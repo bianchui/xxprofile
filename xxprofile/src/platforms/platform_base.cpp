@@ -1,0 +1,9 @@
+//
+//  xxprofile_platform_base.cpp
+//  xxprofile
+//
+//  Created by bianchui on 2017/11/9.
+//  Copyright 2017 bianchui. All rights reserved.
+//
+
+#include "platform_base.hpp"
