@@ -54,7 +54,7 @@ public:
 	}
 	void vappendf(const char* format, va_list ap) {
 		while(1) {
-			int n = _capacity - _length;
+			int n = (int)(_capacity - _length);
 			int final_n = vsnprintf(_dbuf + _length, n, format, ap);
 			if (final_n < 0 || final_n >= n) {
 				int add = final_n - n + 1;
@@ -168,7 +168,7 @@ private:
 };
 
 template <size_t Capacity>
-class StrBufT : StrBufBase {
+class StrBufT : public StrBufBase {
 public:
 	StrBufT() : StrBufBase(_buf, Capacity) {
 	}
