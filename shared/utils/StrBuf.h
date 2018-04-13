@@ -81,7 +81,7 @@ public:
 		}
 	}
 	void assign(const char* str, size_t len = -1) {
-		if (len == -1) {
+		if (len == (size_t)-1) {
 			len = strlen(str);
 		}
 		if (len) {
@@ -102,7 +102,7 @@ public:
 		_length = len;
 	}
 	void append(const char* str, size_t len = -1) {
-		if (len == -1) {
+		if (len == (size_t)-1) {
 			len = strlen(str);
 		}
 		if (!len) {
