@@ -2,6 +2,7 @@
 #ifndef shared_utils_StrBuf_h__
 #define shared_utils_StrBuf_h__
 #include <stdio.h>
+#include <string>
 
 namespace shared {
 
@@ -128,6 +129,20 @@ public:
 		_length += len;
 		_dbuf[_length] = 0;
 	}
+    void append(const std::string& str) {
+        append(str.c_str(), str.length());
+    }
+    void append(const StrBufBase& str) {
+        append(str.c_str(), str.length());
+    }
+    void pop(size_t length = 1) {
+        if (length < _length) {
+            _length -= length;
+        } else {
+            _length = 0;
+        }
+        _dbuf[_length] = 0;
+    }
 
 	const char* c_str() const {
 		return _dbuf;
@@ -153,6 +168,9 @@ public:
 	void clear() {
 		_length = 0;
 	}
+    bool empty() const {
+        return !_length;
+    }
 	
 private:
 	char* _sbuf;
