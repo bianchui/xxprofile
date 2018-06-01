@@ -177,6 +177,9 @@ public:
     bool empty() const {
         return !_length;
     }
+    std::string string() const {
+        return std::string(_dbuf, _length);
+    }
 	
 private:
 	char* _sbuf;
