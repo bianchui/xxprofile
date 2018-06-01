@@ -27,7 +27,10 @@ public:
 	void vprintf(const char* format, va_list ap) {
 		int n = (int)_capacity;
 		while(1) {
-			int final_n = vsnprintf(_dbuf, n, format, ap);
+            va_list apcp;
+            va_copy(apcp, ap);
+			int final_n = vsnprintf(_dbuf, n, format, apcp);
+            va_end(apcp);
 			if (final_n < 0 || final_n >= n) {
 				int add = final_n - n + 1;
 				if (add < 0) {
@@ -56,7 +59,10 @@ public:
 	void vappendf(const char* format, va_list ap) {
 		while(1) {
 			int n = (int)(_capacity - _length);
-			int final_n = vsnprintf(_dbuf + _length, n, format, ap);
+            va_list apcp;
+            va_copy(apcp, ap);
+			int final_n = vsnprintf(_dbuf + _length, n, format, apcp);
+            va_end(apcp);
 			if (final_n < 0 || final_n >= n) {
 				int add = final_n - n + 1;
 				if (add < 0) {
