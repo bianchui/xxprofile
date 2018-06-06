@@ -135,6 +135,9 @@ public:
 		_length += len;
 		_dbuf[_length] = 0;
 	}
+    void append(char ch) {
+        append(&ch, 1);
+    }
     void append(const std::string& str) {
         append(str.c_str(), str.length());
     }
