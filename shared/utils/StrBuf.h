@@ -161,6 +161,10 @@ public:
     std::string string() const {
         return std::string(_dbuf, _length);
     }
+
+    bool same(const std::string& str) const {
+        return _length == str.length() && memcmp(c_str(), str.c_str(), _length) == 0;
+    }
 	
 private:
 	char* _sbuf;
