@@ -1,7 +1,10 @@
-#ifndef platform_win_h__
-#define platform_win_h__
-#include "../xxprofile_build.hpp"
-#include "platform_inc_windows.h"
+// Copyright 2017 bianchui. All rights reserved.
+#ifndef xxprofile_platform_win_h__
+#define xxprofile_platform_win_h__
+#include "../../xxprofile_macros.hpp"
+#include "win/platform_inc_windows.h"
+
+XX_NAMESPACE_BEGIN(xxprofile);
 
 class CSystemLock {
 public:
@@ -34,4 +37,6 @@ public:
 	CRITICAL_SECTION _cs;
 };
 
-#endif//platform_win_h__
+XX_NAMESPACE_END(xxprofile);
+
+#endif//xxprofile_platform_win_h__

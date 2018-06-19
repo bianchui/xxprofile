@@ -8,7 +8,6 @@
 
 #ifndef xxprofile_platform_hpp
 #define xxprofile_platform_hpp
-#include "../helper/CommonMacros.h"
 
 #if defined(PLATFORM_WINDOWS) && PLATFORM_WINDOWS
 // win
@@ -33,6 +32,8 @@
 
 #include <atomic>
 
+XX_NAMESPACE_BEGIN(xxprofile);
+
 class CSystemScopedLock {
 public:
     CSystemScopedLock(CSystemLock& Lock) : _Lock(Lock) {
@@ -43,7 +44,8 @@ public:
     }
     
 private:
-    DISALLOW_COPY_AND_ASSIGN(CSystemScopedLock);
+    XX_CLASS_DELETE_COPY(CSystemScopedLock);
+    XX_CLASS_DELETE_MOVE(CSystemScopedLock);
     CSystemLock& _Lock;
 };
 
@@ -53,5 +55,7 @@ template<typename T>
 inline T make_align(const T v, size_t align) {
     return (T)(((uintptr_t)v + align - 1) & ~(align - 1));
 }
+
+XX_NAMESPACE_END(xxprofile);
 
 #endif//xxprofile_platform_hpp

@@ -8,6 +8,7 @@
 
 #include "platform_apple.hpp"
 
+XX_NAMESPACE_BEGIN(xxprofile);
 
 double XXProfileTimer_apple::InitTiming(void) {
     // Time base is in nano seconds.
@@ -16,3 +17,5 @@ double XXProfileTimer_apple::InitTiming(void) {
     secondsPerCycle = 1e-9 * (double)Info.numer / (double)Info.denom;
     return XXProfileTimer::Seconds();
 }
+
+XX_NAMESPACE_END(xxprofile);

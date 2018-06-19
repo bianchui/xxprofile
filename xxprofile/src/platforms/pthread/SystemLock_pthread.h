@@ -9,7 +9,9 @@
 #ifndef SystemLock_pthread_h
 #define SystemLock_pthread_h
 #include <pthread.h>
-#include "../helper/CommonMacros.h"
+#include "../../xxprofile_macros.hpp"
+
+XX_NAMESPACE_BEGIN(xxprofile);
 
 class CSystemLock_pthread {
 public:
@@ -34,8 +36,11 @@ public:
     }
     
 public:
-    DISALLOW_COPY_AND_ASSIGN(CSystemLock_pthread);
+    XX_CLASS_DELETE_COPY(CSystemLock_pthread);
+    XX_CLASS_DELETE_MOVE(CSystemLock_pthread);
     pthread_mutex_t _cs;
 };
+
+XX_NAMESPACE_END(xxprofile);
 
 #endif//SystemLock_pthread_h

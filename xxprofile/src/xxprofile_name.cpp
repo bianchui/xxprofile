@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
-XX_BEGIN_NAMESPACE;
+XX_NAMESPACE_BEGIN(xxprofile);
 
 class SNamePool {
 public:
@@ -123,8 +123,8 @@ SNamePool::SNameEntry* SNamePool::newNameEntry(const char* name) {
             assert(false);
         }
     }
-    SNameEntry* expEntry = NULL;
-    if (!chunk[idxInChunk].compare_exchange_strong(expEntry, entry)) {
+    SNameEntry* expectEntry = NULL;
+    if (!chunk[idxInChunk].compare_exchange_strong(expectEntry, entry)) {
         assert(false);
     };
 	return entry;
@@ -186,4 +186,4 @@ const char* SName::c_str() const {
     return s_namePool.getName(id);
 }
 
-XX_END_NAMESPACE;
+XX_NAMESPACE_END(xxprofile);

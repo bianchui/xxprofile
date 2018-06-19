@@ -10,6 +10,8 @@
 #define xxprofile_hpp
 #include "xxprofile_name.hpp"
 
+XX_NAMESPACE_BEGIN(xxprofile);
+
 class XXProfileFunctionTreeNode;
 
 class XXProfileScope {
@@ -21,10 +23,12 @@ private:
     XXProfileFunctionTreeNode* _node;
 };
 
-#if defined(_DEBUG) || defined(XX_ENABLE_PROFILE)
+XX_NAMESPACE_END(xxprofile);
 
-#define XX_PROFILE_
-
+#if defined(_DEBUG)
+#  ifndef XX_ENABLE_PROFILE
+#    define XX_ENABLE_PROFILE 1
+#  endif//XX_ENABLE_PROFILE
 #endif//_DEBUG
 
 #endif//xxprofile_hpp

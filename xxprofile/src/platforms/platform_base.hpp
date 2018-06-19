@@ -9,7 +9,9 @@
 #ifndef xxprofile_platform_base_hpp
 #define xxprofile_platform_base_hpp
 #include <stdint.h>
-#include "../xxprofile_build.hpp"
+#include "../xxprofile_macros.hpp"
+
+XX_NAMESPACE_BEGIN(xxprofile);
 
 #define FORCEINLINE inline
 
@@ -27,5 +29,7 @@ struct XXProfileTimer_base {
 protected:
     static double secondsPerCycle;
 };
+
+XX_NAMESPACE_END(xxprofile);
 
 #endif//xxprofile_platform_base_hpp

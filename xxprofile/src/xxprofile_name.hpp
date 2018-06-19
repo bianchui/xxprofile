@@ -8,9 +8,9 @@
 
 #ifndef xxprofile_name_hpp
 #define xxprofile_name_hpp
-#include "xxprofile_build.hpp"
+#include "xxprofile_macros.hpp"
 
-XX_BEGIN_NAMESPACE;
+XX_NAMESPACE_BEGIN(xxprofile);
 
 struct SName {
 private:
@@ -22,6 +22,6 @@ public:
     const char* c_str() const;
 };
 
-XX_END_NAMESPACE;
+XX_NAMESPACE_END(xxprofile);
 
 #endif//xxprofile_name_hpp

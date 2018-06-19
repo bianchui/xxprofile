@@ -1,5 +1,5 @@
-﻿#ifndef platform_inc_windows_h__
-#define platform_inc_windows_h__
+﻿#ifndef xxprofile_win_platform_inc_windows_h__
+#define xxprofile_win_platform_inc_windows_h__
 
 #ifndef _WIN32_WINNT
 # if !defined(WP8)
@@ -54,4 +54,4 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-#endif//platform_inc_windows_h__
+#endif//xxprofile_win_platform_inc_windows_h__

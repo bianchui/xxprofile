@@ -11,6 +11,8 @@
 #include "platforms/platform.hpp"
 #include <vector>
 
+XX_NAMESPACE_BEGIN(xxprofile);
+
 class XXProfileFunctionTreeNode {
     //std::vector<std::string, XXProfileFunctionTreeNode*> nodes;
 };
@@ -36,3 +38,5 @@ XXProfileScope::XXProfileScope(const char* function) {
 XXProfileScope::~XXProfileScope() {
     
 }
+
+XX_NAMESPACE_END(xxprofile);

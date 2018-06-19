@@ -7,3 +7,6 @@
 //
 
 #include "platform_base.hpp"
+
+XX_NAMESPACE_BEGIN(xxprofile);
+XX_NAMESPACE_END(xxprofile);

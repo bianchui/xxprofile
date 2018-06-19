@@ -11,7 +11,10 @@
 #include <mach/mach_time.h>
 #include "platform_base.hpp"
 
-#include "SystemLock_pthread.h"
+#include "pthread/SystemLock_pthread.h"
+
+XX_NAMESPACE_BEGIN(xxprofile);
+
 typedef CSystemLock_pthread CSystemLock;
 
 struct XXProfileTimer_apple : XXProfileTimer_base {
@@ -32,5 +35,7 @@ struct XXProfileTimer_apple : XXProfileTimer_base {
 };
 
 typedef XXProfileTimer_apple XXProfileTimer;
+
+XX_NAMESPACE_END(xxprofile);
 
 #endif//xxprofile_platform_apple_hpp
