@@ -22,6 +22,11 @@
 		ED81D1AA20D37C2C0096FB53 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED81D1A920D37C2C0096FB53 /* main.cpp */; };
 		ED81D1B120D3AC6C0096FB53 /* tls_pthread.h in Headers */ = {isa = PBXBuildFile; fileRef = ED81D1B020D3AC6C0096FB53 /* tls_pthread.h */; };
 		ED81D1B220D3B1610096FB53 /* libxxprofile_mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED84F6B81FB1CF9B00C7B425 /* libxxprofile_mac.a */; };
+		ED97396220D8F5B10067B5D9 /* platform_apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73031FCD46C3004E945D /* platform_apple.cpp */; };
+		ED97396320D8F5B10067B5D9 /* platform_base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73051FCD46C3004E945D /* platform_base.cpp */; };
+		ED97396420D8F5B10067B5D9 /* xxprofile_archive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED81D19F20D374B40096FB53 /* xxprofile_archive.cpp */; };
+		ED97396520D8F5B10067B5D9 /* xxprofile_name.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F730E1FCD49F1004E945D /* xxprofile_name.cpp */; };
+		ED97396620D8F5B10067B5D9 /* xxprofile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73011FCD46C3004E945D /* xxprofile.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -325,6 +330,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED97396220D8F5B10067B5D9 /* platform_apple.cpp in Sources */,
+				ED97396320D8F5B10067B5D9 /* platform_base.cpp in Sources */,
+				ED97396420D8F5B10067B5D9 /* xxprofile_archive.cpp in Sources */,
+				ED97396520D8F5B10067B5D9 /* xxprofile_name.cpp in Sources */,
+				ED97396620D8F5B10067B5D9 /* xxprofile.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

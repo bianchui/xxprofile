@@ -20,10 +20,6 @@ static pthread_key_t g_profile_tls_key;
 static pthread_once_t g_profile_init_once = PTHREAD_ONCE_INIT;
 static __thread XXProfile* g_tls_profile;
 
-class XXProfileFunctionTreeNode {
-    //std::vector<std::string, XXProfileFunctionTreeNode*> nodes;
-};
-
 // XXProfileTreeNode
 struct XXProfileTreeNode {
     uint64_t _beginTime;

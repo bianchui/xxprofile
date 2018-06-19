@@ -28,18 +28,26 @@ public:
         NAMES_CHUNK_COUNT = (MAX_NAME_ENTRY_COUNT + NAMES_CHUNK_SIZE - 1) / NAMES_CHUNK_SIZE,
     };
 
-    struct SChunkHeader {
-        uint32_t usedSize;
-        uint32_t lastId;
-    };
-    
     struct SNameEntry {
         SNameEntry* next;//std::atomic<SNameEntry*>
         uint32_t id;
+        uint32_t length;
         char buf[4];
 
         bool isEqual(const char* name) const {
             return strcmp(buf, name) == 0;
+        }
+    };
+
+    struct SChunkHeader {
+        uint32_t usedSize;
+        uint32_t endId;
+
+        SNameEntry* firstEntry() const {
+            return (SNameEntry*)(((char*)this) + sizeof(SChunkHeader));
+        }
+        uint32_t beginId() const {
+            return firstEntry()->id;
         }
     };
     
@@ -104,10 +112,11 @@ SNamePool::SNameEntry* SNamePool::newNameEntry(const char* name) {
 	const size_t len = strlen(name);
 	const size_t size = make_align(offsetof(SNameEntry, buf) + len + 1, NAME_ENTRY_ALIGN);
 	if (size > _buffer_size) {
+        const uint32_t currentNameCount = _nameCount.load(std::memory_order_acquire);
         if (!_nameBuffers.empty()) {
             SChunkHeader* header = (SChunkHeader*)make_align((char*)_nameBuffers.back(), NAME_ENTRY_ALIGN);
-            header->usedSize = (uint32_t)(_buffer - (char*)header) | (sizeof(void*) << 24);
-            header->lastId = _nameCount;
+            header->usedSize = (uint32_t)(_buffer - (char*)header);
+            header->endId = currentNameCount;
         }
 		char* buffer = (char*)malloc(BUFFER_CHUNK_SIZE);
         _nameBuffers.push_back(buffer);
@@ -122,6 +131,7 @@ SNamePool::SNameEntry* SNamePool::newNameEntry(const char* name) {
     
     uint32_t idx = _nameCount++;
     entry->id = idx + 1;
+    entry->length = (uint32_t)len;
     if (idx == MAX_NAME_ENTRY_COUNT) {
         assert(false);
     }
@@ -147,16 +157,17 @@ uint32_t SNamePool::getNameId(const char* name) {
     if (!name || !*name) {
         return 0;
     }
+    const uint32_t length = (uint32_t)strlen(name);
     const uint32_t hash = StringHash(name);
     const uint32_t bucket = hash % HASH_BUCKET_COUNT;
 	for (SNameEntry* entry = _nameHashes[bucket].load(std::memory_order_acquire); entry; entry = entry->next) {
-        if (entry->isEqual(name)) {
+        if (entry->length == length && entry->isEqual(name)) {
             return entry->id;
         }
     }
     CSystemScopedLock lock(_lock);
 	for (SNameEntry* entry = _nameHashes[bucket].load(std::memory_order_acquire); entry; entry = entry->next) {
-        if (entry->isEqual(name)) {
+        if (entry->length == length && entry->isEqual(name)) {
             return entry->id;
         }
     }
@@ -185,11 +196,79 @@ const char* SNamePool::getName(uint32_t id) {
 }
 
 void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
-    uint32_t nameCount = _nameCount.load(std::memory_order_acquire);
+    uint32_t chunkCount;
     if (ar.isWrite()) {
-        //if (ar.)
+        uint32_t nameCount = _nameCount.load(std::memory_order_acquire);
+        const uint32_t fromId = tag ? tag->fromId : 0;
+        if (fromId == nameCount) {
+            chunkCount = 0;
+            ar << chunkCount;
+            return;
+        }
+        uint32_t fromBufferIndex = 0;
+        std::vector<void*> nameBuffers;
+        const char* currentBufferEnd = NULL;
+        {
+            CSystemScopedLock lock(_lock);
+            nameBuffers = _nameBuffers;
+            currentBufferEnd = _buffer;
+            // get second time to ensure
+            nameCount = _nameCount.load(std::memory_order_acquire);
+        }
+        void** buffers = nameBuffers.data();
+        const uint32_t bufferCount = (uint32_t)nameBuffers.size();
+        if (fromId) {
+            for (uint32_t iter = 1; iter < bufferCount; ++iter) {
+                SChunkHeader* chunkHeader = (SChunkHeader*)make_align(buffers[bufferCount - iter - 1], NAME_ENTRY_ALIGN);
+                if (chunkHeader->beginId() < fromId) {
+                    break;
+                }
+                fromBufferIndex = bufferCount - iter - 1;
+            }
+        }
+        chunkCount = bufferCount - fromBufferIndex;
+        ar << chunkCount;
+        uint32_t startIndex = fromId;
+        for (uint32_t bufferIndex = fromBufferIndex; bufferIndex < bufferCount; ++bufferIndex) {
+            SChunkHeader* chunkHeader = (SChunkHeader*)make_align(buffers[bufferIndex], NAME_ENTRY_ALIGN);
+            const SNameEntry* firstEntry = chunkHeader->firstEntry();
+            assert(firstEntry->id <= startIndex + 1);
+            const char* chunkEnd = ((bufferIndex + 1) == bufferCount) ? currentBufferEnd : (((char*)chunkHeader) + chunkHeader->usedSize);
+            uint32_t endIndex = ((bufferIndex + 1) == bufferCount) ? nameCount : chunkHeader->endId;
+
+            const char* cur = (const char*)firstEntry;
+            while (cur < chunkEnd) {
+                const SNameEntry* entry = (SNameEntry*)cur;
+                if (entry->id == startIndex + 1) {
+                    break;
+                }
+                const size_t size = make_align(offsetof(SNameEntry, buf) + entry->length + 1, NAME_ENTRY_ALIGN);
+                if (entry) {
+                    cur += size;
+                }
+            }
+            // uint32_t startIndex;
+            // uint32_t endIndex;
+            // uint32_t dataSize;
+            // char data[dataSize];
+            ar << startIndex << endIndex;
+            uint32_t dataSize = (uint32_t)(chunkEnd - cur);
+            ar << dataSize;
+            ar.serialize((void*)cur, dataSize);
+            startIndex = endIndex;
+        }
+        if (tag) {
+            tag->fromId = nameCount;
+        }
     } else {
+        ar << chunkCount;
+        if (chunkCount == 0) {
+            return;
+        }
+
+
         CSystemScopedLock lock(_lock);
+
 
     }
 }
