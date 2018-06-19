@@ -9,4 +9,7 @@
 #include "platform_base.hpp"
 
 XX_NAMESPACE_BEGIN(xxprofile);
+
+double XXProfileTimer_base::secondsPerCycle;
+
 XX_NAMESPACE_END(xxprofile);

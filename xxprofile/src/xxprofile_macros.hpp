@@ -10,8 +10,8 @@
 /**/cls& operator=(const cls&) = delete; \
 
 #define XX_CLASS_DELETE_COPY(cls) \
-/**/cls(const cls&) = delete; \
-/**/cls& operator=(const cls&) = delete; \
+/**/XX_CLASS_DELETE_COPY_CONSTRUCTOR(cls); \
+/**/XX_CLASS_DELETE_COPY_ASSIGN(cls); \
 
 #define XX_CLASS_DELETE_MOVE_CONSTRUCTOR(cls) \
 /**/cls(const cls&&) = delete; \
@@ -20,8 +20,12 @@
 /**/cls& operator=(const cls&&) = delete; \
 
 #define XX_CLASS_DELETE_MOVE(cls) \
-/**/cls(const cls&&) = delete; \
-/**/cls& operator=(const cls&&) = delete; \
+/**/XX_CLASS_DELETE_MOVE_CONSTRUCTOR(cls); \
+/**/XX_CLASS_DELETE_MOVE_ASSIGN(cls); \
+
+#define XX_CLASS_DELETE_COPY_AND_MOVE(cls) \
+/**/XX_CLASS_DELETE_COPY(cls); \
+/**/XX_CLASS_DELETE_MOVE(cls); \
 
 #define XX_ARRAY_COUNTOF(c) (sizeof(c) / sizeof(c[0]))
 

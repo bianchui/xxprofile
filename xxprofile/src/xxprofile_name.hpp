@@ -12,6 +12,8 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
+class Archive;
+
 struct SName {
 private:
     uint32_t id;
@@ -20,6 +22,12 @@ public:
     SName(const char* name);
     SName(uint32_t id);
     const char* c_str() const;
+
+public:
+    struct IncrementSerializeTag {
+        uint32_t fromId;
+    };
+    static void Serialize(IncrementSerializeTag* tag, Archive& ar);
 };
 
 XX_NAMESPACE_END(xxprofile);

@@ -12,8 +12,11 @@
 #include "platform_base.hpp"
 
 #include "pthread/SystemLock_pthread.h"
+#include "pthread/tls_pthread.h"
 
 XX_NAMESPACE_BEGIN(xxprofile);
+
+uint32_t GetTid();
 
 typedef CSystemLock_pthread CSystemLock;
 

@@ -11,6 +11,7 @@
 #include <vector>
 #include <stdlib.h>
 #include <assert.h>
+#include "xxprofile_archive.hpp"
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
@@ -25,6 +26,11 @@ public:
         MAX_NAME_ENTRY_COUNT = 1 * 1024 * 1024,
         NAMES_CHUNK_SIZE = 16 * 1024,
         NAMES_CHUNK_COUNT = (MAX_NAME_ENTRY_COUNT + NAMES_CHUNK_SIZE - 1) / NAMES_CHUNK_SIZE,
+    };
+
+    struct SChunkHeader {
+        uint32_t usedSize;
+        uint32_t lastId;
     };
     
     struct SNameEntry {
@@ -42,9 +48,11 @@ public:
 
     uint32_t getNameId(const char* name);
     uint32_t getNameCount() const {
-        return _nameCount;
+        return _nameCount.load(std::memory_order_acquire);
     }
     FORCEINLINE const char* getName(uint32_t id);
+
+    void serialize(SName::IncrementSerializeTag* tag, Archive& ar);
     
 private:// names
     std::atomic<SNameEntry*> _nameHashes[HASH_BUCKET_COUNT];
@@ -96,16 +104,21 @@ SNamePool::SNameEntry* SNamePool::newNameEntry(const char* name) {
 	const size_t len = strlen(name);
 	const size_t size = make_align(offsetof(SNameEntry, buf) + len + 1, NAME_ENTRY_ALIGN);
 	if (size > _buffer_size) {
+        if (!_nameBuffers.empty()) {
+            SChunkHeader* header = (SChunkHeader*)make_align((char*)_nameBuffers.back(), NAME_ENTRY_ALIGN);
+            header->usedSize = (uint32_t)(_buffer - (char*)header) | (sizeof(void*) << 24);
+            header->lastId = _nameCount;
+        }
 		char* buffer = (char*)malloc(BUFFER_CHUNK_SIZE);
         _nameBuffers.push_back(buffer);
 		memset(buffer, 0, BUFFER_CHUNK_SIZE);
-        _buffer = make_align(buffer, NAME_ENTRY_ALIGN);
+        _buffer = make_align(buffer, NAME_ENTRY_ALIGN) + sizeof(SChunkHeader);
         _buffer_size = BUFFER_CHUNK_SIZE - (int32_t)(_buffer - buffer);
 	}
 	SNameEntry* entry = (SNameEntry*)_buffer;
 	_buffer += size;
 	_buffer_size -= (uint32_t)size;
-	strcpy(entry->buf, name);
+	memcpy(entry->buf, name, len);
     
     uint32_t idx = _nameCount++;
     entry->id = idx + 1;
@@ -114,7 +127,7 @@ SNamePool::SNameEntry* SNamePool::newNameEntry(const char* name) {
     }
     uint32_t chunkId = idx / NAMES_CHUNK_SIZE;
     uint32_t idxInChunk = idx % NAMES_CHUNK_SIZE;
-    std::atomic<SNameEntry*>* chunk = _names[chunkId];
+    std::atomic<SNameEntry*>* chunk = _names[chunkId].load(std::memory_order_acquire);
     if (!chunk) {
         chunk = (std::atomic<SNameEntry*>*)malloc(sizeof(SNameEntry*) * NAMES_CHUNK_SIZE);
         memset(chunk, 0, sizeof(SNameEntry*) * NAMES_CHUNK_SIZE);
@@ -136,18 +149,18 @@ uint32_t SNamePool::getNameId(const char* name) {
     }
     const uint32_t hash = StringHash(name);
     const uint32_t bucket = hash % HASH_BUCKET_COUNT;
-	for (SNameEntry* entry = _nameHashes[bucket]; entry; entry = entry->next) {
+	for (SNameEntry* entry = _nameHashes[bucket].load(std::memory_order_acquire); entry; entry = entry->next) {
         if (entry->isEqual(name)) {
             return entry->id;
         }
     }
     CSystemScopedLock lock(_lock);
-	for (SNameEntry* entry = _nameHashes[bucket]; entry; entry = entry->next) {
+	for (SNameEntry* entry = _nameHashes[bucket].load(std::memory_order_acquire); entry; entry = entry->next) {
         if (entry->isEqual(name)) {
             return entry->id;
         }
     }
-	SNameEntry* head = _nameHashes[bucket];
+    SNameEntry* head = _nameHashes[bucket].load(std::memory_order_acquire);
 	SNameEntry* newEntry = newNameEntry(name);
     newEntry->next = head;
     if (!_nameHashes[bucket].compare_exchange_strong(head, newEntry)) {
@@ -171,6 +184,16 @@ const char* SNamePool::getName(uint32_t id) {
     return entry->buf;
 }
 
+void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
+    uint32_t nameCount = _nameCount.load(std::memory_order_acquire);
+    if (ar.isWrite()) {
+        //if (ar.)
+    } else {
+        CSystemScopedLock lock(_lock);
+
+    }
+}
+
 static SNamePool s_namePool;
 
 // SName
@@ -184,6 +207,10 @@ SName::SName(uint32_t id) : id(id) {
 
 const char* SName::c_str() const {
     return s_namePool.getName(id);
+}
+
+void SName::Serialize(IncrementSerializeTag* tag, Archive& ar) {
+    s_namePool.serialize(tag, ar);
 }
 
 XX_NAMESPACE_END(xxprofile);
