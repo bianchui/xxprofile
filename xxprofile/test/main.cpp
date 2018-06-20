@@ -20,7 +20,7 @@ void* static_thread(void* param) {
 }
 
 int main(int argc, const char * argv[]) {
-    xxprofile::XXProfileTimer::InitTiming();
+    xxprofile::XXProfile::StaticInit();
 
     XX_PROFILE_SCOPE_FUNCTION();
 

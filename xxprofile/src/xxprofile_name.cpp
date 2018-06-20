@@ -11,6 +11,7 @@
 #include <vector>
 #include <stdlib.h>
 #include <assert.h>
+#include <string>
 #include "xxprofile_archive.hpp"
 
 XX_NAMESPACE_BEGIN(xxprofile);
@@ -36,6 +37,10 @@ public:
 
         bool isEqual(const char* name) const {
             return strcmp(buf, name) == 0;
+        }
+
+        static size_t CalcEntrySize(size_t len) {
+            return make_align(offsetof(SNameEntry, buf) + len + 1, NAME_ENTRY_ALIGN);
         }
     };
 
@@ -75,7 +80,7 @@ private:// memory pool
     
     std::vector<void*> _nameBuffers;
 
-	SNameEntry* newNameEntry(const char* name);
+	SNameEntry* newNameEntry(const char* name, const uint32_t length);
 
 private:
     static FORCEINLINE uint32_t StringHash(const char* lpszStr);
@@ -108,9 +113,9 @@ SNamePool::~SNamePool() {
     _nameCount = 0;
 }
 
-SNamePool::SNameEntry* SNamePool::newNameEntry(const char* name) {
-	const size_t len = strlen(name);
-	const size_t size = make_align(offsetof(SNameEntry, buf) + len + 1, NAME_ENTRY_ALIGN);
+SNamePool::SNameEntry* SNamePool::newNameEntry(const char* name, const uint32_t length) {
+    assert(strlen(name) == length);
+    const size_t size = SNameEntry::CalcEntrySize(length);
 	if (size > _buffer_size) {
         const uint32_t currentNameCount = _nameCount.load(std::memory_order_acquire);
         if (!_nameBuffers.empty()) {
@@ -127,13 +132,14 @@ SNamePool::SNameEntry* SNamePool::newNameEntry(const char* name) {
 	SNameEntry* entry = (SNameEntry*)_buffer;
 	_buffer += size;
 	_buffer_size -= (uint32_t)size;
-	memcpy(entry->buf, name, len);
+	memcpy(entry->buf, name, length);
     
     uint32_t idx = _nameCount++;
     entry->id = idx + 1;
-    entry->length = (uint32_t)len;
+    entry->length = length;
     if (idx == MAX_NAME_ENTRY_COUNT) {
         assert(false);
+        abort();
     }
     uint32_t chunkId = idx / NAMES_CHUNK_SIZE;
     uint32_t idxInChunk = idx % NAMES_CHUNK_SIZE;
@@ -142,12 +148,12 @@ SNamePool::SNameEntry* SNamePool::newNameEntry(const char* name) {
         chunk = (std::atomic<SNameEntry*>*)malloc(sizeof(SNameEntry*) * NAMES_CHUNK_SIZE);
         memset(chunk, 0, sizeof(SNameEntry*) * NAMES_CHUNK_SIZE);
         std::atomic<SNameEntry*>* expect = NULL;
-        if (!_names[chunkId].compare_exchange_strong(expect, chunk)) {
+        if (!_names[chunkId].compare_exchange_strong(expect, chunk, std::memory_order_release)) {
             assert(false);
         }
     }
     SNameEntry* expectEntry = NULL;
-    if (!chunk[idxInChunk].compare_exchange_strong(expectEntry, entry)) {
+    if (!chunk[idxInChunk].compare_exchange_strong(expectEntry, entry, std::memory_order_release)) {
         assert(false);
     };
 	return entry;
@@ -172,9 +178,9 @@ uint32_t SNamePool::getNameId(const char* name) {
         }
     }
     SNameEntry* head = _nameHashes[bucket].load(std::memory_order_acquire);
-	SNameEntry* newEntry = newNameEntry(name);
+	SNameEntry* newEntry = newNameEntry(name, length);
     newEntry->next = head;
-    if (!_nameHashes[bucket].compare_exchange_strong(head, newEntry)) {
+    if (!_nameHashes[bucket].compare_exchange_strong(head, newEntry, std::memory_order_release)) {
         assert(false);
     }
  
@@ -195,14 +201,22 @@ const char* SNamePool::getName(uint32_t id) {
     return entry->buf;
 }
 
+// uint32_t nameCount;
+// [
+//     uint32_t startId;
+//     {
+//         uint32_t length;
+//         char name[length];
+//     }[nameCount];
+// ]
 void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
-    uint32_t chunkCount;
+    uint32_t nameCount;
     if (ar.isWrite()) {
-        uint32_t nameCount = _nameCount.load(std::memory_order_acquire);
+        uint32_t maxNameId = _nameCount.load(std::memory_order_acquire);
         const uint32_t fromId = tag ? tag->fromId : 0;
-        if (fromId == nameCount) {
-            chunkCount = 0;
-            ar << chunkCount;
+        if (fromId >= maxNameId) {
+            nameCount = 0;
+            ar << nameCount;
             return;
         }
         uint32_t fromBufferIndex = 0;
@@ -213,28 +227,32 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
             nameBuffers = _nameBuffers;
             currentBufferEnd = _buffer;
             // get second time to ensure
-            nameCount = _nameCount.load(std::memory_order_acquire);
+            maxNameId = _nameCount.load(std::memory_order_acquire);
         }
         void** buffers = nameBuffers.data();
         const uint32_t bufferCount = (uint32_t)nameBuffers.size();
         if (fromId) {
             for (uint32_t iter = 1; iter < bufferCount; ++iter) {
-                SChunkHeader* chunkHeader = (SChunkHeader*)make_align(buffers[bufferCount - iter - 1], NAME_ENTRY_ALIGN);
-                if (chunkHeader->beginId() < fromId) {
+                uint32_t index = bufferCount - iter - 1;
+                SChunkHeader* chunkHeader = (SChunkHeader*)make_align(buffers[index], NAME_ENTRY_ALIGN);
+                if (chunkHeader->beginId() <= fromId) {
+                    fromBufferIndex = index;
                     break;
                 }
-                fromBufferIndex = bufferCount - iter - 1;
             }
         }
-        chunkCount = bufferCount - fromBufferIndex;
-        ar << chunkCount;
+        nameCount = maxNameId - fromId;
+        ar << nameCount;
+        if (nameCount == 0) {
+            return;
+        }
         uint32_t startIndex = fromId;
+        ar << startIndex;
         for (uint32_t bufferIndex = fromBufferIndex; bufferIndex < bufferCount; ++bufferIndex) {
             SChunkHeader* chunkHeader = (SChunkHeader*)make_align(buffers[bufferIndex], NAME_ENTRY_ALIGN);
             const SNameEntry* firstEntry = chunkHeader->firstEntry();
             assert(firstEntry->id <= startIndex + 1);
             const char* chunkEnd = ((bufferIndex + 1) == bufferCount) ? currentBufferEnd : (((char*)chunkHeader) + chunkHeader->usedSize);
-            uint32_t endIndex = ((bufferIndex + 1) == bufferCount) ? nameCount : chunkHeader->endId;
 
             const char* cur = (const char*)firstEntry;
             while (cur < chunkEnd) {
@@ -242,34 +260,126 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
                 if (entry->id == startIndex + 1) {
                     break;
                 }
-                const size_t size = make_align(offsetof(SNameEntry, buf) + entry->length + 1, NAME_ENTRY_ALIGN);
-                if (entry) {
-                    cur += size;
-                }
+                cur += SNameEntry::CalcEntrySize(entry->length);
             }
-            // uint32_t startIndex;
-            // uint32_t endIndex;
-            // uint32_t dataSize;
-            // char data[dataSize];
-            ar << startIndex << endIndex;
-            uint32_t dataSize = (uint32_t)(chunkEnd - cur);
-            ar << dataSize;
-            ar.serialize((void*)cur, dataSize);
-            startIndex = endIndex;
+            uint32_t index = startIndex;
+            while (cur < chunkEnd) {
+                // uint32_t length
+                // char name[length]
+                SNameEntry* entry = (SNameEntry*)cur;
+                assert(entry->id == index + 1);
+                ar << entry->length;
+                ar.serialize(entry->buf, entry->length);
+                if (entry->id == maxNameId) {
+                    break;
+                }
+                cur += SNameEntry::CalcEntrySize(entry->length);
+                ++index;
+            }
+            assert(bufferIndex + 1 == bufferCount || chunkHeader->endId == index);
+            startIndex = chunkHeader->endId;
         }
         if (tag) {
-            tag->fromId = nameCount;
+            tag->fromId = maxNameId;
         }
     } else {
-        ar << chunkCount;
-        if (chunkCount == 0) {
+        ar << nameCount;
+        if (nameCount == 0) {
             return;
         }
-
-
+        uint32_t startIndex;
+        ar << startIndex;
+        assert(startIndex != 0);
+        std::string str;
+        str.reserve(256);
         CSystemScopedLock lock(_lock);
+        const uint32_t maxNameId = _nameCount.load(std::memory_order_acquire);
+        std::atomic<SNameEntry*>* chunk = NULL;
+        uint32_t currentChunkId = -1;
+        uint32_t newMaxNameId = maxNameId;
+        for (uint32_t i = 0; i < nameCount; ++i) {
+            uint32_t length;
+            ar << length;
+            const uint32_t id = startIndex + i;
+            const uint32_t idx = id - 1;
+            const uint32_t chunkId = idx / NAMES_CHUNK_SIZE;
+            const uint32_t idxInChunk = idx % NAMES_CHUNK_SIZE;
+            if (idx == MAX_NAME_ENTRY_COUNT) {
+                assert(false);
+                abort();
+            }
 
+            if (id < maxNameId) {
+                str.resize(length);
+                ar.serialize((void*)str.c_str(), length);
+#ifndef NDEBUG
+                // check only
+                if (currentChunkId != chunkId) {
+                    chunk = _names[chunkId].load(std::memory_order_acquire);
+                    currentChunkId = chunkId;
+                }
+                assert(chunk);
+                if (!chunk) {
+                    return;
+                }
+                SNameEntry* entry = chunk[idxInChunk].load(std::memory_order_relaxed);
+                assert(entry);
+                if (!entry) {
+                    return;
+                }
+                assert(entry->id == id);
+                assert(entry->length == length);
+                assert(strcmp(entry->buf, str.c_str()) == 0);
+#endif//NDEBUG
+            } else {
+                const size_t size = SNameEntry::CalcEntrySize(length);
+                if (size > _buffer_size) {
+                    if (!_nameBuffers.empty()) {
+                        SChunkHeader* header = (SChunkHeader*)make_align((char*)_nameBuffers.back(), NAME_ENTRY_ALIGN);
+                        header->usedSize = (uint32_t)(_buffer - (char*)header);
+                        header->endId = id;
+                    }
+                    char* buffer = (char*)malloc(BUFFER_CHUNK_SIZE);
+                    _nameBuffers.push_back(buffer);
+                    memset(buffer, 0, BUFFER_CHUNK_SIZE);
+                    _buffer = make_align(buffer, NAME_ENTRY_ALIGN) + sizeof(SChunkHeader);
+                    _buffer_size = BUFFER_CHUNK_SIZE - (int32_t)(_buffer - buffer);
+                }
 
+                SNameEntry* entry = (SNameEntry*)_buffer;
+                _buffer += size;
+                _buffer_size -= (uint32_t)size;
+
+                entry->id = id;
+                entry->length = length;
+                ar.serialize(entry->buf, length);
+
+                if (currentChunkId != chunkId) {
+                    chunk = _names[chunkId].load(std::memory_order_acquire);
+                    currentChunkId = chunkId;
+                }
+                if (!chunk) {
+                    chunk = (std::atomic<SNameEntry*>*)malloc(sizeof(SNameEntry*) * NAMES_CHUNK_SIZE);
+                    memset(chunk, 0, sizeof(SNameEntry*) * NAMES_CHUNK_SIZE);
+                    std::atomic<SNameEntry*>* expect = NULL;
+                    if (!_names[chunkId].compare_exchange_strong(expect, chunk, std::memory_order_release)) {
+                        assert(false);
+                    }
+                }
+
+                SNameEntry* expectEntry = NULL;
+                if (!chunk[idxInChunk].compare_exchange_strong(expectEntry, entry, std::memory_order_release)) {
+                    assert(false);
+                };
+
+                assert(id == newMaxNameId + 1);
+                newMaxNameId = id;
+            }
+        }
+        uint32_t expectMaxNameId = maxNameId;
+        if (!_nameCount.compare_exchange_strong(expectMaxNameId, newMaxNameId, std::memory_order_release)) {
+            assert(false);
+        }
     }
 }
 

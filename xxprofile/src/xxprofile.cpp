@@ -37,6 +37,7 @@ static void profile_on_thread_exit(void* data) {
 
 static void profile_tls_init_once() {
     pthread_key_create(&g_profile_tls_key, profile_on_thread_exit);
+    XXProfileTimer::InitTiming();
 }
 
 bool XXProfile::StaticInit() {

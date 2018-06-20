@@ -8,7 +8,6 @@
 
 #ifndef xxprofile_hpp
 #define xxprofile_hpp
-#include "platforms/platform.hpp"
 #include "xxprofile_name.hpp"
 #include <vector>
 
@@ -80,8 +79,18 @@ XX_NAMESPACE_END(xxprofile);
 
 #if XX_ENABLE_PROFILE
 
+#define HAVE_PRETTY_FUNCTION 1
+
+#if HAVE_PRETTY_FUNCTION
+#  define XX_PROFILE_FUNCTION __PRETTY_FUNCTION__
+#endif//HAVE_PRETTY_FUNCTION
+
+#ifndef XX_PROFILE_FUNCTION
+#  define XX_PROFILE_FUNCTION __FUNCTION__
+#endif//XX_PROFILE_FUNCTION
+
 #  define XX_PROFILE_SCOPE_FUNCTION() \
-/**/static ::xxprofile::SName __xxprofile_name_function_name(__FUNCTION__); \
+/**/static ::xxprofile::SName __xxprofile_name_function_name(XX_PROFILE_FUNCTION); \
 /**/::xxprofile::XXProfileScope __xxprofile_scope(__xxprofile_name_function_name); \
 
 #  define XX_PROFILE_INCREASE_FRAME() \
