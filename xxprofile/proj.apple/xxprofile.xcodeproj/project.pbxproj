@@ -74,6 +74,7 @@
 		ED642F191FCE8E3D0067CEA4 /* SimpleArray.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimpleArray.h; sourceTree = "<group>"; };
 		ED642F1A1FCE8E3D0067CEA4 /* SimpleConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimpleConfig.h; sourceTree = "<group>"; };
 		ED642F1C1FCE948E0067CEA4 /* SystemLock_pthread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SystemLock_pthread.h; sourceTree = "<group>"; };
+		ED714AF120DA5D3600732372 /* xxprofile_internal.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_internal.hpp; sourceTree = "<group>"; };
 		ED81D19C20D3584B0096FB53 /* xxprofile_macros.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_macros.hpp; sourceTree = "<group>"; };
 		ED81D19F20D374B40096FB53 /* xxprofile_archive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xxprofile_archive.cpp; sourceTree = "<group>"; };
 		ED81D1A020D374B40096FB53 /* xxprofile_archive.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_archive.hpp; sourceTree = "<group>"; };
@@ -117,6 +118,7 @@
 				ED5F72FF1FCD46C3004E945D /* platforms */,
 				ED81D19F20D374B40096FB53 /* xxprofile_archive.cpp */,
 				ED81D1A020D374B40096FB53 /* xxprofile_archive.hpp */,
+				ED714AF120DA5D3600732372 /* xxprofile_internal.hpp */,
 				ED81D19C20D3584B0096FB53 /* xxprofile_macros.hpp */,
 				ED5F730E1FCD49F1004E945D /* xxprofile_name.cpp */,
 				ED5F730F1FCD49F1004E945D /* xxprofile_name.hpp */,

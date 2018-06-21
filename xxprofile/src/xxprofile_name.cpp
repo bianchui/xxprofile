@@ -7,6 +7,7 @@
 //
 
 #include "xxprofile_name.hpp"
+#include "xxprofile_internal.hpp"
 #include "platforms/platform.hpp"
 #include <vector>
 #include <stdlib.h>
@@ -172,12 +173,12 @@ uint32_t SNamePool::getNameId(const char* name) {
         }
     }
     CSystemScopedLock lock(_lock);
-	for (SNameEntry* entry = _nameHashes[bucket].load(std::memory_order_acquire); entry; entry = entry->next) {
+    SNameEntry* head = _nameHashes[bucket].load(std::memory_order_acquire);
+	for (SNameEntry* entry = head; entry; entry = entry->next) {
         if (entry->length == length && entry->isEqual(name)) {
             return entry->id;
         }
     }
-    SNameEntry* head = _nameHashes[bucket].load(std::memory_order_acquire);
 	SNameEntry* newEntry = newNameEntry(name, length);
     newEntry->next = head;
     if (!_nameHashes[bucket].compare_exchange_strong(head, newEntry, std::memory_order_release)) {
@@ -210,12 +211,11 @@ const char* SNamePool::getName(uint32_t id) {
 //     }[nameCount];
 // ]
 void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
-    uint32_t nameCount;
+    uint32_t nameCount = 0;
     if (ar.isWrite()) {
         uint32_t maxNameId = _nameCount.load(std::memory_order_acquire);
         const uint32_t fromId = tag ? tag->fromId : 0;
         if (fromId >= maxNameId) {
-            nameCount = 0;
             ar << nameCount;
             return;
         }
@@ -248,6 +248,10 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
         }
         uint32_t startIndex = fromId;
         ar << startIndex;
+
+        uint32_t debug_max = fromId;
+        uint32_t debug_writeCount = 0;
+
         for (uint32_t bufferIndex = fromBufferIndex; bufferIndex < bufferCount; ++bufferIndex) {
             SChunkHeader* chunkHeader = (SChunkHeader*)make_align(buffers[bufferIndex], NAME_ENTRY_ALIGN);
             const SNameEntry* firstEntry = chunkHeader->firstEntry();
@@ -262,23 +266,29 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
                 }
                 cur += SNameEntry::CalcEntrySize(entry->length);
             }
-            uint32_t index = startIndex;
+            uint32_t debug_index = startIndex;
             while (cur < chunkEnd) {
                 // uint32_t length
                 // char name[length]
                 SNameEntry* entry = (SNameEntry*)cur;
-                assert(entry->id == index + 1);
+                assert(entry->id == debug_index + 1);
+                ar << entry->id;
                 ar << entry->length;
                 ar.serialize(entry->buf, entry->length);
+                debug_max = entry->id;
+                ++debug_writeCount;
+                cur += SNameEntry::CalcEntrySize(entry->length);
                 if (entry->id == maxNameId) {
                     break;
                 }
-                cur += SNameEntry::CalcEntrySize(entry->length);
-                ++index;
+                ++debug_index;
             }
-            assert(bufferIndex + 1 == bufferCount || chunkHeader->endId == index);
+            assert(cur == chunkEnd); // !Thread not safe!
+            assert(bufferIndex + 1 == bufferCount || chunkHeader->endId == debug_index);
             startIndex = chunkHeader->endId;
         }
+        assert(debug_writeCount == nameCount);
+        assert(debug_max == maxNameId);
         if (tag) {
             tag->fromId = maxNameId;
         }
@@ -289,25 +299,28 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
         }
         uint32_t startIndex;
         ar << startIndex;
-        assert(startIndex != 0);
         std::string str;
         str.reserve(256);
         CSystemScopedLock lock(_lock);
         const uint32_t maxNameId = _nameCount.load(std::memory_order_acquire);
         std::atomic<SNameEntry*>* chunk = NULL;
         uint32_t currentChunkId = -1;
-        uint32_t newMaxNameId = maxNameId;
+        uint32_t debug_newMaxNameId = maxNameId;
         for (uint32_t i = 0; i < nameCount; ++i) {
+            uint32_t id2;
+            ar << id2;
             uint32_t length;
             ar << length;
-            const uint32_t id = startIndex + i;
-            const uint32_t idx = id - 1;
+            const uint32_t idx = startIndex + i;
+            const uint32_t id = idx + 1;
             const uint32_t chunkId = idx / NAMES_CHUNK_SIZE;
             const uint32_t idxInChunk = idx % NAMES_CHUNK_SIZE;
             if (idx == MAX_NAME_ENTRY_COUNT) {
                 assert(false);
                 abort();
             }
+
+            assert(id == id2);
 
             if (id < maxNameId) {
                 str.resize(length);
@@ -337,7 +350,7 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
                     if (!_nameBuffers.empty()) {
                         SChunkHeader* header = (SChunkHeader*)make_align((char*)_nameBuffers.back(), NAME_ENTRY_ALIGN);
                         header->usedSize = (uint32_t)(_buffer - (char*)header);
-                        header->endId = id;
+                        header->endId = id - 1;
                     }
                     char* buffer = (char*)malloc(BUFFER_CHUNK_SIZE);
                     _nameBuffers.push_back(buffer);
@@ -346,13 +359,28 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
                     _buffer_size = BUFFER_CHUNK_SIZE - (int32_t)(_buffer - buffer);
                 }
 
-                SNameEntry* entry = (SNameEntry*)_buffer;
+                SNameEntry* newEntry = (SNameEntry*)_buffer;
                 _buffer += size;
                 _buffer_size -= (uint32_t)size;
 
-                entry->id = id;
-                entry->length = length;
-                ar.serialize(entry->buf, length);
+                newEntry->id = id;
+                newEntry->length = length;
+                ar.serialize(newEntry->buf, length);
+
+                {
+                    const uint32_t hash = StringHash(newEntry->buf);
+                    const uint32_t bucket = hash % HASH_BUCKET_COUNT;
+                    SNameEntry* head = _nameHashes[bucket].load(std::memory_order_acquire);
+#ifndef NDEBUG
+                    for (SNameEntry* entry = head; entry; entry = entry->next) {
+                        assert(entry->length != length || !entry->isEqual(newEntry->buf));
+                    }
+#endif//NDEBUG
+                    newEntry->next = head;
+                    if (!_nameHashes[bucket].compare_exchange_strong(head, newEntry, std::memory_order_release)) {
+                        assert(false);
+                    }
+                }
 
                 if (currentChunkId != chunkId) {
                     chunk = _names[chunkId].load(std::memory_order_acquire);
@@ -368,17 +396,27 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
                 }
 
                 SNameEntry* expectEntry = NULL;
-                if (!chunk[idxInChunk].compare_exchange_strong(expectEntry, entry, std::memory_order_release)) {
+                if (!chunk[idxInChunk].compare_exchange_strong(expectEntry, newEntry, std::memory_order_release)) {
                     assert(false);
                 };
 
-                assert(id == newMaxNameId + 1);
-                newMaxNameId = id;
+                assert(id == debug_newMaxNameId + 1);
+                debug_newMaxNameId = id;
+                assert(debug_newMaxNameId >= maxNameId);
             }
         }
-        uint32_t expectMaxNameId = maxNameId;
-        if (!_nameCount.compare_exchange_strong(expectMaxNameId, newMaxNameId, std::memory_order_release)) {
-            assert(false);
+
+        {
+            uint32_t expectMaxNameId = maxNameId;
+            uint32_t newMaxNameId = startIndex + nameCount;
+            if (newMaxNameId < maxNameId) {
+                newMaxNameId = maxNameId;
+            }
+            assert(debug_newMaxNameId == newMaxNameId);
+            assert(debug_newMaxNameId >= maxNameId);
+            if (!_nameCount.compare_exchange_strong(expectMaxNameId, debug_newMaxNameId, std::memory_order_release)) {
+                assert(false);
+            }
         }
     }
 }

@@ -34,6 +34,8 @@ public:
     bool isWrite() const { return _write; }
     bool open(const char* name, bool write);
     void flush();
+    void close();
+    bool eof() const;
 
     struct Chunk {
         uint32_t chunkMagic;

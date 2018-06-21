@@ -16,9 +16,11 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
+class XXProfileTLS;
+
 static pthread_key_t g_profile_tls_key;
 static pthread_once_t g_profile_init_once = PTHREAD_ONCE_INIT;
-static __thread XXProfile* g_tls_profile;
+static __thread XXProfileTLS* g_tls_profile;
 
 // XXProfileTreeNode
 struct XXProfileTreeNode {
@@ -29,9 +31,41 @@ struct XXProfileTreeNode {
     uint32_t _parentNodeId;
 };
 
+// XXProfileTLS
+class XXProfileTLS : public XXProfile {
+public:
+    enum {
+        ChunkNodeCount = 256 * 1024,
+    };
+
+    static XXProfileTLS* Get();
+
+public:
+    XXProfileTLS();
+
+    void increaseFrame();
+    XXProfileTreeNode* beginScope(SName name);
+    void endScope(XXProfileTreeNode* node);
+
+protected:
+    XXProfileTreeNode* newChunk();
+
+private:
+    uint64_t _frameId;
+    std::vector<XXProfileTreeNode*> _stack;
+    size_t _usedCount;
+    uint32_t _curNodeId;
+
+    // allocation
+private:
+    std::vector<XXProfileTreeNode*> _buffers;
+    std::vector<XXProfileTreeNode*> _freeBuffers;
+    XXProfileTreeNode* _currentBuffer;
+};
+
 // XXProfile
 static void profile_on_thread_exit(void* data) {
-    XXProfile* profile = (XXProfile*)data;
+    XXProfileTLS* profile = (XXProfileTLS*)data;
     delete profile;
 }
 
@@ -45,9 +79,9 @@ bool XXProfile::StaticInit() {
     return true;
 }
 
-XXProfile* XXProfile::Get() {
+XXProfileTLS* XXProfileTLS::Get() {
     if (!g_tls_profile) {
-        XXProfile* profile = new XXProfile();
+        XXProfileTLS* profile = new XXProfileTLS();
         pthread_setspecific(g_profile_tls_key, profile);
         g_tls_profile = profile;
     }
@@ -55,15 +89,18 @@ XXProfile* XXProfile::Get() {
 }
 
 void XXProfile::IncreaseFrame() {
-    XXProfile* profile = Get();
+    XXProfileTLS* profile = XXProfileTLS::Get();
     profile->increaseFrame();
 }
 
-XXProfile::XXProfile() : _currentBuffer(NULL) {
-    //_stack.
+// XXProfileTLS
+XXProfileTLS::XXProfileTLS() : _currentBuffer(NULL) {
+    _stack.reserve(100);
+    _buffers.reserve(10);
+    _freeBuffers.reserve(10);
 }
 
-XXProfileTreeNode* XXProfile::beginScope(SName name) {
+XXProfileTreeNode* XXProfileTLS::beginScope(SName name) {
     if (!_currentBuffer || _usedCount == ChunkNodeCount) {
         _currentBuffer = newChunk();
         _usedCount = 0;
@@ -79,7 +116,7 @@ XXProfileTreeNode* XXProfile::beginScope(SName name) {
     return node;
 }
 
-void XXProfile::endScope(XXProfileTreeNode* node) {
+void XXProfileTLS::endScope(XXProfileTreeNode* node) {
     assert(!_stack.empty());
     assert(_stack.back() == node);
     node->_endTime = XXProfileTimer::Cycles64();
@@ -88,12 +125,12 @@ void XXProfile::endScope(XXProfileTreeNode* node) {
     }
 }
 
-void XXProfile::increaseFrame() {
+void XXProfileTLS::increaseFrame() {
     // write buffers to disk
     
 }
 
-XXProfileTreeNode* XXProfile::newChunk() {
+XXProfileTreeNode* XXProfileTLS::newChunk() {
     XXProfileTreeNode* node = NULL;
     if (!_freeBuffers.empty()) {
         node = _freeBuffers.back();
@@ -103,6 +140,16 @@ XXProfileTreeNode* XXProfile::newChunk() {
     }
     memset(node, 0, ChunkNodeCount * sizeof(XXProfileTreeNode));
     return node;
+}
+
+// XXProfileScope
+XXProfileScope::XXProfileScope(const SName name) {
+    _profile = XXProfileTLS::Get();
+    _node = static_cast<XXProfileTLS*>(_profile)->beginScope(name);
+}
+
+XXProfileScope::~XXProfileScope() {
+    static_cast<XXProfileTLS*>(_profile)->endScope(_node);
 }
 
 XX_NAMESPACE_END(xxprofile);

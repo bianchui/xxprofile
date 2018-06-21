@@ -18,51 +18,21 @@ class XXProfileTreeNode;
 
 class XXProfile {
 public:
-    enum {
-        ChunkNodeCount = 256 * 1024,
-    };
-
-public:
     static bool StaticInit();
-    static XXProfile* Get();
     static void IncreaseFrame();
-
-    XXProfile();
-
-    void increaseFrame();
-    XXProfileTreeNode* beginScope(SName name);
-    void endScope(XXProfileTreeNode* node);
-
-protected:
-    XXProfileTreeNode* newChunk();
-
-private:
-    uint64_t _frameId;
-    std::vector<XXProfileTreeNode*> _stack;
-    size_t _usedCount;
-    uint32_t _curNodeId;
-
-    // allocation
-private:
-    std::vector<XXProfileTreeNode*> _buffers;
-    std::vector<XXProfileTreeNode*> _freeBuffers;
-    XXProfileTreeNode* _currentBuffer;
 };
 
 class XXProfileScope {
 public:
-    XXProfileScope(const SName name) {
-        _profile = XXProfile::Get();
-        _node = _profile->beginScope(name);
-    }
-
-    ~XXProfileScope() {
-        _profile->endScope(_node);
-    }
-
+    XXProfileScope(const SName name);
+    ~XXProfileScope();
+    
 private:
     XXProfileTreeNode* _node;
     XXProfile* _profile;
+
+private:
+    XX_CLASS_DELETE_COPY_AND_MOVE(XXProfileScope);
 };
 
 XX_NAMESPACE_END(xxprofile);
