@@ -2,6 +2,8 @@
 #ifndef xxprofile_internal_h
 #define xxprofile_internal_h
 
+#include "platforms/platform.hpp"
+
 #ifndef NDEBUG
 #  define XXDEBUG_ONLY(x) x
 #else//NDEBUG

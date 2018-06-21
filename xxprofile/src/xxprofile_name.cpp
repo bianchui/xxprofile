@@ -6,14 +6,15 @@
 //  Copyright 2017 bianchui. All rights reserved.
 //
 
-#include "xxprofile_name.hpp"
 #include "xxprofile_internal.hpp"
-#include "platforms/platform.hpp"
+#include "xxprofile_name.hpp"
 #include <vector>
 #include <stdlib.h>
 #include <assert.h>
 #include <string>
 #include "xxprofile_archive.hpp"
+
+#define XX_PROFILE_DEBUG_Name_Serialize 0
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
@@ -249,8 +250,8 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
         uint32_t startIndex = fromId;
         ar << startIndex;
 
-        uint32_t debug_max = fromId;
-        uint32_t debug_writeCount = 0;
+        XXDEBUG_ONLY(uint32_t debug_max = fromId);
+        XXDEBUG_ONLY(uint32_t debug_writeCount = 0);
 
         for (uint32_t bufferIndex = fromBufferIndex; bufferIndex < bufferCount; ++bufferIndex) {
             SChunkHeader* chunkHeader = (SChunkHeader*)make_align(buffers[bufferIndex], NAME_ENTRY_ALIGN);
@@ -266,29 +267,31 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
                 }
                 cur += SNameEntry::CalcEntrySize(entry->length);
             }
-            uint32_t debug_index = startIndex;
+            XXDEBUG_ONLY(uint32_t debug_index = startIndex);
             while (cur < chunkEnd) {
                 // uint32_t length
                 // char name[length]
                 SNameEntry* entry = (SNameEntry*)cur;
-                assert(entry->id == debug_index + 1);
+                XXDEBUG_ONLY(assert(entry->id == debug_index + 1));
+#if XX_PROFILE_DEBUG_Name_Serialize
                 ar << entry->id;
+#endif//XX_PROFILE_DEBUG_Name_Serialize
                 ar << entry->length;
                 ar.serialize(entry->buf, entry->length);
-                debug_max = entry->id;
-                ++debug_writeCount;
+                XXDEBUG_ONLY(debug_max = entry->id);
+                XXDEBUG_ONLY(++debug_writeCount);
                 cur += SNameEntry::CalcEntrySize(entry->length);
                 if (entry->id == maxNameId) {
                     break;
                 }
-                ++debug_index;
+                XXDEBUG_ONLY(++debug_index);
             }
             assert(cur == chunkEnd); // !Thread not safe!
-            assert(bufferIndex + 1 == bufferCount || chunkHeader->endId == debug_index);
+            XXDEBUG_ONLY(assert(bufferIndex + 1 == bufferCount || chunkHeader->endId == debug_index));
             startIndex = chunkHeader->endId;
         }
-        assert(debug_writeCount == nameCount);
-        assert(debug_max == maxNameId);
+        XXDEBUG_ONLY(assert(debug_writeCount == nameCount));
+        XXDEBUG_ONLY(assert(debug_max == maxNameId));
         if (tag) {
             tag->fromId = maxNameId;
         }
@@ -305,10 +308,12 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
         const uint32_t maxNameId = _nameCount.load(std::memory_order_acquire);
         std::atomic<SNameEntry*>* chunk = NULL;
         uint32_t currentChunkId = -1;
-        uint32_t debug_newMaxNameId = maxNameId;
+        XXDEBUG_ONLY(uint32_t debug_newMaxNameId = maxNameId);
         for (uint32_t i = 0; i < nameCount; ++i) {
+#if XX_PROFILE_DEBUG_Name_Serialize
             uint32_t id2;
             ar << id2;
+#endif//XX_PROFILE_DEBUG_Name_Serialize
             uint32_t length;
             ar << length;
             const uint32_t idx = startIndex + i;
@@ -320,7 +325,9 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
                 abort();
             }
 
+#if XX_PROFILE_DEBUG_Name_Serialize
             assert(id == id2);
+#endif//XX_PROFILE_DEBUG_Name_Serialize
 
             if (id < maxNameId) {
                 str.resize(length);
@@ -400,23 +407,24 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
                     assert(false);
                 };
 
-                assert(id == debug_newMaxNameId + 1);
-                debug_newMaxNameId = id;
-                assert(debug_newMaxNameId >= maxNameId);
+                XXDEBUG_ONLY(assert(id == debug_newMaxNameId + 1));
+                XXDEBUG_ONLY(debug_newMaxNameId = id);
+                XXDEBUG_ONLY(assert(debug_newMaxNameId >= maxNameId));
             }
         }
 
         {
             uint32_t expectMaxNameId = maxNameId;
             uint32_t newMaxNameId = startIndex + nameCount;
-            if (newMaxNameId < maxNameId) {
-                newMaxNameId = maxNameId;
+            if (newMaxNameId > maxNameId) {
+                if (!_nameCount.compare_exchange_strong(expectMaxNameId, newMaxNameId, std::memory_order_release)) {
+                    assert(false);
+                }
+            } else {
+                XXDEBUG_ONLY(newMaxNameId = maxNameId);
             }
-            assert(debug_newMaxNameId == newMaxNameId);
-            assert(debug_newMaxNameId >= maxNameId);
-            if (!_nameCount.compare_exchange_strong(expectMaxNameId, debug_newMaxNameId, std::memory_order_release)) {
-                assert(false);
-            }
+            XXDEBUG_ONLY(assert(debug_newMaxNameId == newMaxNameId));
+            XXDEBUG_ONLY(assert(debug_newMaxNameId >= maxNameId));
         }
     }
 }

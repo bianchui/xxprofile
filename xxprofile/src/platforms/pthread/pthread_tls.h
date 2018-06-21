@@ -1,11 +1,11 @@
-#ifndef xxprofile_tls_pthread_h
-#define xxprofile_tls_pthread_h
+#ifndef xxprofile_pthread_tls_h
+#define xxprofile_pthread_tls_h
 #include <pthread.h>
 #include "../../xxprofile_macros.hpp"
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
-class TLS_pthread {
+class Pthread_TLS {
 public:
     static_assert(sizeof(uintptr_t) == sizeof(pthread_key_t), "sizeof(pthread_key_t)");
     static uintptr_t AllocSlot() {
@@ -29,10 +29,10 @@ public:
     }
 
 public:
-    XX_CLASS_DELETE_COPY(TLS_pthread);
-    XX_CLASS_DELETE_MOVE(TLS_pthread);
+    XX_CLASS_DELETE_COPY(Pthread_TLS);
+    XX_CLASS_DELETE_MOVE(Pthread_TLS);
 };
 
 XX_NAMESPACE_END(xxprofile);
 
-#endif//xxprofile_tls_pthread_h
+#endif//xxprofile_pthread_tls_h

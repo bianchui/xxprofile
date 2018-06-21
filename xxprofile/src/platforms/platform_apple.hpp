@@ -11,8 +11,7 @@
 #include <mach/mach_time.h>
 #include "platform_base.hpp"
 
-#include "pthread/SystemLock_pthread.h"
-#include "pthread/tls_pthread.h"
+#include "pthread/pthread_SystemLock.h"
 
 XX_NAMESPACE_BEGIN(xxprofile);
 

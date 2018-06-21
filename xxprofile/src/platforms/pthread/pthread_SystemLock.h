@@ -1,13 +1,13 @@
 //
-//  SystemLock_pthread.h
+//  pthread_SystemLock.h
 //  xxprofile
 //
 //  Created by bianchui on 2017/11/29.
 //  Copyright 2017 bianchui. All rights reserved.
 //
 
-#ifndef SystemLock_pthread_h
-#define SystemLock_pthread_h
+#ifndef pthread_SystemLock_h
+#define pthread_SystemLock_h
 #include <pthread.h>
 #include "../../xxprofile_macros.hpp"
 
@@ -43,4 +43,4 @@ public:
 
 XX_NAMESPACE_END(xxprofile);
 
-#endif//SystemLock_pthread_h
+#endif//pthread_SystemLock_h

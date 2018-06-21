@@ -2,6 +2,7 @@
 #include "../src/xxprofile.hpp"
 #include "../src/xxprofile_archive.hpp"
 
+#include <vector>
 #include <thread>
 #include <iostream>
 #include <pthread.h>
@@ -62,7 +63,7 @@ void testLoad() {
     ari.open("test.xxprofile", false);
 
     xxprofile::Archive aro;
-    aro.open("test2.xxprofile", true);
+    aro.open("test1.xxprofile", true);
     xxprofile::SName::IncrementSerializeTag tag = {0};
 
     while (!ari.eof()) {
@@ -71,6 +72,7 @@ void testLoad() {
     }
 }
 
+#define Real_SAVE 0
 void testSave() {
     XX_PROFILE_SCOPE_FUNCTION();
     SSS sss;
@@ -83,14 +85,18 @@ void testSave() {
     {
         xxprofile::SName name("hhahahaha");
     }
+#if Real_SAVE
     xxprofile::SName::IncrementSerializeTag tag = {0};
     xxprofile::Archive ar;
     ar.open("test.xxprofile", true);
     xxprofile::SName::Serialize(&tag, ar);
+#endif
     {
         xxprofile::SName name("asdfasdfadfas");
     }
+#if Real_SAVE
     xxprofile::SName::Serialize(&tag, ar);
+#endif
     {
         xxprofile::SName name("asdfasdfadfas1");
     }
@@ -102,14 +108,16 @@ void testSave() {
         sprintf(namebuf, "hahahahaha%d", i);
         xxprofile::SName name(namebuf);
     }
+#if Real_SAVE
     xxprofile::SName::Serialize(&tag, ar);
+#endif
 }
 
 int main(int argc, const char * argv[]) {
     xxprofile::XXProfile::StaticInit();
 
     testSave();
-    testLoad();
+    //testLoad();
 
     printf("Hello, World!\n");
 
@@ -118,11 +126,12 @@ int main(int argc, const char * argv[]) {
         pthread_create(&pt, NULL, static_thread, NULL);
         pthread_create(&pt, NULL, static_thread, NULL);
         pthread_create(&pt, NULL, static_thread, NULL);
+
+        static_thread(NULL);
+
+        sleep(1);
     }
 
-    static_thread(NULL);
-
-    //sleep(1);
     std::cout << a << std::endl;
     std::cout << std::this_thread::get_id() << std::endl;
     std::cout << pthread_self() << std::endl;

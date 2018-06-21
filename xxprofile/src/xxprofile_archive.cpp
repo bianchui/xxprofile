@@ -1,3 +1,4 @@
+#include "xxprofile_internal.hpp"
 #include "xxprofile_archive.hpp"
 #include <assert.h>
 #include <memory.h>

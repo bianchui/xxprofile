@@ -9,7 +9,6 @@
 #ifndef xxprofile_hpp
 #define xxprofile_hpp
 #include "xxprofile_name.hpp"
-#include <vector>
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
