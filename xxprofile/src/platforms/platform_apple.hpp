@@ -11,7 +11,8 @@
 #include <mach/mach_time.h>
 #include "platform_base.hpp"
 
-#include "pthread/pthread_SystemLock.h"
+#include "posix/pthread_SystemLock.h"
+#include "posix/posix_timer.h"
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
@@ -36,7 +37,8 @@ struct XXProfileTimer_apple : XXProfileTimer_base {
     //static FCPUTime GetCPUTime();
 };
 
-typedef XXProfileTimer_apple XXProfileTimer;
+//typedef XXProfileTimer_apple XXProfileTimer;
+typedef XXProfileTimer_posix XXProfileTimer;
 
 XX_NAMESPACE_END(xxprofile);
 

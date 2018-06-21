@@ -13,17 +13,6 @@
 #include <sys/types.h>
 
 __thread int a = 0;
-pthread_key_t g_key;
-
-void* static_thread(void* param) {
-    for (uint32_t i = 0; i < 100; ++i) {
-
-        uint32_t aa = a++;
-        //printf("%d:%d:%d\n", xxprofile::GetTid(), i, aa);
-    }
-
-    return NULL;
-}
 
 template<typename T>
 class AAA {
@@ -72,7 +61,7 @@ void testLoad() {
     }
 }
 
-#define Real_SAVE 0
+#define Real_SAVE 1
 void testSave() {
     XX_PROFILE_SCOPE_FUNCTION();
     SSS sss;
@@ -113,28 +102,42 @@ void testSave() {
 #endif
 }
 
+void* static_thread(void* param) {
+    XX_PROFILE_SCOPE_FUNCTION();
+
+    uintptr_t start = (uintptr_t)param;
+    for (uint32_t i = 0; i < 1000; ++i) {
+        char namebuf[1024];
+        sprintf(namebuf, "hahahahaha%d", start + i);
+        xxprofile::SName name(namebuf);
+    }
+
+    return NULL;
+}
+
 int main(int argc, const char * argv[]) {
     xxprofile::XXProfile::StaticInit();
-
-    testSave();
     //testLoad();
 
     printf("Hello, World!\n");
 
-    if (false) {
+    if (true) {
         pthread_t pt;
-        pthread_create(&pt, NULL, static_thread, NULL);
-        pthread_create(&pt, NULL, static_thread, NULL);
-        pthread_create(&pt, NULL, static_thread, NULL);
+        pthread_create(&pt, NULL, static_thread, (void*)100000);
+        pthread_create(&pt, NULL, static_thread, (void*)200000);
+        pthread_create(&pt, NULL, static_thread, (void*)300000);
 
         static_thread(NULL);
 
         sleep(1);
     }
 
+    //testSave();
+
     std::cout << a << std::endl;
     std::cout << std::this_thread::get_id() << std::endl;
     std::cout << pthread_self() << std::endl;
+    xxprofile::XXProfile::StaticUninit();
     return 0;
 }
 

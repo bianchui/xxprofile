@@ -1,3 +1,4 @@
+// Copyright 2018 bianchui. All rights reserved.
 #ifndef xxprofile_pthread_tls_h
 #define xxprofile_pthread_tls_h
 #include <pthread.h>

@@ -28,7 +28,7 @@ public:
     XXProfileTLS();
     ~XXProfileTLS();
 
-    void increaseFrame();
+    bool increaseFrame();
     XXProfileTreeNode* beginScope(SName name);
     void endScope(XXProfileTreeNode* node);
 

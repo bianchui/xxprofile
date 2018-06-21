@@ -34,6 +34,15 @@ bool XXProfile::StaticInit() {
     return true;
 }
 
+void XXProfile::StaticUninit() {
+    pthread_key_delete(g_profile_tls_key);
+    g_profile_tls_key = 0;
+    if (g_tls_profile) {
+        delete g_tls_profile;
+        g_tls_profile = NULL;
+    }
+}
+
 XXProfileTLS* XXProfileTLS::Get() {
     if (!g_tls_profile) {
         XXProfileTLS* profile = new XXProfileTLS();
@@ -43,9 +52,12 @@ XXProfileTLS* XXProfileTLS::Get() {
     return g_tls_profile;
 }
 
-void XXProfile::IncreaseFrame() {
+bool XXProfile::IncreaseFrame() {
     XXProfileTLS* profile = XXProfileTLS::Get();
-    profile->increaseFrame();
+    if (!profile) {
+        return false;
+    }
+    return profile->increaseFrame();
 }
 
 // XXProfileScope

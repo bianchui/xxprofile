@@ -19,13 +19,16 @@ void XXProfileTLS::operator delete(void* p) {
 }
 
 XXProfileTLS::XXProfileTLS() {
+    _threadId = GetTid();
+    printf("Thread %d attached\n", _threadId);
+
     _stack.reserve(100);
     _buffers.reserve(10);
     _freeBuffers.reserve(10);
 }
 
 XXProfileTLS::~XXProfileTLS() {
-    
+    printf("Thread %d exit\n", _threadId);
 }
 
 XXProfileTreeNode* XXProfileTLS::beginScope(SName name) {
@@ -53,9 +56,10 @@ void XXProfileTLS::endScope(XXProfileTreeNode* node) {
     }
 }
 
-void XXProfileTLS::increaseFrame() {
+bool XXProfileTLS::increaseFrame() {
     // write buffers to disk
-    
+
+    return true;
 }
 
 XXProfileTreeNode* XXProfileTLS::newChunk() {

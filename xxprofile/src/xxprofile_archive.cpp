@@ -27,11 +27,10 @@ bool Archive::open(const char* name, bool write) {
         return false;
     }
     _write = write;
-    SFileHeader fh;
+    SFileHeader fh = {0};
     static const uint32_t kMagic = 'RAPX'; // XPAR = XxProfile ARchive
     if (_write) {
         fh.magic = kMagic;
-        fh.flags = 0;
         if (sizeof(void*) == 8) {
             fh.flags |= Flag_pointer8;
         }

@@ -18,7 +18,8 @@ class XXProfileTreeNode;
 class XXProfile {
 public:
     static bool StaticInit();
-    static void IncreaseFrame();
+    static void StaticUninit();
+    static bool IncreaseFrame();
 };
 
 class XXProfileScope {

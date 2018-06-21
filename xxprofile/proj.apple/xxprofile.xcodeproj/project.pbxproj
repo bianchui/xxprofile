@@ -67,16 +67,17 @@
 		ED642F181FCE8E3D0067CEA4 /* CommonMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommonMacros.h; sourceTree = "<group>"; };
 		ED642F191FCE8E3D0067CEA4 /* SimpleArray.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimpleArray.h; sourceTree = "<group>"; };
 		ED642F1A1FCE8E3D0067CEA4 /* SimpleConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimpleConfig.h; sourceTree = "<group>"; };
-		ED642F1C1FCE948E0067CEA4 /* SystemLock_pthread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SystemLock_pthread.h; sourceTree = "<group>"; };
+		ED642F1C1FCE948E0067CEA4 /* pthread_SystemLock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pthread_SystemLock.h; sourceTree = "<group>"; };
 		ED6A3CF120DB87A6002A47A8 /* xxprofile_tls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xxprofile_tls.cpp; sourceTree = "<group>"; };
 		ED6A3CF220DB87A6002A47A8 /* xxprofile_tls.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_tls.hpp; sourceTree = "<group>"; };
+		ED6A3CFA20DB9D73002A47A8 /* posix_timer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = posix_timer.h; sourceTree = "<group>"; };
 		ED714AF120DA5D3600732372 /* xxprofile_internal.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_internal.hpp; sourceTree = "<group>"; };
 		ED81D19C20D3584B0096FB53 /* xxprofile_macros.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_macros.hpp; sourceTree = "<group>"; };
 		ED81D19F20D374B40096FB53 /* xxprofile_archive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xxprofile_archive.cpp; sourceTree = "<group>"; };
 		ED81D1A020D374B40096FB53 /* xxprofile_archive.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_archive.hpp; sourceTree = "<group>"; };
 		ED81D1A720D37C2C0096FB53 /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED81D1A920D37C2C0096FB53 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		ED81D1B020D3AC6C0096FB53 /* tls_pthread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tls_pthread.h; sourceTree = "<group>"; };
+		ED81D1B020D3AC6C0096FB53 /* pthread_tls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pthread_tls.h; sourceTree = "<group>"; };
 		ED84F6B81FB1CF9B00C7B425 /* libxxprofile_mac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libxxprofile_mac.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED84F6C31FB1CFC900C7B425 /* libxxprofile_ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libxxprofile_ios.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -130,7 +131,7 @@
 		ED5F72FF1FCD46C3004E945D /* platforms */ = {
 			isa = PBXGroup;
 			children = (
-				ED81D19E20D368D50096FB53 /* pthread */,
+				ED81D19E20D368D50096FB53 /* posix */,
 				ED642F151FCE506C0067CEA4 /* platform_apple.hpp */,
 				ED5F73031FCD46C3004E945D /* platform_apple.cpp */,
 				ED5F73061FCD46C3004E945D /* platform_base.hpp */,
@@ -150,13 +151,14 @@
 			path = helper;
 			sourceTree = "<group>";
 		};
-		ED81D19E20D368D50096FB53 /* pthread */ = {
+		ED81D19E20D368D50096FB53 /* posix */ = {
 			isa = PBXGroup;
 			children = (
-				ED642F1C1FCE948E0067CEA4 /* SystemLock_pthread.h */,
-				ED81D1B020D3AC6C0096FB53 /* tls_pthread.h */,
+				ED642F1C1FCE948E0067CEA4 /* pthread_SystemLock.h */,
+				ED81D1B020D3AC6C0096FB53 /* pthread_tls.h */,
+				ED6A3CFA20DB9D73002A47A8 /* posix_timer.h */,
 			);
-			path = pthread;
+			path = posix;
 			sourceTree = "<group>";
 		};
 		ED81D1A820D37C2C0096FB53 /* test */ = {

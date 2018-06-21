@@ -14,7 +14,7 @@
 #include <string>
 #include "xxprofile_archive.hpp"
 
-#define XX_PROFILE_DEBUG_Name_Serialize 0
+#define XX_PROFILE_DEBUG_Name_Serialize 1
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
@@ -234,7 +234,7 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
         const uint32_t bufferCount = (uint32_t)nameBuffers.size();
         if (fromId) {
             for (uint32_t iter = 1; iter < bufferCount; ++iter) {
-                uint32_t index = bufferCount - iter - 1;
+                uint32_t index = bufferCount - iter;
                 SChunkHeader* chunkHeader = (SChunkHeader*)make_align(buffers[index], NAME_ENTRY_ALIGN);
                 if (chunkHeader->beginId() <= fromId) {
                     fromBufferIndex = index;
@@ -259,20 +259,26 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
             assert(firstEntry->id <= startIndex + 1);
             const char* chunkEnd = ((bufferIndex + 1) == bufferCount) ? currentBufferEnd : (((char*)chunkHeader) + chunkHeader->usedSize);
 
+            XXDEBUG_ONLY(uint32_t debug_id = firstEntry->id);
             const char* cur = (const char*)firstEntry;
             while (cur < chunkEnd) {
                 const SNameEntry* entry = (SNameEntry*)cur;
+                XXDEBUG_ASSERT(entry->id == debug_id);
                 if (entry->id == startIndex + 1) {
                     break;
                 }
+                XXDEBUG_ONLY(++debug_id);
                 cur += SNameEntry::CalcEntrySize(entry->length);
             }
+            XXDEBUG_ASSERT(cur != chunkEnd);
             XXDEBUG_ONLY(uint32_t debug_index = startIndex);
+            XXDEBUG_ASSERT(debug_id == debug_index + 1);
             while (cur < chunkEnd) {
                 // uint32_t length
                 // char name[length]
                 SNameEntry* entry = (SNameEntry*)cur;
-                XXDEBUG_ONLY(assert(entry->id == debug_index + 1));
+                XXDEBUG_ASSERT(entry->id == debug_index + 1);
+                XXDEBUG_ASSERT(entry->id == debug_id);
 #if XX_PROFILE_DEBUG_Name_Serialize
                 ar << entry->id;
 #endif//XX_PROFILE_DEBUG_Name_Serialize
@@ -284,14 +290,15 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
                 if (entry->id == maxNameId) {
                     break;
                 }
+                XXDEBUG_ONLY(++debug_id);
                 XXDEBUG_ONLY(++debug_index);
             }
             assert(cur == chunkEnd); // !Thread not safe!
-            XXDEBUG_ONLY(assert(bufferIndex + 1 == bufferCount || chunkHeader->endId == debug_index));
+            XXDEBUG_ASSERT(bufferIndex + 1 == bufferCount || chunkHeader->endId == debug_index);
             startIndex = chunkHeader->endId;
         }
-        XXDEBUG_ONLY(assert(debug_writeCount == nameCount));
-        XXDEBUG_ONLY(assert(debug_max == maxNameId));
+        XXDEBUG_ASSERT(debug_writeCount == nameCount);
+        XXDEBUG_ASSERT(debug_max == maxNameId);
         if (tag) {
             tag->fromId = maxNameId;
         }
@@ -407,9 +414,9 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
                     assert(false);
                 };
 
-                XXDEBUG_ONLY(assert(id == debug_newMaxNameId + 1));
+                XXDEBUG_ASSERT(id == debug_newMaxNameId + 1);
                 XXDEBUG_ONLY(debug_newMaxNameId = id);
-                XXDEBUG_ONLY(assert(debug_newMaxNameId >= maxNameId));
+                XXDEBUG_ASSERT(debug_newMaxNameId >= maxNameId);
             }
         }
 
@@ -423,8 +430,8 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
             } else {
                 XXDEBUG_ONLY(newMaxNameId = maxNameId);
             }
-            XXDEBUG_ONLY(assert(debug_newMaxNameId == newMaxNameId));
-            XXDEBUG_ONLY(assert(debug_newMaxNameId >= maxNameId));
+            XXDEBUG_ASSERT(debug_newMaxNameId == newMaxNameId);
+            XXDEBUG_ASSERT(debug_newMaxNameId >= maxNameId);
         }
     }
 }

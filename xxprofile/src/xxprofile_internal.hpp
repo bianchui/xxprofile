@@ -10,4 +10,6 @@
 #  define XXDEBUG_ONLY(x)
 #endif//NDEBUG
 
+#define XXDEBUG_ASSERT(e) assert(e)
+
 #endif//xxprofile_internal_h

@@ -17,6 +17,7 @@ private:
         uint32_t magic;
         uint32_t version;
         uint32_t flags;
+        uint32_t dummy;
     };
 
 private:
