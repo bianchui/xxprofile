@@ -22,6 +22,7 @@ static __thread XXProfileTLS* g_tls_profile;
 static void profile_on_thread_exit(void* data) {
     XXProfileTLS* profile = (XXProfileTLS*)data;
     delete profile;
+    g_tls_profile = NULL;
 }
 
 static void profile_tls_init_once() {
@@ -63,11 +64,18 @@ bool XXProfile::IncreaseFrame() {
 // XXProfileScope
 XXProfileScope::XXProfileScope(const SName name) {
     _profile = XXProfileTLS::Get();
-    _node = static_cast<XXProfileTLS*>(_profile)->beginScope(name);
+    assert(_profile);
+    if (_profile) {
+        _node = static_cast<XXProfileTLS*>(_profile)->beginScope(name);
+    } else {
+        _node = NULL;
+    }
 }
 
 XXProfileScope::~XXProfileScope() {
-    static_cast<XXProfileTLS*>(_profile)->endScope(_node);
+    if (_profile) {
+        static_cast<XXProfileTLS*>(_profile)->endScope(_node);
+    }
 }
 
 XX_NAMESPACE_END(xxprofile);

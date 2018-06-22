@@ -2,6 +2,7 @@
 #ifndef xxprofile_tls_hpp
 #define xxprofile_tls_hpp
 #include "xxprofile.hpp"
+#include "xxprofile_archive.hpp"
 #include <vector>
 
 XX_NAMESPACE_BEGIN(xxprofile);
@@ -45,6 +46,7 @@ private:
     uint32_t _usedCount;
     uint32_t _threadId;
     uint32_t _curNodeId;
+    Archive _ar;
 
     // allocation
 private:

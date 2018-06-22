@@ -1,14 +1,17 @@
 // Copyright 2018 bianchui. All rights reserved.
-#ifndef xxprofile_platforms_posix_posix_timer_h
-#define xxprofile_platforms_posix_posix_timer_h
-#include <time.h>
+#ifndef xxprofile_platforms_win_win_timer_h
+#define xxprofile_platforms_win_win_timer_h
 #include "../platform_base.hpp"
+#include "win_inc_windows.h"
+#include "../../xxprofile_macros.hpp"
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
-struct XXProfileTimer_posix : XXProfileTimer_base {
+struct XXProfileTimer_win : XXProfileTimer_base {
     static double InitTiming() {
-        secondsPerCycle = 0.000000001;
+        uint64_t frequency;
+        ::QueryPerformanceFrequency((LARGE_INTEGER*)&frequency);
+        secondsPerCycle = 1.0 ／ (double)frequency;
         return Seconds();
     }
 
@@ -18,13 +21,12 @@ struct XXProfileTimer_posix : XXProfileTimer_base {
     }
 
     static FORCEINLINE uint64_t Cycles64() {
-        struct timespec tp;
-        clock_gettime(CLOCK_MONOTONIC_RAW, &tp);
-        uint64_t cycles = ((uint64_t)tp.tv_sec) * 1000000000 + tp.tv_nsec;
+        uint64_t cycles;
+        ::QueryPerformanceCounter((LARGE_INTEGER*)&cycles);
         return cycles;
     }
 };
 
 XX_NAMESPACE_END(xxprofile);
 
-#endif//xxprofile_platforms_posix_posix_timer_h
+#endif//xxprofile_platforms_win_win_timer_h

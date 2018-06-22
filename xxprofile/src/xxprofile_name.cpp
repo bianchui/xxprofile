@@ -14,7 +14,7 @@
 #include <string>
 #include "xxprofile_archive.hpp"
 
-#define XX_PROFILE_DEBUG_Name_Serialize 1
+#define XX_PROFILE_DEBUG_Name_Serialize 0
 
 XX_NAMESPACE_BEGIN(xxprofile);
 

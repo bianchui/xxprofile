@@ -42,7 +42,7 @@ public:
     ~CSystemScopedLock() {
         _Lock.Unlock();
     }
-    
+
 private:
     XX_CLASS_DELETE_COPY(CSystemScopedLock);
     XX_CLASS_DELETE_MOVE(CSystemScopedLock);

@@ -21,11 +21,11 @@ struct XXProfileTimer_base {
     //static double Seconds();
     //static uint64_t Cycles64();
     //** end interfaces
-    
+
     static double GetSecondsPerCycle() {
         return secondsPerCycle;
     }
-    
+
 protected:
     static double secondsPerCycle;
 };

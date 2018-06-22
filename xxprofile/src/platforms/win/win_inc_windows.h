@@ -1,5 +1,6 @@
-﻿#ifndef xxprofile_win_platform_inc_windows_h__
-#define xxprofile_win_platform_inc_windows_h__
+﻿// Copyright 2008 bianchui. All rights reserved.
+#ifndef xxprofile_platforms_win_win_inc_windows_h__
+#define xxprofile_platforms_win_win_inc_windows_h__
 
 #ifndef _WIN32_WINNT
 # if !defined(WP8)
@@ -54,4 +55,4 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-#endif//xxprofile_win_platform_inc_windows_h__
+#endif//xxprofile_platforms_win_win_inc_windows_h__

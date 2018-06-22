@@ -22,12 +22,18 @@ XXProfileTLS::XXProfileTLS() {
     _threadId = GetTid();
     printf("Thread %d attached\n", _threadId);
 
+    char name[PATH_MAX];
+    sprintf(name, "Thread_%d.xxprofile", _threadId);
+    _ar.open(name, true);
+
     _stack.reserve(100);
     _buffers.reserve(10);
     _freeBuffers.reserve(10);
 }
 
 XXProfileTLS::~XXProfileTLS() {
+
+
     printf("Thread %d exit\n", _threadId);
 }
 

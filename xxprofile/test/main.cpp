@@ -1,6 +1,7 @@
 // Copyright 2018 bianchui. All rights reserved.
 #include "../src/xxprofile.hpp"
 #include "../src/xxprofile_archive.hpp"
+#include "../src/platforms/platform.hpp"
 
 #include <vector>
 #include <thread>
@@ -105,8 +106,8 @@ void testSave() {
 void* static_thread(void* param) {
     XX_PROFILE_SCOPE_FUNCTION();
 
-    uintptr_t start = (uintptr_t)param;
-    for (uint32_t i = 0; i < 1000; ++i) {
+    uint32_t start = (uint32_t)(uintptr_t)param;
+    for (uint32_t i = 0; i < 100000; ++i) {
         char namebuf[1024];
         sprintf(namebuf, "hahahahaha%d", start + i);
         xxprofile::SName name(namebuf);
@@ -115,22 +116,34 @@ void* static_thread(void* param) {
     return NULL;
 }
 
+void test_cycles() {
+    uint64_t cycles = xxprofile::XXProfileTimer::Cycles64();
+    for (uint32_t i = 0; i < 1000000; ++i) {
+        uint64_t cycles2 = xxprofile::XXProfileTimer::Cycles64();
+        assert(cycles != cycles2);
+        cycles = cycles2;
+    }
+}
+
+void test_threads() {
+    pthread_t pt;
+    pthread_create(&pt, NULL, static_thread, (void*)100000);
+    pthread_create(&pt, NULL, static_thread, (void*)200000);
+    pthread_create(&pt, NULL, static_thread, (void*)300000);
+
+    static_thread(NULL);
+
+    //sleep(1);
+}
+
 int main(int argc, const char * argv[]) {
     xxprofile::XXProfile::StaticInit();
     //testLoad();
 
     printf("Hello, World!\n");
 
-    if (true) {
-        pthread_t pt;
-        pthread_create(&pt, NULL, static_thread, (void*)100000);
-        pthread_create(&pt, NULL, static_thread, (void*)200000);
-        pthread_create(&pt, NULL, static_thread, (void*)300000);
-
-        static_thread(NULL);
-
-        sleep(1);
-    }
+    //test_cycles();
+    test_threads();
 
     //testSave();
 

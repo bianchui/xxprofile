@@ -1,6 +1,6 @@
 // Copyright 2018 bianchui. All rights reserved.
-#ifndef xxprofile_pthread_tls_h
-#define xxprofile_pthread_tls_h
+#ifndef xxprofile_platforms_posix_pthread_tls_h
+#define xxprofile_platforms_posix_pthread_tls_h
 #include <pthread.h>
 #include "../../xxprofile_macros.hpp"
 
@@ -29,11 +29,10 @@ public:
         return pthread_getspecific((pthread_key_t)slot);
     }
 
-public:
-    XX_CLASS_DELETE_COPY(Pthread_TLS);
-    XX_CLASS_DELETE_MOVE(Pthread_TLS);
+protected:
+    XX_CLASS_DELETE_COPY_AND_MOVE(Pthread_TLS);
 };
 
 XX_NAMESPACE_END(xxprofile);
 
-#endif//xxprofile_pthread_tls_h
+#endif//xxprofile_platforms_posix_pthread_tls_h

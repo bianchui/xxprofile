@@ -404,6 +404,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				USE_HEADERMAP = NO;
 			};
 			name = Debug;
 		};
@@ -451,6 +452,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
+				USE_HEADERMAP = NO;
 			};
 			name = Release;
 		};

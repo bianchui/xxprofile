@@ -2,40 +2,13 @@
 #ifndef xxprofile_platform_win_h__
 #define xxprofile_platform_win_h__
 #include "../../xxprofile_macros.hpp"
-#include "win/platform_inc_windows.h"
+#include "win/win_SystemLock.h"
+#include "win/win_timer.h"
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
-class CSystemLock {
-public:
-	CSystemLock() {
-#ifndef WP8
-		::InitializeCriticalSectionAndSpinCount(&_cs, 0x80001000);
-#else//WP8
-		::InitializeCriticalSectionEx(&_cs, 0x1000, CRITICAL_SECTION_NO_DEBUG_INFO);
-#endif//
-	}
-
-	~CSystemLock() {
-		::DeleteCriticalSection(&_cs);
-	}
-
-	bool TryLock() {
-		return !!::TryEnterCriticalSection(&_cs);
-	}
-
-	void Lock() {
-		::EnterCriticalSection(&_cs);
-	}
-
-	void Unlock() {
-		::LeaveCriticalSection(&_cs);
-	}
-
-public:
-	DISALLOW_COPY_AND_ASSIGN(CSystemLock);
-	CRITICAL_SECTION _cs;
-};
+typedef CSystemLock_win CSystemLock;
+typedef XXProfileTimer_win XXProfileTimer;
 
 XX_NAMESPACE_END(xxprofile);
 
