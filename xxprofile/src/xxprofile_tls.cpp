@@ -8,6 +8,8 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
+static std::atomic<uint64_t> g_frameId;
+
 // XXProfileTLS
 void* XXProfileTLS::operator new(size_t size) {
     void* mem = malloc(size);
@@ -20,7 +22,7 @@ void XXProfileTLS::operator delete(void* p) {
 
 XXProfileTLS::XXProfileTLS() {
     _threadId = GetTid();
-    printf("Thread %d attached\n", _threadId);
+    printf("Thread %d begin profile\n", _threadId);
 
     char name[PATH_MAX];
     sprintf(name, "Thread_%d.xxprofile", _threadId);
@@ -32,9 +34,15 @@ XXProfileTLS::XXProfileTLS() {
 }
 
 XXProfileTLS::~XXProfileTLS() {
+    assert(_stack.empty());
+    frameFlush();
+    for (auto iter = _freeBuffers.begin(); iter != _freeBuffers.end(); ++iter) {
+        free(*iter);
+    }
+    _freeBuffers.clear();
+    _ar.close();
 
-
-    printf("Thread %d exit\n", _threadId);
+    printf("Thread %d end profile\n", _threadId);
 }
 
 XXProfileTreeNode* XXProfileTLS::beginScope(SName name) {
@@ -60,12 +68,18 @@ void XXProfileTLS::endScope(XXProfileTreeNode* node) {
     if (!_stack.empty()) {
         _stack.pop_back();
     }
+
+    tryFrameFlush();
 }
 
 bool XXProfileTLS::increaseFrame() {
     // write buffers to disk
-
-    return true;
+    ++g_frameId;
+    assert(_stack.empty());
+    if (_stack.empty()) {
+        frameFlush();
+    }
+    return _stack.empty();
 }
 
 XXProfileTreeNode* XXProfileTLS::newChunk() {
@@ -75,9 +89,47 @@ XXProfileTreeNode* XXProfileTLS::newChunk() {
         _freeBuffers.pop_back();
     } else {
         node = (XXProfileTreeNode*)malloc(ChunkNodeCount * sizeof(XXProfileTreeNode));
+        memset(node, 0, ChunkNodeCount * sizeof(XXProfileTreeNode));
     }
-    memset(node, 0, ChunkNodeCount * sizeof(XXProfileTreeNode));
     return node;
+}
+
+void XXProfileTLS::tryFrameFlush() {
+    if (_stack.empty()) {
+        uint64_t frameId = g_frameId.load(std::memory_order_acquire);
+        if (frameId > _frameId) {
+            _frameId = frameId;
+            frameFlush();
+        }
+    }
+}
+
+// uint32_t frameId;
+// SName::Serialize();
+// uint32_t nodeCount;
+// XXProfileTreeNode nodes[nodeCount];
+void XXProfileTLS::frameFlush() {
+    _ar << _frameId;
+    SName::Serialize(&_tag, _ar);
+    uint32_t nodeCount = (uint32_t)_buffers.size();
+    if (nodeCount) {
+        nodeCount = (nodeCount - 1) * ChunkNodeCount + _usedCount;
+    }
+    _ar << nodeCount;
+    for (auto iter = _buffers.begin(); iter != _buffers.end(); ++iter) {
+        XXProfileTreeNode* buffer = *iter;
+        const size_t count = (buffer != _currentBuffer) ? ChunkNodeCount : _usedCount;
+        _ar.serialize(buffer, count * sizeof(XXProfileTreeNode));
+        memset(buffer, 0, count * sizeof(XXProfileTreeNode));
+        _freeBuffers.push_back(buffer);
+    }
+    _ar.flush();
+
+    // reset
+    _usedCount = 0;
+    _currentBuffer = NULL;
+    _buffers.clear();
+    _curNodeId = 0;
 }
 
 XX_NAMESPACE_END(xxprofile);

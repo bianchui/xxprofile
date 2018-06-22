@@ -39,6 +39,8 @@ public:
 
 protected:
     XXProfileTreeNode* newChunk();
+    void tryFrameFlush();
+    void frameFlush();
 
 private:
     uint64_t _frameId;
@@ -46,6 +48,7 @@ private:
     uint32_t _usedCount;
     uint32_t _threadId;
     uint32_t _curNodeId;
+    SName::IncrementSerializeTag _tag;
     Archive _ar;
 
     // allocation

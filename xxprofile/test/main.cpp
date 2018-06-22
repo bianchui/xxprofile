@@ -126,12 +126,15 @@ void test_cycles() {
 }
 
 void test_threads() {
-    pthread_t pt;
-    pthread_create(&pt, NULL, static_thread, (void*)100000);
-    pthread_create(&pt, NULL, static_thread, (void*)200000);
-    pthread_create(&pt, NULL, static_thread, (void*)300000);
-
+    pthread_t pt[3] = {0};
+    for (size_t i = 0; i < XX_ARRAY_COUNTOF(pt); ++i) {
+        pthread_create(pt + i, NULL, static_thread, (void*)(100000 * i));
+    }
     static_thread(NULL);
+
+    for (size_t i = 0; i < XX_ARRAY_COUNTOF(pt); ++i) {
+        pthread_join(pt[i], NULL);
+    }
 
     //sleep(1);
 }

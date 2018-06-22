@@ -107,6 +107,10 @@ SNamePool::SNamePool() {
 }
 
 SNamePool::~SNamePool() {
+    if (true) {
+        // Do not real finish and clear or delete
+        return;
+    }
     for (size_t i = 0; i < _nameBuffers.size(); ++i) {
         free(_nameBuffers[i]);
     }

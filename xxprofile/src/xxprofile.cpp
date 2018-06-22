@@ -22,7 +22,6 @@ static __thread XXProfileTLS* g_tls_profile;
 static void profile_on_thread_exit(void* data) {
     XXProfileTLS* profile = (XXProfileTLS*)data;
     delete profile;
-    g_tls_profile = NULL;
 }
 
 static void profile_tls_init_once() {
@@ -45,7 +44,7 @@ void XXProfile::StaticUninit() {
 }
 
 XXProfileTLS* XXProfileTLS::Get() {
-    if (!g_tls_profile) {
+    if (!g_tls_profile && g_profile_tls_key) {
         XXProfileTLS* profile = new XXProfileTLS();
         pthread_setspecific(g_profile_tls_key, profile);
         g_tls_profile = profile;
