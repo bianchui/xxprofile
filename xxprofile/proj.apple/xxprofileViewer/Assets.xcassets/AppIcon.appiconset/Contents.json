@@ -21,9 +21,8 @@
       "scale" : "2x"
     },
     {
-      "size" : "128x128",
       "idiom" : "mac",
-      "filename" : "icon_imgui_128x128.png",
+      "size" : "128x128",
       "scale" : "1x"
     },
     {
