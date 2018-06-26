@@ -93,10 +93,12 @@ void testSave() {
     {
         xxprofile::SName name("asdfasdfadfas2");
     }
-    for (uint32_t i = 0; i < 100000; ++i) {
-        char namebuf[1024];
-        sprintf(namebuf, "hahahahaha%d", i);
-        xxprofile::SName name(namebuf);
+    if (false) {
+        for (uint32_t i = 0; i < 100000; ++i) {
+            char namebuf[1024];
+            sprintf(namebuf, "hahahahaha%d", i);
+            xxprofile::SName name(namebuf);
+        }
     }
 #if Real_SAVE
     xxprofile::SName::Serialize(&tag, ar);
@@ -107,12 +109,13 @@ void* static_thread(void* param) {
     XX_PROFILE_SCOPE_FUNCTION();
 
     uint32_t start = (uint32_t)(uintptr_t)param;
-    for (uint32_t i = 0; i < 100000; ++i) {
-        char namebuf[1024];
-        sprintf(namebuf, "hahahahaha%d", start + i);
-        xxprofile::SName name(namebuf);
+    if (false) {
+        for (uint32_t i = 0; i < 100000; ++i) {
+            char namebuf[1024];
+            sprintf(namebuf, "hahahahaha%d", start + i);
+            xxprofile::SName name(namebuf);
+        }
     }
-
     return NULL;
 }
 
