@@ -8,6 +8,9 @@
 
 #import <Cocoa/Cocoa.h>
 
+void mainLoop();
+
 int main(int argc, const char * argv[]) {
-    return NSApplicationMain(argc, argv);
+    mainLoop();
+    return 0;
 }

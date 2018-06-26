@@ -13,6 +13,15 @@
 		ED22005F20E1D76F0076C22F /* Document.m in Sources */ = {isa = PBXBuildFile; fileRef = ED22005E20E1D76F0076C22F /* Document.m */; };
 		ED22006120E1D76F0076C22F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ED22006020E1D76F0076C22F /* Assets.xcassets */; };
 		ED22006420E1D76F0076C22F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ED22006220E1D76F0076C22F /* Main.storyboard */; };
+		ED2207B420E1DFAC0076C22F /* imgui_draw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2207B120E1DFAC0076C22F /* imgui_draw.cpp */; };
+		ED2207B520E1DFAC0076C22F /* imgui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2207B220E1DFAC0076C22F /* imgui.cpp */; };
+		ED2207BA20E1DFC40076C22F /* imgui_impl_glfw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2207B620E1DFC40076C22F /* imgui_impl_glfw.cpp */; };
+		ED2207BB20E1DFC40076C22F /* imgui_impl_opengl2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2207B820E1DFC40076C22F /* imgui_impl_opengl2.cpp */; };
+		ED2207C220E1E4120076C22F /* libxxprofile_mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED84F6B81FB1CF9B00C7B425 /* libxxprofile_mac.a */; };
+		ED2207C620E1EDB90076C22F /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2207C120E1E3E00076C22F /* libglfw3.a */; };
+		ED2207C920E1F67D0076C22F /* mainloop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2207C820E1F67D0076C22F /* mainloop.cpp */; };
+		ED2207E120E2500D0076C22F /* mainwin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2207DE20E2500D0076C22F /* mainwin.cpp */; };
+		ED2207E220E2500D0076C22F /* parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2207E020E2500D0076C22F /* parser.cpp */; };
 		ED5F73081FCD46C3004E945D /* xxprofile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73011FCD46C3004E945D /* xxprofile.cpp */; };
 		ED5F730A1FCD46C3004E945D /* platform_apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73031FCD46C3004E945D /* platform_apple.cpp */; };
 		ED5F730C1FCD46C3004E945D /* platform_base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73051FCD46C3004E945D /* platform_base.cpp */; };
@@ -30,6 +39,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		ED2207C020E1E3E00076C22F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = ED2207BC20E1E3E00076C22F /* GLFW.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A757DDD898AC4177871D3F8E;
+			remoteInfo = glfw;
+		};
 		ED81D1AE20D392100096FB53 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = ED84F6B01FB1CF9B00C7B425 /* Project object */;
@@ -72,6 +88,20 @@
 		ED22006020E1D76F0076C22F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		ED22006320E1D76F0076C22F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		ED22006520E1D76F0076C22F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		ED2207B020E1DFAC0076C22F /* imconfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imconfig.h; sourceTree = "<group>"; };
+		ED2207B120E1DFAC0076C22F /* imgui_draw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgui_draw.cpp; sourceTree = "<group>"; };
+		ED2207B220E1DFAC0076C22F /* imgui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgui.cpp; sourceTree = "<group>"; };
+		ED2207B320E1DFAC0076C22F /* imgui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imgui.h; sourceTree = "<group>"; };
+		ED2207B620E1DFC40076C22F /* imgui_impl_glfw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = imgui_impl_glfw.cpp; path = examples/imgui_impl_glfw.cpp; sourceTree = "<group>"; };
+		ED2207B720E1DFC40076C22F /* imgui_impl_glfw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = imgui_impl_glfw.h; path = examples/imgui_impl_glfw.h; sourceTree = "<group>"; };
+		ED2207B820E1DFC40076C22F /* imgui_impl_opengl2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = imgui_impl_opengl2.cpp; path = examples/imgui_impl_opengl2.cpp; sourceTree = "<group>"; };
+		ED2207B920E1DFC40076C22F /* imgui_impl_opengl2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = imgui_impl_opengl2.h; path = examples/imgui_impl_opengl2.h; sourceTree = "<group>"; };
+		ED2207BC20E1E3E00076C22F /* GLFW.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GLFW.xcodeproj; path = "../../../libs/glfw-3.2.1/build/GLFW.xcodeproj"; sourceTree = "<group>"; };
+		ED2207C820E1F67D0076C22F /* mainloop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mainloop.cpp; sourceTree = "<group>"; };
+		ED2207D820E24D9D0076C22F /* xxprofile_namepool.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_namepool.hpp; sourceTree = "<group>"; };
+		ED2207DE20E2500D0076C22F /* mainwin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mainwin.cpp; sourceTree = "<group>"; };
+		ED2207DF20E2500D0076C22F /* mainwin.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = mainwin.hpp; sourceTree = "<group>"; };
+		ED2207E020E2500D0076C22F /* parser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = parser.cpp; sourceTree = "<group>"; };
 		ED5F73001FCD46C3004E945D /* platform.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = platform.hpp; sourceTree = "<group>"; };
 		ED5F73011FCD46C3004E945D /* xxprofile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xxprofile.cpp; sourceTree = "<group>"; };
 		ED5F73021FCD46C3004E945D /* xxprofile.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xxprofile.hpp; sourceTree = "<group>"; };
@@ -104,6 +134,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED2207C620E1EDB90076C22F /* libglfw3.a in Frameworks */,
+				ED2207C220E1E4120076C22F /* libxxprofile_mac.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -135,6 +167,9 @@
 		ED22005320E1D76F0076C22F /* xxprofileViewer */ = {
 			isa = PBXGroup;
 			children = (
+				ED2207BC20E1E3E00076C22F /* GLFW.xcodeproj */,
+				ED22006B20E1DF120076C22F /* imgui */,
+				ED2207CA20E1F6870076C22F /* viewer */,
 				ED22005420E1D76F0076C22F /* AppDelegate.h */,
 				ED22005520E1D76F0076C22F /* AppDelegate.m */,
 				ED22005A20E1D76F0076C22F /* ViewController.h */,
@@ -157,6 +192,50 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		ED22006B20E1DF120076C22F /* imgui */ = {
+			isa = PBXGroup;
+			children = (
+				ED2207C320E1E5170076C22F /* impl */,
+				ED2207B020E1DFAC0076C22F /* imconfig.h */,
+				ED2207B120E1DFAC0076C22F /* imgui_draw.cpp */,
+				ED2207B220E1DFAC0076C22F /* imgui.cpp */,
+				ED2207B320E1DFAC0076C22F /* imgui.h */,
+			);
+			name = imgui;
+			path = "../../../libs/imgui-1.62";
+			sourceTree = "<group>";
+		};
+		ED2207BD20E1E3E00076C22F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				ED2207C120E1E3E00076C22F /* libglfw3.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		ED2207C320E1E5170076C22F /* impl */ = {
+			isa = PBXGroup;
+			children = (
+				ED2207B620E1DFC40076C22F /* imgui_impl_glfw.cpp */,
+				ED2207B720E1DFC40076C22F /* imgui_impl_glfw.h */,
+				ED2207B820E1DFC40076C22F /* imgui_impl_opengl2.cpp */,
+				ED2207B920E1DFC40076C22F /* imgui_impl_opengl2.h */,
+			);
+			name = impl;
+			sourceTree = "<group>";
+		};
+		ED2207CA20E1F6870076C22F /* viewer */ = {
+			isa = PBXGroup;
+			children = (
+				ED2207C820E1F67D0076C22F /* mainloop.cpp */,
+				ED2207DE20E2500D0076C22F /* mainwin.cpp */,
+				ED2207DF20E2500D0076C22F /* mainwin.hpp */,
+				ED2207E020E2500D0076C22F /* parser.cpp */,
+			);
+			name = viewer;
+			path = ../../viewer;
+			sourceTree = "<group>";
+		};
 		ED5F72FE1FCD46C3004E945D /* src */ = {
 			isa = PBXGroup;
 			children = (
@@ -168,6 +247,7 @@
 				ED81D19C20D3584B0096FB53 /* xxprofile_macros.hpp */,
 				ED5F730E1FCD49F1004E945D /* xxprofile_name.cpp */,
 				ED5F730F1FCD49F1004E945D /* xxprofile_name.hpp */,
+				ED2207D820E24D9D0076C22F /* xxprofile_namepool.hpp */,
 				ED6A3CF120DB87A6002A47A8 /* xxprofile_tls.cpp */,
 				ED6A3CF220DB87A6002A47A8 /* xxprofile_tls.hpp */,
 				ED5F73011FCD46C3004E945D /* xxprofile.cpp */,
@@ -353,6 +433,12 @@
 			mainGroup = ED84F6AF1FB1CF9B00C7B425;
 			productRefGroup = ED84F6B91FB1CF9B00C7B425 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = ED2207BD20E1E3E00076C22F /* Products */;
+					ProjectRef = ED2207BC20E1E3E00076C22F /* GLFW.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				ED84F6B71FB1CF9B00C7B425 /* xxprofile_mac */,
@@ -362,6 +448,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		ED2207C120E1E3E00076C22F /* libglfw3.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libglfw3.a;
+			remoteRef = ED2207C020E1E3E00076C22F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		ED22005020E1D76F0076C22F /* Resources */ = {
@@ -380,9 +476,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED2207BA20E1DFC40076C22F /* imgui_impl_glfw.cpp in Sources */,
+				ED2207BB20E1DFC40076C22F /* imgui_impl_opengl2.cpp in Sources */,
+				ED2207C920E1F67D0076C22F /* mainloop.cpp in Sources */,
+				ED2207B420E1DFAC0076C22F /* imgui_draw.cpp in Sources */,
+				ED2207E220E2500D0076C22F /* parser.cpp in Sources */,
+				ED2207B520E1DFAC0076C22F /* imgui.cpp in Sources */,
 				ED22005F20E1D76F0076C22F /* Document.m in Sources */,
 				ED22005C20E1D76F0076C22F /* ViewController.m in Sources */,
 				ED22005920E1D76F0076C22F /* main.m in Sources */,
+				ED2207E120E2500D0076C22F /* mainwin.cpp in Sources */,
 				ED22005620E1D76F0076C22F /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -449,9 +552,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = PEZE6XWYTJ;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../libs/imgui-1.62/",
+					"$(SRCROOT)/../../libs/imgui-1.62/examples/",
+					"$(SRCROOT)/../../libs/glfw-3.2.1/include/",
 				);
 				INFOPLIST_FILE = xxprofileViewer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -466,6 +571,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = PEZE6XWYTJ;
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../libs/imgui-1.62/",
+					"$(SRCROOT)/../../libs/imgui-1.62/examples/",
+					"$(SRCROOT)/../../libs/glfw-3.2.1/include/",
+				);
 				INFOPLIST_FILE = xxprofileViewer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.google.bianchui.xxprofileViewer;
@@ -477,10 +588,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEVELOPMENT_TEAM = PEZE6XWYTJ;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -489,6 +597,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEVELOPMENT_TEAM = PEZE6XWYTJ;
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -604,6 +713,7 @@
 				EXECUTABLE_PREFIX = lib;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"PLATFORM_MAC=1",
+					"PLATFORM_APPLE=1",
 					"$(inherited)",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -619,6 +729,7 @@
 				EXECUTABLE_PREFIX = lib;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"PLATFORM_MAC=1",
+					"PLATFORM_APPLE=1",
 					"$(inherited)",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -674,6 +785,7 @@
 				ED22006720E1D76F0076C22F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		ED81D1AB20D37C2C0096FB53 /* Build configuration list for PBXNativeTarget "test" */ = {
 			isa = XCConfigurationList;
