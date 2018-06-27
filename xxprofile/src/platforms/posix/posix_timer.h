@@ -6,7 +6,7 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
-struct XXProfileTimer_posix : XXProfileTimer_base {
+struct Timer_posix : Timer_base {
     static double InitTiming() {
         secondsPerCycle = 0.000000001;
         return Seconds();

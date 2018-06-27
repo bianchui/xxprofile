@@ -15,7 +15,7 @@ XX_NAMESPACE_BEGIN(xxprofile);
 
 #define FORCEINLINE inline
 
-struct XXProfileTimer_base {
+struct Timer_base {
     //** start interfaces
     //static double InitTiming();
     //static double Seconds();

@@ -6,9 +6,9 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
-class CSystemLock_win {
+class SystemLock_win {
 public:
-    CSystemLock_win() {
+    SystemLock_win() {
 #ifndef WP8
         ::InitializeCriticalSectionAndSpinCount(&_cs, 0x80001000);
 #else//WP8
@@ -16,7 +16,7 @@ public:
 #endif//
     }
 
-    ~CSystemLock_win() {
+    ~SystemLock_win() {
         ::DeleteCriticalSection(&_cs);
     }
 
@@ -35,7 +35,7 @@ public:
 protected:
     CRITICAL_SECTION _cs;
 
-    XX_CLASS_DELETE_COPY_AND_MOVE(CSystemLock_win);
+    XX_CLASS_DELETE_COPY_AND_MOVE(SystemLock_win);
 };
 
 XX_NAMESPACE_END(xxprofile);

@@ -21,13 +21,13 @@
 		ED2207C620E1EDB90076C22F /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2207C120E1E3E00076C22F /* libglfw3.a */; };
 		ED2207C920E1F67D0076C22F /* mainloop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2207C820E1F67D0076C22F /* mainloop.cpp */; };
 		ED2207E120E2500D0076C22F /* mainwin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2207DE20E2500D0076C22F /* mainwin.cpp */; };
-		ED2207E220E2500D0076C22F /* parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2207E020E2500D0076C22F /* parser.cpp */; };
 		ED5F73081FCD46C3004E945D /* xxprofile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73011FCD46C3004E945D /* xxprofile.cpp */; };
 		ED5F730A1FCD46C3004E945D /* platform_apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73031FCD46C3004E945D /* platform_apple.cpp */; };
 		ED5F730C1FCD46C3004E945D /* platform_base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73051FCD46C3004E945D /* platform_base.cpp */; };
 		ED5F73101FCD49F1004E945D /* xxprofile_name.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F730E1FCD49F1004E945D /* xxprofile_name.cpp */; };
 		ED6A3CF320DB87A6002A47A8 /* xxprofile_tls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED6A3CF120DB87A6002A47A8 /* xxprofile_tls.cpp */; };
 		ED6A3CF420DB87A6002A47A8 /* xxprofile_tls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED6A3CF120DB87A6002A47A8 /* xxprofile_tls.cpp */; };
+		ED6B806520E34285008D2BAD /* xxprofile_loader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED6B806320E34285008D2BAD /* xxprofile_loader.cpp */; };
 		ED81D1A120D374B40096FB53 /* xxprofile_archive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED81D19F20D374B40096FB53 /* xxprofile_archive.cpp */; };
 		ED81D1AA20D37C2C0096FB53 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED81D1A920D37C2C0096FB53 /* main.cpp */; };
 		ED81D1B220D3B1610096FB53 /* libxxprofile_mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED84F6B81FB1CF9B00C7B425 /* libxxprofile_mac.a */; };
@@ -101,7 +101,6 @@
 		ED2207D820E24D9D0076C22F /* xxprofile_namepool.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_namepool.hpp; sourceTree = "<group>"; };
 		ED2207DE20E2500D0076C22F /* mainwin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mainwin.cpp; sourceTree = "<group>"; };
 		ED2207DF20E2500D0076C22F /* mainwin.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = mainwin.hpp; sourceTree = "<group>"; };
-		ED2207E020E2500D0076C22F /* parser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = parser.cpp; sourceTree = "<group>"; };
 		ED5F73001FCD46C3004E945D /* platform.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = platform.hpp; sourceTree = "<group>"; };
 		ED5F73011FCD46C3004E945D /* xxprofile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xxprofile.cpp; sourceTree = "<group>"; };
 		ED5F73021FCD46C3004E945D /* xxprofile.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xxprofile.hpp; sourceTree = "<group>"; };
@@ -111,20 +110,19 @@
 		ED5F730E1FCD49F1004E945D /* xxprofile_name.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xxprofile_name.cpp; sourceTree = "<group>"; };
 		ED5F730F1FCD49F1004E945D /* xxprofile_name.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_name.hpp; sourceTree = "<group>"; };
 		ED642F151FCE506C0067CEA4 /* platform_apple.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = platform_apple.hpp; sourceTree = "<group>"; };
-		ED642F181FCE8E3D0067CEA4 /* CommonMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommonMacros.h; sourceTree = "<group>"; };
-		ED642F191FCE8E3D0067CEA4 /* SimpleArray.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimpleArray.h; sourceTree = "<group>"; };
-		ED642F1A1FCE8E3D0067CEA4 /* SimpleConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimpleConfig.h; sourceTree = "<group>"; };
 		ED642F1C1FCE948E0067CEA4 /* pthread_SystemLock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pthread_SystemLock.h; sourceTree = "<group>"; };
 		ED6A3CF120DB87A6002A47A8 /* xxprofile_tls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xxprofile_tls.cpp; sourceTree = "<group>"; };
 		ED6A3CF220DB87A6002A47A8 /* xxprofile_tls.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_tls.hpp; sourceTree = "<group>"; };
 		ED6A3CFA20DB9D73002A47A8 /* posix_timer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = posix_timer.h; sourceTree = "<group>"; };
+		ED6B806320E34285008D2BAD /* xxprofile_loader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xxprofile_loader.cpp; sourceTree = "<group>"; };
+		ED6B806420E34285008D2BAD /* xxprofile_loader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_loader.hpp; sourceTree = "<group>"; };
 		ED714AF120DA5D3600732372 /* xxprofile_internal.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_internal.hpp; sourceTree = "<group>"; };
 		ED81D19C20D3584B0096FB53 /* xxprofile_macros.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_macros.hpp; sourceTree = "<group>"; };
 		ED81D19F20D374B40096FB53 /* xxprofile_archive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xxprofile_archive.cpp; sourceTree = "<group>"; };
 		ED81D1A020D374B40096FB53 /* xxprofile_archive.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_archive.hpp; sourceTree = "<group>"; };
 		ED81D1A720D37C2C0096FB53 /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED81D1A920D37C2C0096FB53 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		ED81D1B020D3AC6C0096FB53 /* pthread_tls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pthread_tls.h; sourceTree = "<group>"; };
+		ED81D1B020D3AC6C0096FB53 /* pthread_ThreadLocal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pthread_ThreadLocal.h; sourceTree = "<group>"; };
 		ED84F6B81FB1CF9B00C7B425 /* libxxprofile_mac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libxxprofile_mac.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED84F6C31FB1CFC900C7B425 /* libxxprofile_ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libxxprofile_ios.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -168,6 +166,7 @@
 			isa = PBXGroup;
 			children = (
 				ED2207BC20E1E3E00076C22F /* GLFW.xcodeproj */,
+				ED6B806220E34285008D2BAD /* loader */,
 				ED22006B20E1DF120076C22F /* imgui */,
 				ED2207CA20E1F6870076C22F /* viewer */,
 				ED22005420E1D76F0076C22F /* AppDelegate.h */,
@@ -230,7 +229,6 @@
 				ED2207C820E1F67D0076C22F /* mainloop.cpp */,
 				ED2207DE20E2500D0076C22F /* mainwin.cpp */,
 				ED2207DF20E2500D0076C22F /* mainwin.hpp */,
-				ED2207E020E2500D0076C22F /* parser.cpp */,
 			);
 			name = viewer;
 			path = ../../viewer;
@@ -239,7 +237,6 @@
 		ED5F72FE1FCD46C3004E945D /* src */ = {
 			isa = PBXGroup;
 			children = (
-				ED642F171FCE8E3D0067CEA4 /* helper */,
 				ED5F72FF1FCD46C3004E945D /* platforms */,
 				ED81D19F20D374B40096FB53 /* xxprofile_archive.cpp */,
 				ED81D1A020D374B40096FB53 /* xxprofile_archive.hpp */,
@@ -270,21 +267,21 @@
 			path = platforms;
 			sourceTree = "<group>";
 		};
-		ED642F171FCE8E3D0067CEA4 /* helper */ = {
+		ED6B806220E34285008D2BAD /* loader */ = {
 			isa = PBXGroup;
 			children = (
-				ED642F181FCE8E3D0067CEA4 /* CommonMacros.h */,
-				ED642F191FCE8E3D0067CEA4 /* SimpleArray.h */,
-				ED642F1A1FCE8E3D0067CEA4 /* SimpleConfig.h */,
+				ED6B806320E34285008D2BAD /* xxprofile_loader.cpp */,
+				ED6B806420E34285008D2BAD /* xxprofile_loader.hpp */,
 			);
-			path = helper;
+			name = loader;
+			path = ../../loader;
 			sourceTree = "<group>";
 		};
 		ED81D19E20D368D50096FB53 /* posix */ = {
 			isa = PBXGroup;
 			children = (
 				ED642F1C1FCE948E0067CEA4 /* pthread_SystemLock.h */,
-				ED81D1B020D3AC6C0096FB53 /* pthread_tls.h */,
+				ED81D1B020D3AC6C0096FB53 /* pthread_ThreadLocal.h */,
 				ED6A3CFA20DB9D73002A47A8 /* posix_timer.h */,
 			);
 			path = posix;
@@ -480,10 +477,10 @@
 				ED2207BB20E1DFC40076C22F /* imgui_impl_opengl2.cpp in Sources */,
 				ED2207C920E1F67D0076C22F /* mainloop.cpp in Sources */,
 				ED2207B420E1DFAC0076C22F /* imgui_draw.cpp in Sources */,
-				ED2207E220E2500D0076C22F /* parser.cpp in Sources */,
 				ED2207B520E1DFAC0076C22F /* imgui.cpp in Sources */,
 				ED22005F20E1D76F0076C22F /* Document.m in Sources */,
 				ED22005C20E1D76F0076C22F /* ViewController.m in Sources */,
+				ED6B806520E34285008D2BAD /* xxprofile_loader.cpp in Sources */,
 				ED22005920E1D76F0076C22F /* main.m in Sources */,
 				ED2207E120E2500D0076C22F /* mainwin.cpp in Sources */,
 				ED22005620E1D76F0076C22F /* AppDelegate.m in Sources */,
@@ -550,6 +547,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = PEZE6XWYTJ;
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
@@ -569,6 +567,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = PEZE6XWYTJ;
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";

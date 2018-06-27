@@ -2,6 +2,8 @@
 #ifndef xxprofile_namepool_hpp
 #define xxprofile_namepool_hpp
 #include "xxprofile_macros.hpp"
+#include <vector>
+#include <stdlib.h>
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
@@ -69,7 +71,7 @@ private:// memory pool
     uint32_t _buffer_size;
     std::atomic<uint32_t> _nameCount;
 
-    CSystemLock _lock;
+    SystemLock _lock;
 
     std::vector<void*> _nameBuffers;
 

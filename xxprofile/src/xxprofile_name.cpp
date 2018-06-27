@@ -46,7 +46,7 @@ SNamePool::~SNamePool() {
 }
 
 void SNamePool::clear() {
-    CSystemScopedLock lock(_lock);
+    SystemScopedLock lock(_lock);
     for (size_t i = 0; i < _nameBuffers.size(); ++i) {
         free(_nameBuffers[i]);
     }
@@ -117,7 +117,7 @@ uint32_t SNamePool::getNameId(const char* name) {
             return entry->id;
         }
     }
-    CSystemScopedLock lock(_lock);
+    SystemScopedLock lock(_lock);
     SNameEntry* head = _nameHashes[bucket].load(std::memory_order_acquire);
 	for (SNameEntry* entry = head; entry; entry = entry->next) {
         if (entry->length == length && entry->isEqual(name)) {
@@ -168,7 +168,7 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
         std::vector<void*> nameBuffers;
         const char* currentBufferEnd = NULL;
         {
-            CSystemScopedLock lock(_lock);
+            SystemScopedLock lock(_lock);
             nameBuffers = _nameBuffers;
             currentBufferEnd = _buffer;
             // get second time to ensure
@@ -255,7 +255,7 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
         ar << startIndex;
         std::string str;
         str.reserve(256);
-        CSystemScopedLock lock(_lock);
+        SystemScopedLock lock(_lock);
         const uint32_t maxNameId = _nameCount.load(std::memory_order_acquire);
         std::atomic<SNameEntry*>* chunk = NULL;
         uint32_t currentChunkId = -1;

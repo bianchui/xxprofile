@@ -120,9 +120,9 @@ void* static_thread(void* param) {
 }
 
 void test_cycles() {
-    uint64_t cycles = xxprofile::XXProfileTimer::Cycles64();
+    uint64_t cycles = xxprofile::Timer::Cycles64();
     for (uint32_t i = 0; i < 1000000; ++i) {
-        uint64_t cycles2 = xxprofile::XXProfileTimer::Cycles64();
+        uint64_t cycles2 = xxprofile::Timer::Cycles64();
         assert(cycles != cycles2);
         cycles = cycles2;
     }

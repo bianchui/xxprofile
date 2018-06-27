@@ -13,13 +13,13 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
-class CSystemLock_pthread {
+class SystemLock_pthread {
 public:
-    CSystemLock_pthread() {
+    SystemLock_pthread() {
         pthread_mutex_init(&_cs, NULL);
     }
 
-    ~CSystemLock_pthread() {
+    ~SystemLock_pthread() {
         pthread_mutex_destroy(&_cs);
     }
     
@@ -38,7 +38,7 @@ public:
 public:
     pthread_mutex_t _cs;
 
-    XX_CLASS_DELETE_COPY_AND_MOVE(CSystemLock_pthread);
+    XX_CLASS_DELETE_COPY_AND_MOVE(SystemLock_pthread);
 };
 
 XX_NAMESPACE_END(xxprofile);

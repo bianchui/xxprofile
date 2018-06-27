@@ -34,19 +34,19 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
-class CSystemScopedLock {
+class SystemScopedLock {
 public:
-    CSystemScopedLock(CSystemLock& Lock) : _Lock(Lock) {
+    SystemScopedLock(SystemLock& Lock) : _Lock(Lock) {
         _Lock.Lock();
     }
-    ~CSystemScopedLock() {
+    ~SystemScopedLock() {
         _Lock.Unlock();
     }
 
 private:
-    XX_CLASS_DELETE_COPY(CSystemScopedLock);
-    XX_CLASS_DELETE_MOVE(CSystemScopedLock);
-    CSystemLock& _Lock;
+    XX_CLASS_DELETE_COPY(SystemScopedLock);
+    XX_CLASS_DELETE_MOVE(SystemScopedLock);
+    SystemLock& _Lock;
 };
 
 static_assert(sizeof(std::atomic<void*>) == sizeof(void*), "sizeof atomic is not same");

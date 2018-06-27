@@ -7,8 +7,8 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
-typedef CSystemLock_pthread CSystemLock;
-typedef XXProfileTimer_posix XXProfileTimer;
+typedef SystemLock_pthread SystemLock;
+typedef Timer_posix Timer;
 
 XX_NAMESPACE_END(xxprofile);
 

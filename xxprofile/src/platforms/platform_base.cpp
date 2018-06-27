@@ -10,6 +10,6 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
-double XXProfileTimer_base::secondsPerCycle;
+double Timer_base::secondsPerCycle;
 
 XX_NAMESPACE_END(xxprofile);

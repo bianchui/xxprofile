@@ -53,7 +53,7 @@ XXProfileTreeNode* XXProfileTLS::beginScope(SName name) {
     }
 
     XXProfileTreeNode* node = _currentBuffer + (_usedCount++);
-    node->_beginTime = XXProfileTimer::Cycles64();
+    node->_beginTime = Timer::Cycles64();
     node->_name = name;
     node->_nodeId = ++_curNodeId;
     node->_parentNodeId = _stack.empty() ? 0 : _stack.back()->_nodeId;
@@ -64,7 +64,7 @@ XXProfileTreeNode* XXProfileTLS::beginScope(SName name) {
 void XXProfileTLS::endScope(XXProfileTreeNode* node) {
     assert(!_stack.empty());
     assert(_stack.back() == node);
-    node->_endTime = XXProfileTimer::Cycles64();
+    node->_endTime = Timer::Cycles64();
     if (!_stack.empty()) {
         _stack.pop_back();
     }

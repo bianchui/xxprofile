@@ -11,12 +11,13 @@
 #include <mach/mach_time.h>
 #include "platform_base.hpp"
 #include "posix/pthread_SystemLock.h"
+#include "posix/pthread_ThreadLocal.h"
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
 uint32_t GetTid();
 
-struct XXProfileTimer_apple : XXProfileTimer_base {
+struct Timer_apple : Timer_base {
     static double InitTiming();
     
     static FORCEINLINE double Seconds() {
@@ -31,8 +32,12 @@ struct XXProfileTimer_apple : XXProfileTimer_base {
     }
 };
 
-typedef CSystemLock_pthread CSystemLock;
-typedef XXProfileTimer_apple XXProfileTimer;
+typedef SystemLock_pthread SystemLock;
+typedef Timer_apple Timer;
+
+template <typename T>
+struct ThreadLocal : public ThreadLocal_pthread<T> {
+};
 
 XX_NAMESPACE_END(xxprofile);
 

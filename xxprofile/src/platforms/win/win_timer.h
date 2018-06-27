@@ -7,7 +7,7 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
-struct XXProfileTimer_win : XXProfileTimer_base {
+struct Timer_win : Timer_base {
     static double InitTiming() {
         uint64_t frequency;
         ::QueryPerformanceFrequency((LARGE_INTEGER*)&frequency);

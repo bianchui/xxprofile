@@ -16,13 +16,23 @@ uint64_t getTimeStamp() {
     return (std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
 }
 
+void setupStyle() {
+    ImGui::StyleColorsDark();
+
+    ImGuiStyle& style = ImGui::GetStyle();
+    style.WindowBorderSize = 1.0f;
+    style.FrameBorderSize = 1.0f;
+    style.PopupBorderSize = 1.0f;
+    style.FrameRounding = 3.0f;
+}
+
 extern "C" void mainLoop() {
     // Setup window
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit()) {
         return;
     }
-    GLFWwindow* window = glfwCreateWindow(1280, 720, "ImGui GLFW+OpenGL2 example", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(1280, 720, "xxprofileViewer", NULL, NULL);
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // Enable vsync
 
@@ -36,11 +46,8 @@ extern "C" void mainLoop() {
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL2_Init();
 
-    // Setup style
-    ImGui::StyleColorsDark();
-    //ImGui::StyleColorsClassic();
+    setupStyle();
 
-    bool show_demo_window = true;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     MainWin mainwin;

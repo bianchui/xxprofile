@@ -14,10 +14,10 @@
 /**/XX_CLASS_DELETE_COPY_ASSIGN(cls); \
 
 #define XX_CLASS_DELETE_MOVE_CONSTRUCTOR(cls) \
-/**/cls(const cls&&) = delete; \
+/**/cls(cls&&) = delete; \
 
 #define XX_CLASS_DELETE_MOVE_ASSIGN(cls) \
-/**/cls& operator=(const cls&&) = delete; \
+/**/cls& operator=(cls&&) = delete; \
 
 #define XX_CLASS_DELETE_MOVE(cls) \
 /**/XX_CLASS_DELETE_MOVE_CONSTRUCTOR(cls); \

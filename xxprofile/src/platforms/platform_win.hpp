@@ -7,8 +7,8 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
-typedef CSystemLock_win CSystemLock;
-typedef XXProfileTimer_win XXProfileTimer;
+typedef SystemLock_win SystemLock;
+typedef Timer_win Timer;
 
 XX_NAMESPACE_END(xxprofile);
 
