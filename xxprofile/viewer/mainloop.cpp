@@ -26,9 +26,13 @@ void setupStyle() {
     style.FrameRounding = 3.0f;
 }
 
-int OnDocumentOpen(const char* name) {
-    printf("%s\n", name);
+MainWin mainwin;
 
+int glfw_onDocumentOpen(const char* name) {
+    printf("%s\n", name);
+    if (!mainwin.load(name)) {
+        return GLFW_FALSE;
+    }
     return GLFW_TRUE;
 }
 
@@ -38,7 +42,7 @@ extern "C" void mainLoop() {
     if (!glfwInit()) {
         return;
     }
-    glfwSetOnDocumentOpen(OnDocumentOpen);
+    glfwSetOnDocumentOpen(glfw_onDocumentOpen);
     GLFWwindow* window = glfwCreateWindow(1280, 720, "xxprofileViewer", NULL, NULL);
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // Enable vsync
@@ -57,7 +61,6 @@ extern "C" void mainLoop() {
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-    MainWin mainwin;
 
     // Main loop
     while (!glfwWindowShouldClose(window)) {

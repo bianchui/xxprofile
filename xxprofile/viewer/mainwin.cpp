@@ -5,6 +5,15 @@
 
 #include <limits.h>         // INT_MIN, INT_MAX
 
+bool MainWin::load(const char* file) {
+    xxprofile::Archive ar;
+    if (!ar.open(file, false)) {
+        return false;
+    }
+    _loader.load(ar);
+    return true;
+}
+
 static void ShowHelpMarker(const char* desc)
 {
     ImGui::TextDisabled("(?)");
@@ -83,6 +92,14 @@ static void ShowExampleMenuFile()
     if (ImGui::MenuItem("Quit", "Alt+F4")) {}
 }
 
+float GetItemMaxWidth() {
+    float s = ImGui::GetIndent();
+    float w = ImGui::GetContentWidth();
+
+    ImGuiStyle& style = ImGui::GetStyle();
+    return w - s - 2 * style.WindowBorderSize - 2 * style.FrameBorderSize;
+}
+
 void MainWin::draw(int w, int h) {
     // Examples apps
     static bool show_app_main_menu_bar = false;
@@ -142,6 +159,9 @@ void MainWin::draw(int w, int h) {
     //ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.65f);    // 2/3 of the space for widget and 1/3 for labels
     ImGui::PushItemWidth(-140);                                 // Right align, keep 140 pixels for labels
 
+    _timeLineView.draw();
+    _frameView.draw();
+
     // Menu
     if (ImGui::BeginMenuBar())
     {
@@ -186,19 +206,6 @@ void MainWin::draw(int w, int h) {
     {
         if (ImGui::TreeNode("Trees"))
         {
-            if (ImGui::TreeNode("Basic trees"))
-            {
-                for (int i = 0; i < 5; i++)
-                    if (ImGui::TreeNode((void*)(intptr_t)i, "Child %d", i))
-                    {
-                        ImGui::Text("blah blah");
-                        ImGui::SameLine();
-                        if (ImGui::SmallButton("button")) { };
-                        ImGui::TreePop();
-                    }
-                ImGui::TreePop();
-            }
-
             if (ImGui::TreeNode("Advanced, with Selectable nodes"))
             {
                 ShowHelpMarker("This is a more standard looking tree with selectable nodes.\nClick to select, CTRL+Click to toggle, click on arrows or double-click to open.");
@@ -261,8 +268,7 @@ void MainWin::draw(int w, int h) {
             ImGui::TreePop();
         }
 
-        if (ImGui::TreeNode("Plots Widgets"))
-        {
+        if (ImGui::TreeNode("Plots Widgets")) {
             static bool animate = true;
             ImGui::Checkbox("Animate", &animate);
 
@@ -308,7 +314,11 @@ void MainWin::draw(int w, int h) {
             //float scale_max,
             //ImVec2 graph_size
 
-            ImGui::PlotHistogram("Histogram", func, NULL, display_count, 0, "hahaha", -1.0f, 1.0f, ImVec2(0,100));
+            float s = ImGui::GetIndent();
+            float rw = ImGui::GetWindowContentRegionWidth();
+
+            display_count = rw - s;
+            ImGui::PlotHistogram("Histogram", func, NULL, display_count, 0, NULL, -1.0f, 1.0f, ImVec2(rw - s + 2 - 140,100));
             ImGui::Separator();
 
             // Animate a simple progress bar

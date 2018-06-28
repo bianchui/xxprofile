@@ -7,10 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		ED22005620E1D76F0076C22F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = ED22005520E1D76F0076C22F /* AppDelegate.m */; };
 		ED22005920E1D76F0076C22F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = ED22005820E1D76F0076C22F /* main.m */; };
 		ED22005C20E1D76F0076C22F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED22005B20E1D76F0076C22F /* ViewController.m */; };
-		ED22005F20E1D76F0076C22F /* Document.m in Sources */ = {isa = PBXBuildFile; fileRef = ED22005E20E1D76F0076C22F /* Document.m */; };
 		ED22006120E1D76F0076C22F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ED22006020E1D76F0076C22F /* Assets.xcassets */; };
 		ED22006420E1D76F0076C22F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ED22006220E1D76F0076C22F /* Main.storyboard */; };
 		ED2207B420E1DFAC0076C22F /* imgui_draw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2207B120E1DFAC0076C22F /* imgui_draw.cpp */; };
@@ -21,6 +19,7 @@
 		ED2207C620E1EDB90076C22F /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2207C120E1E3E00076C22F /* libglfw3.a */; };
 		ED2207C920E1F67D0076C22F /* mainloop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2207C820E1F67D0076C22F /* mainloop.cpp */; };
 		ED2207E120E2500D0076C22F /* mainwin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2207DE20E2500D0076C22F /* mainwin.cpp */; };
+		ED336CF620E4C2BD0085BF34 /* TimeLineView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED336CF420E4C2BD0085BF34 /* TimeLineView.cpp */; };
 		ED5F73081FCD46C3004E945D /* xxprofile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73011FCD46C3004E945D /* xxprofile.cpp */; };
 		ED5F730A1FCD46C3004E945D /* platform_apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73031FCD46C3004E945D /* platform_apple.cpp */; };
 		ED5F730C1FCD46C3004E945D /* platform_base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73051FCD46C3004E945D /* platform_base.cpp */; };
@@ -28,6 +27,8 @@
 		ED6A3CF320DB87A6002A47A8 /* xxprofile_tls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED6A3CF120DB87A6002A47A8 /* xxprofile_tls.cpp */; };
 		ED6A3CF420DB87A6002A47A8 /* xxprofile_tls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED6A3CF120DB87A6002A47A8 /* xxprofile_tls.cpp */; };
 		ED6B806520E34285008D2BAD /* xxprofile_loader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED6B806320E34285008D2BAD /* xxprofile_loader.cpp */; };
+		ED6B806920E39355008D2BAD /* StackView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED6B806720E39355008D2BAD /* StackView.cpp */; };
+		ED6B806C20E3935A008D2BAD /* FrameView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED6B806A20E3935A008D2BAD /* FrameView.cpp */; };
 		ED81D1A120D374B40096FB53 /* xxprofile_archive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED81D19F20D374B40096FB53 /* xxprofile_archive.cpp */; };
 		ED81D1AA20D37C2C0096FB53 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED81D1A920D37C2C0096FB53 /* main.cpp */; };
 		ED81D1B220D3B1610096FB53 /* libxxprofile_mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED84F6B81FB1CF9B00C7B425 /* libxxprofile_mac.a */; };
@@ -78,13 +79,9 @@
 
 /* Begin PBXFileReference section */
 		ED22005220E1D76F0076C22F /* xxprofileViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xxprofileViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		ED22005420E1D76F0076C22F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		ED22005520E1D76F0076C22F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		ED22005820E1D76F0076C22F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		ED22005A20E1D76F0076C22F /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		ED22005B20E1D76F0076C22F /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		ED22005D20E1D76F0076C22F /* Document.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Document.h; sourceTree = "<group>"; };
-		ED22005E20E1D76F0076C22F /* Document.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Document.m; sourceTree = "<group>"; };
 		ED22006020E1D76F0076C22F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		ED22006320E1D76F0076C22F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		ED22006520E1D76F0076C22F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -101,6 +98,8 @@
 		ED2207D820E24D9D0076C22F /* xxprofile_namepool.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_namepool.hpp; sourceTree = "<group>"; };
 		ED2207DE20E2500D0076C22F /* mainwin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mainwin.cpp; sourceTree = "<group>"; };
 		ED2207DF20E2500D0076C22F /* mainwin.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = mainwin.hpp; sourceTree = "<group>"; };
+		ED336CF420E4C2BD0085BF34 /* TimeLineView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimeLineView.cpp; sourceTree = "<group>"; };
+		ED336CF520E4C2BD0085BF34 /* TimeLineView.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TimeLineView.hpp; sourceTree = "<group>"; };
 		ED5F73001FCD46C3004E945D /* platform.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = platform.hpp; sourceTree = "<group>"; };
 		ED5F73011FCD46C3004E945D /* xxprofile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xxprofile.cpp; sourceTree = "<group>"; };
 		ED5F73021FCD46C3004E945D /* xxprofile.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xxprofile.hpp; sourceTree = "<group>"; };
@@ -116,6 +115,10 @@
 		ED6A3CFA20DB9D73002A47A8 /* posix_timer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = posix_timer.h; sourceTree = "<group>"; };
 		ED6B806320E34285008D2BAD /* xxprofile_loader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xxprofile_loader.cpp; sourceTree = "<group>"; };
 		ED6B806420E34285008D2BAD /* xxprofile_loader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_loader.hpp; sourceTree = "<group>"; };
+		ED6B806720E39355008D2BAD /* StackView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StackView.cpp; sourceTree = "<group>"; };
+		ED6B806820E39355008D2BAD /* StackView.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = StackView.hpp; sourceTree = "<group>"; };
+		ED6B806A20E3935A008D2BAD /* FrameView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FrameView.cpp; sourceTree = "<group>"; };
+		ED6B806B20E3935A008D2BAD /* FrameView.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FrameView.hpp; sourceTree = "<group>"; };
 		ED714AF120DA5D3600732372 /* xxprofile_internal.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_internal.hpp; sourceTree = "<group>"; };
 		ED81D19C20D3584B0096FB53 /* xxprofile_macros.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_macros.hpp; sourceTree = "<group>"; };
 		ED81D19F20D374B40096FB53 /* xxprofile_archive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xxprofile_archive.cpp; sourceTree = "<group>"; };
@@ -169,12 +172,8 @@
 				ED6B806220E34285008D2BAD /* loader */,
 				ED22006B20E1DF120076C22F /* imgui */,
 				ED2207CA20E1F6870076C22F /* viewer */,
-				ED22005420E1D76F0076C22F /* AppDelegate.h */,
-				ED22005520E1D76F0076C22F /* AppDelegate.m */,
 				ED22005A20E1D76F0076C22F /* ViewController.h */,
 				ED22005B20E1D76F0076C22F /* ViewController.m */,
-				ED22005D20E1D76F0076C22F /* Document.h */,
-				ED22005E20E1D76F0076C22F /* Document.m */,
 				ED22006020E1D76F0076C22F /* Assets.xcassets */,
 				ED22006220E1D76F0076C22F /* Main.storyboard */,
 				ED22006520E1D76F0076C22F /* Info.plist */,
@@ -226,9 +225,15 @@
 		ED2207CA20E1F6870076C22F /* viewer */ = {
 			isa = PBXGroup;
 			children = (
+				ED6B806A20E3935A008D2BAD /* FrameView.cpp */,
+				ED6B806B20E3935A008D2BAD /* FrameView.hpp */,
 				ED2207C820E1F67D0076C22F /* mainloop.cpp */,
 				ED2207DE20E2500D0076C22F /* mainwin.cpp */,
 				ED2207DF20E2500D0076C22F /* mainwin.hpp */,
+				ED6B806720E39355008D2BAD /* StackView.cpp */,
+				ED6B806820E39355008D2BAD /* StackView.hpp */,
+				ED336CF420E4C2BD0085BF34 /* TimeLineView.cpp */,
+				ED336CF520E4C2BD0085BF34 /* TimeLineView.hpp */,
 			);
 			name = viewer;
 			path = ../../viewer;
@@ -474,16 +479,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				ED2207BA20E1DFC40076C22F /* imgui_impl_glfw.cpp in Sources */,
+				ED6B806C20E3935A008D2BAD /* FrameView.cpp in Sources */,
 				ED2207BB20E1DFC40076C22F /* imgui_impl_opengl2.cpp in Sources */,
+				ED336CF620E4C2BD0085BF34 /* TimeLineView.cpp in Sources */,
 				ED2207C920E1F67D0076C22F /* mainloop.cpp in Sources */,
 				ED2207B420E1DFAC0076C22F /* imgui_draw.cpp in Sources */,
 				ED2207B520E1DFAC0076C22F /* imgui.cpp in Sources */,
-				ED22005F20E1D76F0076C22F /* Document.m in Sources */,
 				ED22005C20E1D76F0076C22F /* ViewController.m in Sources */,
 				ED6B806520E34285008D2BAD /* xxprofile_loader.cpp in Sources */,
 				ED22005920E1D76F0076C22F /* main.m in Sources */,
 				ED2207E120E2500D0076C22F /* mainwin.cpp in Sources */,
-				ED22005620E1D76F0076C22F /* AppDelegate.m in Sources */,
+				ED6B806920E39355008D2BAD /* StackView.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
