@@ -180,19 +180,6 @@ void MainWin::draw(int w, int h) {
         ImGui::Checkbox("No scrollbar", &no_scrollbar); ImGui::SameLine(300);
         ImGui::Checkbox("No menu", &no_menu);
         ImGui::Checkbox("No nav", &no_nav);
-
-        if (ImGui::TreeNode("Style"))
-        {
-            //ImGui::ShowStyleEditor();
-            ImGui::TreePop();
-        }
-
-        if (ImGui::TreeNode("Capture/Logging"))
-        {
-            ImGui::TextWrapped("The logging API redirects all text output so you can easily capture the content of a window or a block. Tree nodes can be automatically expanded. You can also call ImGui::LogText() to output directly to the log without a visual output.");
-            ImGui::LogButtons();
-            ImGui::TreePop();
-        }
     }
 
     if (ImGui::CollapsingHeader("Widgets"))
@@ -381,7 +368,7 @@ void MainWin::draw(int w, int h) {
             for (int i = 0; i < 3; i++)
             {
                 char label[32];
-                sprintf(label, "%04d", i);
+                sprintf(label, "%*d", i + 5, i);
                 if (ImGui::Selectable(label, selected == i, ImGuiSelectableFlags_SpanAllColumns))
                     selected = i;
                 bool hovered = ImGui::IsItemHovered();

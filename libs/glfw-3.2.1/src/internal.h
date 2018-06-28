@@ -446,6 +446,8 @@ struct _GLFWlibrary
 
     uint64_t            timerOffset;
 
+    GLFWOnDocumentOpen  onDocumentOpen;
+
     struct {
         GLFWbool        available;
         void*           handle;

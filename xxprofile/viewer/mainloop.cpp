@@ -26,12 +26,19 @@ void setupStyle() {
     style.FrameRounding = 3.0f;
 }
 
+int OnDocumentOpen(const char* name) {
+    printf("%s\n", name);
+
+    return GLFW_TRUE;
+}
+
 extern "C" void mainLoop() {
     // Setup window
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit()) {
         return;
     }
+    glfwSetOnDocumentOpen(OnDocumentOpen);
     GLFWwindow* window = glfwCreateWindow(1280, 720, "xxprofileViewer", NULL, NULL);
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // Enable vsync
@@ -83,7 +90,7 @@ extern "C" void mainLoop() {
         glfwMakeContextCurrent(window);
         glfwSwapBuffers(window);
 
-        if (1) {
+        if (true) {
             uint64_t end = getTimeStamp();
             uint64_t used = end - start;
             const uint64_t minTime = 33000;

@@ -1332,6 +1332,9 @@ GLFWAPI void glfwGetVersion(int* major, int* minor, int* rev);
  */
 GLFWAPI const char* glfwGetVersionString(void);
 
+typedef int (* GLFWOnDocumentOpen)(const char*);
+GLFWAPI void glfwSetOnDocumentOpen(GLFWOnDocumentOpen cbfun);
+
 /*! @brief Sets the error callback.
  *
  *  This function sets the error callback, which is called with an error code

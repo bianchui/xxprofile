@@ -192,6 +192,10 @@ GLFWAPI const char* glfwGetVersionString(void)
     return _glfwPlatformGetVersionString();
 }
 
+GLFWAPI void glfwSetOnDocumentOpen(GLFWOnDocumentOpen cbfun) {
+    _glfw.onDocumentOpen = cbfun;
+}
+
 GLFWAPI GLFWerrorfun glfwSetErrorCallback(GLFWerrorfun cbfun)
 {
     _GLFW_SWAP_POINTERS(_glfwErrorCallback, cbfun);

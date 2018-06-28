@@ -9,18 +9,19 @@
 #import "AppDelegate.h"
 
 @interface AppDelegate ()
+@property (nonatomic, retain) NSTimer *renderTimer;
+@property (nonatomic, readwrite) int fps;
 
 @end
 
 @implementation AppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-    // Insert code here to initialize your application
+
 }
 
-
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
-    // Insert code here to tear down your application
+    NSLog(@"applicationWillTerminate");
 }
 
 - (BOOL)application:(NSApplication *)sender openFile:(NSString *)filename {
@@ -37,6 +38,30 @@
     NSLog(@"Bid %@", bid);
     //self.title = bid;
     return YES;
+}
+
+- (void)timerFired:(id)sender {
+}
+
+- (void)tickEnd {
+    [_renderTimer invalidate];
+    _renderTimer = nil;
+}
+
+- (void)setFps:(int)fps {
+    _fps = fps;
+    if (_renderTimer != nil) {
+        [_renderTimer invalidate];
+        _renderTimer = nil;
+    }
+    _renderTimer = [NSTimer timerWithTimeInterval:1 / _fps
+                                           target:self
+                                         selector:@selector(timerFired:)
+                                         userInfo:nil
+                                          repeats:YES];
+
+    [[NSRunLoop currentRunLoop] addTimer:_renderTimer forMode:NSDefaultRunLoopMode];
+    [[NSRunLoop currentRunLoop] addTimer:_renderTimer forMode:NSEventTrackingRunLoopMode];
 }
 
 @end

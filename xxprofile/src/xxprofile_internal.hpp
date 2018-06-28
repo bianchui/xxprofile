@@ -2,6 +2,7 @@
 #ifndef xxprofile_internal_h
 #define xxprofile_internal_h
 
+#include "xxprofile_macros.hpp"
 #include "platforms/platform.hpp"
 
 #ifndef NDEBUG
