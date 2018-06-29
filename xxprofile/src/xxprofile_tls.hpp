@@ -43,8 +43,8 @@ protected:
     void frameFlush();
 
 private:
-    uint64_t _frameId;
     std::vector<XXProfileTreeNode*> _stack;
+    uint32_t _frameId;
     uint32_t _usedCount;
     uint32_t _threadId;
     uint32_t _curNodeId;

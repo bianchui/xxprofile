@@ -180,13 +180,18 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
             for (uint32_t iter = 1; iter < bufferCount; ++iter) {
                 uint32_t index = bufferCount - iter;
                 SChunkHeader* chunkHeader = (SChunkHeader*)make_align(buffers[index], NAME_ENTRY_ALIGN);
-                if (chunkHeader->beginId() <= fromId) {
+                uint32_t chunkBeginId = chunkHeader->beginId();
+                if (chunkBeginId <= fromId + 1) {
                     fromBufferIndex = index;
                     break;
                 }
             }
         }
         nameCount = maxNameId - fromId;
+        XXLOG_DETAIL("NamePool.write(from:%d + count:%d)\n", fromId, nameCount);
+        XXLOG_DETAIL("  state.maxNameId       = %d\n", maxNameId);
+        XXLOG_DETAIL("  state.bufferCount     = %d\n", bufferCount);
+        XXLOG_DETAIL("  state.fromBufferIndex = %d\n", fromBufferIndex);
         ar << nameCount;
         if (nameCount == 0) {
             return;
@@ -227,6 +232,7 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
                 ar << entry->id;
 #endif//XX_PROFILE_DEBUG_Name_Serialize
                 ar << entry->length;
+                XXLOG_DEBUG("  name(%d)>>%s\n", entry->id, entry->buf);
                 ar.serialize(entry->buf, entry->length);
                 XXDEBUG_ONLY(debug_max = entry->id);
                 XXDEBUG_ONLY(++debug_writeCount);
@@ -248,6 +254,7 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
         }
     } else {
         ar << nameCount;
+        XXLOG_DETAIL("name.read(%d)\n", nameCount);
         if (nameCount == 0) {
             return;
         }
@@ -324,6 +331,8 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
                 newEntry->id = id;
                 newEntry->length = length;
                 ar.serialize(newEntry->buf, length);
+
+                XXLOG_DEBUG("  name(%d)<<%s\n", newEntry->id, newEntry->buf);
 
                 {
                     const uint32_t hash = StringHash(newEntry->buf);

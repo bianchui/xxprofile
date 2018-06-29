@@ -105,15 +105,23 @@ void testSave() {
 #endif
 }
 
-void* static_thread(void* param) {
+void fun() {
     XX_PROFILE_SCOPE_FUNCTION();
 
+    SSS sss;
+    sss.abcde();
+}
+
+void* static_thread(void* param) {
+
     uint32_t start = (uint32_t)(uintptr_t)param;
-    if (false) {
+    if (true) {
         for (uint32_t i = 0; i < 100000; ++i) {
+            fun();
             char namebuf[1024];
             sprintf(namebuf, "hahahahaha%d", start + i);
-            xxprofile::SName name(namebuf);
+            //xxprofile::SName name(namebuf);
+            XX_PROFILE_INCREASE_FRAME();
         }
     }
     return NULL;
@@ -149,13 +157,15 @@ int main(int argc, const char * argv[]) {
     printf("Hello, World!\n");
 
     //test_cycles();
-    test_threads();
+    //test_threads();
+    static_thread(NULL);
+
 
     //testSave();
 
-    std::cout << a << std::endl;
-    std::cout << std::this_thread::get_id() << std::endl;
-    std::cout << pthread_self() << std::endl;
+    //std::cout << a << std::endl;
+    //std::cout << std::this_thread::get_id() << std::endl;
+    //std::cout << pthread_self() << std::endl;
     xxprofile::XXProfile::StaticUninit();
     return 0;
 }

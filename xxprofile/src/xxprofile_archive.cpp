@@ -88,6 +88,13 @@ void Archive::serialize(void* data, size_t size) {
         return;
     }
     if (_write) {
+        XXDEBUG_DEBUG({
+            if (size == 4) {
+                printf("write %d(%d)\n", (int)size, *(int*)data);
+            } else {
+                printf("write %d\n", (int)size);
+            }
+        });
         _size += size;
         if (BufferSize) {
             if (size + _used >= BufferSize) {
