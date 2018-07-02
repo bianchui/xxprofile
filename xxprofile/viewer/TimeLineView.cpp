@@ -5,19 +5,6 @@ static const char* TimeLineView_scaleText = " Scale";
 
 TimeLineView::TimeLineView() : _loader(NULL) {
 
-    struct Funcs {
-        static float Fun(void*, int i) { return 1.0f * i / 1000; }
-    };
-
-    memset(&_hitTest, 0, sizeof(_hitTest));
-
-    _hitTest.values_getter = Funcs::Fun;
-    _hitTest.data = this;
-    //_hitTest.values_offset;
-    //_hitTest.overlay_text;
-    _hitTest.scale_min = 0;
-    _hitTest.scale_max = 1.0f;
-    //_hitTest.graph_size;
 }
 
 TimeLineView::~TimeLineView() {
@@ -32,7 +19,13 @@ void TimeLineView::setLoader(const xxprofile::Loader* loader) {
     clear();
     _loader = loader;
     if (loader) {
-        //loader->
+        size_t tcount = loader->_threads.size();
+        _threads.resize(tcount);
+        for (size_t t = 0; t < tcount; ++t) {
+            auto& thread = _threads[t];
+            const auto& loader_thread = loader->_threads[t];
+            thread.init(&loader_thread);
+        }
     }
 }
 
@@ -56,9 +49,29 @@ float TimeLineView::calcHeight() {
     return height;
 }
 
+void TimeLineView::ThreadData::init(const xxprofile::Loader::ThreadData* data) {
+    _data = data;
+    assert(data);
+    //for (auto iter = data->_frames.begin(); ++ )
+}
+
+float TimeLineView::ThreadData::StaticGetData(void* p, int idx) {
+    const ThreadData* data = (const ThreadData*)p;
+    const int index = data->startIndex + idx;
+    return 1.0f * index / 1000;
+}
+
+void TimeLineView::ThreadData::setTo(ImGui::ImPlotWithHitTest& plot) const {
+    plot.data = (void*)this;
+    plot.valuesGetter = StaticGetData;
+    plot.scaleMax = valueMax;
+    const size_t count = _data->_frames.size();
+    plot.valuesCount = 500;
+}
+
 void TimeLineView::draw() {
     ImGuiWindowFlags window_flags = 0;
-    ImGuiStyle& style = ImGui::GetStyle();
+    const ImGuiStyle& style = ImGui::GetStyle();
 
     const float rw = ImGui::GetWindowContentRegionWidth();
 
@@ -74,16 +87,26 @@ void TimeLineView::draw() {
     static int display_count = 1000;
 
     {// Frames
-        const float framesWidth = rw - style.WindowPadding.x * 2 - s + style.FramePadding.x * 2;
+        const float framesGraphWidth = rw - style.WindowPadding.x * 2 - s + style.FramePadding.x * 2;
+        const int maxItemCount = (int)framesGraphWidth * 0.5f;
+        assert(_threads.size() == _loader->_threads.size());
+        ImGui::ImPlotWithHitTest plot;
+        memset(&plot, 0, sizeof(plot));
+        //plot.overlay_text;
+        plot.scaleMin = 0;
+        plot.scaleMax = 1.0f;
+        plot.graphSize = ImVec2(framesGraphWidth, FramesItemHeight);
 
-        float itemCount = framesWidth;
+        for (size_t t = 0; t < _threads.size(); ++t) {
+            const auto& thread = _threads[t];
+            thread.setTo(plot);
+            plot.valuesCount = 500;
+            //plot.selectedItem = (++i)%plot.values_count;
 
-        static int i = 0;
-        _hitTest.values_count = 500;
-        _hitTest.selectedItem = (++i)%_hitTest.values_count;
-        _hitTest.graph_size = ImVec2(framesWidth, FramesItemHeight);
+            ImGui::PlotHistogram(plot);
 
-        ImGui::PlotHistogram(_hitTest);
+        }
+
     }
 
     {// Scale

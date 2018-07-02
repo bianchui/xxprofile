@@ -13,7 +13,7 @@ float ImGui::GetContentWidth() {
     return window->SizeContents.x;
 }
 
-void ImGui::PlotEx(ImGuiPlotType plot_type, ImHistogramWithHitTest& value) {
+void ImGui::PlotEx(ImGuiPlotType plot_type, ImPlotWithHitTest& value) {
     value.hoverItem = -1;
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems) {
@@ -22,14 +22,14 @@ void ImGui::PlotEx(ImGuiPlotType plot_type, ImHistogramWithHitTest& value) {
     ImGuiContext& g = *GImGui;
     const ImGuiStyle& style = g.Style;
 
-    if (value.graph_size.x == 0.0f) {
-        value.graph_size.x = CalcItemWidth();
+    if (value.graphSize.x == 0.0f) {
+        value.graphSize.x = CalcItemWidth();
     }
-    if (value.graph_size.y == 0.0f) {
-        value.graph_size.y = (style.FramePadding.y * 2);
+    if (value.graphSize.y == 0.0f) {
+        value.graphSize.y = (style.FramePadding.y * 2);
     }
 
-    const ImRect frame_bb(window->DC.CursorPos, window->DC.CursorPos + value.graph_size);
+    const ImRect frame_bb(window->DC.CursorPos, window->DC.CursorPos + value.graphSize);
     const ImRect inner_bb(frame_bb.Min + style.FramePadding, frame_bb.Max - style.FramePadding);
     const ImRect total_bb(frame_bb.Min, frame_bb.Max);
     ItemSize(total_bb, style.FramePadding.y);
@@ -39,37 +39,37 @@ void ImGui::PlotEx(ImGuiPlotType plot_type, ImHistogramWithHitTest& value) {
     const bool hovered = ItemHoverable(inner_bb, 0);
 
     // Determine scale from values if not specified
-    if (value.scale_min == FLT_MAX || value.scale_max == FLT_MAX) {
+    if (value.scaleMin == FLT_MAX || value.scaleMax == FLT_MAX) {
         float v_min = FLT_MAX;
         float v_max = -FLT_MAX;
-        for (int i = 0; i < value.values_count; i++) {
+        for (int i = 0; i < value.valuesCount; i++) {
             const float v = value.value(i);
             v_min = ImMin(v_min, v);
             v_max = ImMax(v_max, v);
         }
-        if (value.scale_min == FLT_MAX) {
-            value.scale_min = v_min;
+        if (value.scaleMin == FLT_MAX) {
+            value.scaleMin = v_min;
         }
-        if (value.scale_max == FLT_MAX) {
-            value.scale_max = v_max;
+        if (value.scaleMax == FLT_MAX) {
+            value.scaleMax = v_max;
         }
     }
 
     RenderFrame(frame_bb.Min, frame_bb.Max, GetColorU32(ImGuiCol_FrameBg), true, style.FrameRounding);
 
-    if (value.values_count > 0) {
-        int res_w = ImMin((int)value.graph_size.x, value.values_count) + ((plot_type == ImGuiPlotType_Lines) ? -1 : 0);
-        int item_count = value.values_count + ((plot_type == ImGuiPlotType_Lines) ? -1 : 0);
+    if (value.valuesCount > 0) {
+        int res_w = ImMin((int)value.graphSize.x, value.valuesCount) + ((plot_type == ImGuiPlotType_Lines) ? -1 : 0);
+        int item_count = value.valuesCount + ((plot_type == ImGuiPlotType_Lines) ? -1 : 0);
 
         // Tooltip on hover
         int v_hovered = -1;
         if (hovered) {
             const float t = ImClamp((g.IO.MousePos.x - inner_bb.Min.x) / (inner_bb.Max.x - inner_bb.Min.x), 0.0f, 0.9999f);
             const int v_idx = (int)(t * item_count);
-            IM_ASSERT(v_idx >= 0 && v_idx < value.values_count);
+            IM_ASSERT(v_idx >= 0 && v_idx < value.valuesCount);
 
-            const float v0 = value.value((v_idx + value.values_offset) % value.values_count);
-            const float v1 = value.value((v_idx + 1 + value.values_offset) % value.values_count);
+            const float v0 = value.value((v_idx) % value.valuesCount);
+            const float v1 = value.value((v_idx + 1) % value.valuesCount);
             if (plot_type == ImGuiPlotType_Lines) {
                 SetTooltip("%d: %8.4g\n%d: %8.4g", v_idx, v0, v_idx+1, v1);
             } else if (plot_type == ImGuiPlotType_Histogram) {
@@ -85,14 +85,14 @@ void ImGui::PlotEx(ImGuiPlotType plot_type, ImHistogramWithHitTest& value) {
         }
 
         const float t_step = 1.0f / (float)res_w;
-        const float inv_scale = (value.scale_min == value.scale_max) ? 0.0f : (1.0f / (value.scale_max - value.scale_min));
+        const float inv_scale = (value.scaleMin == value.scaleMax) ? 0.0f : (1.0f / (value.scaleMax - value.scaleMin));
 
-        float v0 = value.value((0 + value.values_offset) % value.values_count);
+        float v0 = value.value(0);
         float t0 = 0.0f;
         // Point in the normalized space of our target rectangle
-        ImVec2 tp0 = ImVec2( t0, 1.0f - ImSaturate((v0 - value.scale_min) * inv_scale) );
+        ImVec2 tp0 = ImVec2( t0, 1.0f - ImSaturate((v0 - value.scaleMin) * inv_scale) );
         // Where does the zero line stands
-        float histogram_zero_line_t = (value.scale_min * value.scale_max < 0.0f) ? (-value.scale_min * inv_scale) : (value.scale_min < 0.0f ? 0.0f : 1.0f);
+        float histogram_zero_line_t = (value.scaleMin * value.scaleMax < 0.0f) ? (-value.scaleMin * inv_scale) : (value.scaleMin < 0.0f ? 0.0f : 1.0f);
 
         const ImU32 col_base = GetColorU32((plot_type == ImGuiPlotType_Lines) ? ImGuiCol_PlotLines : ImGuiCol_PlotHistogram);
         const ImU32 col_hovered = GetColorU32((plot_type == ImGuiPlotType_Lines) ? ImGuiCol_PlotLinesHovered : ImGuiCol_PlotHistogramHovered);
@@ -101,9 +101,9 @@ void ImGui::PlotEx(ImGuiPlotType plot_type, ImHistogramWithHitTest& value) {
         for (int n = 0; n < res_w; n++) {
             const float t1 = t0 + t_step;
             const int v1_idx = (int)(t0 * item_count + 0.5f);
-            IM_ASSERT(v1_idx >= 0 && v1_idx < value.values_count);
-            const float v1 = value.value((v1_idx + value.values_offset + 1) % value.values_count);
-            const ImVec2 tp1 = ImVec2( t1, 1.0f - ImSaturate((v1 - value.scale_min) * inv_scale) );
+            IM_ASSERT(v1_idx >= 0 && v1_idx < value.valuesCount);
+            const float v1 = value.value((v1_idx + 1) % value.valuesCount);
+            const ImVec2 tp1 = ImVec2( t1, 1.0f - ImSaturate((v1 - value.scaleMin) * inv_scale) );
 
             // NB: Draw calls are merged together by the DrawList system. Still, we should render our batch are lower level to save a bit of CPU.
             ImVec2 pos0 = ImLerp(inner_bb.Min, inner_bb.Max, tp0);
@@ -135,11 +135,11 @@ void ImGui::PlotEx(ImGuiPlotType plot_type, ImHistogramWithHitTest& value) {
     }
     
     // Text overlay
-    if (value.overlay_text) {
-        RenderTextClipped(ImVec2(frame_bb.Min.x, frame_bb.Min.y + style.FramePadding.y), frame_bb.Max, value.overlay_text, NULL, NULL, ImVec2(0.5f,0.0f));
+    if (value.overlayText) {
+        RenderTextClipped(ImVec2(frame_bb.Min.x, frame_bb.Min.y + style.FramePadding.y), frame_bb.Max, value.overlayText, NULL, NULL, ImVec2(0.5f,0.0f));
     }
 }
 
-void ImGui::PlotHistogram(ImHistogramWithHitTest& value) {
+void ImGui::PlotHistogram(ImPlotWithHitTest& value) {
     PlotEx(ImGuiPlotType_Histogram, value);
 }

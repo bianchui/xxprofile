@@ -10,6 +10,19 @@ public:
         FramesItemHeight = 100,
     };
 
+    struct ThreadData {
+        float valueMax;
+        uint64_t maxCycles;
+        int startIndex;
+        const xxprofile::Loader::ThreadData* _data;
+
+        void init(const xxprofile::Loader::ThreadData* data);
+        
+        static float StaticGetData(void*, int);
+
+        void setTo(ImGui::ImPlotWithHitTest& plot) const;
+    };
+
     TimeLineView();
     ~TimeLineView();
 
@@ -20,8 +33,8 @@ public:
     void draw();
 
 private:
-    ImGui::ImHistogramWithHitTest _hitTest;
     const xxprofile::Loader* _loader;
+    std::vector<ThreadData> _threads;
 };
 
 #endif//xxprofileviewer_TimeLineView_hpp

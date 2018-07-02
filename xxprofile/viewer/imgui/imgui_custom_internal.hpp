@@ -3,7 +3,8 @@
 #define imgui_custom_internal_hpp
 
 namespace ImGui {
-    IMGUI_API void PlotEx(ImGuiPlotType plot_type, ImHistogramWithHitTest& value);
+    IMGUI_API void PlotEx(ImGuiPlotType plot_type, ImPlotWithHitTest& value);
+
 }
 
 #endif//imgui_custom_internal_hpp

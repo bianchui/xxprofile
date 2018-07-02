@@ -7,25 +7,24 @@ namespace ImGui {
     IMGUI_API float GetIndent();
     IMGUI_API float GetContentWidth();
 
-    struct ImHistogramWithHitTest {
-        float (*values_getter)(void* data, int idx);
+    struct ImPlotWithHitTest {
+        float (*valuesGetter)(void* data, int idx);
         void* data;
-        int values_count;
-        int values_offset;
-        const char* overlay_text;
-        float scale_min;
-        float scale_max;
-        ImVec2 graph_size;
+        int valuesCount;
+        const char* overlayText;
+        float scaleMin;
+        float scaleMax;
+        ImVec2 graphSize;
         int selectedItem;
         int clickedItem;
         int hoverItem;
 
         float value(int idx) {
-            return values_getter(data, idx);
+            return valuesGetter(data, idx);
         }
     };
 
-    IMGUI_API void PlotHistogram(ImHistogramWithHitTest& value);
+    IMGUI_API void PlotHistogram(ImPlotWithHitTest& value);
 }
 
 #endif//imgui_custom_hpp
