@@ -27,7 +27,6 @@
 		ED6A3CF320DB87A6002A47A8 /* xxprofile_tls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED6A3CF120DB87A6002A47A8 /* xxprofile_tls.cpp */; };
 		ED6A3CF420DB87A6002A47A8 /* xxprofile_tls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED6A3CF120DB87A6002A47A8 /* xxprofile_tls.cpp */; };
 		ED6B806520E34285008D2BAD /* xxprofile_loader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED6B806320E34285008D2BAD /* xxprofile_loader.cpp */; };
-		ED6B806920E39355008D2BAD /* StackView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED6B806720E39355008D2BAD /* StackView.cpp */; };
 		ED6B806C20E3935A008D2BAD /* FrameView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED6B806A20E3935A008D2BAD /* FrameView.cpp */; };
 		ED81D1A120D374B40096FB53 /* xxprofile_archive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED81D19F20D374B40096FB53 /* xxprofile_archive.cpp */; };
 		ED81D1AA20D37C2C0096FB53 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED81D1A920D37C2C0096FB53 /* main.cpp */; };
@@ -37,6 +36,7 @@
 		ED97396420D8F5B10067B5D9 /* xxprofile_archive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED81D19F20D374B40096FB53 /* xxprofile_archive.cpp */; };
 		ED97396520D8F5B10067B5D9 /* xxprofile_name.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F730E1FCD49F1004E945D /* xxprofile_name.cpp */; };
 		ED97396620D8F5B10067B5D9 /* xxprofile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73011FCD46C3004E945D /* xxprofile.cpp */; };
+		EDA4401620E9C1EE00C9AE65 /* imgui_custom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDA4401420E9C1EE00C9AE65 /* imgui_custom.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,8 +115,6 @@
 		ED6A3CFA20DB9D73002A47A8 /* posix_timer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = posix_timer.h; sourceTree = "<group>"; };
 		ED6B806320E34285008D2BAD /* xxprofile_loader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xxprofile_loader.cpp; sourceTree = "<group>"; };
 		ED6B806420E34285008D2BAD /* xxprofile_loader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_loader.hpp; sourceTree = "<group>"; };
-		ED6B806720E39355008D2BAD /* StackView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StackView.cpp; sourceTree = "<group>"; };
-		ED6B806820E39355008D2BAD /* StackView.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = StackView.hpp; sourceTree = "<group>"; };
 		ED6B806A20E3935A008D2BAD /* FrameView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FrameView.cpp; sourceTree = "<group>"; };
 		ED6B806B20E3935A008D2BAD /* FrameView.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FrameView.hpp; sourceTree = "<group>"; };
 		ED714AF120DA5D3600732372 /* xxprofile_internal.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_internal.hpp; sourceTree = "<group>"; };
@@ -128,6 +126,10 @@
 		ED81D1B020D3AC6C0096FB53 /* pthread_ThreadLocal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pthread_ThreadLocal.h; sourceTree = "<group>"; };
 		ED84F6B81FB1CF9B00C7B425 /* libxxprofile_mac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libxxprofile_mac.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED84F6C31FB1CFC900C7B425 /* libxxprofile_ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libxxprofile_ios.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EDA4401420E9C1EE00C9AE65 /* imgui_custom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgui_custom.cpp; sourceTree = "<group>"; };
+		EDA4401520E9C1EE00C9AE65 /* imgui_custom.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = imgui_custom.hpp; sourceTree = "<group>"; };
+		EDA4401820E9C3BF00C9AE65 /* imgui_custom_internal.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = imgui_custom_internal.hpp; sourceTree = "<group>"; };
+		EDA4401920E9CB3E00C9AE65 /* imgui_internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = imgui_internal.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -196,6 +198,7 @@
 				ED2207C320E1E5170076C22F /* impl */,
 				ED2207B020E1DFAC0076C22F /* imconfig.h */,
 				ED2207B120E1DFAC0076C22F /* imgui_draw.cpp */,
+				EDA4401920E9CB3E00C9AE65 /* imgui_internal.h */,
 				ED2207B220E1DFAC0076C22F /* imgui.cpp */,
 				ED2207B320E1DFAC0076C22F /* imgui.h */,
 			);
@@ -225,13 +228,12 @@
 		ED2207CA20E1F6870076C22F /* viewer */ = {
 			isa = PBXGroup;
 			children = (
+				EDA4401320E9C1EE00C9AE65 /* imgui */,
 				ED6B806A20E3935A008D2BAD /* FrameView.cpp */,
 				ED6B806B20E3935A008D2BAD /* FrameView.hpp */,
 				ED2207C820E1F67D0076C22F /* mainloop.cpp */,
 				ED2207DE20E2500D0076C22F /* mainwin.cpp */,
 				ED2207DF20E2500D0076C22F /* mainwin.hpp */,
-				ED6B806720E39355008D2BAD /* StackView.cpp */,
-				ED6B806820E39355008D2BAD /* StackView.hpp */,
 				ED336CF420E4C2BD0085BF34 /* TimeLineView.cpp */,
 				ED336CF520E4C2BD0085BF34 /* TimeLineView.hpp */,
 			);
@@ -320,6 +322,16 @@
 				ED22005220E1D76F0076C22F /* xxprofileViewer.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		EDA4401320E9C1EE00C9AE65 /* imgui */ = {
+			isa = PBXGroup;
+			children = (
+				EDA4401820E9C3BF00C9AE65 /* imgui_custom_internal.hpp */,
+				EDA4401420E9C1EE00C9AE65 /* imgui_custom.cpp */,
+				EDA4401520E9C1EE00C9AE65 /* imgui_custom.hpp */,
+			);
+			path = imgui;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -480,6 +492,7 @@
 			files = (
 				ED2207BA20E1DFC40076C22F /* imgui_impl_glfw.cpp in Sources */,
 				ED6B806C20E3935A008D2BAD /* FrameView.cpp in Sources */,
+				EDA4401620E9C1EE00C9AE65 /* imgui_custom.cpp in Sources */,
 				ED2207BB20E1DFC40076C22F /* imgui_impl_opengl2.cpp in Sources */,
 				ED336CF620E4C2BD0085BF34 /* TimeLineView.cpp in Sources */,
 				ED2207C920E1F67D0076C22F /* mainloop.cpp in Sources */,
@@ -489,7 +502,6 @@
 				ED6B806520E34285008D2BAD /* xxprofile_loader.cpp in Sources */,
 				ED22005920E1D76F0076C22F /* main.m in Sources */,
 				ED2207E120E2500D0076C22F /* mainwin.cpp in Sources */,
-				ED6B806920E39355008D2BAD /* StackView.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

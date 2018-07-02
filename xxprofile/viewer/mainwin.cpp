@@ -1,5 +1,5 @@
 #include "mainwin.hpp"
-#include "imgui.h"
+#include "imgui/imgui_custom.hpp"
 #include <stdio.h>
 #include <math.h>
 
@@ -11,6 +11,8 @@ bool MainWin::load(const char* file) {
         return false;
     }
     _loader.load(ar);
+    _timeLineView.setLoader(&_loader);
+    _frameView.setLoader(&_loader);
     return true;
 }
 
@@ -102,32 +104,8 @@ float GetItemMaxWidth() {
 
 void MainWin::draw(int w, int h) {
     // Examples apps
-    static bool show_app_main_menu_bar = false;
-    static bool show_app_console = false;
-    static bool show_app_log = false;
-    static bool show_app_layout = false;
-    static bool show_app_property_editor = false;
-    static bool show_app_long_text = false;
-    static bool show_app_auto_resize = false;
-    static bool show_app_constrained_resize = false;
-    static bool show_app_simple_overlay = false;
-    static bool show_app_window_titles = false;
-    static bool show_app_custom_rendering = false;
     static bool show_app_style_editor = false;
-
     static bool show_app_metrics = false;
-
-    //if (show_app_main_menu_bar)       ShowExampleAppMainMenuBar();
-    //if (show_app_console)             ShowExampleAppConsole(&show_app_console);
-    //if (show_app_log)                 ShowExampleAppLog(&show_app_log);
-    //if (show_app_layout)              ShowExampleAppLayout(&show_app_layout);
-    //if (show_app_property_editor)     ShowExampleAppPropertyEditor(&show_app_property_editor);
-    //if (show_app_long_text)           ShowExampleAppLongText(&show_app_long_text);
-    //if (show_app_auto_resize)         ShowExampleAppAutoResize(&show_app_auto_resize);
-    //if (show_app_constrained_resize)  ShowExampleAppConstrainedResize(&show_app_constrained_resize);
-    //if (show_app_simple_overlay)      ShowExampleAppSimpleOverlay(&show_app_simple_overlay);
-    //if (show_app_window_titles)       ShowExampleAppWindowTitles(&show_app_window_titles);
-    //if (show_app_custom_rendering)    ShowExampleAppCustomRendering(&show_app_custom_rendering);
 
     if (show_app_metrics)             { ImGui::ShowMetricsWindow(&show_app_metrics); }
     //if (show_app_style_editor)        { ImGui::Begin("Style Editor", &show_app_style_editor); ImGui::ShowStyleEditor(); ImGui::End(); }
@@ -168,21 +146,6 @@ void MainWin::draw(int w, int h) {
         if (ImGui::BeginMenu("Menu"))
         {
             ShowExampleMenuFile();
-            ImGui::EndMenu();
-        }
-        if (ImGui::BeginMenu("Examples"))
-        {
-            ImGui::MenuItem("Main menu bar", NULL, &show_app_main_menu_bar);
-            ImGui::MenuItem("Console", NULL, &show_app_console);
-            ImGui::MenuItem("Log", NULL, &show_app_log);
-            ImGui::MenuItem("Simple layout", NULL, &show_app_layout);
-            ImGui::MenuItem("Property editor", NULL, &show_app_property_editor);
-            ImGui::MenuItem("Long text display", NULL, &show_app_long_text);
-            ImGui::MenuItem("Auto-resizing window", NULL, &show_app_auto_resize);
-            ImGui::MenuItem("Constrained-resizing window", NULL, &show_app_constrained_resize);
-            ImGui::MenuItem("Simple overlay", NULL, &show_app_simple_overlay);
-            ImGui::MenuItem("Manipulating window titles", NULL, &show_app_window_titles);
-            ImGui::MenuItem("Custom rendering", NULL, &show_app_custom_rendering);
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Help"))
@@ -265,80 +228,6 @@ void MainWin::draw(int w, int h) {
             ImGui::BulletText("Bullet point 2\nOn multiple lines");
             ImGui::Bullet(); ImGui::Text("Bullet point 3 (two calls)");
             ImGui::Bullet(); ImGui::SmallButton("Button");
-            ImGui::TreePop();
-        }
-
-        if (ImGui::TreeNode("Plots Widgets")) {
-            static bool animate = true;
-            ImGui::Checkbox("Animate", &animate);
-
-            // Create a dummy array of contiguous float values to plot
-            // Tip: If your float aren't contiguous but part of a structure, you can pass a pointer to your first float and the sizeof() of your structure in the Stride parameter.
-            static float values[90] = { 0 };
-            static int values_offset = 0;
-            static float refresh_time = 0.0f;
-            if (!animate || refresh_time == 0.0f)
-                refresh_time = ImGui::GetTime();
-
-            while (refresh_time < ImGui::GetTime()) // Create dummy data at fixed 60 hz rate for the demo
-            {
-                static float phase = 0.0f;
-                values[values_offset] = cosf(phase);
-                values_offset = (values_offset+1) % IM_ARRAYSIZE(values);
-                phase += 0.10f*values_offset;
-                refresh_time += 1.0f/60.0f;
-            }
-            ImGui::PlotLines("Lines", values, IM_ARRAYSIZE(values), values_offset, "avg 0.0", -1.0f, 1.0f, ImVec2(0,80));
-
-            // Use functions to generate output
-            // FIXME: This is rather awkward because current plot API only pass in indices. We probably want an API passing floats and user provide sample rate/count.
-            struct Funcs
-            {
-                static float Sin(void*, int i) { return sinf(i * 0.1f); }
-                static float Saw(void*, int i) { return (i & 1) ? 1.0f : -1.0f; }
-            };
-            static int func_type = 0, display_count = 1000;
-            ImGui::Separator();
-            ImGui::PushItemWidth(100); ImGui::Combo("func", &func_type, "Sin\0Saw\0"); ImGui::PopItemWidth();
-            ImGui::SameLine();
-            ImGui::SliderInt("Sample count", &display_count, 1, 400);
-            float (*func)(void*, int) = (func_type == 0) ? Funcs::Sin : Funcs::Saw;
-
-            //const char* label,
-            //float (*values_getter)(void* data, int idx),
-            //void* data,
-            //int values_count,
-            //int values_offset,
-            //const char* overlay_text,
-            //float scale_min,
-            //float scale_max,
-            //ImVec2 graph_size
-
-            float s = ImGui::GetIndent();
-            float rw = ImGui::GetWindowContentRegionWidth();
-
-            display_count = rw - s;
-            ImGui::PlotHistogram("Histogram", func, NULL, display_count, 0, NULL, -1.0f, 1.0f, ImVec2(rw - s + 2 - 140,100));
-            ImGui::Separator();
-
-            // Animate a simple progress bar
-            static float progress = 0.0f, progress_dir = 1.0f;
-            if (animate)
-            {
-                progress += progress_dir * 0.4f * ImGui::GetIO().DeltaTime;
-                if (progress >= +1.1f) { progress = +1.1f; progress_dir *= -1.0f; }
-                if (progress <= -0.1f) { progress = -0.1f; progress_dir *= -1.0f; }
-            }
-
-            // Typically we would use ImVec2(-1.0f,0.0f) to use all available width, or ImVec2(width,0.0f) for a specified width. ImVec2(0.0f,0.0f) uses ItemWidth.
-            ImGui::ProgressBar(progress, ImVec2(0.0f,0.0f));
-            ImGui::SameLine(0.0f, ImGui::GetStyle().ItemInnerSpacing.x);
-            ImGui::Text("Progress Bar");
-
-            float progress_saturated = (progress < 0.0f) ? 0.0f : (progress > 1.0f) ? 1.0f : progress;
-            char buf[32];
-            sprintf(buf, "%d/%d", (int)(progress_saturated*1753), 1753);
-            ImGui::ProgressBar(progress, ImVec2(0.f,0.f), buf);
             ImGui::TreePop();
         }
     }

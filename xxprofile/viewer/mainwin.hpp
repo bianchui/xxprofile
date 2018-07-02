@@ -6,13 +6,13 @@
 #include "../loader/xxprofile_loader.hpp"
 
 struct MainWin {
+    bool load(const char* file);
 
     void draw(int w, int h);
 
     TimeLineView _timeLineView;
     FrameView _frameView;
 
-    bool load(const char* file);
     xxprofile::Loader _loader;
 };
 

@@ -58,9 +58,13 @@ public:
     uint32_t getNameCount() const {
         return _nameCount.load(std::memory_order_acquire);
     }
-    FORCEINLINE const char* getName(uint32_t id);
+    const char* getName(uint32_t id) const;
 
     void serialize(SName::IncrementSerializeTag* tag, Archive& ar);
+
+    FORCEINLINE const char* getName(SName name) const {
+        return getName(name.id());
+    }
 
 private:// names
     std::atomic<SNameEntry*> _nameHashes[HASH_BUCKET_COUNT];

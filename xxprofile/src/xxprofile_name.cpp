@@ -133,7 +133,7 @@ uint32_t SNamePool::getNameId(const char* name) {
     return newEntry->id;
 }
 
-const char* SNamePool::getName(uint32_t id) {
+const char* SNamePool::getName(uint32_t id) const {
     if (!id) {
         return "";
     }
@@ -393,15 +393,15 @@ static SNamePool s_namePool;
 
 // SName
 SName::SName(const char* name) {
-    id = s_namePool.getNameId(name);
+    _id = s_namePool.getNameId(name);
 }
 
-SName::SName(uint32_t id) : id(id) {
+SName::SName(uint32_t id) : _id(id) {
     assert(c_str());
 }
 
 const char* SName::c_str() const {
-    return s_namePool.getName(id);
+    return s_namePool.getName(_id);
 }
 
 void SName::Serialize(IncrementSerializeTag* tag, Archive& ar) {

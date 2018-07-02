@@ -1,6 +1,8 @@
 #include "TimeLineView.hpp"
 #include "imgui.h"
 
+static const char* TimeLineView_scaleText = " Scale";
+
 TimeLineView::TimeLineView() : _loader(NULL) {
 
     struct Funcs {
@@ -9,7 +11,6 @@ TimeLineView::TimeLineView() : _loader(NULL) {
 
     memset(&_hitTest, 0, sizeof(_hitTest));
 
-    _hitTest.label = "";
     _hitTest.values_getter = Funcs::Fun;
     _hitTest.data = this;
     //_hitTest.values_offset;
@@ -19,19 +20,49 @@ TimeLineView::TimeLineView() : _loader(NULL) {
     //_hitTest.graph_size;
 }
 
-void TimeLineView::setLoader(xxprofile::Loader* loader) {
+TimeLineView::~TimeLineView() {
+    clear();
+}
+
+void TimeLineView::clear() {
+
+}
+
+void TimeLineView::setLoader(const xxprofile::Loader* loader) {
+    clear();
     _loader = loader;
+    if (loader) {
+        //loader->
+    }
+}
+
+float TimeLineView::calcHeight() {
+    float height = 0;
+    const ImGuiStyle& style = ImGui::GetStyle();
+
+    {// Frames
+        height += FramesItemHeight;
+        height += style.WindowPadding.y * 2;
+    }
+
+    height += style.ItemSpacing.y;
+
+    {// Scale
+        const ImVec2 label_size = ImGui::CalcTextSize(TimeLineView_scaleText, NULL, true);
+        height += label_size.y;
+        height += style.FramePadding.y * 2.0f;
+    }
+
+    return height;
 }
 
 void TimeLineView::draw() {
     ImGuiWindowFlags window_flags = 0;
     ImGuiStyle& style = ImGui::GetStyle();
 
-    float rw = ImGui::GetWindowContentRegionWidth();
+    const float rw = ImGui::GetWindowContentRegionWidth();
 
-    float itemHeight = 100;
-
-    if (!ImGui::BeginChild("TimeLine", ImVec2(rw, itemHeight + style.WindowPadding.y * 2), true, window_flags)) {
+    if (!ImGui::BeginChild("TimeLine", ImVec2(rw, calcHeight()), true, window_flags)) {
         // Early out if the window is collapsed, as an optimization.
         ImGui::EndChild();
         return;
@@ -39,18 +70,26 @@ void TimeLineView::draw() {
     ImGui::PushItemWidth(-1);
 
     float s = ImGui::GetIndent();
+
     static int display_count = 1000;
 
-    //  - style.FramePadding.y * 2
-    float itemWidth = rw - style.WindowPadding.x * 2 - s;
-    int itemCount = (int)itemWidth;
+    {// Frames
+        const float framesWidth = rw - style.WindowPadding.x * 2 - s + style.FramePadding.x * 2;
 
-    static int i = 0;
+        float itemCount = framesWidth;
 
-    _hitTest.values_count = 100;
-    _hitTest.hitItem = (++i)%_hitTest.values_count;
-    _hitTest.graph_size = ImVec2(itemWidth, itemHeight);
+        static int i = 0;
+        _hitTest.values_count = 500;
+        _hitTest.selectedItem = (++i)%_hitTest.values_count;
+        _hitTest.graph_size = ImVec2(framesWidth, FramesItemHeight);
 
-    ImGui::PlotHistogram(_hitTest);
+        ImGui::PlotHistogram(_hitTest);
+    }
+
+    {// Scale
+        static int is = 0;
+        ImGui::SliderInt(TimeLineView_scaleText, &is, 0, 100);
+    }
+
     ImGui::EndChild();
 }

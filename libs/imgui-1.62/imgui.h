@@ -144,24 +144,6 @@ struct ImVec4
 #endif
 };
 
-struct ImHistogramWithHitTest {
-    const char* label;
-    float (*values_getter)(void* data, int idx);
-    void* data;
-    int values_count;
-    int values_offset;
-    const char* overlay_text;
-    float scale_min;
-    float scale_max;
-    ImVec2 graph_size;
-    int hitItem;
-    int hoverItem;
-
-    float value(int idx) {
-        return values_getter(data, idx);
-    }
-};
-
 // Dear ImGui end-user API
 // (In a namespace so you can add extra functions in your own separate file. Please don't modify imgui.cpp/.h!)
 namespace ImGui
@@ -289,8 +271,6 @@ namespace ImGui
     IMGUI_API void          Dummy(const ImVec2& size);                                      // add a dummy item of given size
     IMGUI_API void          Indent(float indent_w = 0.0f);                                  // move content position toward the right, by style.IndentSpacing or indent_w if != 0
     IMGUI_API void          Unindent(float indent_w = 0.0f);                                // move content position back to the left, by style.IndentSpacing or indent_w if != 0
-    IMGUI_API float         GetIndent();
-    IMGUI_API float         GetContentWidth();
     IMGUI_API void          BeginGroup();                                                   // lock horizontal starting position + capture group bounding box into one "item" (so you can use IsItemHovered() or layout primitives such as SameLine() on whole group, etc.)
     IMGUI_API void          EndGroup();
     IMGUI_API ImVec2        GetCursorPos();                                                 // cursor position is relative to window position
@@ -354,7 +334,6 @@ namespace ImGui
     IMGUI_API void          PlotLines(const char* label, float (*values_getter)(void* data, int idx), void* data, int values_count, int values_offset = 0, const char* overlay_text = NULL, float scale_min = FLT_MAX, float scale_max = FLT_MAX, ImVec2 graph_size = ImVec2(0,0));
     IMGUI_API void          PlotHistogram(const char* label, const float* values, int values_count, int values_offset = 0, const char* overlay_text = NULL, float scale_min = FLT_MAX, float scale_max = FLT_MAX, ImVec2 graph_size = ImVec2(0,0), int stride = sizeof(float));
     IMGUI_API void          PlotHistogram(const char* label, float (*values_getter)(void* data, int idx), void* data, int values_count, int values_offset = 0, const char* overlay_text = NULL, float scale_min = FLT_MAX, float scale_max = FLT_MAX, ImVec2 graph_size = ImVec2(0,0));
-    IMGUI_API void PlotHistogram(ImHistogramWithHitTest& value);
     IMGUI_API void          ProgressBar(float fraction, const ImVec2& size_arg = ImVec2(-1,0), const char* overlay = NULL);
     IMGUI_API void          Bullet();                                                       // draw a small circle and keep the cursor on the same line. advance cursor x position by GetTreeNodeToLabelSpacing(), same distance that TreeNode() uses
 

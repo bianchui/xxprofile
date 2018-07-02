@@ -2,19 +2,26 @@
 #ifndef xxprofileviewer_TimeLineView_hpp
 #define xxprofileviewer_TimeLineView_hpp
 #include "../loader/xxprofile_loader.hpp"
-#include "imgui.h"
+#include "imgui/imgui_custom.hpp"
 
 class TimeLineView {
 public:
-    TimeLineView();
+    enum {
+        FramesItemHeight = 100,
+    };
 
-    void setLoader(xxprofile::Loader* loader);
+    TimeLineView();
+    ~TimeLineView();
+
+    float calcHeight();
+    void setLoader(const xxprofile::Loader* loader);
+    void clear();
 
     void draw();
 
 private:
-    ImHistogramWithHitTest _hitTest;
-    xxprofile::Loader* _loader;
+    ImGui::ImHistogramWithHitTest _hitTest;
+    const xxprofile::Loader* _loader;
 };
 
 #endif//xxprofileviewer_TimeLineView_hpp

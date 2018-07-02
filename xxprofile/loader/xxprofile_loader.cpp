@@ -27,12 +27,15 @@ Loader::~Loader() {
 
 void Loader::load(Archive& ar) {
     ThreadData thread;
+    ar << thread._secondsPerCycle;
     while (!ar.eof()) {
         FrameData data;
         memset(&data, 0, sizeof(FrameData));
         ar << data.frameId;
+        XXLOG_DEBUG("Load.frame(%d)\n", data.frameId);
         _namePool.serialize(NULL, ar);
         ar << data.nodeCount;
+        XXLOG_DEBUG("  nodeCount = %d\n", data.nodeCount);
         if (data.nodeCount > 0) {
             data.nodes = (XXProfileTreeNode*)malloc(sizeof(XXProfileTreeNode) * data.nodeCount);
             ar.serialize(data.nodes, sizeof(XXProfileTreeNode) * data.nodeCount);

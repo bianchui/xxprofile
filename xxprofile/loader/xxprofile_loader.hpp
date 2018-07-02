@@ -22,6 +22,7 @@ struct Loader {
 
     struct ThreadData {
         std::vector<FrameData> _frames;
+        double _secondsPerCycle;
         ThreadData() {
         }
 
@@ -48,6 +49,10 @@ struct Loader {
 
     void load(Archive& ar);
     void clear();
+
+    FORCEINLINE const char* name(SName name) const {
+        return _namePool.getName(name);
+    }
 };
 
 XX_NAMESPACE_END(xxprofile);
