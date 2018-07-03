@@ -1,7 +1,7 @@
 // Copyright 2017 bianchui. All rights reserved.
 #ifndef xxprofileviewer_mainwin_hpp
 #define xxprofileviewer_mainwin_hpp
-#include "TimeLineView.hpp"
+#include "FramesLineView.hpp"
 #include "FrameView.hpp"
 #include "../loader/xxprofile_loader.hpp"
 #include "EventHandler.hpp"
@@ -12,7 +12,7 @@ struct MainWin : EventHandler {
 
     void draw(int w, int h);
 
-    TimeLineView _timeLineView;
+    FramesLineView _framesLineView;
     FrameView _frameView;
 
     xxprofile::Loader _loader;

@@ -19,7 +19,7 @@
 		ED2207C620E1EDB90076C22F /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2207C120E1E3E00076C22F /* libglfw3.a */; };
 		ED2207C920E1F67D0076C22F /* mainloop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2207C820E1F67D0076C22F /* mainloop.cpp */; };
 		ED2207E120E2500D0076C22F /* mainwin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2207DE20E2500D0076C22F /* mainwin.cpp */; };
-		ED336CF620E4C2BD0085BF34 /* TimeLineView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED336CF420E4C2BD0085BF34 /* TimeLineView.cpp */; };
+		ED336CF620E4C2BD0085BF34 /* FramesLineView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED336CF420E4C2BD0085BF34 /* FramesLineView.cpp */; };
 		ED5F73081FCD46C3004E945D /* xxprofile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73011FCD46C3004E945D /* xxprofile.cpp */; };
 		ED5F730A1FCD46C3004E945D /* platform_apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73031FCD46C3004E945D /* platform_apple.cpp */; };
 		ED5F730C1FCD46C3004E945D /* platform_base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73051FCD46C3004E945D /* platform_base.cpp */; };
@@ -98,8 +98,8 @@
 		ED2207D820E24D9D0076C22F /* xxprofile_namepool.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_namepool.hpp; sourceTree = "<group>"; };
 		ED2207DE20E2500D0076C22F /* mainwin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mainwin.cpp; sourceTree = "<group>"; };
 		ED2207DF20E2500D0076C22F /* mainwin.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = mainwin.hpp; sourceTree = "<group>"; };
-		ED336CF420E4C2BD0085BF34 /* TimeLineView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimeLineView.cpp; sourceTree = "<group>"; };
-		ED336CF520E4C2BD0085BF34 /* TimeLineView.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TimeLineView.hpp; sourceTree = "<group>"; };
+		ED336CF420E4C2BD0085BF34 /* FramesLineView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FramesLineView.cpp; sourceTree = "<group>"; };
+		ED336CF520E4C2BD0085BF34 /* FramesLineView.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FramesLineView.hpp; sourceTree = "<group>"; };
 		ED5F73001FCD46C3004E945D /* platform.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = platform.hpp; sourceTree = "<group>"; };
 		ED5F73011FCD46C3004E945D /* xxprofile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xxprofile.cpp; sourceTree = "<group>"; };
 		ED5F73021FCD46C3004E945D /* xxprofile.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xxprofile.hpp; sourceTree = "<group>"; };
@@ -231,13 +231,13 @@
 			children = (
 				EDA4401320E9C1EE00C9AE65 /* imgui */,
 				ED71B0FB20EB29C200AEF85F /* EventHandler.hpp */,
+				ED336CF420E4C2BD0085BF34 /* FramesLineView.cpp */,
+				ED336CF520E4C2BD0085BF34 /* FramesLineView.hpp */,
 				ED6B806A20E3935A008D2BAD /* FrameView.cpp */,
 				ED6B806B20E3935A008D2BAD /* FrameView.hpp */,
 				ED2207C820E1F67D0076C22F /* mainloop.cpp */,
 				ED2207DE20E2500D0076C22F /* mainwin.cpp */,
 				ED2207DF20E2500D0076C22F /* mainwin.hpp */,
-				ED336CF420E4C2BD0085BF34 /* TimeLineView.cpp */,
-				ED336CF520E4C2BD0085BF34 /* TimeLineView.hpp */,
 			);
 			name = viewer;
 			path = ../../viewer;
@@ -496,7 +496,7 @@
 				ED6B806C20E3935A008D2BAD /* FrameView.cpp in Sources */,
 				EDA4401620E9C1EE00C9AE65 /* imgui_custom.cpp in Sources */,
 				ED2207BB20E1DFC40076C22F /* imgui_impl_opengl2.cpp in Sources */,
-				ED336CF620E4C2BD0085BF34 /* TimeLineView.cpp in Sources */,
+				ED336CF620E4C2BD0085BF34 /* FramesLineView.cpp in Sources */,
 				ED2207C920E1F67D0076C22F /* mainloop.cpp in Sources */,
 				ED2207B420E1DFAC0076C22F /* imgui_draw.cpp in Sources */,
 				ED2207B520E1DFAC0076C22F /* imgui.cpp in Sources */,

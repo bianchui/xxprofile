@@ -1,11 +1,11 @@
 // Copyright 2017 bianchui. All rights reserved.
-#ifndef xxprofileviewer_TimeLineView_hpp
-#define xxprofileviewer_TimeLineView_hpp
+#ifndef xxprofileviewer_FramesLineView_hpp
+#define xxprofileviewer_FramesLineView_hpp
 #include "../loader/xxprofile_loader.hpp"
 #include "imgui/imgui_custom.hpp"
 #include "EventHandler.hpp"
 
-class TimeLineView {
+class FramesLineView {
 public:
     enum {
         FramesItemHeight = 100,
@@ -23,8 +23,8 @@ public:
         void setTo(ImGui::ImPlotWithHitTest& plot) const;
     };
 
-    TimeLineView(EventHandler* handler);
-    ~TimeLineView();
+    FramesLineView(EventHandler* handler);
+    ~FramesLineView();
 
     float calcHeight();
     void setLoader(const xxprofile::Loader* loader);
@@ -38,4 +38,4 @@ private:
     std::vector<ThreadData> _threads;
 };
 
-#endif//xxprofileviewer_TimeLineView_hpp
+#endif//xxprofileviewer_FramesLineView_hpp

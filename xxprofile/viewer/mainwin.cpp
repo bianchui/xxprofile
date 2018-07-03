@@ -5,16 +5,17 @@
 
 #include <limits.h>         // INT_MIN, INT_MAX
 
-MainWin::MainWin() : _timeLineView(this) {
-    _timeLineView.setLoader(&_loader);
+MainWin::MainWin() : _framesLineView(this) {
+    _framesLineView.setLoader(&_loader);
     _frameView.setLoader(&_loader);
 }
 
 bool MainWin::load(const char* file) {
     _loader.clear();
     bool success = _load(file);
-    _timeLineView.setLoader(&_loader);
+    _framesLineView.setLoader(&_loader);
     _frameView.setLoader(&_loader);
+    onFrameSelectChange(0, 0);
     return success;
 }
 
@@ -24,7 +25,6 @@ bool MainWin::_load(const char* file) {
         return false;
     }
     _loader.load(ar);
-    onFrameSelectChange(0, 0);
     return true;
 }
 
@@ -56,7 +56,7 @@ void MainWin::draw(int w, int h) {
     //ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.65f);    // 2/3 of the space for widget and 1/3 for labels
     ImGui::PushItemWidth(-140);                                 // Right align, keep 140 pixels for labels
 
-    _timeLineView.draw();
+    _framesLineView.draw();
     _frameView.draw();
 
     ImGui::End();

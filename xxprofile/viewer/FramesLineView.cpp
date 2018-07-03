@@ -1,21 +1,22 @@
-#include "TimeLineView.hpp"
+#include "FramesLineView.hpp"
 #include "imgui.h"
+#include <cmath>
 
-static const char* TimeLineView_scaleText = " Scale";
+static const char* FramesLineView_scaleText = " Scale";
 
-TimeLineView::TimeLineView(EventHandler* handler) : _handler(handler), _loader(NULL) {
+FramesLineView::FramesLineView(EventHandler* handler) : _handler(handler), _loader(NULL) {
 
 }
 
-TimeLineView::~TimeLineView() {
+FramesLineView::~FramesLineView() {
     clear();
 }
 
-void TimeLineView::clear() {
+void FramesLineView::clear() {
 
 }
 
-void TimeLineView::setLoader(const xxprofile::Loader* loader) {
+void FramesLineView::setLoader(const xxprofile::Loader* loader) {
     clear();
     _loader = loader;
     if (loader) {
@@ -29,7 +30,7 @@ void TimeLineView::setLoader(const xxprofile::Loader* loader) {
     }
 }
 
-float TimeLineView::calcHeight() {
+float FramesLineView::calcHeight() {
     float height = 0;
     const ImGuiStyle& style = ImGui::GetStyle();
 
@@ -41,7 +42,7 @@ float TimeLineView::calcHeight() {
     height += style.ItemSpacing.y;
 
     {// Scale
-        const ImVec2 label_size = ImGui::CalcTextSize(TimeLineView_scaleText, NULL, true);
+        const ImVec2 label_size = ImGui::CalcTextSize(FramesLineView_scaleText, NULL, true);
         height += label_size.y;
         height += style.FramePadding.y * 2.0f;
     }
@@ -49,12 +50,12 @@ float TimeLineView::calcHeight() {
     return height;
 }
 
-void TimeLineView::ThreadData::init(const xxprofile::ThreadData* data) {
+void FramesLineView::ThreadData::init(const xxprofile::ThreadData* data) {
     _data = data;
     assert(data);
 }
 
-float TimeLineView::ThreadData::StaticGetData(void* p, int idx) {
+float FramesLineView::ThreadData::StaticGetData(void* p, int idx) {
     const ThreadData* data = (const ThreadData*)p;
     const auto& frames = data->_data->_frames;
     const int index = data->startIndex + idx;
@@ -63,7 +64,7 @@ float TimeLineView::ThreadData::StaticGetData(void* p, int idx) {
     return (float)value;
 }
 
-void TimeLineView::ThreadData::setTo(ImGui::ImPlotWithHitTest& plot) const {
+void FramesLineView::ThreadData::setTo(ImGui::ImPlotWithHitTest& plot) const {
     plot.data = (void*)this;
     plot.valuesGetter = StaticGetData;
     plot.scaleMax = (float)(_data->_maxCycleCount * _data->_secondsPerCycle);
@@ -71,7 +72,7 @@ void TimeLineView::ThreadData::setTo(ImGui::ImPlotWithHitTest& plot) const {
     plot.valuesCount = (int)count;
 }
 
-void TimeLineView::draw() {
+void FramesLineView::draw() {
     ImGuiWindowFlags window_flags = 0;
     const ImGuiStyle& style = ImGui::GetStyle();
 
@@ -84,11 +85,11 @@ void TimeLineView::draw() {
     }
     ImGui::PushItemWidth(-1);
 
-    float s = ImGui::GetIndent();
+    const float indent = ImGui::GetIndent();
 
     {// Frames
-        const float framesGraphWidth = rw - style.WindowPadding.x * 2 - s + style.FramePadding.x * 2;
-        const int maxItemCount = (int)framesGraphWidth * 0.5f;
+        const int maxItemCount = (int)std::floor((rw - style.WindowPadding.x * 2 - indent + style.FramePadding.x * 2) * 0.5f);
+        const float framesGraphWidth = maxItemCount * 2;
         assert(_threads.size() == _loader->_threads.size());
         ImGui::ImPlotWithHitTest plot;
         memset(&plot, 0, sizeof(plot));
@@ -116,7 +117,7 @@ void TimeLineView::draw() {
 
     {// Scale
         static int is = 0;
-        ImGui::SliderInt(TimeLineView_scaleText, &is, 0, 5);
+        ImGui::SliderInt(FramesLineView_scaleText, &is, 0, 5);
     }
 
     ImGui::EndChild();
