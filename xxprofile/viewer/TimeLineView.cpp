@@ -3,7 +3,7 @@
 
 static const char* TimeLineView_scaleText = " Scale";
 
-TimeLineView::TimeLineView() : _loader(NULL) {
+TimeLineView::TimeLineView(EventHandler* handler) : _handler(handler), _loader(NULL) {
 
 }
 
@@ -49,24 +49,26 @@ float TimeLineView::calcHeight() {
     return height;
 }
 
-void TimeLineView::ThreadData::init(const xxprofile::Loader::ThreadData* data) {
+void TimeLineView::ThreadData::init(const xxprofile::ThreadData* data) {
     _data = data;
     assert(data);
-    //for (auto iter = data->_frames.begin(); ++ )
 }
 
 float TimeLineView::ThreadData::StaticGetData(void* p, int idx) {
     const ThreadData* data = (const ThreadData*)p;
+    const auto& frames = data->_data->_frames;
     const int index = data->startIndex + idx;
-    return 1.0f * index / 1000;
+    const xxprofile::FrameData& frameData = frames[index % frames.size()];
+    double value = frameData.frameCycles() * data->_data->_secondsPerCycle;
+    return (float)value;
 }
 
 void TimeLineView::ThreadData::setTo(ImGui::ImPlotWithHitTest& plot) const {
     plot.data = (void*)this;
     plot.valuesGetter = StaticGetData;
-    plot.scaleMax = valueMax;
+    plot.scaleMax = (float)(_data->_maxCycleCount * _data->_secondsPerCycle);
     const size_t count = _data->_frames.size();
-    plot.valuesCount = 500;
+    plot.valuesCount = (int)count;
 }
 
 void TimeLineView::draw() {
@@ -84,34 +86,37 @@ void TimeLineView::draw() {
 
     float s = ImGui::GetIndent();
 
-    static int display_count = 1000;
-
     {// Frames
         const float framesGraphWidth = rw - style.WindowPadding.x * 2 - s + style.FramePadding.x * 2;
         const int maxItemCount = (int)framesGraphWidth * 0.5f;
         assert(_threads.size() == _loader->_threads.size());
         ImGui::ImPlotWithHitTest plot;
         memset(&plot, 0, sizeof(plot));
-        //plot.overlay_text;
         plot.scaleMin = 0;
         plot.scaleMax = 1.0f;
         plot.graphSize = ImVec2(framesGraphWidth, FramesItemHeight);
+        const auto& io = ImGui::GetIO();
 
         for (size_t t = 0; t < _threads.size(); ++t) {
-            const auto& thread = _threads[t];
+            auto& thread = _threads[t];
             thread.setTo(plot);
-            plot.valuesCount = 500;
-            //plot.selectedItem = (++i)%plot.values_count;
+            if (plot.valuesCount > maxItemCount) {
+                plot.valuesCount = maxItemCount;
+            }
+            plot.selectedItem = thread.selectedItem;
 
             ImGui::PlotHistogram(plot);
 
+            if (io.MouseDown[0] && plot.hoverItem >= 0) {
+                thread.selectedItem = plot.hoverItem - thread.startIndex;
+                _handler->onFrameSelectChange((int)t, thread.selectedItem);
+            }
         }
-
     }
 
     {// Scale
         static int is = 0;
-        ImGui::SliderInt(TimeLineView_scaleText, &is, 0, 100);
+        ImGui::SliderInt(TimeLineView_scaleText, &is, 0, 5);
     }
 
     ImGui::EndChild();

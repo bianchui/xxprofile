@@ -5,17 +5,47 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
-Loader::ThreadData::~ThreadData() {
+uint64_t TreeItem::useCycles() const {
+    return node->_endTime - node->_beginTime;
+}
+
+void FrameData::init(Loader* loader) {
+    assert(loader);
+    assert(_allNodes == NULL);
+    if (_nodeCount) {
+        assert(_nodes != NULL);
+        assert(_frameCycles == 0);
+        _allNodes = (TreeItem*)malloc(sizeof(TreeItem) * _nodeCount);
+        memset(_allNodes, 0, sizeof(TreeItem) * _nodeCount);
+        const xxprofile::XXProfileTreeNode* nodes = _nodes;
+        const uint32_t nodeCount = _nodeCount;
+
+        _frameCycles = 0;
+        for (uint32_t i = 0; i < nodeCount; ++i) {
+            const xxprofile::XXProfileTreeNode* node = nodes + i;
+            TreeItem* item = _allNodes + i;
+            item->node = node;
+            item->name = loader->name(node->_name);
+            if (node->_parentNodeId) {
+                assert(node->_parentNodeId <= i);
+                TreeItem* parentItem = _allNodes + (node->_parentNodeId - 1);
+                parentItem->addChild(item);
+            } else {
+                _roots.push_back(item);
+                _frameCycles += item->useCycles();
+            }
+        }
+    }
+}
+
+ThreadData::~ThreadData() {
     clear();
 }
 
-void Loader::ThreadData::clear() {
-    for (auto iter = _frames.begin(); iter != _frames.end(); ++iter) {
-        if (iter->nodes) {
-            free(iter->nodes);
-        }
-    }
+void ThreadData::clear() {
     _frames.clear();
+    _secondsPerCycle = 0;
+    _maxCycleCount = 0;
 }
 
 Loader::Loader() {
@@ -28,19 +58,23 @@ Loader::~Loader() {
 void Loader::load(Archive& ar) {
     ThreadData thread;
     ar << thread._secondsPerCycle;
+    thread._maxCycleCount = 0;
     while (!ar.eof()) {
         FrameData data;
-        memset(&data, 0, sizeof(FrameData));
-        ar << data.frameId;
-        XXLOG_DEBUG("Load.frame(%d)\n", data.frameId);
+        ar << data._frameId;
+        XXLOG_DEBUG("Load.frame(%d)\n", data._frameId);
         _namePool.serialize(NULL, ar);
-        ar << data.nodeCount;
-        XXLOG_DEBUG("  nodeCount = %d\n", data.nodeCount);
-        if (data.nodeCount > 0) {
-            data.nodes = (XXProfileTreeNode*)malloc(sizeof(XXProfileTreeNode) * data.nodeCount);
-            ar.serialize(data.nodes, sizeof(XXProfileTreeNode) * data.nodeCount);
+        ar << data._nodeCount;
+        XXLOG_DEBUG("  nodeCount = %d\n", data._nodeCount);
+        if (data._nodeCount > 0) {
+            data._nodes = (XXProfileTreeNode*)malloc(sizeof(XXProfileTreeNode) * data._nodeCount);
+            ar.serialize(data._nodes, sizeof(XXProfileTreeNode) * data._nodeCount);
         }
-        thread._frames.push_back(data);
+        data.init(this);
+        if (thread._maxCycleCount < data.frameCycles()) {
+            thread._maxCycleCount = data.frameCycles();
+        }
+        thread._frames.push_back(std::move(data));
     }
     _threads.push_back(std::move(thread));
 }

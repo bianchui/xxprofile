@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <time.h>
 #include <chrono>
+#include "../../shared/utils/StrBuf.h"
 
 #include "mainwin.hpp"
 
@@ -27,12 +28,24 @@ void setupStyle() {
 }
 
 MainWin mainwin;
+GLFWwindow* g_win = NULL;
+const char* g_title = "xxprofileViewer";
 
 int glfw_onDocumentOpen(const char* name) {
     printf("%s\n", name);
     if (!mainwin.load(name)) {
+        glfwSetWindowTitle(g_win, g_title);
         return GLFW_FALSE;
     }
+    const char* p_name = strrchr(name, '/');
+    if (!p_name) {
+        p_name = name;
+    } else {
+        ++p_name;
+    }
+    shared::StrBuf buf;
+    buf.printf("%s - %s", p_name, g_title);
+    glfwSetWindowTitle(g_win, buf);
     return GLFW_TRUE;
 }
 
@@ -43,7 +56,8 @@ extern "C" void mainLoop() {
         return;
     }
     glfwSetOnDocumentOpen(glfw_onDocumentOpen);
-    GLFWwindow* window = glfwCreateWindow(1280, 720, "xxprofileViewer", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(1280, 720, g_title, NULL, NULL);
+    g_win = window;
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // Enable vsync
 

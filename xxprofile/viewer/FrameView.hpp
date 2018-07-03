@@ -9,30 +9,14 @@ public:
     ~FrameView();
 
     void setLoader(const xxprofile::Loader* loader);
-    void setFrameData(const xxprofile::Loader::FrameData* data);
+    void setFrameData(const xxprofile::FrameData* data);
     void draw();
 
     void clear();
 
-    struct TreeItem {
-        const char* name;
-        const xxprofile::XXProfileTreeNode* node;
-        std::vector<TreeItem*>* children;
-        bool open;
-
-        void addChild(TreeItem* child) {
-            if (!children) {
-                children = new std::vector<TreeItem*>();
-            }
-            children->push_back(child);
-        }
-    };
-
 private:
     const xxprofile::Loader* _loader;
-    const xxprofile::Loader::FrameData* _frameData;
-    TreeItem* _allNodes;
-    std::vector<TreeItem*> _roots;
+    const xxprofile::FrameData* _frameData;
 };
 
 #endif//xxprofileviewer_FrameView_hpp

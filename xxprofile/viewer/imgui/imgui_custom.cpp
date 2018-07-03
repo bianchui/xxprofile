@@ -61,13 +61,15 @@ void ImGui::PlotEx(ImGuiPlotType plot_type, ImPlotWithHitTest& value) {
         int res_w = ImMin((int)value.graphSize.x, value.valuesCount) + ((plot_type == ImGuiPlotType_Lines) ? -1 : 0);
         int item_count = value.valuesCount + ((plot_type == ImGuiPlotType_Lines) ? -1 : 0);
 
+        const bool mouseInItem = IsMouseHoveringRect(inner_bb.Min, inner_bb.Max);
+
+        const float t = ImClamp((g.IO.MousePos.x - inner_bb.Min.x) / (inner_bb.Max.x - inner_bb.Min.x), 0.0f, 0.9999f);
+        const int v_idx = (int)(t * item_count);
+        IM_ASSERT(v_idx >= 0 && v_idx < value.valuesCount);
+
         // Tooltip on hover
         int v_hovered = -1;
         if (hovered) {
-            const float t = ImClamp((g.IO.MousePos.x - inner_bb.Min.x) / (inner_bb.Max.x - inner_bb.Min.x), 0.0f, 0.9999f);
-            const int v_idx = (int)(t * item_count);
-            IM_ASSERT(v_idx >= 0 && v_idx < value.valuesCount);
-
             const float v0 = value.value((v_idx) % value.valuesCount);
             const float v1 = value.value((v_idx + 1) % value.valuesCount);
             if (plot_type == ImGuiPlotType_Lines) {
@@ -76,12 +78,13 @@ void ImGui::PlotEx(ImGuiPlotType plot_type, ImPlotWithHitTest& value) {
                 SetTooltip("%d: %8.4g", v_idx, v0);
             }
             v_hovered = v_idx;
+        }
 
-            value.hoverItem = v_hovered;
-
-            if (g.IO.MouseReleased[0]) {
-                value.clickedItem = v_hovered;
-            }
+        if (mouseInItem) {
+            value.hoverItem = v_idx;
+        }
+        if (g.IO.MouseClicked[0] && mouseInItem) {
+            value.clickedItem = v_idx;
         }
 
         const float t_step = 1.0f / (float)res_w;

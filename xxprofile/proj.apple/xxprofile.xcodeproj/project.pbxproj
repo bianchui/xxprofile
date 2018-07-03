@@ -118,6 +118,7 @@
 		ED6B806A20E3935A008D2BAD /* FrameView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FrameView.cpp; sourceTree = "<group>"; };
 		ED6B806B20E3935A008D2BAD /* FrameView.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FrameView.hpp; sourceTree = "<group>"; };
 		ED714AF120DA5D3600732372 /* xxprofile_internal.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_internal.hpp; sourceTree = "<group>"; };
+		ED71B0FB20EB29C200AEF85F /* EventHandler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = EventHandler.hpp; sourceTree = "<group>"; };
 		ED81D19C20D3584B0096FB53 /* xxprofile_macros.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_macros.hpp; sourceTree = "<group>"; };
 		ED81D19F20D374B40096FB53 /* xxprofile_archive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xxprofile_archive.cpp; sourceTree = "<group>"; };
 		ED81D1A020D374B40096FB53 /* xxprofile_archive.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_archive.hpp; sourceTree = "<group>"; };
@@ -229,6 +230,7 @@
 			isa = PBXGroup;
 			children = (
 				EDA4401320E9C1EE00C9AE65 /* imgui */,
+				ED71B0FB20EB29C200AEF85F /* EventHandler.hpp */,
 				ED6B806A20E3935A008D2BAD /* FrameView.cpp */,
 				ED6B806B20E3935A008D2BAD /* FrameView.hpp */,
 				ED2207C820E1F67D0076C22F /* mainloop.cpp */,

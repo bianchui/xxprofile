@@ -3,6 +3,7 @@
 #define xxprofileviewer_TimeLineView_hpp
 #include "../loader/xxprofile_loader.hpp"
 #include "imgui/imgui_custom.hpp"
+#include "EventHandler.hpp"
 
 class TimeLineView {
 public:
@@ -11,19 +12,18 @@ public:
     };
 
     struct ThreadData {
-        float valueMax;
-        uint64_t maxCycles;
         int startIndex;
-        const xxprofile::Loader::ThreadData* _data;
+        int selectedItem;
+        const xxprofile::ThreadData* _data;
 
-        void init(const xxprofile::Loader::ThreadData* data);
+        void init(const xxprofile::ThreadData* data);
         
         static float StaticGetData(void*, int);
 
         void setTo(ImGui::ImPlotWithHitTest& plot) const;
     };
 
-    TimeLineView();
+    TimeLineView(EventHandler* handler);
     ~TimeLineView();
 
     float calcHeight();
@@ -33,6 +33,7 @@ public:
     void draw();
 
 private:
+    EventHandler* _handler;
     const xxprofile::Loader* _loader;
     std::vector<ThreadData> _threads;
 };
