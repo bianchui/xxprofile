@@ -575,6 +575,7 @@
 					"$(SRCROOT)/../../libs/imgui-1.62/",
 					"$(SRCROOT)/../../libs/imgui-1.62/examples/",
 					"$(SRCROOT)/../../libs/glfw-3.2.1/include/",
+					"$(SRCROOT)/../../",
 				);
 				INFOPLIST_FILE = xxprofileViewer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -595,6 +596,7 @@
 					"$(SRCROOT)/../../libs/imgui-1.62/",
 					"$(SRCROOT)/../../libs/imgui-1.62/examples/",
 					"$(SRCROOT)/../../libs/glfw-3.2.1/include/",
+					"$(SRCROOT)/../../",
 				);
 				INFOPLIST_FILE = xxprofileViewer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";

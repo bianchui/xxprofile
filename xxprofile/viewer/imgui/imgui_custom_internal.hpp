@@ -4,7 +4,6 @@
 
 namespace ImGui {
     IMGUI_API void PlotEx(ImGuiPlotType plot_type, ImPlotWithHitTest& value);
-
 }
 
 #endif//imgui_custom_internal_hpp

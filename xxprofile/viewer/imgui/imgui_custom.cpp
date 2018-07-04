@@ -21,6 +21,7 @@ void ImGui::PlotEx(ImGuiPlotType plot_type, ImPlotWithHitTest& value) {
     }
     ImGuiContext& g = *GImGui;
     const ImGuiStyle& style = g.Style;
+    const ImGuiID id = value.keyId ? window->GetID(value.keyId) : window->GetID(value.data);
 
     if (value.graphSize.x == 0.0f) {
         value.graphSize.x = CalcItemWidth();
@@ -36,7 +37,7 @@ void ImGui::PlotEx(ImGuiPlotType plot_type, ImPlotWithHitTest& value) {
     if (!ItemAdd(total_bb, 0, &frame_bb)) {
         return;
     }
-    const bool hovered = ItemHoverable(inner_bb, 0);
+    const bool hovered = ItemHoverable(inner_bb, id);
 
     // Determine scale from values if not specified
     if (value.scaleMin == FLT_MAX || value.scaleMax == FLT_MAX) {
@@ -58,10 +59,10 @@ void ImGui::PlotEx(ImGuiPlotType plot_type, ImPlotWithHitTest& value) {
     RenderFrame(frame_bb.Min, frame_bb.Max, GetColorU32(ImGuiCol_FrameBg), true, style.FrameRounding);
 
     if (value.valuesCount > 0) {
-        int res_w = ImMin((int)value.graphSize.x, value.valuesCount) + ((plot_type == ImGuiPlotType_Lines) ? -1 : 0);
+        int res_w = ImMin((int)inner_bb.GetWidth(), value.valuesCount) + ((plot_type == ImGuiPlotType_Lines) ? -1 : 0);
         int item_count = value.valuesCount + ((plot_type == ImGuiPlotType_Lines) ? -1 : 0);
 
-        const bool mouseInItem = IsMouseHoveringRect(inner_bb.Min, inner_bb.Max);
+        //const bool mouseInItem = IsMouseHoveringRect(inner_bb.Min, inner_bb.Max);
 
         const float t = ImClamp((g.IO.MousePos.x - inner_bb.Min.x) / (inner_bb.Max.x - inner_bb.Min.x), 0.0f, 0.9999f);
         const int v_idx = (int)(t * item_count);
@@ -75,17 +76,24 @@ void ImGui::PlotEx(ImGuiPlotType plot_type, ImPlotWithHitTest& value) {
             if (plot_type == ImGuiPlotType_Lines) {
                 SetTooltip("%d: %8.4g\n%d: %8.4g", v_idx, v0, v_idx+1, v1);
             } else if (plot_type == ImGuiPlotType_Histogram) {
-                SetTooltip("%d: %8.4g", v_idx, v0);
+                if (value.formatValue) {
+                    shared::StrBuf buf;
+                    value.format(buf, v_idx);
+                    SetTooltip("%s", buf.c_str());
+                } else {
+                    SetTooltip("%d: %8.4g", v_idx, v0);
+                }
             }
             v_hovered = v_idx;
         }
 
-        if (mouseInItem) {
+        if (hovered) {
             value.hoverItem = v_idx;
         }
-        if (g.IO.MouseClicked[0] && mouseInItem) {
+        if (hovered) {
             value.clickedItem = v_idx;
         }
+        
 
         const float t_step = 1.0f / (float)res_w;
         const float inv_scale = (value.scaleMin == value.scaleMax) ? 0.0f : (1.0f / (value.scaleMax - value.scaleMin));
@@ -101,6 +109,7 @@ void ImGui::PlotEx(ImGuiPlotType plot_type, ImPlotWithHitTest& value) {
         const ImU32 col_hovered = GetColorU32((plot_type == ImGuiPlotType_Lines) ? ImGuiCol_PlotLinesHovered : ImGuiCol_PlotHistogramHovered);
         const ImU32 col_selected = GetColorU32(ImGuiCol_CheckMark);
 
+        ImVec2 vmin(inner_bb.Min), vmax(inner_bb.Max);
         for (int n = 0; n < res_w; n++) {
             const float t1 = t0 + t_step;
             const int v1_idx = (int)(t0 * item_count + 0.5f);
@@ -109,34 +118,38 @@ void ImGui::PlotEx(ImGuiPlotType plot_type, ImPlotWithHitTest& value) {
             const ImVec2 tp1 = ImVec2( t1, 1.0f - ImSaturate((v1 - value.scaleMin) * inv_scale) );
 
             // NB: Draw calls are merged together by the DrawList system. Still, we should render our batch are lower level to save a bit of CPU.
-            ImVec2 pos0 = ImLerp(inner_bb.Min, inner_bb.Max, tp0);
-            ImVec2 pos1 = ImLerp(inner_bb.Min, inner_bb.Max, (plot_type == ImGuiPlotType_Lines) ? tp1 : ImVec2(tp1.x, histogram_zero_line_t));
+            const ImVec2 pos0 = ImLerp(inner_bb.Min, inner_bb.Max, tp0);
+            const ImVec2 pos1 = ImLerp(inner_bb.Min, inner_bb.Max, (plot_type == ImGuiPlotType_Lines) ? tp1 : ImVec2(tp1.x, histogram_zero_line_t));
             const ImU32 col = v_hovered == v1_idx ? col_hovered : col_base;
 
             if (plot_type == ImGuiPlotType_Lines) {
                 window->DrawList->AddLine(pos0, pos1, col);
             } else if (plot_type == ImGuiPlotType_Histogram) {
-                if (pos1.x >= pos0.x + 2.0f) {
-                    pos1.x -= 1.0f;
-                }
+                //if (pos1.x >= pos0.x + 2.0f) {
+                //    pos1.x -= 1.0f;
+                //}
                 window->DrawList->AddRectFilled(pos0, pos1, col);
             }
             
             if (v1_idx == value.selectedItem) {
-                ImVec2 vmin(pos0.x, inner_bb.Min.y), vmax(pos1.x, inner_bb.Max.y);
-                float w = vmax.x - vmin.x;
-                if (w < 3) {
-                    vmin.x -= 1;
-                    vmax.x += 1;
+                vmin.x = pos0.x;
+                vmax.x = pos1.x;
+                if (value.selectedCount > 1) {
+                    vmax.x = ImLerp(inner_bb.Min.x, inner_bb.Max.x, t0 + t_step * value.selectedCount);
                 }
-                window->DrawList->AddRect(vmin, vmax, col_selected);
             }
             
             t0 = t1;
             tp0 = tp1;
         }
+
+        if (value.selectedItem >= 0 && value.selectedCount > 0) {
+            vmin.x -= 1;
+            vmax.x += 1;
+            window->DrawList->AddRect(vmin, vmax, col_selected);
+        }
     }
-    
+
     // Text overlay
     if (value.overlayText) {
         RenderTextClipped(ImVec2(frame_bb.Min.x, frame_bb.Min.y + style.FramePadding.y), frame_bb.Max, value.overlayText, NULL, NULL, ImVec2(0.5f,0.0f));

@@ -5,7 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <time.h>
 #include <chrono>
-#include "../../shared/utils/StrBuf.h"
+#include <shared/utils/StrBuf.h>
 
 #include "mainwin.hpp"
 

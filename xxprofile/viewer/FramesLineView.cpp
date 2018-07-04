@@ -1,8 +1,5 @@
 #include "FramesLineView.hpp"
 #include "imgui.h"
-#include <cmath>
-
-static const char* FramesLineView_scaleText = " Scale";
 
 FramesLineView::FramesLineView(EventHandler* handler) : _handler(handler), _loader(NULL) {
 
@@ -30,94 +27,83 @@ void FramesLineView::setLoader(const xxprofile::Loader* loader) {
     }
 }
 
-float FramesLineView::calcHeight() {
+float FramesLineView::calcHeight(int framesGraphWidthPixels) {
     float height = 0;
     const ImGuiStyle& style = ImGui::GetStyle();
+    height += style.WindowPadding.y * 2;
 
     {// Frames
-        height += FramesItemHeight;
-        height += style.WindowPadding.y * 2;
+        for (size_t t = 0; t < _threads.size(); ++t) {
+            auto& thread = _threads[t];
+            thread.setGraphWidthPixels(framesGraphWidthPixels);
+            if (thread.hasThumbnail()) {
+                height += ThumbnailItemHeight;
+                height += style.ItemSpacing.y;
+            }
+            height += FramesItemHeight;
+            height += style.ItemSpacing.y;
+        }
     }
 
-    height += style.ItemSpacing.y;
-
-    {// Scale
-        const ImVec2 label_size = ImGui::CalcTextSize(FramesLineView_scaleText, NULL, true);
-        height += label_size.y;
-        height += style.FramePadding.y * 2.0f;
-    }
+    height -= style.ItemSpacing.y;
 
     return height;
 }
 
-void FramesLineView::ThreadData::init(const xxprofile::ThreadData* data) {
-    _data = data;
-    assert(data);
-}
-
-float FramesLineView::ThreadData::StaticGetData(void* p, int idx) {
-    const ThreadData* data = (const ThreadData*)p;
-    const auto& frames = data->_data->_frames;
-    const int index = data->startIndex + idx;
-    const xxprofile::FrameData& frameData = frames[index % frames.size()];
-    double value = frameData.frameCycles() * data->_data->_secondsPerCycle;
-    return (float)value;
-}
-
-void FramesLineView::ThreadData::setTo(ImGui::ImPlotWithHitTest& plot) const {
-    plot.data = (void*)this;
-    plot.valuesGetter = StaticGetData;
-    plot.scaleMax = (float)(_data->_maxCycleCount * _data->_secondsPerCycle);
-    const size_t count = _data->_frames.size();
-    plot.valuesCount = (int)count;
-}
-
 void FramesLineView::draw() {
+    if (_threads.empty()) {
+        return;
+    }
     ImGuiWindowFlags window_flags = 0;
     const ImGuiStyle& style = ImGui::GetStyle();
 
     const float rw = ImGui::GetWindowContentRegionWidth();
+    const float indent = ImGui::GetIndent();
+    const float plotItemWidth = (rw - style.WindowPadding.x * 2 - indent + style.FramePadding.x * 2);
+    const int framesGraphWidthPixels = (int)(plotItemWidth - style.FramePadding.x * 2);
 
-    if (!ImGui::BeginChild("TimeLine", ImVec2(rw, calcHeight()), true, window_flags)) {
+    if (!ImGui::BeginChild("FramesLine", ImVec2(rw, calcHeight(framesGraphWidthPixels)), true, window_flags)) {
         // Early out if the window is collapsed, as an optimization.
         ImGui::EndChild();
         return;
     }
     ImGui::PushItemWidth(-1);
 
-    const float indent = ImGui::GetIndent();
-
     {// Frames
-        const int maxItemCount = (int)std::floor((rw - style.WindowPadding.x * 2 - indent + style.FramePadding.x * 2) * 0.5f);
-        const float framesGraphWidth = maxItemCount * 2;
         assert(_threads.size() == _loader->_threads.size());
         ImGui::ImPlotWithHitTest plot;
-        memset(&plot, 0, sizeof(plot));
-        plot.scaleMin = 0;
-        plot.scaleMax = 1.0f;
-        plot.graphSize = ImVec2(framesGraphWidth, FramesItemHeight);
+        shared::StrBuf text;
         const auto& io = ImGui::GetIO();
-
+        shared::StrBuf keyId;
         for (size_t t = 0; t < _threads.size(); ++t) {
             auto& thread = _threads[t];
-            thread.setTo(plot);
-            if (plot.valuesCount > maxItemCount) {
-                plot.valuesCount = maxItemCount;
+
+            // thumbnail
+            if (thread.hasThumbnail()) {
+                memset(&plot, 0, sizeof(plot));
+                thread.setThumbnail(plot);
+                keyId.printf("Thumbnail_%d", t);
+                plot.keyId = keyId;
+                plot.graphSize = ImVec2(plotItemWidth, ThumbnailItemHeight);
+                ImGui::PlotHistogram(plot);
             }
-            plot.selectedItem = thread.selectedItem;
+
+            // frames
+            memset(&plot, 0, sizeof(plot));
+            thread.setFrames(plot);
+            keyId.printf("Frames_%d", t);
+            plot.keyId = keyId;
+            plot.graphSize = ImVec2(plotItemWidth, FramesItemHeight);
+            Math::FormatTime(text, thread.frameUseTime());
+            plot.overlayText = text;
 
             ImGui::PlotHistogram(plot);
 
             if (io.MouseDown[0] && plot.hoverItem >= 0) {
-                thread.selectedItem = plot.hoverItem - thread.startIndex;
-                _handler->onFrameSelectChange((int)t, thread.selectedItem);
+                thread._selectedItem = plot.hoverItem - thread._startIndex;
+                _handler->onFrameSelectChange((int)t, thread._selectedItem);
             }
         }
-    }
-
-    {// Scale
-        static int is = 0;
-        ImGui::SliderInt(FramesLineView_scaleText, &is, 0, 5);
     }
 
     ImGui::EndChild();
