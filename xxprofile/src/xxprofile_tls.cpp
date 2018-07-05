@@ -20,12 +20,12 @@ void XXProfileTLS::operator delete(void* p) {
     free(p);
 }
 
-XXProfileTLS::XXProfileTLS() {
+XXProfileTLS::XXProfileTLS(const char* path) {
     _threadId = GetTid();
     printf("Thread %d begin profile\n", _threadId);
 
     char name[PATH_MAX];
-    sprintf(name, "Thread_%d.xxprofile", _threadId);
+    sprintf(name, "%sThread_%d.xxprofile", path, _threadId);
     _ar.open(name, true);
 
     double secondsPerCycle = Timer::GetSecondsPerCycle();

@@ -4,6 +4,7 @@
 #include "../src/xxprofile_name.hpp"
 #include "../src/xxprofile_namepool.hpp"
 #include "../src/xxprofile_archive.hpp"
+#include <shared/utils/StrBuf.h>
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
@@ -131,6 +132,7 @@ private:
 struct Loader {
     std::vector<ThreadData> _threads;
     SNamePool _namePool;
+    std::vector<const char*> _names;
 
     Loader();
     ~Loader();
@@ -138,9 +140,10 @@ struct Loader {
     void load(Archive& ar);
     void clear();
 
-    FORCEINLINE const char* name(SName name) const {
-        return _namePool.getName(name);
-    }
+    const char* name(SName name);
+
+protected:
+    static const char* prepareName(const char* name);
 };
 
 XX_NAMESPACE_END(xxprofile);

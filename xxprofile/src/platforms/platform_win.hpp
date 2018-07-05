@@ -4,11 +4,20 @@
 #include "../../xxprofile_macros.hpp"
 #include "win/win_SystemLock.h"
 #include "win/win_timer.h"
+#include "win/win_ThreadLocal.h"
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
+uint32_t GetTid() {
+    return ::GetCurrentThreadId();
+}
+
 typedef SystemLock_win SystemLock;
 typedef Timer_win Timer;
+
+template <typename T>
+struct ThreadLocal : public ThreadLocal_win<T> {
+};
 
 XX_NAMESPACE_END(xxprofile);
 

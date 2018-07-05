@@ -90,7 +90,7 @@ void ImGui::PlotEx(ImGuiPlotType plot_type, ImPlotWithHitTest& value) {
         if (hovered) {
             value.hoverItem = v_idx;
         }
-        if (hovered) {
+        if (hovered && g.IO.MouseClicked[0]) {
             value.clickedItem = v_idx;
         }
         
@@ -143,9 +143,11 @@ void ImGui::PlotEx(ImGuiPlotType plot_type, ImPlotWithHitTest& value) {
             tp0 = tp1;
         }
 
-        if (value.selectedItem >= 0 && value.selectedCount > 0) {
+        if (value.selectedItem >= 0 && value.selectedCount > 0 && value.selectedItem < value.valuesCount) {
             vmin.x -= 1;
+            vmin.y -= 1;
             vmax.x += 1;
+            vmax.y += 1;
             window->DrawList->AddRect(vmin, vmax, col_selected);
         }
     }

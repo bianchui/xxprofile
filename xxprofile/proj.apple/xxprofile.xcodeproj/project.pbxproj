@@ -31,6 +31,8 @@
 		ED81D1A120D374B40096FB53 /* xxprofile_archive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED81D19F20D374B40096FB53 /* xxprofile_archive.cpp */; };
 		ED81D1AA20D37C2C0096FB53 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED81D1A920D37C2C0096FB53 /* main.cpp */; };
 		ED81D1B220D3B1610096FB53 /* libxxprofile_mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED84F6B81FB1CF9B00C7B425 /* libxxprofile_mac.a */; };
+		ED94982A20EE15EC00FA04D0 /* apple_mac_WritablePath.mm in Sources */ = {isa = PBXBuildFile; fileRef = ED94982820EE15E300FA04D0 /* apple_mac_WritablePath.mm */; };
+		ED94983220EE19B700FA04D0 /* apple_ios_WritablePath.mm in Sources */ = {isa = PBXBuildFile; fileRef = ED94983020EE19B300FA04D0 /* apple_ios_WritablePath.mm */; };
 		ED97396220D8F5B10067B5D9 /* platform_apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73031FCD46C3004E945D /* platform_apple.cpp */; };
 		ED97396320D8F5B10067B5D9 /* platform_base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73051FCD46C3004E945D /* platform_base.cpp */; };
 		ED97396420D8F5B10067B5D9 /* xxprofile_archive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED81D19F20D374B40096FB53 /* xxprofile_archive.cpp */; };
@@ -127,6 +129,9 @@
 		ED81D1B020D3AC6C0096FB53 /* pthread_ThreadLocal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pthread_ThreadLocal.h; sourceTree = "<group>"; };
 		ED84F6B81FB1CF9B00C7B425 /* libxxprofile_mac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libxxprofile_mac.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED84F6C31FB1CFC900C7B425 /* libxxprofile_ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libxxprofile_ios.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		ED94982820EE15E300FA04D0 /* apple_mac_WritablePath.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = apple_mac_WritablePath.mm; sourceTree = "<group>"; };
+		ED94983020EE19B300FA04D0 /* apple_ios_WritablePath.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = apple_ios_WritablePath.mm; sourceTree = "<group>"; };
+		ED94983420EE1C3400FA04D0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		EDA4401420E9C1EE00C9AE65 /* imgui_custom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgui_custom.cpp; sourceTree = "<group>"; };
 		EDA4401520E9C1EE00C9AE65 /* imgui_custom.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = imgui_custom.hpp; sourceTree = "<group>"; };
 		EDA4401820E9C3BF00C9AE65 /* imgui_custom_internal.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = imgui_custom_internal.hpp; sourceTree = "<group>"; };
@@ -266,6 +271,7 @@
 		ED5F72FF1FCD46C3004E945D /* platforms */ = {
 			isa = PBXGroup;
 			children = (
+				ED94982720EE15E300FA04D0 /* apple */,
 				ED81D19E20D368D50096FB53 /* posix */,
 				ED642F151FCE506C0067CEA4 /* platform_apple.hpp */,
 				ED5F73031FCD46C3004E945D /* platform_apple.cpp */,
@@ -312,6 +318,7 @@
 				ED81D1A820D37C2C0096FB53 /* test */,
 				ED22005320E1D76F0076C22F /* xxprofileViewer */,
 				ED84F6B91FB1CF9B00C7B425 /* Products */,
+				ED94983320EE1C3400FA04D0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -324,6 +331,23 @@
 				ED22005220E1D76F0076C22F /* xxprofileViewer.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		ED94982720EE15E300FA04D0 /* apple */ = {
+			isa = PBXGroup;
+			children = (
+				ED94983020EE19B300FA04D0 /* apple_ios_WritablePath.mm */,
+				ED94982820EE15E300FA04D0 /* apple_mac_WritablePath.mm */,
+			);
+			path = apple;
+			sourceTree = "<group>";
+		};
+		ED94983320EE1C3400FA04D0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				ED94983420EE1C3400FA04D0 /* Foundation.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		EDA4401320E9C1EE00C9AE65 /* imgui */ = {
@@ -521,6 +545,7 @@
 			files = (
 				ED5F73101FCD49F1004E945D /* xxprofile_name.cpp in Sources */,
 				ED6A3CF320DB87A6002A47A8 /* xxprofile_tls.cpp in Sources */,
+				ED94982A20EE15EC00FA04D0 /* apple_mac_WritablePath.mm in Sources */,
 				ED5F73081FCD46C3004E945D /* xxprofile.cpp in Sources */,
 				ED81D1A120D374B40096FB53 /* xxprofile_archive.cpp in Sources */,
 				ED5F730C1FCD46C3004E945D /* platform_base.cpp in Sources */,
@@ -532,6 +557,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED94983220EE19B700FA04D0 /* apple_ios_WritablePath.mm in Sources */,
 				ED97396220D8F5B10067B5D9 /* platform_apple.cpp in Sources */,
 				ED6A3CF420DB87A6002A47A8 /* xxprofile_tls.cpp in Sources */,
 				ED97396320D8F5B10067B5D9 /* platform_base.cpp in Sources */,

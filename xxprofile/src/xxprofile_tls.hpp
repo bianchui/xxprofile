@@ -26,7 +26,7 @@ public:
     static XXProfileTLS* Get();
 
 public:
-    XXProfileTLS();
+    XXProfileTLS(const char* path);
     ~XXProfileTLS();
 
     bool increaseFrame();

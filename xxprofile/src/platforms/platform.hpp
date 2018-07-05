@@ -31,8 +31,11 @@
 #endif//ANDROID
 
 #include <atomic>
+#include <string>
 
 XX_NAMESPACE_BEGIN(xxprofile);
+
+std::string systemGetWritablePath();
 
 class SystemScopedLock {
 public:

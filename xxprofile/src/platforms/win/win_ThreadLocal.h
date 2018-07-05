@@ -1,31 +1,31 @@
 // Copyright 2018 bianchui. All rights reserved.
-#ifndef xxprofile_platforms_posix_pthread_ThreadLocal_h
-#define xxprofile_platforms_posix_pthread_ThreadLocal_h
-#include <pthread.h>
+#ifndef xxprofile_platforms_win_win_ThreadLocal_h
+#define xxprofile_platforms_win_win_ThreadLocal_h
+#include "win_inc_windows.h"
 #include "../../xxprofile_macros.hpp"
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
 template <typename T>
-class ThreadLocal_pthread {
+class ThreadLocal_win {
 public:
-    ThreadLocal_pthread() : _key(0) {
-        pthread_key_create(&_key, _on_thread_exit);
+    ThreadLocal_win() {
+        _fls = FlsAlloc(_on_thread_exit);
     }
-    ~ThreadLocal_pthread() {
+    ~ThreadLocal_win() {
         T* p = get();
         if (p) {
             delete p;
         }
-        pthread_key_delete(_key);
+        FlsAlloc(_fls);
     }
 
     void set(T* value) {
-        pthread_setspecific(_key, (void*)value);
+        FlsSetValue(_fls, (void*)value);
     }
 
     T* get() {
-        return (T*)pthread_getspecific(_key);
+        return (T*)FlsGetValue(_fls);
     }
 
 private:
@@ -35,10 +35,10 @@ private:
     }
 
 protected:
-    pthread_key_t _key;
+    DWORD _fls;
     XX_CLASS_DELETE_COPY_AND_MOVE(ThreadLocal_pthread);
 };
 
 XX_NAMESPACE_END(xxprofile);
 
-#endif//xxprofile_platforms_posix_pthread_ThreadLocal_h
+#endif//xxprofile_platforms_win_win_ThreadLocal_h

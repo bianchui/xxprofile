@@ -27,7 +27,6 @@ public:
         // thumbnail
         int _framesPerThumbnail;
         std::vector<double> _timesForThumbnail;
-        int _thumbnailSelectedItem;
         int _thumbnailSelectedCount;
 
         void init(const xxprofile::ThreadData* data) {
@@ -43,25 +42,28 @@ public:
             // thumbnail
             _framesPerThumbnail = 1;
             _timesForThumbnail.clear();
-            _thumbnailSelectedItem = 0;
             _thumbnailSelectedCount = 0;
         }
         void setGraphWidthPixels(int pixels) {
+            if (pixels < PixelsPerFrame) {
+                return;
+            }
             const auto& frames_ = _data->_frames;
-            _maxItemCount = pixels / PixelsPerFrame;
-            int frameCount = (int)frames_.size();
-            const int framesPerThumbnail = (frameCount + pixels - 1) / pixels;
+            const int maxItemCount = pixels / PixelsPerFrame;
+            const int frameCount = (int)frames_.size();
+            const int framesPerThumbnail = (frameCount + maxItemCount - 1) / maxItemCount;
             if (_framesPerThumbnail != framesPerThumbnail) {
                 _framesPerThumbnail = framesPerThumbnail;
                 // thumbnail enabled
-                if (framesPerThumbnail != 1) {
+                if (hasThumbnail()) {
                     const int timeCount = (int)((frameCount + framesPerThumbnail - 1) / framesPerThumbnail);
                     _timesForThumbnail.resize(timeCount);
                     const auto* frames = frames_.data();
                     double* timesForThumbnail = _timesForThumbnail.data();
+                    int remainFrames = frameCount;
                     for (int i = 0; i < timeCount; ++i) {
                         uint64_t maxCycles = frames[0].frameCycles();
-                        const int thumbnailFrameCount = frameCount > framesPerThumbnail ? framesPerThumbnail : frameCount;
+                        const int thumbnailFrameCount = remainFrames > framesPerThumbnail ? framesPerThumbnail : remainFrames;
                         for (int f = 1; f < thumbnailFrameCount; ++f) {
                             const uint64_t cycles = frames[f].frameCycles();
                             if (maxCycles < cycles) {
@@ -70,15 +72,39 @@ public:
                         }
                         timesForThumbnail[i] = maxCycles * _data->_secondsPerCycle;
                         frames += framesPerThumbnail;
-                        frameCount -= framesPerThumbnail;
+                        remainFrames -= framesPerThumbnail;
                     }
-
-                    //_thumbnailSelectedCount =
                 }
+            }
+            _thumbnailSelectedCount = ((int)_timesForThumbnail.size()) * maxItemCount / frameCount;
+            if (_thumbnailSelectedCount <= 1) {
+                _thumbnailSelectedCount = 1;
+            }
+            if (_maxItemCount != maxItemCount) {
                 // update frames start index
-                {
-
+                if (hasThumbnail()) {
+                    // try not change startIndex;
+                    int startIndex = _startIndex;
+                    assert(_selectedItem < frameCount);
+                    if (startIndex + maxItemCount > frameCount) {
+                        startIndex = frameCount - maxItemCount;
+                    }
+#if 0
+                    if (_selectedItem < startIndex) {
+                        startIndex = _selectedItem;
+                    }
+                    if (startIndex + maxItemCount < _selectedItem) {
+                        startIndex = _selectedItem - maxItemCount;
+                    }
+#endif//0
+                    _startIndex = startIndex;
+                } else {
+                    _startIndex = 0;
                 }
+                _maxItemCount = maxItemCount;
+
+                //dump();
+                //printf("    width = %d\n", pixels);
             }
         }
         double frameUseTime() const {
@@ -89,8 +115,12 @@ public:
         double data(int idx) const {
             const auto& frames = _data->_frames;
             const int index = _startIndex + idx;
-            const xxprofile::FrameData& frameData = frames[index % frames.size()];
-            return frameData.frameCycles() * _data->_secondsPerCycle;
+            if (index < frames.size()) {
+                return frames[index].frameCycles() * _data->_secondsPerCycle;
+            } else {
+                assert(false);
+                return 0;
+            }
         }
         static float StaticFramesGetData(void* p, int idx) {
             const ThreadData* data = (const ThreadData*)p;
@@ -114,9 +144,8 @@ public:
             plot.selectedItem = _selectedItem - _startIndex;
             plot.selectedCount = 1;
         }
-        void setStartIndex(int startIndex) {
-            const auto& frames = _data->_frames;
-
+        void setFramesTrackingItem(int item) {
+            _selectedItem = item + _startIndex;
         }
 
         // thumbnail
@@ -125,13 +154,18 @@ public:
         }
         static float StaticThumbnailGetData(void* p, int idx) {
             const ThreadData* data = (const ThreadData*)p;
+            assert(idx < data->_timesForThumbnail.size());
             return (float)data->_timesForThumbnail[idx];
         }
         static void StaticThumbnailFormat(void* p, shared::StrBuf& buf, int idx) {
             const ThreadData* data = (const ThreadData*)p;
             double v = data->_timesForThumbnail[idx];
-
-            buf.appendf("%d: ", idx + 1);
+            const int index = idx * data->_framesPerThumbnail + 1;
+            int endIndex = index + data->_framesPerThumbnail - 1;
+            if (endIndex > (int)data->_data->_frames.size()) {
+                endIndex = (int)data->_data->_frames.size();
+            }
+            buf.appendf("[%d, %d]\n", index, endIndex);
             Math::FormatTime(buf, v);
         }
         void setThumbnail(ImGui::ImPlotWithHitTest& plot) const {
@@ -140,8 +174,47 @@ public:
             plot.valuesGetter = StaticThumbnailGetData;
             plot.scaleMax = (float)(_data->_maxCycleCount * _data->_secondsPerCycle);
             plot.valuesCount = (int)_timesForThumbnail.size();
-            plot.selectedItem = _thumbnailSelectedItem;
+            plot.selectedItem = _startIndex / _framesPerThumbnail;
             plot.selectedCount = _thumbnailSelectedCount;
+        }
+        void setThumbnailTrackingItem(int item) {
+            int minI = item - _thumbnailSelectedCount / 2;
+            int maxI = minI + _thumbnailSelectedCount;
+
+            if (minI < 0) {
+                maxI = _thumbnailSelectedCount;
+                minI = 0;
+            } else if (maxI > _timesForThumbnail.size()) {
+                maxI = (int)_timesForThumbnail.size();
+                minI = maxI - _thumbnailSelectedCount;
+            }
+            int startIndex = minI * _framesPerThumbnail;
+            int endIndex = startIndex + _maxItemCount;
+            const int frameCount = (int)_data->_frames.size();
+            if (endIndex > frameCount) {
+                startIndex = frameCount - _maxItemCount;
+                endIndex = frameCount;
+            }
+            _startIndex = startIndex;
+            //if (_selectedItem < startIndex) {
+            //    _selectedItem = startIndex;
+            //} else if (endIndex < _selectedItem) {
+            //    _selectedItem = endIndex;
+            //}
+        }
+
+        void dump() const {
+            printf("ThreadData\n");
+            printf("    _frameCount = %d\n", (int)_data->_frames.size());
+            // frames
+            printf("    _startIndex = %d\n", _startIndex);
+            printf("    _selectedItem = %d\n", _selectedItem);
+            printf("    _selectedCount = %d\n", _selectedCount);
+            printf("    _maxItemCount = %d\n", _maxItemCount);
+            // thumbnail
+            printf("    _framesPerThumbnail = %d\n", _framesPerThumbnail);
+            printf("    _thumbnailCount = %d\n", (int)_timesForThumbnail.size());
+            printf("    _thumbnailSelectedCount = %d\n", _thumbnailSelectedCount);
         }
     };
 

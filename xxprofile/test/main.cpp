@@ -9,7 +9,10 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <time.h>
-
+#include <map>
+#include <set>
+#include <unordered_map>
+#include <unordered_set>
 #include <sys/syscall.h>
 #include <sys/types.h>
 
@@ -105,9 +108,18 @@ void testSave() {
 #endif
 }
 
+void fun_get(const char buf[]) {
+    XX_PROFILE_SCOPE_FUNCTION();
+    AAA<std::map<int, int>> aa;
+    AAA<std::set<int>> bb;
+    AAA<std::unordered_map<int, int>> cc;
+    AAA<std::unordered_set<int>> dd;
+}
+
 void fun() {
     XX_PROFILE_SCOPE_FUNCTION();
 
+    fun_get("sdf");
     SSS sss;
     sss.abcde();
 }

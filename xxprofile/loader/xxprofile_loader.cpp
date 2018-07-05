@@ -82,6 +82,34 @@ void Loader::load(Archive& ar) {
 void Loader::clear() {
     _threads.clear();
     _namePool.clear();
+    for (auto iter = _names.begin(); iter != _names.end(); ++iter) {
+        if (*iter) {
+            free((void*)*iter);
+        }
+    }
+    _names.clear();
+}
+
+const char* Loader::name(SName name) {
+    if (name.id() == 0) {
+        return "";
+    }
+    uint32_t index = name.id() - 1;
+    const char* n = NULL;
+    if (index < _names.size()) {
+        n = _names[index];
+    } else {
+        _names.resize(index + 1);
+    }
+    if (n) {
+        return n;
+    }
+    _names[index] = n = prepareName(_namePool.getName(name));
+    return n;
+}
+
+const char* Loader::prepareName(const char* name) {
+    return strdup(name);
 }
 
 XX_NAMESPACE_END(xxprofile);

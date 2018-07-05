@@ -86,6 +86,10 @@ void FramesLineView::draw() {
                 plot.keyId = keyId;
                 plot.graphSize = ImVec2(plotItemWidth, ThumbnailItemHeight);
                 ImGui::PlotHistogram(plot);
+
+                if (io.MouseDown[0] && plot.hoverItem >= 0) {
+                    thread.setThumbnailTrackingItem(plot.hoverItem);
+                }
             }
 
             // frames
@@ -94,13 +98,14 @@ void FramesLineView::draw() {
             keyId.printf("Frames_%d", t);
             plot.keyId = keyId;
             plot.graphSize = ImVec2(plotItemWidth, FramesItemHeight);
+            text.printf("[%d, %d]", thread._startIndex + 1, thread._startIndex + thread._maxItemCount);
             Math::FormatTime(text, thread.frameUseTime());
             plot.overlayText = text;
 
             ImGui::PlotHistogram(plot);
 
             if (io.MouseDown[0] && plot.hoverItem >= 0) {
-                thread._selectedItem = plot.hoverItem - thread._startIndex;
+                thread.setFramesTrackingItem(plot.hoverItem);
                 _handler->onFrameSelectChange((int)t, thread._selectedItem);
             }
         }

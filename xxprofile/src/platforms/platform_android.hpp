@@ -4,11 +4,18 @@
 #include "platform_base.hpp"
 #include "posix/pthread_SystemLock.h"
 #include "posix/posix_timer.h"
+#include "posix/pthread_ThreadLocal.h"
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
+uint32_t GetTid();
+
 typedef SystemLock_pthread SystemLock;
 typedef Timer_posix Timer;
+
+template <typename T>
+struct ThreadLocal : public ThreadLocal_pthread<T> {
+};
 
 XX_NAMESPACE_END(xxprofile);
 

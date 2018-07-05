@@ -34,7 +34,10 @@ static void profile_on_thread_exit(void* data) {
 //}
 #endif//XX_ThreadLocal
 
+static std::string g_filePath;
+
 bool XXProfile::StaticInit() {
+    
 #if !XX_ThreadLocal
     //pthread_once(&g_profile_init_once, profile_tls_init_once);
     if (!g_profile_tls_key) {
@@ -42,6 +45,7 @@ bool XXProfile::StaticInit() {
     }
 #endif//XX_ThreadLocal
     Timer::InitTiming();
+    g_filePath = systemGetWritablePath();
     return true;
 }
 
@@ -64,7 +68,7 @@ XXProfileTLS* XXProfileTLS::Get() {
 #if XX_ThreadLocal
     profile = g_profile_tls.get();
     if (!profile) {
-        profile = new XXProfileTLS();
+        profile = new XXProfileTLS(g_filePath.c_str());
         g_profile_tls.set(profile);
     }
 #else//XX_ThreadLocal

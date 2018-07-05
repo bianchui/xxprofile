@@ -7,6 +7,10 @@
 #include <chrono>
 #include <shared/utils/StrBuf.h>
 
+#define XX_ENABLE_PROFILE 0
+
+#include "../src/xxprofile.hpp"
+
 #include "mainwin.hpp"
 
 static void glfw_error_callback(int error, const char* description) {
@@ -29,12 +33,22 @@ void setupStyle() {
 
 MainWin mainwin;
 GLFWwindow* g_win = NULL;
-const char* g_title = "xxprofileViewer";
+const char* kTitle = "xxprofileViewer";
+std::string g_title = kTitle;
+
+void glfw_setTitle(const char* title) {
+    XX_PROFILE_SCOPE_FUNCTION();
+    g_title = title;
+    if (g_win) {
+        glfwSetWindowTitle(g_win, title);
+    }
+}
 
 int glfw_onDocumentOpen(const char* name) {
+    XX_PROFILE_SCOPE_FUNCTION();
     printf("%s\n", name);
     if (!mainwin.load(name)) {
-        glfwSetWindowTitle(g_win, g_title);
+        glfw_setTitle(kTitle);
         return GLFW_FALSE;
     }
     const char* p_name = strrchr(name, '/');
@@ -43,21 +57,23 @@ int glfw_onDocumentOpen(const char* name) {
     } else {
         ++p_name;
     }
-    shared::StrBuf buf;
-    buf.printf("%s - %s", p_name, g_title);
-    glfwSetWindowTitle(g_win, buf);
+    shared::StrBuf title;
+    title.printf("%s - %s", p_name, kTitle);
+    glfw_setTitle(title);
     return GLFW_TRUE;
 }
 
-extern "C" void mainLoop() {
+void _mainLoop() {
+    XX_PROFILE_SCOPE_FUNCTION();
     // Setup window
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit()) {
         return;
     }
     glfwSetOnDocumentOpen(glfw_onDocumentOpen);
-    GLFWwindow* window = glfwCreateWindow(1280, 720, g_title, NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(1280, 720, g_title.c_str(), NULL, NULL);
     g_win = window;
+    glfwSetWindowTitle(g_win, g_title.c_str());
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // Enable vsync
 
@@ -133,4 +149,10 @@ extern "C" void mainLoop() {
 
     glfwDestroyWindow(window);
     glfwTerminate();
+}
+
+extern "C" void mainLoop() {
+    XX_PROFILE_STATIC_INIT();
+    _mainLoop();
+    XX_PROFILE_STATIC_UNINIT();
 }
