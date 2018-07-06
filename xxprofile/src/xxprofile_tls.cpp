@@ -21,7 +21,7 @@ void XXProfileTLS::operator delete(void* p) {
 }
 
 XXProfileTLS::XXProfileTLS(const char* path) {
-    _threadId = GetTid();
+    _threadId = systemGetTid();
     printf("Thread %d begin profile\n", _threadId);
 
     char name[PATH_MAX];

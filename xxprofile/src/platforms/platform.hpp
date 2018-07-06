@@ -36,6 +36,7 @@
 XX_NAMESPACE_BEGIN(xxprofile);
 
 std::string systemGetWritablePath();
+uint32_t systemGetTid();
 
 class SystemScopedLock {
 public:

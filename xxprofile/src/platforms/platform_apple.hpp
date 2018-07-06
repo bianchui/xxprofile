@@ -15,8 +15,6 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
-uint32_t GetTid();
-
 struct Timer_apple : Timer_base {
     static double InitTiming();
     

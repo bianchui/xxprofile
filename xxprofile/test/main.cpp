@@ -108,12 +108,20 @@ void testSave() {
 #endif
 }
 
+template <size_t len>
+inline void fun_get2(const int (&buf)[len]) {
+    XX_PROFILE_SCOPE_FUNCTION();
+}
+
 void fun_get(const char buf[]) {
     XX_PROFILE_SCOPE_FUNCTION();
     AAA<std::map<int, int>> aa;
     AAA<std::set<int>> bb;
     AAA<std::unordered_map<int, int>> cc;
     AAA<std::unordered_set<int>> dd;
+
+    int buf2[4];
+    fun_get2(buf2);
 }
 
 void fun() {
@@ -128,7 +136,7 @@ void* static_thread(void* param) {
 
     uint32_t start = (uint32_t)(uintptr_t)param;
     if (true) {
-        for (uint32_t i = 0; i < 100000; ++i) {
+        for (uint32_t i = 0; i < 1000; ++i) {
             fun();
             char namebuf[1024];
             sprintf(namebuf, "hahahahaha%d", start + i);

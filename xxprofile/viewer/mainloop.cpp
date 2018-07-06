@@ -71,7 +71,7 @@ void _mainLoop() {
         return;
     }
     glfwSetOnDocumentOpen(glfw_onDocumentOpen);
-    GLFWwindow* window = glfwCreateWindow(1280, 720, g_title.c_str(), NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(1280, 720, kTitle, NULL, NULL);
     g_win = window;
     glfwSetWindowTitle(g_win, g_title.c_str());
     glfwMakeContextCurrent(window);
@@ -89,12 +89,12 @@ void _mainLoop() {
 
     setupStyle();
 
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    const ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 
     // Main loop
     while (!glfwWindowShouldClose(window)) {
-        uint64_t start = getTimeStamp();
+        const uint64_t start = getTimeStamp();
         // Poll and handle events (inputs, window resize, etc.)
         // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
         // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application.
@@ -124,8 +124,8 @@ void _mainLoop() {
         glfwSwapBuffers(window);
 
         if (true) {
-            uint64_t end = getTimeStamp();
-            uint64_t used = end - start;
+            const uint64_t end = getTimeStamp();
+            const uint64_t used = end - start;
             const uint64_t minTime = 33000;
             if (used < minTime) {
                 struct timespec rqtp, rmtp;

@@ -1,6 +1,7 @@
 #include "FrameView.hpp"
 #include "imgui/imgui_custom.hpp"
 #include "../src/xxprofile_tls.hpp"
+#include "EventHandler.hpp"
 
 FrameView::FrameView() : _loader(NULL), _frameData(NULL) {
     
@@ -41,6 +42,7 @@ void FrameView::draw() {
         double frameTimes;
         ImGuiStyle* style;
         const xxprofile::FrameData* data;
+        shared::StrBuf _timeBuffer;
         void Draw(xxprofile::TreeItem* item, uint64_t parentCycles) {
             double percentage = (item->useCycles() * 1000000 / parentCycles) * 0.0001;
             if (percentage > 50) {
@@ -50,15 +52,17 @@ void FrameView::draw() {
             } else {
                 style->Colors[ImGuiCol_Text] = kColorWhite;
             }
+            _timeBuffer.clear();
+            Math::FormatTime(_timeBuffer, item->useCycles() * _secondsPerCycle);
             if (item->children) {
-                if (ImGui::TreeNode(item->name, "(%0.4f%%) %s", percentage, item->name)) {
+                if (ImGui::TreeNode(item->name, "(%0.4f%% %s) %s", percentage, _timeBuffer.c_str(), item->name)) {
                     for (auto iter = item->children->begin(); iter != item->children->end(); ++iter) {
                         Draw(*iter, item->useCycles());
                     }
                     ImGui::TreePop();
                 }
             } else {
-                ImGui::BulletText("(%0.4f%%) %s", percentage, item->name);
+                ImGui::BulletText("(%0.4f%% %s) %s", percentage, _timeBuffer.c_str(), item->name);
             }
         }
     };

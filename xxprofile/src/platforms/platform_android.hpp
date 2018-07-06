@@ -8,8 +8,6 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
-uint32_t GetTid();
-
 typedef SystemLock_pthread SystemLock;
 typedef Timer_posix Timer;
 

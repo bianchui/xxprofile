@@ -13,7 +13,7 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
-uint32_t GetTid() {
+uint32_t systemGetTid() {
     return ::syscall(SYS_thread_selfid);
 }
 

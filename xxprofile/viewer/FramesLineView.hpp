@@ -123,14 +123,23 @@ public:
             }
         }
         static float StaticFramesGetData(void* p, int idx) {
-            const ThreadData* data = (const ThreadData*)p;
-            return (float)data->data(idx);
+            return (float)((const ThreadData*)p)->data(idx);
+        }
+        void framesFormat(shared::StrBuf& buf, int idx) const {
+            const auto& frames = _data->_frames;
+            int index = idx + _startIndex;
+            if (index < frames.size()) {
+                const auto& frame = frames[index];
+                double time = frame.frameCycles() * _data->_secondsPerCycle;
+                buf.appendf("%d: ", frame.frameId());
+                Math::FormatTime(buf, time);
+            } else {
+                assert(false);
+                buf.append("Error index %d", index);
+            }
         }
         static void StaticFramesFormat(void* p, shared::StrBuf& buf, int idx) {
-            const ThreadData* data = (const ThreadData*)p;
-            double v = data->data(idx);
-            buf.appendf("%d: ", idx + data->_startIndex + 1);
-            Math::FormatTime(buf, v);
+            return ((const ThreadData*)p)->framesFormat(buf, idx);
         }
         void setFrames(ImGui::ImPlotWithHitTest& plot) const {
             plot.data = (void*)this;
@@ -147,26 +156,45 @@ public:
         void setFramesTrackingItem(int item) {
             _selectedItem = item + _startIndex;
         }
+        void getFramesOverlay(shared::StrBuf& buf) const {
+            int endIndex = _startIndex + _maxItemCount;
+            if (endIndex >= (int)_data->_frames.size()) {
+                endIndex = (int)_data->_frames.size() - 1;
+            }
+            assert(_startIndex < (int)_data->_frames.size());
+            const auto& start = _data->_frames[_startIndex];
+            const auto& end = _data->_frames[endIndex];
+            buf.printf("[%d, %d]", start.frameId(), end.frameId());
+            Math::FormatTime(buf, frameUseTime());
+        }
 
         // thumbnail
         bool hasThumbnail() const {
             return _framesPerThumbnail > 1;
         }
+        double thumbnailGetData(int idx) const {
+            assert(idx < _timesForThumbnail.size());
+            return _timesForThumbnail[idx];
+        }
         static float StaticThumbnailGetData(void* p, int idx) {
-            const ThreadData* data = (const ThreadData*)p;
-            assert(idx < data->_timesForThumbnail.size());
-            return (float)data->_timesForThumbnail[idx];
+            return (float)((const ThreadData*)p)->thumbnailGetData(idx);
+        }
+        void thumbnailFormat(shared::StrBuf& buf, int idx) const {
+            assert(idx < _timesForThumbnail.size());
+            double v = _timesForThumbnail[idx];
+            const int index = idx * _framesPerThumbnail;
+            int endIndex = index + _framesPerThumbnail - 1;
+            if (endIndex >= (int)_data->_frames.size()) {
+                endIndex = (int)_data->_frames.size() - 1;
+            }
+            assert(index < (int)_data->_frames.size());
+            const auto& start = _data->_frames[index];
+            const auto& end = _data->_frames[endIndex];
+            buf.printf("[%d, %d]\n", start.frameId(), end.frameId());
+            Math::FormatTime(buf, v);
         }
         static void StaticThumbnailFormat(void* p, shared::StrBuf& buf, int idx) {
-            const ThreadData* data = (const ThreadData*)p;
-            double v = data->_timesForThumbnail[idx];
-            const int index = idx * data->_framesPerThumbnail + 1;
-            int endIndex = index + data->_framesPerThumbnail - 1;
-            if (endIndex > (int)data->_data->_frames.size()) {
-                endIndex = (int)data->_data->_frames.size();
-            }
-            buf.appendf("[%d, %d]\n", index, endIndex);
-            Math::FormatTime(buf, v);
+            ((const ThreadData*)p)->thumbnailFormat(buf, idx);
         }
         void setThumbnail(ImGui::ImPlotWithHitTest& plot) const {
             plot.data = (void*)this;

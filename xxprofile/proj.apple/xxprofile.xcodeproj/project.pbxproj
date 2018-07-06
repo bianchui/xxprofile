@@ -33,6 +33,7 @@
 		ED81D1B220D3B1610096FB53 /* libxxprofile_mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED84F6B81FB1CF9B00C7B425 /* libxxprofile_mac.a */; };
 		ED94982A20EE15EC00FA04D0 /* apple_mac_WritablePath.mm in Sources */ = {isa = PBXBuildFile; fileRef = ED94982820EE15E300FA04D0 /* apple_mac_WritablePath.mm */; };
 		ED94983220EE19B700FA04D0 /* apple_ios_WritablePath.mm in Sources */ = {isa = PBXBuildFile; fileRef = ED94983020EE19B300FA04D0 /* apple_ios_WritablePath.mm */; };
+		ED94983820EE27D500FA04D0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED94983420EE1C3400FA04D0 /* Foundation.framework */; };
 		ED97396220D8F5B10067B5D9 /* platform_apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73031FCD46C3004E945D /* platform_apple.cpp */; };
 		ED97396320D8F5B10067B5D9 /* platform_base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73051FCD46C3004E945D /* platform_base.cpp */; };
 		ED97396420D8F5B10067B5D9 /* xxprofile_archive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED81D19F20D374B40096FB53 /* xxprofile_archive.cpp */; };
@@ -152,6 +153,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED94983820EE27D500FA04D0 /* Foundation.framework in Frameworks */,
 				ED81D1B220D3B1610096FB53 /* libxxprofile_mac.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

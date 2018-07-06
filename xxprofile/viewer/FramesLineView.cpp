@@ -72,7 +72,7 @@ void FramesLineView::draw() {
     {// Frames
         assert(_threads.size() == _loader->_threads.size());
         ImGui::ImPlotWithHitTest plot;
-        shared::StrBuf text;
+        shared::StrBuf overlay;
         const auto& io = ImGui::GetIO();
         shared::StrBuf keyId;
         for (size_t t = 0; t < _threads.size(); ++t) {
@@ -98,9 +98,8 @@ void FramesLineView::draw() {
             keyId.printf("Frames_%d", t);
             plot.keyId = keyId;
             plot.graphSize = ImVec2(plotItemWidth, FramesItemHeight);
-            text.printf("[%d, %d]", thread._startIndex + 1, thread._startIndex + thread._maxItemCount);
-            Math::FormatTime(text, thread.frameUseTime());
-            plot.overlayText = text;
+            thread.getFramesOverlay(overlay);
+            plot.overlayText = overlay;
 
             ImGui::PlotHistogram(plot);
 
