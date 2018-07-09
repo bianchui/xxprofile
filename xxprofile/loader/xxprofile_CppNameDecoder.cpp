@@ -124,8 +124,83 @@ void CppNameDecoder::TokenParser::_parseNext(Token& token) {
     token._name = isName;
 }
 
+void CppNameDecoder::TokenParser::_putBackToken(Token& token) {
+    assert(token.begin + token.length == _current);
+    _current = token.begin;
+}
+
+// https://en.wikipedia.org/wiki/Operators_in_C_and_C%2B%2B
+static const char* const kOperators[] = {
+    // Arithmetic operators
+    "=", // R& K::operator =(S b);
+    "+", // R K::operator +(S b) const; R K::operator +() const;
+    "-", // R K::operator -(S b) const; R K::operator -() const;
+    "*", // R K::operator *(S b) const; R& K::operator *();
+    "/", // R K::operator /(S b) const;
+    "%", // R K::operator %(S b) const;
+    "++", // R& K::operator ++(); R K::operator ++(int);
+    "--", // R& K::operator --(); R K::operator --(int);
+
+    // Comparison operators/relational operators
+    "==", // bool K::operator ==(S const& b) const;
+    "!=", // bool K::operator !=(S const& b) const;
+    ">", // bool K::operator >(S const& b) const;
+    "<", // bool K::operator <(S const& b) const;
+    ">=", // bool K::operator >=(S const& b) const;
+    "<=", // bool K::operator <=(S const& b) const;
+
+    // Logical operators
+    "!", // bool K::operator !() const;
+    "&&", // bool K::operator &&(S b) const;
+    "||", // bool K::operator ||(S b) const;
+
+    // Bitwise operators
+    "~", // R K::operator ~() const;
+    "&", // R K::operator &(S b) const;
+    "|", // R K::operator |(S b) const;
+    "^", // R K::operator ^(S b) const;
+    "<<", // R K::operator <<(S b) const;
+    ">>", // R K::operator >>(S b) const;
+
+    // Compound assignment operators
+    "+=", // R& K::operator +=(S b);
+    "-=", // R& K::operator -=(S b);
+    "*=", // R& K::operator *=(S b);
+    "/=", // R& K::operator /=(S b);
+    "%=", // R& K::operator %=(S b);
+    "&=", // R& K::operator &=(S b);
+    "|=", // R& K::operator |=(S b);
+    "^=", // R& K::operator ^=(S b);
+    "<<=", // R& K::operator <<=(S b);
+    ">>=", // R& K::operator >>=(S b);
+
+    // Member and pointer operators
+    "[]", // R& K::operator [](S b) const;
+    // R& K::operator *();
+    "&", // R* K::operator &();
+    "->", // R* K::operator ->();
+    "->*", // R& K::operator ->*(S b);
+
+    // Other operators
+    "()", // R K::operator ()(S a, T b, ...);
+
+};
+
 void CppNameDecoder::TokenParser::parseNext(Token& token) {
     _parseNext(token);
+    if (token.length == 0) {
+        return;
+    }
+
+    if (token.isName()) {
+        if (token.is("operator")) {
+
+        } else {
+            
+        }
+    } else {
+
+    }
 }
 
 CppNameDecoder::CppNameDecoder(const char* name) {
@@ -162,7 +237,7 @@ CppNameDecoder::CppNameDecoder(const char* name) {
         if (!token.length) {
             break;
         }
-        printf("  '%.*s'\n", (int)token.length, token.begin);
+        //printf("  '%.*s'\n", (int)token.length, token.begin);
         builder._tokens.push_back(token);
     } while (true);
 

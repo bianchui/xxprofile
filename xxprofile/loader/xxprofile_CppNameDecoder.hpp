@@ -19,6 +19,9 @@ struct CppNameDecoder {
         bool is(const char* str) const {
             return (strncmp(begin, str, length) == 0) && str[length] == 0;
         }
+        bool isName() const {
+            return _name;
+        }
     };
 
     struct TokenParser {
@@ -27,6 +30,7 @@ struct CppNameDecoder {
 
     private:
         void _parseNext(Token& token);
+        void _putBackToken(Token& token);
 
     private:
         const char* _data;

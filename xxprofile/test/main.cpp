@@ -19,6 +19,212 @@
 
 __thread int a = 0;
 
+class Operators {
+public:
+    Operators() {
+        XX_PROFILE_SCOPE_FUNCTION();
+    }
+    ~Operators() {
+        XX_PROFILE_SCOPE_FUNCTION();
+    }
+
+    // Arithmetic operators
+    void operator=(int a) {
+        XX_PROFILE_SCOPE_FUNCTION();
+    }
+    int operator+(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator-(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator+() {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator-() {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator*(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator/(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator%(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator++() {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator++(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator--() {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator--(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+
+    //Comparison operators/relational operators
+    int operator==(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return true;
+    }
+    bool operator!=(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return false;
+    }
+    int operator>(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return false;
+    }
+    int operator<(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return false;
+    }
+    int operator>=(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return false;
+    }
+    int operator<=(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return false;
+    }
+
+    // Logical operators
+    int operator!() {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator&&(int b) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return false;
+    }
+    int operator||(int b) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return false;
+    }
+
+    // Bitwise operators
+    int operator~() {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator&(int b) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return false;
+    }
+    int operator|(int b) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return false;
+    }
+    int operator^(int b) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return false;
+    }
+    int operator<<(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator>>(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+
+    // Compound assignment operators
+    int operator +=(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator-=(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator *=(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator/=(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator %=(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator&=(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator|=(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator^=(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator<<=(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator>>=(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+
+    // Member and pointer operators
+    int operator[](int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator *() {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator &() {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    struct Sub {
+        int test() {
+            XX_PROFILE_SCOPE_FUNCTION();
+            return 1;
+        }
+    };
+    Sub* operator ->() {
+        XX_PROFILE_SCOPE_FUNCTION();
+        static Sub sub;
+        return &sub;
+    }
+    int operator ->*(int a) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+
+    // Other operators
+    int operator ()(int a) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator ,(int a) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+};
+
 template<typename T>
 class AAA {
 public:
@@ -40,26 +246,6 @@ public:
     void def(T& t, T2& t2) {
         XX_PROFILE_SCOPE_FUNCTION();
     }
-    int operator+(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator<<(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator  +=(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator-=(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator[](int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
     operator int() {
         XX_PROFILE_SCOPE_FUNCTION();
         return 1;
@@ -76,14 +262,6 @@ public:
     operator std::vector<bool>() {
         XX_PROFILE_SCOPE_FUNCTION();
         return std::vector<bool>();
-    }
-    int operator ->*(int a) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    AAA& operator <<=(int a) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return *this;
     }
     //operator int(*)(int)() {
     //    return NULL;
@@ -207,20 +385,94 @@ void fun_get(const char buf[]) {
     int buf5[5];
     ee.def(buf2, buf5);
 
-    { int r = ee + 10; }
-    { auto r = ee += 10; }
-    { auto r = ee[1]; }
-    { fun_get3(dd); }
-    { int r = ee; }
-    { int r = ee << 3; }
-    { std::set<int> r = bb; }
-    { std::vector<bool> r = ee; }
-    { int r = ee->*1; }
-    { ee<<=1; }
+    {
+        { fun_get3(dd); }
+        { int r = ee; }
+        { std::set<int> r = bb; }
+        { std::vector<bool> r = ee; }
+    }
+}
+
+void test_operators() {
+    XX_PROFILE_SCOPE_FUNCTION();
+    Operators ops;
+    {
+        XX_PROFILE_SCOPE_NAME(Arithmetic);
+        { ops = 10; }
+        { int r = ops + 10; }
+        { int r = ops - 10; }
+        { int r = +ops; }
+        { int r = -ops; }
+        { int r = ops * 10; }
+        { int r = ops / 10; }
+        { int r = ops % 10; }
+        { int r = ops++; }
+        { int r = ++ops; }
+        { int r = ops--; }
+        { int r = --ops; }
+    }
+
+    {
+        XX_PROFILE_SCOPE_NAME(Comparison_relational);
+        { auto r = ops == 10; }
+        { auto r = ops != 10; }
+        { auto r = ops > 10; }
+        { auto r = ops < 10; }
+        { auto r = ops <= 10; }
+        { auto r = ops >= 10; }
+    }
+
+    {
+        XX_PROFILE_SCOPE_NAME(Logical);
+        { auto r = !ops; }
+        { auto r = ops && 10; }
+        { auto r = ops || 10; }
+    }
+
+    {
+        XX_PROFILE_SCOPE_NAME(Bitwise);
+        { int r = ~ops; }
+        { int r = ops & 3; }
+        { int r = ops | 3; }
+        { int r = ops ^ 3; }
+        { int r = ops << 3; }
+        { int r = ops >> 3; }
+    }
+
+    {
+        XX_PROFILE_SCOPE_NAME(Compound_assignment);
+        { ops += 10; }
+        { ops -= 10; }
+        { ops *= 10; }
+        { ops /= 10; }
+        { ops %= 10; }
+        { ops &= 10; }
+        { ops |= 10; }
+        { ops ^= 10; }
+        { ops <<= 10; }
+        { ops >>= 10; }
+    }
+
+    {
+        XX_PROFILE_SCOPE_NAME(Member_pointer);
+        { auto r = ops[1]; }
+        { int r = *ops; }
+        { int r = &ops; }
+        { int r = ops->*1; }
+        { int r = ops->test(); }
+    }
+
+    {
+        XX_PROFILE_SCOPE_NAME(Other);
+        { auto r = ops(1); }
+        //{ auto r = ops, 1; }
+    }
 }
 
 void fun() {
     XX_PROFILE_SCOPE_FUNCTION();
+
+    test_operators();
 
     fun_get("sdf");
     SSS sss;
