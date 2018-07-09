@@ -38,7 +38,9 @@ XXProfileTLS::XXProfileTLS(const char* path) {
 
 XXProfileTLS::~XXProfileTLS() {
     assert(_stack.empty());
-    frameFlush();
+    if (_buffers.size()) {
+        frameFlush();
+    }
     for (auto iter = _freeBuffers.begin(); iter != _freeBuffers.end(); ++iter) {
         free(*iter);
     }
@@ -78,11 +80,12 @@ void XXProfileTLS::endScope(XXProfileTreeNode* node) {
 bool XXProfileTLS::increaseFrame() {
     // write buffers to disk
     ++g_frameId;
-    assert(_stack.empty());
-    if (_stack.empty()) {
+    //assert(_stack.empty());
+    bool canFlush = _stack.empty();
+    if (canFlush) {
         tryFrameFlush();
     }
-    return _stack.empty();
+    return canFlush;
 }
 
 XXProfileTreeNode* XXProfileTLS::newChunk() {

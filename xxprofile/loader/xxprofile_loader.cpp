@@ -1,7 +1,7 @@
 // Copyright 2017 bianchui. All rights reserved.
 #include "../src/xxprofile_internal.hpp"
 #include "xxprofile_loader.hpp"
-#include "../src/xxprofile_tls.hpp"
+#include "xxprofile_CppNameDecoder.hpp"
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
@@ -26,6 +26,7 @@ void FrameData::init(Loader* loader) {
             TreeItem* item = _allNodes + i;
             item->node = node;
             item->name = loader->name(node->_name);
+            assert(node->_nodeId == i + 1);
             if (node->_parentNodeId) {
                 assert(node->_parentNodeId <= i);
                 TreeItem* parentItem = _allNodes + (node->_parentNodeId - 1);
@@ -68,6 +69,7 @@ void Loader::load(Archive& ar) {
         XXLOG_DEBUG("  nodeCount = %d\n", data._nodeCount);
         if (data._nodeCount > 0) {
             data._nodes = (XXProfileTreeNode*)malloc(sizeof(XXProfileTreeNode) * data._nodeCount);
+            memset(data._nodes, 0, sizeof(XXProfileTreeNode) * data._nodeCount);
             ar.serialize(data._nodes, sizeof(XXProfileTreeNode) * data._nodeCount);
         }
         data.init(this);
@@ -109,6 +111,8 @@ const char* Loader::name(SName name) {
 }
 
 const char* Loader::prepareName(const char* name) {
+    CppNameDecoder decoder(name);
+
     return strdup(name);
 }
 

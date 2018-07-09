@@ -1,4 +1,5 @@
 // Copyright 2018 bianchui. All rights reserved.
+#define XX_ENABLE_PROFILE 1
 #include "../src/xxprofile.hpp"
 #include "../src/xxprofile_archive.hpp"
 #include "../src/platforms/platform.hpp"
@@ -22,7 +23,12 @@ template<typename T>
 class AAA {
 public:
     AAA() {
-        XX_PROFILE_SCOPE_FUNCTION();
+        {
+            XX_PROFILE_SCOPE_NAME(TimerAAA);
+            {
+                XX_PROFILE_SCOPE_FUNCTION();
+            }
+        }
     }
     ~AAA() {
         XX_PROFILE_SCOPE_FUNCTION();
@@ -30,6 +36,58 @@ public:
     void abcd() {
         XX_PROFILE_SCOPE_FUNCTION();
     }
+    template<typename T2>
+    void def(T& t, T2& t2) {
+        XX_PROFILE_SCOPE_FUNCTION();
+    }
+    int operator+(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator<<(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator  +=(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator-=(int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    int operator[](int t) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    operator int() {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    operator int*() {
+        XX_PROFILE_SCOPE_FUNCTION();
+        static int a[3] = {1, 2, 3};
+        return a;
+    }
+    operator T&() {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return a;
+    }
+    operator std::vector<bool>() {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return std::vector<bool>();
+    }
+    int operator ->*(int a) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return 1;
+    }
+    AAA& operator <<=(int a) {
+        XX_PROFILE_SCOPE_FUNCTION();
+        return *this;
+    }
+    //operator int(*)(int)() {
+    //    return NULL;
+    //}
     T a;
 };
 
@@ -49,6 +107,21 @@ public:
 
 protected:
     AAA<std::vector<std::vector<std::vector<int>>>> aaa;
+};
+
+template<typename T>
+class BBB {
+public:
+    BBB() {
+        XX_PROFILE_SCOPE_FUNCTION();
+        aaa.abcd();
+    }
+    ~BBB() {
+        XX_PROFILE_SCOPE_FUNCTION();
+    }
+
+protected:
+    AAA<std::vector<T>> aaa;
 };
 
 void testLoad() {
@@ -113,15 +186,37 @@ inline void fun_get2(const int (&buf)[len]) {
     XX_PROFILE_SCOPE_FUNCTION();
 }
 
+inline void fun_get3(int i[]) {
+    XX_PROFILE_SCOPE_FUNCTION();
+}
+
+typedef int(*fun_ptr)(int);
+
 void fun_get(const char buf[]) {
     XX_PROFILE_SCOPE_FUNCTION();
     AAA<std::map<int, int>> aa;
     AAA<std::set<int>> bb;
     AAA<std::unordered_map<int, int>> cc;
     AAA<std::unordered_set<int>> dd;
+    AAA<int[4]> ee;
+    AAA<fun_ptr> ff;
+    //BBB<int[4]> gg;
 
     int buf2[4];
     fun_get2(buf2);
+    int buf5[5];
+    ee.def(buf2, buf5);
+
+    { int r = ee + 10; }
+    { auto r = ee += 10; }
+    { auto r = ee[1]; }
+    { fun_get3(dd); }
+    { int r = ee; }
+    { int r = ee << 3; }
+    { std::set<int> r = bb; }
+    { std::vector<bool> r = ee; }
+    { int r = ee->*1; }
+    { ee<<=1; }
 }
 
 void fun() {
@@ -171,7 +266,7 @@ void test_threads() {
 }
 
 int main(int argc, const char * argv[]) {
-    xxprofile::XXProfile::StaticInit();
+    XX_PROFILE_STATIC_INIT();
     //testLoad();
 
     printf("Hello, World!\n");
@@ -186,7 +281,7 @@ int main(int argc, const char * argv[]) {
     //std::cout << a << std::endl;
     //std::cout << std::this_thread::get_id() << std::endl;
     //std::cout << pthread_self() << std::endl;
-    xxprofile::XXProfile::StaticUninit();
+    XX_PROFILE_STATIC_UNINIT();
     return 0;
 }
 

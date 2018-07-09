@@ -8,8 +8,6 @@
 #include "xxprofile_internal.hpp"
 #include "xxprofile.hpp"
 #include <assert.h>
-#include <unistd.h>
-#include <pthread.h>
 #include "xxprofile_tls.hpp"
 
 #define XX_ThreadLocal 1

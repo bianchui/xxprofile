@@ -1,6 +1,6 @@
+// Copyright 2018 bianchui. All rights reserved.
 #include "FrameView.hpp"
 #include "imgui/imgui_custom.hpp"
-#include "../src/xxprofile_tls.hpp"
 #include "EventHandler.hpp"
 
 FrameView::FrameView() : _loader(NULL), _frameData(NULL) {

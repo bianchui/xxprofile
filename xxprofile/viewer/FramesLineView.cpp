@@ -1,3 +1,4 @@
+// Copyright 2018 bianchui. All rights reserved.
 #include "FramesLineView.hpp"
 #include "imgui.h"
 

@@ -1,4 +1,4 @@
-// Copyright 2017 bianchui. All rights reserved.
+// Copyright 2018 bianchui. All rights reserved.
 #ifndef xxprofileviewer_mainwin_hpp
 #define xxprofileviewer_mainwin_hpp
 #include "FramesLineView.hpp"

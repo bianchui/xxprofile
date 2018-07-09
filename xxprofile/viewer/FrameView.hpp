@@ -1,4 +1,4 @@
-// Copyright 2017 bianchui. All rights reserved.
+// Copyright 2018 bianchui. All rights reserved.
 #ifndef xxprofileviewer_FrameView_hpp
 #define xxprofileviewer_FrameView_hpp
 #include "../loader/xxprofile_loader.hpp"

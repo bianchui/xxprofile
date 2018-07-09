@@ -4,6 +4,7 @@
 #include "../src/xxprofile_name.hpp"
 #include "../src/xxprofile_namepool.hpp"
 #include "../src/xxprofile_archive.hpp"
+#include "../src/xxprofile_data.hpp"
 #include <shared/utils/StrBuf.h>
 
 XX_NAMESPACE_BEGIN(xxprofile);

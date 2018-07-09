@@ -9,7 +9,7 @@
 #ifndef xxprofile_platform_hpp
 #define xxprofile_platform_hpp
 
-#if defined(PLATFORM_WINDOWS) && PLATFORM_WINDOWS
+#if defined(XX_PLATFORM_WINDOWS) && XX_PLATFORM_WINDOWS
 // win
 #  include "platform_win.h"
 

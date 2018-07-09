@@ -1,3 +1,4 @@
+// Copyright 2018 bianchui. All rights reserved.
 #include "mainwin.hpp"
 #include "imgui/imgui_custom.hpp"
 #include <stdio.h>

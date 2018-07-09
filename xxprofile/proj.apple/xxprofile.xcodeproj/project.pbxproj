@@ -28,6 +28,19 @@
 		ED6A3CF420DB87A6002A47A8 /* xxprofile_tls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED6A3CF120DB87A6002A47A8 /* xxprofile_tls.cpp */; };
 		ED6B806520E34285008D2BAD /* xxprofile_loader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED6B806320E34285008D2BAD /* xxprofile_loader.cpp */; };
 		ED6B806C20E3935A008D2BAD /* FrameView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED6B806A20E3935A008D2BAD /* FrameView.cpp */; };
+		ED7744C720EF340B002B0578 /* xxprofile_CppNameDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED7744C520EF340B002B0578 /* xxprofile_CppNameDecoder.cpp */; };
+		ED7744CF20EF4BC4002B0578 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED7744CE20EF4BC4002B0578 /* Metal.framework */; };
+		ED7744D120EF4BC4002B0578 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED7744D020EF4BC4002B0578 /* MetalKit.framework */; };
+		ED7744D320EF4BC4002B0578 /* ModelIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED7744D220EF4BC4002B0578 /* ModelIO.framework */; };
+		ED7744D620EF4BC4002B0578 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ED7744D520EF4BC4002B0578 /* Assets.xcassets */; };
+		ED7744D920EF4BC4002B0578 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = ED7744D820EF4BC4002B0578 /* main.m */; };
+		ED7744DC20EF4BC4002B0578 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = ED7744DB20EF4BC4002B0578 /* AppDelegate.mm */; };
+		ED7744DF20EF4BC4002B0578 /* Renderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = ED7744DE20EF4BC4002B0578 /* Renderer.mm */; };
+		ED7744E220EF4BC4002B0578 /* GameViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = ED7744E120EF4BC4002B0578 /* GameViewController.mm */; };
+		ED7744E420EF4BC4002B0578 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = ED7744E320EF4BC4002B0578 /* Shaders.metal */; };
+		ED7744E820EF4BC4002B0578 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ED7744E620EF4BC4002B0578 /* Main.storyboard */; };
+		ED7744EB20EF4BC4002B0578 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ED7744E920EF4BC4002B0578 /* LaunchScreen.storyboard */; };
+		ED7744F120EF53C0002B0578 /* libxxprofile_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED84F6C31FB1CFC900C7B425 /* libxxprofile_ios.a */; };
 		ED81D1A120D374B40096FB53 /* xxprofile_archive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED81D19F20D374B40096FB53 /* xxprofile_archive.cpp */; };
 		ED81D1AA20D37C2C0096FB53 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED81D1A920D37C2C0096FB53 /* main.cpp */; };
 		ED81D1B220D3B1610096FB53 /* libxxprofile_mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED84F6B81FB1CF9B00C7B425 /* libxxprofile_mac.a */; };
@@ -122,6 +135,26 @@
 		ED6B806B20E3935A008D2BAD /* FrameView.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FrameView.hpp; sourceTree = "<group>"; };
 		ED714AF120DA5D3600732372 /* xxprofile_internal.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_internal.hpp; sourceTree = "<group>"; };
 		ED71B0FB20EB29C200AEF85F /* EventHandler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = EventHandler.hpp; sourceTree = "<group>"; };
+		ED7744C520EF340B002B0578 /* xxprofile_CppNameDecoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xxprofile_CppNameDecoder.cpp; sourceTree = "<group>"; };
+		ED7744C620EF340B002B0578 /* xxprofile_CppNameDecoder.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_CppNameDecoder.hpp; sourceTree = "<group>"; };
+		ED7744CD20EF4BC4002B0578 /* test_ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = test_ios.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		ED7744CE20EF4BC4002B0578 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		ED7744D020EF4BC4002B0578 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
+		ED7744D220EF4BC4002B0578 /* ModelIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ModelIO.framework; path = System/Library/Frameworks/ModelIO.framework; sourceTree = SDKROOT; };
+		ED7744D520EF4BC4002B0578 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		ED7744D820EF4BC4002B0578 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		ED7744DA20EF4BC4002B0578 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		ED7744DB20EF4BC4002B0578 /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
+		ED7744DD20EF4BC4002B0578 /* Renderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Renderer.h; sourceTree = "<group>"; };
+		ED7744DE20EF4BC4002B0578 /* Renderer.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Renderer.mm; sourceTree = "<group>"; };
+		ED7744E020EF4BC4002B0578 /* GameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameViewController.h; sourceTree = "<group>"; };
+		ED7744E120EF4BC4002B0578 /* GameViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GameViewController.mm; sourceTree = "<group>"; };
+		ED7744E320EF4BC4002B0578 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
+		ED7744E520EF4BC4002B0578 /* ShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderTypes.h; sourceTree = "<group>"; };
+		ED7744E720EF4BC4002B0578 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		ED7744EA20EF4BC4002B0578 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		ED7744EC20EF4BC4002B0578 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		ED7744F020EF5146002B0578 /* inc_xxprofile.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = inc_xxprofile.hpp; sourceTree = "<group>"; };
 		ED81D19C20D3584B0096FB53 /* xxprofile_macros.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_macros.hpp; sourceTree = "<group>"; };
 		ED81D19F20D374B40096FB53 /* xxprofile_archive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xxprofile_archive.cpp; sourceTree = "<group>"; };
 		ED81D1A020D374B40096FB53 /* xxprofile_archive.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_archive.hpp; sourceTree = "<group>"; };
@@ -130,6 +163,7 @@
 		ED81D1B020D3AC6C0096FB53 /* pthread_ThreadLocal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pthread_ThreadLocal.h; sourceTree = "<group>"; };
 		ED84F6B81FB1CF9B00C7B425 /* libxxprofile_mac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libxxprofile_mac.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED84F6C31FB1CFC900C7B425 /* libxxprofile_ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libxxprofile_ios.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		ED885C2420F2FDD800AFDE20 /* xxprofile_data.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_data.hpp; sourceTree = "<group>"; };
 		ED94982820EE15E300FA04D0 /* apple_mac_WritablePath.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = apple_mac_WritablePath.mm; sourceTree = "<group>"; };
 		ED94983020EE19B300FA04D0 /* apple_ios_WritablePath.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = apple_ios_WritablePath.mm; sourceTree = "<group>"; };
 		ED94983420EE1C3400FA04D0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -146,6 +180,17 @@
 			files = (
 				ED2207C620E1EDB90076C22F /* libglfw3.a in Frameworks */,
 				ED2207C220E1E4120076C22F /* libxxprofile_mac.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ED7744CA20EF4BC4002B0578 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ED7744F120EF53C0002B0578 /* libxxprofile_ios.a in Frameworks */,
+				ED7744D320EF4BC4002B0578 /* ModelIO.framework in Frameworks */,
+				ED7744CF20EF4BC4002B0578 /* Metal.framework in Frameworks */,
+				ED7744D120EF4BC4002B0578 /* MetalKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,6 +301,7 @@
 				ED5F72FF1FCD46C3004E945D /* platforms */,
 				ED81D19F20D374B40096FB53 /* xxprofile_archive.cpp */,
 				ED81D1A020D374B40096FB53 /* xxprofile_archive.hpp */,
+				ED885C2420F2FDD800AFDE20 /* xxprofile_data.hpp */,
 				ED714AF120DA5D3600732372 /* xxprofile_internal.hpp */,
 				ED81D19C20D3584B0096FB53 /* xxprofile_macros.hpp */,
 				ED5F730E1FCD49F1004E945D /* xxprofile_name.cpp */,
@@ -287,11 +333,42 @@
 		ED6B806220E34285008D2BAD /* loader */ = {
 			isa = PBXGroup;
 			children = (
+				ED7744C520EF340B002B0578 /* xxprofile_CppNameDecoder.cpp */,
+				ED7744C620EF340B002B0578 /* xxprofile_CppNameDecoder.hpp */,
 				ED6B806320E34285008D2BAD /* xxprofile_loader.cpp */,
 				ED6B806420E34285008D2BAD /* xxprofile_loader.hpp */,
 			);
 			name = loader;
 			path = ../../loader;
+			sourceTree = "<group>";
+		};
+		ED7744D420EF4BC4002B0578 /* test_ios */ = {
+			isa = PBXGroup;
+			children = (
+				ED7744D520EF4BC4002B0578 /* Assets.xcassets */,
+				ED7744DA20EF4BC4002B0578 /* AppDelegate.h */,
+				ED7744DB20EF4BC4002B0578 /* AppDelegate.mm */,
+				ED7744DD20EF4BC4002B0578 /* Renderer.h */,
+				ED7744DE20EF4BC4002B0578 /* Renderer.mm */,
+				ED7744E020EF4BC4002B0578 /* GameViewController.h */,
+				ED7744E120EF4BC4002B0578 /* GameViewController.mm */,
+				ED7744F020EF5146002B0578 /* inc_xxprofile.hpp */,
+				ED7744E320EF4BC4002B0578 /* Shaders.metal */,
+				ED7744E520EF4BC4002B0578 /* ShaderTypes.h */,
+				ED7744E620EF4BC4002B0578 /* Main.storyboard */,
+				ED7744E920EF4BC4002B0578 /* LaunchScreen.storyboard */,
+				ED7744EC20EF4BC4002B0578 /* Info.plist */,
+				ED7744D720EF4BC4002B0578 /* Supporting Files */,
+			);
+			path = test_ios;
+			sourceTree = "<group>";
+		};
+		ED7744D720EF4BC4002B0578 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				ED7744D820EF4BC4002B0578 /* main.m */,
+			);
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		ED81D19E20D368D50096FB53 /* posix */ = {
@@ -318,6 +395,7 @@
 			children = (
 				ED5F72FE1FCD46C3004E945D /* src */,
 				ED81D1A820D37C2C0096FB53 /* test */,
+				ED7744D420EF4BC4002B0578 /* test_ios */,
 				ED22005320E1D76F0076C22F /* xxprofileViewer */,
 				ED84F6B91FB1CF9B00C7B425 /* Products */,
 				ED94983320EE1C3400FA04D0 /* Frameworks */,
@@ -331,6 +409,7 @@
 				ED84F6C31FB1CFC900C7B425 /* libxxprofile_ios.a */,
 				ED81D1A720D37C2C0096FB53 /* test */,
 				ED22005220E1D76F0076C22F /* xxprofileViewer.app */,
+				ED7744CD20EF4BC4002B0578 /* test_ios.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -348,6 +427,9 @@
 			isa = PBXGroup;
 			children = (
 				ED94983420EE1C3400FA04D0 /* Foundation.framework */,
+				ED7744CE20EF4BC4002B0578 /* Metal.framework */,
+				ED7744D020EF4BC4002B0578 /* MetalKit.framework */,
+				ED7744D220EF4BC4002B0578 /* ModelIO.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -380,6 +462,23 @@
 			name = xxprofileViewer;
 			productName = xxprofileViewer;
 			productReference = ED22005220E1D76F0076C22F /* xxprofileViewer.app */;
+			productType = "com.apple.product-type.application";
+		};
+		ED7744CC20EF4BC4002B0578 /* test_ios */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ED7744ED20EF4BC4002B0578 /* Build configuration list for PBXNativeTarget "test_ios" */;
+			buildPhases = (
+				ED7744C920EF4BC4002B0578 /* Sources */,
+				ED7744CA20EF4BC4002B0578 /* Frameworks */,
+				ED7744CB20EF4BC4002B0578 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = test_ios;
+			productName = test_ios;
+			productReference = ED7744CD20EF4BC4002B0578 /* test_ios.app */;
 			productType = "com.apple.product-type.application";
 		};
 		ED81D1A620D37C2C0096FB53 /* test */ = {
@@ -447,6 +546,11 @@
 						DevelopmentTeam = PEZE6XWYTJ;
 						ProvisioningStyle = Automatic;
 					};
+					ED7744CC20EF4BC4002B0578 = {
+						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = PEZE6XWYTJ;
+						ProvisioningStyle = Automatic;
+					};
 					ED81D1A620D37C2C0096FB53 = {
 						CreatedOnToolsVersion = 8.3.3;
 						DevelopmentTeam = PEZE6XWYTJ;
@@ -486,6 +590,7 @@
 				ED84F6B71FB1CF9B00C7B425 /* xxprofile_mac */,
 				ED84F6C21FB1CFC900C7B425 /* xxprofile_ios */,
 				ED81D1A620D37C2C0096FB53 /* test */,
+				ED7744CC20EF4BC4002B0578 /* test_ios */,
 				ED22005120E1D76F0076C22F /* xxprofileViewer */,
 			);
 		};
@@ -511,6 +616,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		ED7744CB20EF4BC4002B0578 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ED7744EB20EF4BC4002B0578 /* LaunchScreen.storyboard in Resources */,
+				ED7744D620EF4BC4002B0578 /* Assets.xcassets in Resources */,
+				ED7744E820EF4BC4002B0578 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -525,11 +640,24 @@
 				ED336CF620E4C2BD0085BF34 /* FramesLineView.cpp in Sources */,
 				ED2207C920E1F67D0076C22F /* mainloop.cpp in Sources */,
 				ED2207B420E1DFAC0076C22F /* imgui_draw.cpp in Sources */,
+				ED7744C720EF340B002B0578 /* xxprofile_CppNameDecoder.cpp in Sources */,
 				ED2207B520E1DFAC0076C22F /* imgui.cpp in Sources */,
 				ED22005C20E1D76F0076C22F /* ViewController.m in Sources */,
 				ED6B806520E34285008D2BAD /* xxprofile_loader.cpp in Sources */,
 				ED22005920E1D76F0076C22F /* main.m in Sources */,
 				ED2207E120E2500D0076C22F /* mainwin.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ED7744C920EF4BC4002B0578 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ED7744E220EF4BC4002B0578 /* GameViewController.mm in Sources */,
+				ED7744DC20EF4BC4002B0578 /* AppDelegate.mm in Sources */,
+				ED7744D920EF4BC4002B0578 /* main.m in Sources */,
+				ED7744DF20EF4BC4002B0578 /* Renderer.mm in Sources */,
+				ED7744E420EF4BC4002B0578 /* Shaders.metal in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -588,6 +716,22 @@
 			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
+		ED7744E620EF4BC4002B0578 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				ED7744E720EF4BC4002B0578 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		ED7744E920EF4BC4002B0578 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				ED7744EA20EF4BC4002B0578 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -630,6 +774,41 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.google.bianchui.xxprofileViewer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		ED7744EE20EF4BC4002B0578 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = PEZE6XWYTJ;
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				INFOPLIST_FILE = test_ios/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.google.bianchui.xxprofile-test-ios";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		ED7744EF20EF4BC4002B0578 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = PEZE6XWYTJ;
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				INFOPLIST_FILE = test_ios/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.google.bianchui.xxprofile-test-ios";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
@@ -761,8 +940,8 @@
 				DEVELOPMENT_TEAM = PEZE6XWYTJ;
 				EXECUTABLE_PREFIX = lib;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"PLATFORM_MAC=1",
-					"PLATFORM_APPLE=1",
+					"XX_PLATFORM_MAC=1",
+					"XX_PLATFORM_APPLE=1",
 					"$(inherited)",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -777,8 +956,8 @@
 				DEVELOPMENT_TEAM = PEZE6XWYTJ;
 				EXECUTABLE_PREFIX = lib;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"PLATFORM_MAC=1",
-					"PLATFORM_APPLE=1",
+					"XX_PLATFORM_MAC=1",
+					"XX_PLATFORM_APPLE=1",
 					"$(inherited)",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -791,8 +970,8 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = PEZE6XWYTJ;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"PLATFORM_IOS=1",
-					"PLATFORM_APPLE=1",
+					"XX_PLATFORM_IOS=1",
+					"XX_PLATFORM_APPLE=1",
 					"$(inherited)",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -810,8 +989,8 @@
 				COPY_PHASE_STRIP = YES;
 				DEVELOPMENT_TEAM = PEZE6XWYTJ;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"PLATFORM_IOS=1",
-					"PLATFORM_APPLE=1",
+					"XX_PLATFORM_IOS=1",
+					"XX_PLATFORM_APPLE=1",
 					"$(inherited)",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -835,6 +1014,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		ED7744ED20EF4BC4002B0578 /* Build configuration list for PBXNativeTarget "test_ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ED7744EE20EF4BC4002B0578 /* Debug */,
+				ED7744EF20EF4BC4002B0578 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		ED81D1AB20D37C2C0096FB53 /* Build configuration list for PBXNativeTarget "test" */ = {
 			isa = XCConfigurationList;

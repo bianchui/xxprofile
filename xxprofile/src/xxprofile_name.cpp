@@ -333,7 +333,6 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
                 ar.serialize(newEntry->buf, length);
 
                 XXLOG_DEBUG("  name(%d)<<%s\n", newEntry->id, newEntry->buf);
-                printf("  name(%d)<<%s\n", newEntry->id, newEntry->buf);
 
                 {
                     const uint32_t hash = StringHash(newEntry->buf);

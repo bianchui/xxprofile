@@ -4,17 +4,9 @@
 #include "xxprofile.hpp"
 #include "xxprofile_archive.hpp"
 #include <vector>
+#include "xxprofile_data.hpp"
 
 XX_NAMESPACE_BEGIN(xxprofile);
-
-// XXProfileTreeNode
-struct XXProfileTreeNode {
-    uint64_t _beginTime;
-    uint64_t _endTime;
-    SName _name;
-    uint32_t _nodeId;
-    uint32_t _parentNodeId;
-};
 
 // XXProfileTLS
 class XXProfileTLS : public XXProfile {
