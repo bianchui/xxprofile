@@ -19,6 +19,13 @@
 
 __thread int a = 0;
 
+#define OPERATOR_0PARAM(op) int operator op() { XX_PROFILE_SCOPE_FUNCTION(); return 1; }
+#define OPERATOR_1PARAM(op) int operator op(int a0) { XX_PROFILE_SCOPE_FUNCTION(); return 1; }
+template <typename T>
+void any_receiver(const T&/*v*/) {
+    XX_PROFILE_SCOPE_FUNCTION();
+}
+
 class Operators {
 public:
     Operators() {
@@ -29,175 +36,56 @@ public:
     }
 
     // Arithmetic operators
-    void operator=(int a) {
-        XX_PROFILE_SCOPE_FUNCTION();
-    }
-    int operator+(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator-(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator+() {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator-() {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator*(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator/(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator%(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator++() {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator++(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator--() {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator--(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-
+    OPERATOR_1PARAM(=); // a = b
+    OPERATOR_1PARAM(+); // a + b
+    OPERATOR_1PARAM(-); // a - b
+    OPERATOR_0PARAM(+); // +a
+    OPERATOR_0PARAM(-); // -a
+    OPERATOR_1PARAM(*); // a * b
+    OPERATOR_1PARAM(/); // a / b
+    OPERATOR_1PARAM(%); // a % b
+    OPERATOR_0PARAM(++); // ++a
+    OPERATOR_1PARAM(++); // a++
+    OPERATOR_0PARAM(--); // --a
+    OPERATOR_1PARAM(--); // a--
+    
     //Comparison operators/relational operators
-    int operator==(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return true;
-    }
-    bool operator!=(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return false;
-    }
-    int operator>(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return false;
-    }
-    int operator<(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return false;
-    }
-    int operator>=(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return false;
-    }
-    int operator<=(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return false;
-    }
+    OPERATOR_1PARAM(==); // a == b
+    OPERATOR_1PARAM(!=); // a != b
+    OPERATOR_1PARAM(<); // a < b
+    OPERATOR_1PARAM(>); // a > b
+    OPERATOR_1PARAM(<=); // a <= b
+    OPERATOR_1PARAM(>=); // a >= b
 
     // Logical operators
-    int operator!() {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator&&(int b) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return false;
-    }
-    int operator||(int b) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return false;
-    }
+    OPERATOR_0PARAM(!); // !a
+    OPERATOR_1PARAM(&&); // a && b
+    OPERATOR_1PARAM(||); // a || b
 
     // Bitwise operators
-    int operator~() {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator&(int b) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return false;
-    }
-    int operator|(int b) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return false;
-    }
-    int operator^(int b) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return false;
-    }
-    int operator<<(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator>>(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
+    OPERATOR_0PARAM(~); // ~a
+    OPERATOR_1PARAM(&); // a & b
+    OPERATOR_1PARAM(|); // a | b
+    OPERATOR_1PARAM(^); // a ^ b
+    OPERATOR_1PARAM(<<); // a << b
+    OPERATOR_1PARAM(>>); // a >> b
 
     // Compound assignment operators
-    int operator +=(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator-=(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator *=(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator/=(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator %=(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator&=(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator|=(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator^=(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator<<=(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator>>=(int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
+    OPERATOR_1PARAM(+=); // a+=
+    OPERATOR_1PARAM(-=); // a-=
+    OPERATOR_1PARAM(*=); // a*=
+    OPERATOR_1PARAM(/=); // a/=
+    OPERATOR_1PARAM(%=); // a%=
+    OPERATOR_1PARAM(&=); // a&=
+    OPERATOR_1PARAM(|=); // a|=
+    OPERATOR_1PARAM(^=); // a^=
+    OPERATOR_1PARAM(<<=); // a<<=
+    OPERATOR_1PARAM(>>=); // a>>=
 
     // Member and pointer operators
-    int operator[](int t) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator *() {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
-    int operator &() {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
+    OPERATOR_1PARAM([]); // a[b]
+    OPERATOR_0PARAM(*); // *a
+    OPERATOR_0PARAM(&); // &a
     struct Sub {
         int test() {
             XX_PROFILE_SCOPE_FUNCTION();
@@ -209,16 +97,10 @@ public:
         static Sub sub;
         return &sub;
     }
-    int operator ->*(int a) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
+    OPERATOR_1PARAM(->*); // a->*b
 
     // Other operators
-    int operator ()(int a) {
-        XX_PROFILE_SCOPE_FUNCTION();
-        return 1;
-    }
+    OPERATOR_1PARAM(()); // a(b)
     int operator ,(int a) {
         XX_PROFILE_SCOPE_FUNCTION();
         return 1;
@@ -387,7 +269,7 @@ void fun_get(const char buf[]) {
 
     {
         { fun_get3(dd); }
-        { int r = ee; }
+        { any_receiver<int>(ee); }
         { std::set<int> r = bb; }
         { std::vector<bool> r = ee; }
     }
@@ -398,74 +280,74 @@ void test_operators() {
     Operators ops;
     {
         XX_PROFILE_SCOPE_NAME(Arithmetic);
-        { ops = 10; }
-        { int r = ops + 10; }
-        { int r = ops - 10; }
-        { int r = +ops; }
-        { int r = -ops; }
-        { int r = ops * 10; }
-        { int r = ops / 10; }
-        { int r = ops % 10; }
-        { int r = ops++; }
-        { int r = ++ops; }
-        { int r = ops--; }
-        { int r = --ops; }
+        { any_receiver(ops = 10); }
+        { any_receiver(ops + 10); }
+        { any_receiver(ops - 10); }
+        { any_receiver(+ops); }
+        { any_receiver(-ops); }
+        { any_receiver(ops * 10); }
+        { any_receiver(ops / 10); }
+        { any_receiver(ops % 10); }
+        { any_receiver(ops++); }
+        { any_receiver(++ops); }
+        { any_receiver(ops--); }
+        { any_receiver(--ops); }
     }
 
     {
         XX_PROFILE_SCOPE_NAME(Comparison_relational);
-        { auto r = ops == 10; }
-        { auto r = ops != 10; }
-        { auto r = ops > 10; }
-        { auto r = ops < 10; }
-        { auto r = ops <= 10; }
-        { auto r = ops >= 10; }
+        { any_receiver(ops == 10); }
+        { any_receiver(ops != 10); }
+        { any_receiver(ops < 10); }
+        { any_receiver(ops > 10); }
+        { any_receiver(ops <= 10); }
+        { any_receiver(ops >= 10); }
     }
 
     {
         XX_PROFILE_SCOPE_NAME(Logical);
-        { auto r = !ops; }
-        { auto r = ops && 10; }
-        { auto r = ops || 10; }
+        { any_receiver(!ops); }
+        { any_receiver(ops && 10); }
+        { any_receiver(ops || 10); }
     }
 
     {
         XX_PROFILE_SCOPE_NAME(Bitwise);
-        { int r = ~ops; }
-        { int r = ops & 3; }
-        { int r = ops | 3; }
-        { int r = ops ^ 3; }
-        { int r = ops << 3; }
-        { int r = ops >> 3; }
+        { any_receiver(~ops); }
+        { any_receiver(ops & 3); }
+        { any_receiver(ops | 3); }
+        { any_receiver(ops ^ 3); }
+        { any_receiver(ops << 3); }
+        { any_receiver(ops >> 3); }
     }
 
     {
         XX_PROFILE_SCOPE_NAME(Compound_assignment);
-        { ops += 10; }
-        { ops -= 10; }
-        { ops *= 10; }
-        { ops /= 10; }
-        { ops %= 10; }
-        { ops &= 10; }
-        { ops |= 10; }
-        { ops ^= 10; }
-        { ops <<= 10; }
-        { ops >>= 10; }
+        { any_receiver(ops += 10); }
+        { any_receiver(ops -= 10); }
+        { any_receiver(ops *= 10); }
+        { any_receiver(ops /= 10); }
+        { any_receiver(ops %= 10); }
+        { any_receiver(ops &= 10); }
+        { any_receiver(ops |= 10); }
+        { any_receiver(ops ^= 10); }
+        { any_receiver(ops <<= 10); }
+        { any_receiver(ops >>= 10); }
     }
 
     {
         XX_PROFILE_SCOPE_NAME(Member_pointer);
-        { auto r = ops[1]; }
-        { int r = *ops; }
-        { int r = &ops; }
-        { int r = ops->*1; }
-        { int r = ops->test(); }
+        { any_receiver(ops[1]); }
+        { any_receiver(*ops); }
+        { any_receiver(&ops); }
+        { any_receiver(ops->*1); }
+        { any_receiver(ops->test()); }
     }
 
     {
         XX_PROFILE_SCOPE_NAME(Other);
-        { auto r = ops(1); }
-        //{ auto r = ops, 1; }
+        { any_receiver(ops(1)); }
+        //{ any_receiver(ops, 1); }
     }
 }
 

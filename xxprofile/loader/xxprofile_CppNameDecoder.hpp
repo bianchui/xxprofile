@@ -11,16 +11,34 @@ XX_NAMESPACE_BEGIN(xxprofile);
 
 struct CppNameDecoder {
     struct Token {
+        struct Type {
+            enum Enum {
+                Unknown,
+                Name,
+                Operator,
+                FixedOperator,
+            };
+        };
+
         const char* begin;
         size_t length;
         size_t column;
-        bool _name;
+        Type::Enum _type;
 
         bool is(const char* str) const {
             return (strncmp(begin, str, length) == 0) && str[length] == 0;
         }
+        bool is(char ch) const {
+            return length == 1 && begin[0] == ch;
+        }
         bool isName() const {
-            return _name;
+            return _type == Type::Name;
+        }
+        bool isOperator() const {
+            return _type == Type::Operator;
+        }
+        bool isFixedOperator() const {
+            return _type == Type::FixedOperator;
         }
     };
 

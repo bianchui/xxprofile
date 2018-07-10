@@ -18,7 +18,7 @@ void CppNameDecoder::TokenParser::_parseNext(Token& token) {
     token.begin = _current;
     token.column = _current - _data + 1;
     token.length = 0;
-    token._name = false;
+    token._type = Token::Type::Unknown;
     if (!*_current) {
         return;
     }
@@ -54,57 +54,6 @@ void CppNameDecoder::TokenParser::_parseNext(Token& token) {
                     _current += 2;
                     break;
                 }
-            } else if (ch == '[') {
-                if (_current[1] == ']') {
-                    _current += 2;
-                    break;
-                }
-            } else if (ch == '(') {
-                if (_current[1] == ')') {
-                    _current += 2;
-                    break;
-                }
-            } else if (ch == '+') {
-                if (_current[1] == '+') {
-                    _current += 2;
-                    break;
-                }
-                if (_current[1] == '=') {
-                    _current += 2;
-                    break;
-                }
-            } else if (ch == '-') {
-                if (_current[1] == '-') {
-                    _current += 2;
-                    break;
-                }
-                if (_current[1] == '=') {
-                    _current += 2;
-                    break;
-                }
-                if (_current[1] == '>') {
-                    if (_current[2] == '*') {
-                        _current += 3;
-                        break;
-                    }
-                    _current += 2;
-                    break;
-                }
-            } else if (ch == '*') {
-                if (_current[1] == '=') {
-                    _current += 2;
-                    break;
-                }
-            } else if (ch == '/') {
-                if (_current[1] == '=') {
-                    _current += 2;
-                    break;
-                }
-            } else if (ch == '%') {
-                if (_current[1] == '=') {
-                    _current += 2;
-                    break;
-                }
             }
         } else {
             if (isName) {
@@ -121,7 +70,9 @@ void CppNameDecoder::TokenParser::_parseNext(Token& token) {
         break;
     }
     token.length = _current - token.begin;
-    token._name = isName;
+    if (isName) {
+        token._type = Token::Type::Name;
+    }
 }
 
 void CppNameDecoder::TokenParser::_putBackToken(Token& token) {
@@ -129,6 +80,7 @@ void CppNameDecoder::TokenParser::_putBackToken(Token& token) {
     _current = token.begin;
 }
 
+// https://en.cppreference.com/w/cpp/language/expressions#Operators
 // https://en.wikipedia.org/wiki/Operators_in_C_and_C%2B%2B
 static const char* const kOperators[] = {
     // Arithmetic operators
@@ -144,8 +96,8 @@ static const char* const kOperators[] = {
     // Comparison operators/relational operators
     "==", // bool K::operator ==(S const& b) const;
     "!=", // bool K::operator !=(S const& b) const;
-    ">", // bool K::operator >(S const& b) const;
     "<", // bool K::operator <(S const& b) const;
+    ">", // bool K::operator >(S const& b) const;
     ">=", // bool K::operator >=(S const& b) const;
     "<=", // bool K::operator <=(S const& b) const;
 
@@ -193,7 +145,123 @@ void CppNameDecoder::TokenParser::parseNext(Token& token) {
     }
 
     if (token.isName()) {
+        // try to fix operators, make operator a full name
         if (token.is("operator")) {
+            Token tk;
+            _parseNext(tk);
+            if (tk.length == 0) {
+                return;
+            }
+            if (tk.length == 1) {
+                bool isFixedOperator = true;
+                const char opCh = tk.begin[0];
+                switch (opCh) {
+                    case '=': // =, ==
+                    case '*': // *, *=
+                    case '/': // /, /=
+                    case '%': // %, %=
+                    case '!': // !, !=
+                    case '^': // ^, ^=
+                        token.length += tk.length;
+                        _parseNext(tk);
+                        if (tk.is('=')) {
+                             token.length += tk.length;
+                        } else {
+                            _putBackToken(tk);
+                        }
+                        break;
+
+                    case '+': // +, ++, +=
+                        token.length += tk.length;
+                        _parseNext(tk);
+                        if (tk.is('+') || tk.is('=')) {
+                            token.length += tk.length;
+                        }  else {
+                            _putBackToken(tk);
+                        }
+                        break;
+
+                    case '-': // -, --, -=, ->, ->*
+                        token.length += tk.length;
+                        _parseNext(tk);
+                        if (tk.is('-') || tk.is('=')) {
+                            token.length += tk.length;
+                        } else if (tk.is('>')) {
+                            token.length += tk.length;
+                            _parseNext(tk);
+                            if (tk.is('*')) {
+                                token.length += tk.length;
+                            }  else {
+                                _putBackToken(tk);
+                            }
+                        }  else {
+                            _putBackToken(tk);
+                        }
+                        break;
+
+                    case '<': // <, <=, <<, <<=
+                    case '>': // >, >=, >>, >>=
+                        token.length += tk.length;
+                        _parseNext(tk);
+                        if (tk.is('=')) {
+                            token.length += tk.length;
+                        } else if (tk.is(opCh)) {
+                            token.length += tk.length;
+                            _parseNext(tk);
+                            if (tk.is('=')) {
+                                token.length += tk.length;
+                            }  else {
+                                _putBackToken(tk);
+                            }
+                        }  else {
+                            _putBackToken(tk);
+                        }
+                        break;
+
+                    case '~': // ~
+                        token.length += tk.length;
+                        _parseNext(tk);
+                        break;
+
+                    case '&': // &, &&, &=
+                    case '|': // |, ||, |=
+                        token.length += tk.length;
+                        _parseNext(tk);
+                        if (tk.is('=') || tk.is(opCh)) {
+                            token.length += tk.length;
+                        }  else {
+                            _putBackToken(tk);
+                        }
+                        break;
+
+                    case '[': // []
+                        token.length += tk.length;
+                        _parseNext(tk);
+                        if (tk.is(']')) {
+                            token.length += tk.length;
+                        } else {
+                            _putBackToken(tk);
+                        }
+                        break;
+
+                    case '(': // ()
+                        token.length += tk.length;
+                        _parseNext(tk);
+                        if (tk.is(')')) {
+                            token.length += tk.length;
+                        } else {
+                            _putBackToken(tk);
+                        }
+                        break;
+
+                    default:
+                        isFixedOperator = false;
+                        break;
+                }
+                if (isFixedOperator) {
+                    token._type = Token::Type::FixedOperator;
+                }
+            }
 
         } else {
             
@@ -220,7 +288,7 @@ CppNameDecoder::CppNameDecoder(const char* name) {
 
         void build(size_t curIndex, NameTree& node) {
             const Token& token = _tokens[curIndex];
-            if (token._name) {
+            if (token.isName()) {
                 if (curIndex + 1 < _tokens.size()) {
                     if (_tokens[curIndex + 1].is("::")) {
 
