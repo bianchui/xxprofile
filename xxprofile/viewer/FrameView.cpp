@@ -43,8 +43,9 @@ void FrameView::draw() {
         ImGuiStyle* style;
         const xxprofile::FrameData* data;
         shared::StrBuf _timeBuffer;
-        void Draw(xxprofile::TreeItem* item, uint64_t parentCycles) {
+        void draw(const xxprofile::TreeItem* item, uint64_t parentCycles) {
             double percentage = (item->useCycles() * 1000000 / parentCycles) * 0.0001;
+            double framePercentage = (item->useCycles() * 1000000 / frameCycles) * 0.0001;
             if (percentage > 50) {
                 style->Colors[ImGuiCol_Text] = kColorRed;
             } else if (percentage > 30) {
@@ -55,14 +56,29 @@ void FrameView::draw() {
             _timeBuffer.clear();
             Math::FormatTime(_timeBuffer, item->useCycles() * _secondsPerCycle);
             if (item->children) {
-                if (ImGui::TreeNode(item->name, "(%0.4f%% %s) %s", percentage, _timeBuffer.c_str(), item->name)) {
+                bool expanded = ImGui::TreeNode(item->name, "(%0.4f%% %s) %s", percentage, _timeBuffer.c_str(), item->name);
+                tooltip("Frame: %0.4f%%\nParent:%0.4f%%\nTime:  %s\n%s", framePercentage, percentage, _timeBuffer.c_str(), item->name);
+                if (expanded) {
                     for (auto iter = item->children->begin(); iter != item->children->end(); ++iter) {
-                        Draw(*iter, item->useCycles());
+                        draw(*iter, item->useCycles());
                     }
                     ImGui::TreePop();
                 }
             } else {
                 ImGui::BulletText("(%0.4f%% %s) %s", percentage, _timeBuffer.c_str(), item->name);
+                tooltip("Frame: %0.4f%%\nParent:%0.4f%%\nTime:  %s\n%s", framePercentage, percentage, _timeBuffer.c_str(), item->name);
+            }
+        }
+        void tooltip(const char* fmt, ...) {
+            if (ImGui::IsItemHovered()) {
+                ImGui::BeginTooltip();
+                ImGui::PushTextWrapPos(ImGui::GetFontSize() * 50.0f);
+                va_list args;
+                va_start(args, fmt);
+                ImGui::TextV(fmt, args);
+                va_end(args);
+                ImGui::PopTextWrapPos();
+                ImGui::EndTooltip();
             }
         }
     };
@@ -80,7 +96,7 @@ void FrameView::draw() {
     drawtv.style = &style;
     const ImVec4 colorOld = style.Colors[ImGuiCol_Text];
     for (auto iter = _frameData->roots().begin(); iter != _frameData->roots().end(); ++iter) {
-        drawtv.Draw(*iter, drawtv.frameCycles);
+        drawtv.draw(*iter, drawtv.frameCycles);
     }
     style.Colors[ImGuiCol_Text] = colorOld;
 }

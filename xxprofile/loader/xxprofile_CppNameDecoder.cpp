@@ -14,7 +14,7 @@ static bool isSecondSymbolChar(char ch) {
     return isFirstSymbolChar(ch) || (ch >= '0' && ch <= '9');
 }
 
-void CppNameDecoder::TokenParser::_parseNext(Token& token) {
+void CppNameDecoder::TokenParser::_parseNextSimple(Token& token) {
     token.begin = _current;
     token.column = _current - _data + 1;
     token.length = 0;
@@ -87,7 +87,7 @@ static const char* const kOperators[] = {
     "=", // R& K::operator =(S b);
     "+", // R K::operator +(S b) const; R K::operator +() const;
     "-", // R K::operator -(S b) const; R K::operator -() const;
-    "*", // R K::operator *(S b) const; R& K::operator *();
+    "*", // R K::operator *(S b) const;
     "/", // R K::operator /(S b) const;
     "%", // R K::operator %(S b) const;
     "++", // R& K::operator ++(); R K::operator ++(int);
@@ -98,8 +98,8 @@ static const char* const kOperators[] = {
     "!=", // bool K::operator !=(S const& b) const;
     "<", // bool K::operator <(S const& b) const;
     ">", // bool K::operator >(S const& b) const;
-    ">=", // bool K::operator >=(S const& b) const;
     "<=", // bool K::operator <=(S const& b) const;
+    ">=", // bool K::operator >=(S const& b) const;
 
     // Logical operators
     "!", // bool K::operator !() const;
@@ -128,18 +128,17 @@ static const char* const kOperators[] = {
 
     // Member and pointer operators
     "[]", // R& K::operator [](S b) const;
-    // R& K::operator *();
+    "*", // R& K::operator *();
     "&", // R* K::operator &();
     "->", // R* K::operator ->();
     "->*", // R& K::operator ->*(S b);
 
     // Other operators
     "()", // R K::operator ()(S a, T b, ...);
-
 };
 
-void CppNameDecoder::TokenParser::parseNext(Token& token) {
-    _parseNext(token);
+void CppNameDecoder::TokenParser::_parseNextWithFixedOperator(Token& token) {
+    _parseNextSimple(token);
     if (token.length == 0) {
         return;
     }
@@ -147,8 +146,9 @@ void CppNameDecoder::TokenParser::parseNext(Token& token) {
     if (token.isName()) {
         // try to fix operators, make operator a full name
         if (token.is("operator")) {
+            token._type = Token::Type::Operator;
             Token tk;
-            _parseNext(tk);
+            _parseNextSimple(tk);
             if (tk.length == 0) {
                 return;
             }
@@ -163,9 +163,9 @@ void CppNameDecoder::TokenParser::parseNext(Token& token) {
                     case '!': // !, !=
                     case '^': // ^, ^=
                         token.length += tk.length;
-                        _parseNext(tk);
+                        _parseNextSimple(tk);
                         if (tk.is('=')) {
-                             token.length += tk.length;
+                            token.length += tk.length;
                         } else {
                             _putBackToken(tk);
                         }
@@ -173,7 +173,7 @@ void CppNameDecoder::TokenParser::parseNext(Token& token) {
 
                     case '+': // +, ++, +=
                         token.length += tk.length;
-                        _parseNext(tk);
+                        _parseNextSimple(tk);
                         if (tk.is('+') || tk.is('=')) {
                             token.length += tk.length;
                         }  else {
@@ -183,12 +183,12 @@ void CppNameDecoder::TokenParser::parseNext(Token& token) {
 
                     case '-': // -, --, -=, ->, ->*
                         token.length += tk.length;
-                        _parseNext(tk);
+                        _parseNextSimple(tk);
                         if (tk.is('-') || tk.is('=')) {
                             token.length += tk.length;
                         } else if (tk.is('>')) {
                             token.length += tk.length;
-                            _parseNext(tk);
+                            _parseNextSimple(tk);
                             if (tk.is('*')) {
                                 token.length += tk.length;
                             }  else {
@@ -202,12 +202,12 @@ void CppNameDecoder::TokenParser::parseNext(Token& token) {
                     case '<': // <, <=, <<, <<=
                     case '>': // >, >=, >>, >>=
                         token.length += tk.length;
-                        _parseNext(tk);
+                        _parseNextSimple(tk);
                         if (tk.is('=')) {
                             token.length += tk.length;
                         } else if (tk.is(opCh)) {
                             token.length += tk.length;
-                            _parseNext(tk);
+                            _parseNextSimple(tk);
                             if (tk.is('=')) {
                                 token.length += tk.length;
                             }  else {
@@ -220,13 +220,12 @@ void CppNameDecoder::TokenParser::parseNext(Token& token) {
 
                     case '~': // ~
                         token.length += tk.length;
-                        _parseNext(tk);
                         break;
 
                     case '&': // &, &&, &=
                     case '|': // |, ||, |=
                         token.length += tk.length;
-                        _parseNext(tk);
+                        _parseNextSimple(tk);
                         if (tk.is('=') || tk.is(opCh)) {
                             token.length += tk.length;
                         }  else {
@@ -236,7 +235,7 @@ void CppNameDecoder::TokenParser::parseNext(Token& token) {
 
                     case '[': // []
                         token.length += tk.length;
-                        _parseNext(tk);
+                        _parseNextSimple(tk);
                         if (tk.is(']')) {
                             token.length += tk.length;
                         } else {
@@ -246,7 +245,7 @@ void CppNameDecoder::TokenParser::parseNext(Token& token) {
 
                     case '(': // ()
                         token.length += tk.length;
-                        _parseNext(tk);
+                        _parseNextSimple(tk);
                         if (tk.is(')')) {
                             token.length += tk.length;
                         } else {
@@ -256,19 +255,54 @@ void CppNameDecoder::TokenParser::parseNext(Token& token) {
 
                     default:
                         isFixedOperator = false;
+                        _putBackToken(tk);
                         break;
                 }
                 if (isFixedOperator) {
                     token._type = Token::Type::FixedOperator;
                 }
+            } else {
+                _putBackToken(tk);
             }
+        }
+    }
+    
+    assert(token.begin + token.length == _current);
+}
 
-        } else {
-            
+void CppNameDecoder::TokenParser::parseNext(Token& token) {
+    _parseNextWithFixedOperator(token);
+    if (token.length == 0) {
+        return;
+    }
+
+    if (token.isName() || token.is("::")) {
+        if (token.is("::")) {
+            _putBackToken(token);
+            token.length = 0;
+        }
+        while (true) {
+            Token tk;
+            _parseNextWithFixedOperator(tk);
+            if (tk.is("::")) {
+                token.length += tk.length;
+                _parseNextWithFixedOperator(tk);
+                if (tk.isName() || tk.isFixedOperator()) {
+                    token.length += tk.length;
+                } else {
+                    _putBackToken(tk);
+                    break;
+                }
+            } else {
+                _putBackToken(tk);
+                break;
+            }
         }
     } else {
 
     }
+
+    assert(token.begin + token.length == _current);
 }
 
 CppNameDecoder::CppNameDecoder(const char* name) {
@@ -283,16 +317,31 @@ CppNameDecoder::CppNameDecoder(const char* name) {
         }
 
         void build() {
-            build(0, _root);
+            size_t curIndex = 0;
+            build(curIndex, _root);
         }
 
-        void build(size_t curIndex, NameTree& node) {
-            const Token& token = _tokens[curIndex];
-            if (token.isName()) {
-                if (curIndex + 1 < _tokens.size()) {
-                    if (_tokens[curIndex + 1].is("::")) {
+        void build(size_t& curIndex, NameTree& node) {
+            while (curIndex < _tokens.size()) {
+                const Token& token = _tokens[curIndex];
+                node.children.resize(node.children.size() + 1);
+                auto& child = node.children.back();
+                child.token = token;
+                ++curIndex;
+                if (token.is('<')) {
+                    build(curIndex, child);
+                } else if (token.is('>')) {
+                    return;
+                } else if (token.is('(')) {
+                    build(curIndex, child);
+                } else if (token.is(')')) {
+                    return;
+                } else if (token.is('[')) {
+                    build(curIndex, child);
+                } else if (token.is(']')) {
+                    return;
+                } else {
 
-                    }
                 }
             }
         }
@@ -310,6 +359,7 @@ CppNameDecoder::CppNameDecoder(const char* name) {
     } while (true);
 
     builder.build();
+    builder._root.dump();
 }
 
 XX_NAMESPACE_END(xxprofile);

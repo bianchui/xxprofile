@@ -34,7 +34,7 @@ static void profile_on_thread_exit(void* data) {
 
 static std::string g_filePath;
 
-bool XXProfile::StaticInit() {
+bool XXProfile::StaticInit(const char* savePath) {
     
 #if !XX_ThreadLocal
     //pthread_once(&g_profile_init_once, profile_tls_init_once);
@@ -43,7 +43,14 @@ bool XXProfile::StaticInit() {
     }
 #endif//XX_ThreadLocal
     Timer::InitTiming();
-    g_filePath = systemGetWritablePath();
+    if (savePath) {
+        g_filePath.assign(savePath);
+        if (g_filePath.length() > 0 && g_filePath.back() != '/') {
+            g_filePath.push_back('/');
+        }
+    } else {
+        g_filePath = systemGetWritablePath();
+    }
     return true;
 }
 

@@ -26,7 +26,7 @@ struct CppNameDecoder {
         Type::Enum _type;
 
         bool is(const char* str) const {
-            return (strncmp(begin, str, length) == 0) && str[length] == 0;
+            return length && (strncmp(begin, str, length) == 0) && str[length] == 0;
         }
         bool is(char ch) const {
             return length == 1 && begin[0] == ch;
@@ -47,7 +47,8 @@ struct CppNameDecoder {
         void parseNext(Token& token);
 
     private:
-        void _parseNext(Token& token);
+        void _parseNextSimple(Token& token);
+        void _parseNextWithFixedOperator(Token& token);
         void _putBackToken(Token& token);
 
     private:
@@ -56,8 +57,26 @@ struct CppNameDecoder {
     };
 
     struct NameTree {
+        Token token;
         std::string name;
         std::vector<NameTree> children;
+
+        NameTree() {
+            token.length = 0;
+        }
+
+        NameTree(NameTree&& other) : token(other.token), name(std::move(other.name)), children(std::move(other.children)) {
+        }
+
+        void dump(int indent = 0) {
+            printf("%*s%.*s\n", indent * 4, "", (int)token.length, token.begin);
+            for (auto iter = children.begin(); iter != children.end(); ++iter) {
+                iter->dump(indent + 1);
+            }
+        }
+
+        XX_CLASS_DELETE_COPY(NameTree);
+        XX_CLASS_DELETE_MOVE_ASSIGN(NameTree);
     };
 
     CppNameDecoder(const char* name);

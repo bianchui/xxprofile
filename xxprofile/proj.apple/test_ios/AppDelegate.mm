@@ -11,7 +11,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    XX_PROFILE_STATIC_INIT();
+    XX_PROFILE_STATIC_INIT(NULL);
     return YES;
 }
 

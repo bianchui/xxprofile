@@ -251,6 +251,7 @@ inline void fun_get3(int i[]) {
 }
 
 typedef int(*fun_ptr)(int);
+typedef fun_ptr (*fun2_ptr)(fun_ptr);
 
 void fun_get(const char buf[]) {
     XX_PROFILE_SCOPE_FUNCTION();
@@ -261,6 +262,14 @@ void fun_get(const char buf[]) {
     AAA<int[4]> ee;
     AAA<fun_ptr> ff;
     //BBB<int[4]> gg;
+    AAA<fun2_ptr> hh;
+    AAA<std::string> ii;
+
+    {
+        auto glambda = [](int a, int&& b) { return a < b; };
+        any_receiver(glambda);
+    }
+
 
     int buf2[4];
     fun_get2(buf2);
@@ -400,7 +409,7 @@ void test_threads() {
 }
 
 int main(int argc, const char * argv[]) {
-    XX_PROFILE_STATIC_INIT();
+    XX_PROFILE_STATIC_INIT(NULL);
     //testLoad();
 
     printf("Hello, World!\n");
