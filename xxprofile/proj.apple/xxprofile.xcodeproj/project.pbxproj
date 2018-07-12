@@ -41,6 +41,9 @@
 		ED7744E820EF4BC4002B0578 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ED7744E620EF4BC4002B0578 /* Main.storyboard */; };
 		ED7744EB20EF4BC4002B0578 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ED7744E920EF4BC4002B0578 /* LaunchScreen.storyboard */; };
 		ED7744F120EF53C0002B0578 /* libxxprofile_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED84F6C31FB1CFC900C7B425 /* libxxprofile_ios.a */; };
+		ED7D784D20F731670043FF99 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = ED7D784C20F731670043FF99 /* libz.tbd */; };
+		ED7D785020F7316F0043FF99 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = ED7D784F20F7316F0043FF99 /* libz.tbd */; };
+		ED7D785120F731740043FF99 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = ED7D784F20F7316F0043FF99 /* libz.tbd */; };
 		ED81D1A120D374B40096FB53 /* xxprofile_archive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED81D19F20D374B40096FB53 /* xxprofile_archive.cpp */; };
 		ED81D1AA20D37C2C0096FB53 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED81D1A920D37C2C0096FB53 /* main.cpp */; };
 		ED81D1B220D3B1610096FB53 /* libxxprofile_mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED84F6B81FB1CF9B00C7B425 /* libxxprofile_mac.a */; };
@@ -155,6 +158,8 @@
 		ED7744EA20EF4BC4002B0578 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ED7744EC20EF4BC4002B0578 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ED7744F020EF5146002B0578 /* inc_xxprofile.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = inc_xxprofile.hpp; sourceTree = "<group>"; };
+		ED7D784C20F731670043FF99 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
+		ED7D784F20F7316F0043FF99 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		ED81D19C20D3584B0096FB53 /* xxprofile_macros.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_macros.hpp; sourceTree = "<group>"; };
 		ED81D19F20D374B40096FB53 /* xxprofile_archive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xxprofile_archive.cpp; sourceTree = "<group>"; };
 		ED81D1A020D374B40096FB53 /* xxprofile_archive.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_archive.hpp; sourceTree = "<group>"; };
@@ -178,6 +183,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED7D785020F7316F0043FF99 /* libz.tbd in Frameworks */,
 				ED2207C620E1EDB90076C22F /* libglfw3.a in Frameworks */,
 				ED2207C220E1E4120076C22F /* libxxprofile_mac.a in Frameworks */,
 			);
@@ -187,6 +193,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED7D784D20F731670043FF99 /* libz.tbd in Frameworks */,
 				ED7744F120EF53C0002B0578 /* libxxprofile_ios.a in Frameworks */,
 				ED7744D320EF4BC4002B0578 /* ModelIO.framework in Frameworks */,
 				ED7744CF20EF4BC4002B0578 /* Metal.framework in Frameworks */,
@@ -198,6 +205,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED7D785120F731740043FF99 /* libz.tbd in Frameworks */,
 				ED94983820EE27D500FA04D0 /* Foundation.framework in Frameworks */,
 				ED81D1B220D3B1610096FB53 /* libxxprofile_mac.a in Frameworks */,
 			);
@@ -426,6 +434,8 @@
 		ED94983320EE1C3400FA04D0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				ED7D784F20F7316F0043FF99 /* libz.tbd */,
+				ED7D784C20F731670043FF99 /* libz.tbd */,
 				ED94983420EE1C3400FA04D0 /* Foundation.framework */,
 				ED7744CE20EF4BC4002B0578 /* Metal.framework */,
 				ED7744D020EF4BC4002B0578 /* MetalKit.framework */,
@@ -978,7 +988,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 			};
 			name = Debug;
 		};
@@ -997,8 +1007,8 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				STRIP_STYLE = all;
+				SKIP_INSTALL = NO;
+				STRIP_STYLE = "non-global";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

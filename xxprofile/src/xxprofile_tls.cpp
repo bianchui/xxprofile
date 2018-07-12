@@ -5,6 +5,7 @@
 #include <assert.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <zlib.h>
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
@@ -26,6 +27,7 @@ XXProfileTLS::XXProfileTLS(const char* path) {
 
     char name[PATH_MAX];
     sprintf(name, "%sThread_%d.xxprofile", path, _threadId);
+    _ar.setVersion(2);
     _ar.open(name, true);
 
     double secondsPerCycle = Timer::GetSecondsPerCycle();
@@ -34,6 +36,8 @@ XXProfileTLS::XXProfileTLS(const char* path) {
     _stack.reserve(100);
     _buffers.reserve(10);
     _freeBuffers.reserve(10);
+
+    _compressedBuf = (unsigned char*)newChunk();
 }
 
 XXProfileTLS::~XXProfileTLS() {
@@ -46,6 +50,11 @@ XXProfileTLS::~XXProfileTLS() {
     }
     _freeBuffers.clear();
     _ar.close();
+
+    if (_compressedBuf) {
+        free(_compressedBuf);
+        _compressedBuf = NULL;
+    }
 
     printf("Thread %d end profile\n", _threadId);
 }
@@ -60,15 +69,14 @@ XXProfileTreeNode* XXProfileTLS::beginScope(SName name) {
     XXProfileTreeNode* node = _currentBuffer + (_usedCount++);
     node->_beginTime = Timer::Cycles64();
     node->_name = name;
-    node->_nodeId = ++_curNodeId;
-    node->_parentNodeId = _stack.empty() ? 0 : _stack.back()->_nodeId;
-    _stack.push_back(node);
+    node->_parentNodeId = _stack.empty() ? 0 : _stack.back().nodeId;
+    _stack.push_back({node, ++_curNodeId});
     return node;
 }
 
 void XXProfileTLS::endScope(XXProfileTreeNode* node) {
     assert(!_stack.empty());
-    assert(_stack.back() == node);
+    assert(_stack.back().node == node);
     node->_endTime = Timer::Cycles64();
     if (!_stack.empty()) {
         _stack.pop_back();
@@ -127,8 +135,22 @@ void XXProfileTLS::frameFlush() {
     for (auto iter = _buffers.begin(); iter != _buffers.end(); ++iter) {
         XXProfileTreeNode* buffer = *iter;
         const size_t count = (buffer != _currentBuffer) ? ChunkNodeCount : _usedCount;
-        _ar.serialize(buffer, count * sizeof(XXProfileTreeNode));
-        memset(buffer, 0, count * sizeof(XXProfileTreeNode));
+        uint32_t sizeOrg = (uint32_t)(count * sizeof(XXProfileTreeNode));
+        uLongf compressedSize = sizeOrg;
+        uint32_t sizeCom = 0;
+        if (Z_OK == compress2((Bytef*)_compressedBuf, &compressedSize, (const Bytef*)buffer, compressedSize, 9)) {
+            sizeCom = (uint32_t)compressedSize;
+        } else {
+            assert(false);
+        }
+        _ar << sizeOrg;
+        _ar << sizeCom;
+        if (sizeCom) {
+            _ar.serialize(_compressedBuf, sizeCom);
+        } else {
+            _ar.serialize(buffer, sizeOrg);
+        }
+        memset(buffer, 0, sizeOrg);
         _freeBuffers.push_back(buffer);
     }
     _ar.flush();

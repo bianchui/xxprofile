@@ -360,6 +360,9 @@ CppNameDecoder::CppNameDecoder(const char* name) {
 
     builder.build();
     builder._root.dump();
+    shared::StrBuf buf;
+    builder._root.build(buf);
+    assert(strcmp(buf.c_str(), name) == 0);
 }
 
 XX_NAMESPACE_END(xxprofile);

@@ -32,6 +32,8 @@
 #include "app.h"
 #include "shapes.h"
 #include "cams.h"
+#define XX_ENABLE_PROFILE 1
+#include <xxprofile.hpp>
 
 
 // Total run length is 20 * camera track base unit length (see cams.h).
@@ -43,21 +45,18 @@
 
 static unsigned long sRandomSeed = 0;
 
-static void seedRandom(unsigned long seed)
-{
+static void seedRandom(unsigned long seed) {
     sRandomSeed = seed;
 }
 
-static unsigned long randomUInt()
-{
+static unsigned long randomUInt() {
     sRandomSeed = sRandomSeed * 0x343fd + 0x269ec3;
     return sRandomSeed >> 16;
 }
 
 
 // Capped conversion from float to fixed.
-static long floatToFixed(float value)
-{
+static long floatToFixed(float value) {
     if (value < -32768) value = -32768;
     if (value > 32767) value = 32767;
     return (long)(value * 65536);
@@ -102,8 +101,8 @@ typedef struct {
 } VECTOR3;
 
 
-static void freeGLObject(GLOBJECT *object)
-{
+static void freeGLObject(GLOBJECT *object) {
+    XX_PROFILE_SCOPE_FUNCTION();
     if (object == NULL)
         return;
     free(object->normalArray);
@@ -113,9 +112,8 @@ static void freeGLObject(GLOBJECT *object)
 }
 
 
-static GLOBJECT * newGLObject(long vertices, int vertexComponents,
-                              int useNormalArray)
-{
+static GLOBJECT * newGLObject(long vertices, int vertexComponents, int useNormalArray) {
+    XX_PROFILE_SCOPE_FUNCTION();
     GLOBJECT *result;
     result = (GLOBJECT *)malloc(sizeof(GLOBJECT));
     if (result == NULL)
@@ -143,8 +141,8 @@ static GLOBJECT * newGLObject(long vertices, int vertexComponents,
 }
 
 
-static void drawGLObject(GLOBJECT *object)
-{
+static void drawGLObject(GLOBJECT *object) {
+    XX_PROFILE_SCOPE_FUNCTION();
     assert(object != NULL);
 
     glVertexPointer(object->vertexComponents, GL_FIXED,
@@ -166,16 +164,14 @@ static void drawGLObject(GLOBJECT *object)
 }
 
 
-static void vector3Sub(VECTOR3 *dest, VECTOR3 *v1, VECTOR3 *v2)
-{
+static void vector3Sub(VECTOR3 *dest, VECTOR3 *v1, VECTOR3 *v2) {
     dest->x = v1->x - v2->x;
     dest->y = v1->y - v2->y;
     dest->z = v1->z - v2->z;
 }
 
 
-static void superShapeMap(VECTOR3 *point, float r1, float r2, float t, float p)
-{
+static void superShapeMap(VECTOR3 *point, float r1, float r2, float t, float p) {
     // sphere-mapping of supershape parameters
     point->x = (float)(cos(t) * cos(p) / r1 / r2);
     point->y = (float)(sin(t) * cos(p) / r1 / r2);
@@ -183,8 +179,7 @@ static void superShapeMap(VECTOR3 *point, float r1, float r2, float t, float p)
 }
 
 
-static float ssFunc(const float t, const float *p)
-{
+static float ssFunc(const float t, const float *p) {
     return (float)(pow(pow(fabs(cos(p[0] * t / 4)) / p[1], p[4]) +
                        pow(fabs(sin(p[0] * t / 4)) / p[2], p[5]), 1 / p[3]));
 }
@@ -193,8 +188,8 @@ static float ssFunc(const float t, const float *p)
 // Creates and returns a supershape object.
 // Based on Paul Bourke's POV-Ray implementation.
 // http://astronomy.swin.edu.au/~pbourke/povray/supershape/
-static GLOBJECT * createSuperShape(const float *params)
-{
+static GLOBJECT * createSuperShape(const float *params) {
+    XX_PROFILE_SCOPE_FUNCTION();
     const int resol1 = (int)params[SUPERSHAPE_PARAMS - 3];
     const int resol2 = (int)params[SUPERSHAPE_PARAMS - 2];
     // latitude 0 to pi/2 for no mirrored bottom
@@ -221,12 +216,10 @@ static GLOBJECT * createSuperShape(const float *params)
     currentVertex = 0;
 
     // longitude -pi to pi
-    for (longitude = 0; longitude < longitudeCount; ++longitude)
-    {
+    for (longitude = 0; longitude < longitudeCount; ++longitude) {
 
         // latitude 0 to pi/2
-        for (latitude = latitudeBegin; latitude < latitudeEnd; ++latitude)
-        {
+        for (latitude = latitudeBegin; latitude < latitudeEnd; ++latitude) {
             float t1 = -PI + longitude * 2 * PI / resol1;
             float t2 = -PI + (longitude + 1) * 2 * PI / resol1;
             float p1 = -PI / 2 + latitude * 2 * PI / resol2;
@@ -238,8 +231,7 @@ static GLOBJECT * createSuperShape(const float *params)
             r2 = ssFunc(t2, params);
             r3 = ssFunc(p2, &params[6]);
 
-            if (r0 != 0 && r1 != 0 && r2 != 0 && r3 != 0)
-            {
+            if (r0 != 0 && r1 != 0 && r2 != 0 && r3 != 0) {
                 VECTOR3 pa, pb, pc, pd;
                 VECTOR3 v1, v2, n;
                 float ca;
@@ -283,21 +275,14 @@ static GLOBJECT * createSuperShape(const float *params)
 
                 ca = pa.z + 0.5f;
 
-                for (i = currentVertex * 3;
-                     i < (currentVertex + 6) * 3;
-                     i += 3)
-                {
+                for (i = currentVertex * 3; i < (currentVertex + 6) * 3; i += 3) {
                     result->normalArray[i] = FIXED(n.x);
                     result->normalArray[i + 1] = FIXED(n.y);
                     result->normalArray[i + 2] = FIXED(n.z);
                 }
-                for (i = currentVertex * 4;
-                     i < (currentVertex + 6) * 4;
-                     i += 4)
-                {
+                for (i = currentVertex * 4; i < (currentVertex + 6) * 4; i += 4) {
                     int a, color[3];
-                    for (a = 0; a < 3; ++a)
-                    {
+                    for (a = 0; a < 3; ++a) {
                         color[a] = (int)(ca * baseColor[a] * 255);
                         if (color[a] > 255) color[a] = 255;
                     }
@@ -342,8 +327,8 @@ static GLOBJECT * createSuperShape(const float *params)
 }
 
 
-static GLOBJECT * createGroundPlane()
-{
+static GLOBJECT * createGroundPlane() {
+    XX_PROFILE_SCOPE_FUNCTION();
     const int scale = 4;
     const int yBegin = -15, yEnd = 15;    // ends are non-inclusive
     const int xBegin = -15, xEnd = 15;
@@ -360,15 +345,12 @@ static GLOBJECT * createGroundPlane()
     currentQuad = 0;
     currentVertex = 0;
 
-    for (y = yBegin; y < yEnd; ++y)
-    {
-        for (x = xBegin; x < xEnd; ++x)
-        {
+    for (y = yBegin; y < yEnd; ++y) {
+        for (x = xBegin; x < xEnd; ++x) {
             GLubyte color;
             int i, a;
             color = (GLubyte)((randomUInt() & 0x5f) + 81);  // 101 1111
-            for (i = currentVertex * 4; i < (currentVertex + 6) * 4; i += 4)
-            {
+            for (i = currentVertex * 4; i < (currentVertex + 6) * 4; i += 4) {
                 result->colorArray[i] = color;
                 result->colorArray[i + 1] = color;
                 result->colorArray[i + 2] = color;
@@ -378,8 +360,7 @@ static GLOBJECT * createGroundPlane()
             // Axis bits for quad triangles:
             // x: 011100 (0x1c), y: 110001 (0x31)  (clockwise)
             // x: 001110 (0x0e), y: 100011 (0x23)  (counter-clockwise)
-            for (a = 0; a < 6; ++a)
-            {
+            for (a = 0; a < 6; ++a) {
                 const int xm = x + ((0x1c >> a) & 1);
                 const int ym = y + ((0x31 >> a) & 1);
                 const float m = (float)(cos(xm * 2) * sin(ym * 4) * 0.75f);
@@ -396,8 +377,9 @@ static GLOBJECT * createGroundPlane()
 }
 
 
-static void drawGroundPlane()
-{
+static void drawGroundPlane() {
+    XX_PROFILE_SCOPE_FUNCTION();
+
     glDisable(GL_CULL_FACE);
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
@@ -412,8 +394,9 @@ static void drawGroundPlane()
 }
 
 
-static void drawFadeQuad()
-{
+static void drawFadeQuad() {
+    XX_PROFILE_SCOPE_FUNCTION();
+
     static const GLfixed quadVertices[] = {
         -0x10000, -0x10000,
          0x10000, -0x10000,
@@ -427,8 +410,7 @@ static void drawFadeQuad()
     const int endFade = sNextCamTrackStartTick - sTick;
     const int minFade = beginFade < endFade ? beginFade : endFade;
 
-    if (minFade < 1024)
-    {
+    if (minFade < 1024) {
         const GLfixed fadeColor = minFade << 6;
         glColor4x(fadeColor, fadeColor, fadeColor, 0);
 
@@ -460,8 +442,9 @@ static void drawFadeQuad()
 
 
 // Called from the app framework.
-void appInit()
-{
+void appInit() {
+    XX_PROFILE_STATIC_INIT(NULL);
+    XX_PROFILE_SCOPE_FUNCTION();
     int a;
 
     glEnable(GL_NORMALIZE);
@@ -479,8 +462,7 @@ void appInit()
 
     seedRandom(15);
 
-    for (a = 0; a < SUPERSHAPE_COUNT; ++a)
-    {
+    for (a = 0; a < SUPERSHAPE_COUNT; ++a) {
         sSuperShapeObjects[a] = createSuperShape(sSuperShapeParams[a]);
         assert(sSuperShapeObjects[a] != NULL);
     }
@@ -490,18 +472,21 @@ void appInit()
 
 
 // Called from the app framework.
-void appDeinit()
-{
+void _appDeinit() {
+    XX_PROFILE_SCOPE_FUNCTION();
     int a;
     for (a = 0; a < SUPERSHAPE_COUNT; ++a)
         freeGLObject(sSuperShapeObjects[a]);
     freeGLObject(sGroundPlane);
 }
 
+void appDeinit() {
+    _appDeinit();
+    XX_PROFILE_STATIC_UNINIT();
+}
 
-static void gluPerspective(GLfloat fovy, GLfloat aspect,
-                           GLfloat zNear, GLfloat zFar)
-{
+static void gluPerspective(GLfloat fovy, GLfloat aspect, GLfloat zNear, GLfloat zFar) {
+    XX_PROFILE_SCOPE_FUNCTION();
     GLfloat xmin, xmax, ymin, ymax;
 
     ymax = zNear * (GLfloat)tan(fovy * PI / 360);
@@ -515,8 +500,8 @@ static void gluPerspective(GLfloat fovy, GLfloat aspect,
 }
 
 
-static void prepareFrame(int width, int height)
-{
+static void prepareFrame(int width, int height) {
+    XX_PROFILE_SCOPE_FUNCTION();
     glViewport(0, 0, width, height);
 
     glClearColorx((GLfixed)(0.1f * 65536),
@@ -534,8 +519,8 @@ static void prepareFrame(int width, int height)
 }
 
 
-static void configureLightAndMaterial()
-{
+static void configureLightAndMaterial() {
+    XX_PROFILE_SCOPE_FUNCTION();
     static GLfixed light0Position[] = { -0x40000, 0x10000, 0x10000, 0 };
     static GLfixed light0Diffuse[] = { 0x10000, 0x6666, 0, 0x10000 };
     static GLfixed light1Position[] = { 0x10000, -0x20000, -0x10000, 0 };
@@ -557,8 +542,8 @@ static void configureLightAndMaterial()
 }
 
 
-static void drawModels(float zScale)
-{
+static void drawModels(float zScale) {
+    XX_PROFILE_SCOPE_FUNCTION();
     const int translationScale = 9;
     int x, y;
 
@@ -566,10 +551,8 @@ static void drawModels(float zScale)
 
     glScalex(1 << 16, 1 << 16, (GLfixed)(zScale * 65536));
 
-    for (y = -5; y <= 5; ++y)
-    {
-        for (x = -5; x <= 5; ++x)
-        {
+    for (y = -5; y <= 5; ++y) {
+        for (x = -5; x <= 5; ++x) {
             float buildingScale;
             GLfixed fixedScale;
 
@@ -589,8 +572,7 @@ static void drawModels(float zScale)
         }
     }
 
-    for (x = -2; x <= 2; ++x)
-    {
+    for (x = -2; x <= 2; ++x) {
         const int shipScale100 = translationScale * 500;
         const int offs100 = x * shipScale100 + (sTick % shipScale100);
         float offs = offs100 * 0.01f;
@@ -615,6 +597,7 @@ static void gluLookAt(GLfloat eyex, GLfloat eyey, GLfloat eyez,
 	              GLfloat centerx, GLfloat centery, GLfloat centerz,
 	              GLfloat upx, GLfloat upy, GLfloat upz)
 {
+    XX_PROFILE_SCOPE_FUNCTION();
     GLfloat m[16];
     GLfloat x[3], y[3], z[3];
     GLfloat mag;
@@ -699,8 +682,8 @@ static void gluLookAt(GLfloat eyex, GLfloat eyey, GLfloat eyez,
 }
 
 
-static void camTrack()
-{
+static void camTrack() {
+    XX_PROFILE_SCOPE_FUNCTION();
     float lerp[5];
     float eX, eY, eZ, cX, cY, cZ;
     float trackPos;
@@ -708,8 +691,7 @@ static void camTrack()
     long currentCamTick;
     int a;
 
-    if (sNextCamTrackStartTick <= sTick)
-    {
+    if (sNextCamTrackStartTick <= sTick) {
         ++sCurrentCamTrack;
         sCurrentCamTrackStartTick = sNextCamTrackStartTick;
     }
@@ -723,8 +705,7 @@ static void camTrack()
     for (a = 0; a < 5; ++a)
         lerp[a] = (cam->src[a] + cam->dest[a] * trackPos) * 0.01f;
 
-    if (cam->dist)
-    {
+    if (cam->dist) {
         float dist = cam->dist * 0.1f;
         cX = lerp[0];
         cY = lerp[1];
@@ -732,9 +713,7 @@ static void camTrack()
         eX = cX - (float)cos(lerp[3]) * dist;
         eY = cY - (float)sin(lerp[3]) * dist;
         eZ = cZ - lerp[4];
-    }
-    else
-    {
+    } else {
         eX = lerp[0];
         eY = lerp[1];
         eZ = lerp[2];
@@ -750,8 +729,9 @@ static void camTrack()
 /* The tick is current time in milliseconds, width and height
  * are the image dimensions to be rendered.
  */
-void appRender(long tick, int width, int height)
-{
+void appRender(long tick, int width, int height) {
+    XX_PROFILE_SCOPE_FUNCTION();
+    XX_PROFILE_INCREASE_FRAME();
     if (sStartTick == 0)
         sStartTick = tick;
     if (!gAppAlive)
@@ -761,8 +741,7 @@ void appRender(long tick, int width, int height)
     sTick = (sTick + tick - sStartTick) >> 1;
 
     // Terminate application after running through the demonstration once.
-    if (sTick >= RUN_LENGTH)
-    {
+    if (sTick >= RUN_LENGTH) {
         gAppAlive = 0;
         return;
     }

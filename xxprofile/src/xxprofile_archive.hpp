@@ -25,14 +25,19 @@ private:
     size_t _size;
     size_t _used;
     char* _buffer;
+    uint32_t _version;
     uint32_t _flags;
     bool _write;
+    bool _error;
 
 public:
     Archive();
     ~Archive();
 
+    void setVersion(uint32_t ver) { _version = ver; }
+    uint32_t version() const { return _version; }
     bool isWrite() const { return _write; }
+    bool hasError() const { return _error; }
     bool open(const char* name, bool write);
     void flush();
     void close();

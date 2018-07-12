@@ -35,7 +35,12 @@ protected:
     void frameFlush();
 
 private:
-    std::vector<XXProfileTreeNode*> _stack;
+    struct StackFrame {
+        XXProfileTreeNode* node;
+        uint32_t nodeId;
+    };
+    std::vector<StackFrame> _stack;
+    unsigned char* _compressedBuf;
     uint32_t _frameId;
     uint32_t _usedCount;
     uint32_t _threadId;

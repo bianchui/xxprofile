@@ -6,6 +6,7 @@
 #include <ctype.h>
 #include <string>
 #include <vector>
+#include <shared/utils/StrBuf.h>
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
@@ -58,20 +59,28 @@ struct CppNameDecoder {
 
     struct NameTree {
         Token token;
-        std::string name;
         std::vector<NameTree> children;
 
         NameTree() {
             token.length = 0;
         }
 
-        NameTree(NameTree&& other) : token(other.token), name(std::move(other.name)), children(std::move(other.children)) {
+        NameTree(NameTree&& other) : token(other.token), children(std::move(other.children)) {
         }
 
         void dump(int indent = 0) {
             printf("%*s%.*s\n", indent * 4, "", (int)token.length, token.begin);
             for (auto iter = children.begin(); iter != children.end(); ++iter) {
                 iter->dump(indent + 1);
+            }
+        }
+
+        void build(shared::StrBuf& buf) {
+            if (token.length) {
+                buf.appendf("%.*s", (int)token.length, token.begin);
+            }
+            for (auto iter = children.begin(); iter != children.end(); ++iter) {
+                iter->build(buf);
             }
         }
 

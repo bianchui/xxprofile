@@ -1,5 +1,9 @@
 #include "../platform.hpp"
 #include <sys/stat.h>
+#include <android/log.h>
+#include <errno.h>
+
+#define ndk_log(...) __android_log_print(ANDROID_LOG_INFO, "xxprofile", __VA_ARGS__)
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
@@ -11,7 +15,10 @@ static void mkdirs(const std::string& path) {
             break;
         }
         if (index != 0) {
-            mkdir(path.substr(0, index).c_str(), S_IRWXU | S_IRWXG | S_IRWXO);
+            int ret = mkdir(path.substr(0, index).c_str(), S_IRWXU | S_IRWXG | S_IRWXO);
+            if (ret) {
+                ndk_log("mkdir error %d:%s", errno, path.substr(0, index).c_str());
+            }
         }
         ++index;
     }
@@ -29,6 +36,7 @@ std::string systemGetWritablePath() {
             sdcardPath.clear();
         }
     }
+    ndk_log("WritablePath:%s", sdcardPath.c_str());
     return sdcardPath;
 }
 

@@ -11,6 +11,7 @@ Archive::Archive() {
     if (BufferSize) {
         _buffer = (char*)malloc(BufferSize);
     }
+    _version = 1;
 }
 
 Archive::~Archive() {
@@ -34,7 +35,7 @@ bool Archive::open(const char* name, bool write) {
         if (sizeof(void*) == 8) {
             fh.flags |= Flag_pointer8;
         }
-        fh.version = 1;
+        fh.version = _version;
         fwrite(&fh, 1, sizeof(fh), _fp);
     } else {
         if (!BufferSize) {
@@ -49,6 +50,7 @@ bool Archive::open(const char* name, bool write) {
             _fp = NULL;
             return false;
         }
+        _version = fh.version;
         _flags = fh.flags;
         if (BufferSize) {
             _size = fread(_buffer, 1, BufferSize, _fp);
@@ -63,6 +65,7 @@ void Archive::flush() {
     if (BufferSize && _fp && _write && _used) {
         fwrite(_buffer, 1, _used, _fp);
         _used = 0;
+        fflush(_fp);
     }
 }
 
@@ -128,6 +131,9 @@ void Archive::serialize(void* data, size_t size) {
                 if (size > BufferSize) {
                     size_t count = fread(data, 1, size, _fp);
                     assert(count == size);
+                    if (count != size) {
+                        _error = true;
+                    }
                     size = 0;
                 }
                 _size = fread(_buffer, 1, BufferSize, _fp);
@@ -136,8 +142,10 @@ void Archive::serialize(void* data, size_t size) {
             if (size) {
                 size_t maxSize = _size - _used;
                 assert(size <= maxSize);
-                if (size < maxSize) {
+                if (size <= maxSize) {
                     maxSize = size;
+                } else {
+                    _error = true;
                 }
                 if (maxSize) {
                     memcpy(data, _buffer + _used, maxSize);
@@ -148,6 +156,9 @@ void Archive::serialize(void* data, size_t size) {
             size_t count = fread(data, 1, size, _fp);
             _used += size;
             assert(count == size);
+            if (count != size) {
+                _error = true;
+            }
         }
     }
 }

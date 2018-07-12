@@ -2,6 +2,7 @@
 #include "../src/xxprofile_internal.hpp"
 #include "xxprofile_loader.hpp"
 #include "xxprofile_CppNameDecoder.hpp"
+#include <zlib.h>
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
@@ -26,7 +27,6 @@ void FrameData::init(Loader* loader) {
             TreeItem* item = _allNodes + i;
             item->node = node;
             item->name = loader->name(node->_name);
-            assert(node->_nodeId == i + 1);
             if (node->_parentNodeId) {
                 assert(node->_parentNodeId <= i);
                 TreeItem* parentItem = _allNodes + (node->_parentNodeId - 1);
@@ -60,17 +60,73 @@ void Loader::load(Archive& ar) {
     ThreadData thread;
     ar << thread._secondsPerCycle;
     thread._maxCycleCount = 0;
-    while (!ar.eof()) {
+    while (!ar.eof() && !ar.hasError()) {
         FrameData data;
         ar << data._frameId;
         XXLOG_DEBUG("Load.frame(%d)\n", data._frameId);
         _namePool.serialize(NULL, ar);
         ar << data._nodeCount;
         XXLOG_DEBUG("  nodeCount = %d\n", data._nodeCount);
-        if (data._nodeCount > 0) {
-            data._nodes = (XXProfileTreeNode*)malloc(sizeof(XXProfileTreeNode) * data._nodeCount);
-            memset(data._nodes, 0, sizeof(XXProfileTreeNode) * data._nodeCount);
-            ar.serialize(data._nodes, sizeof(XXProfileTreeNode) * data._nodeCount);
+        if (!ar.hasError() && data._nodeCount > 0) {
+            size_t remainSize = sizeof(XXProfileTreeNode) * data._nodeCount;
+            data._nodes = (XXProfileTreeNode*)malloc(remainSize);
+            memset(data._nodes, 0, remainSize);
+            if (ar.version() == 1) {
+                ar.serialize(data._nodes, remainSize);
+            } else if (ar.version() == 2) {
+                bool hasError = false;
+                Bytef* buf = NULL;
+                size_t bufSize = 0;
+                Bytef* cur = (Bytef*)data._nodes;
+                while (!ar.hasError()) {
+                    uint32_t sizeOrg = 0, sizeCom = 0;
+                    ar << sizeOrg;
+                    ar << sizeCom;
+                    if (ar.hasError()) {
+                        break;
+                    }
+                    if (remainSize < sizeOrg) {
+                        hasError = true;
+                        break;
+                    }
+                    if (sizeCom) {
+                        if (bufSize) {
+                            if (bufSize < sizeOrg) {
+                                hasError = true;
+                                break;
+                            }
+                        } else {
+                            bufSize = sizeOrg;
+                            buf = (Bytef*)malloc(bufSize);
+                        }
+                        ar.serialize(buf, sizeCom);
+                        if (ar.hasError()) {
+                            break;
+                        }
+                        uLong destLen = sizeOrg;
+                        if (Z_OK != uncompress(cur, &destLen, buf, sizeCom) || destLen != sizeOrg) {
+                            hasError = true;
+                            break;
+                        }
+                    } else {
+                        ar.serialize(cur, sizeOrg);
+                    }
+                    cur += sizeOrg;
+                    remainSize -= sizeOrg;
+                    if (remainSize == 0) {
+                        break;
+                    }
+                }
+                if (buf) {
+                    free(buf);
+                }
+                if (hasError || remainSize != 0) {
+                    break;
+                }
+            }
+        }
+        if (ar.hasError()) {
+            break;
         }
         data.init(this);
         if (thread._maxCycleCount < data.frameCycles()) {
@@ -111,7 +167,7 @@ const char* Loader::name(SName name) {
 }
 
 const char* Loader::prepareName(const char* name) {
-    CppNameDecoder decoder(name);
+    //CppNameDecoder decoder(name);
 
     return strdup(name);
 }
