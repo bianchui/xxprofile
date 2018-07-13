@@ -6,19 +6,24 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
+#define Archive_BufferSize (1024 * 1024)
+
 Archive::Archive() {
     memset(this, 0, sizeof(Archive));
-    if (BufferSize) {
-        _buffer = (char*)malloc(BufferSize);
-    }
+
+#if Archive_BufferSize
+    _buffer = (char*)malloc(Archive_BufferSize);
+#endif//Archive_BufferSize
     _version = 1;
 }
 
 Archive::~Archive() {
     close();
-    if (BufferSize && _buffer) {
+#if Archive_BufferSize
+    if (_buffer) {
         free(_buffer);
     }
+#endif//Archive_BufferSize
 }
 
 bool Archive::open(const char* name, bool write) {
@@ -38,12 +43,12 @@ bool Archive::open(const char* name, bool write) {
         fh.version = _version;
         fwrite(&fh, 1, sizeof(fh), _fp);
     } else {
-        if (!BufferSize) {
-            fseek(_fp, 0, SEEK_END);
-            _size = ftell(_fp);
-            fseek(_fp, 0, SEEK_SET);
-            _used = sizeof(fh);
-        }
+#if !Archive_BufferSize
+        fseek(_fp, 0, SEEK_END);
+        _size = ftell(_fp);
+        fseek(_fp, 0, SEEK_SET);
+        _used = sizeof(fh);
+#endif//Archive_BufferSize
         fread(&fh, 1, sizeof(fh), _fp);
         if (fh.magic != kMagic) {
             fclose(_fp);
@@ -52,9 +57,9 @@ bool Archive::open(const char* name, bool write) {
         }
         _version = fh.version;
         _flags = fh.flags;
-        if (BufferSize) {
-            _size = fread(_buffer, 1, BufferSize, _fp);
-        }
+#if Archive_BufferSize
+        _size = fread(_buffer, 1, Archive_BufferSize, _fp);
+#endif//Archive_BufferSize
     }
     return _fp;
 }
@@ -62,18 +67,22 @@ bool Archive::open(const char* name, bool write) {
 void Archive::flush() {
     assert(_fp);
     assert(_write);
-    if (BufferSize && _fp && _write && _used) {
+#if Archive_BufferSize
+    if (_fp && _write && _used) {
         fwrite(_buffer, 1, _used, _fp);
         _used = 0;
         fflush(_fp);
     }
+#endif//Archive_BufferSize
 }
 
 void Archive::close() {
     if (_fp) {
-        if (BufferSize && _write && _used) {
+#if Archive_BufferSize
+        if (_write && _used) {
             fwrite(_buffer, 1, _used, _fp);
         }
+#endif//Archive_BufferSize
         fclose(_fp);
     }
     auto buffer = _buffer;
@@ -82,7 +91,11 @@ void Archive::close() {
 }
 
 bool Archive::eof() const {
-    return !_fp || ((!_write) && (BufferSize ? (_size < BufferSize && _used >= _size) : (_used >= _size)));
+#if Archive_BufferSize
+    return !_fp || ((!_write) && (_size < Archive_BufferSize && _used >= _size));
+#else//Archive_BufferSize
+    return !_fp || ((!_write) && (_used >= _size));
+#endif//Archive_BufferSize
 }
 
 void Archive::serialize(void* data, size_t size) {
@@ -99,67 +112,67 @@ void Archive::serialize(void* data, size_t size) {
             }
         });
         _size += size;
-        if (BufferSize) {
-            if (size + _used >= BufferSize) {
-                if (_used) {
-                    const size_t writeSize = BufferSize - _used;
-                    memcpy(_buffer + _used, data, writeSize);
-                    size -= writeSize;
-                    data = ((char*)data) + writeSize;
-                    fwrite(_buffer, 1, BufferSize, _fp);
-                    _used = 0;
-                }
-                if (size > BufferSize) {
-                    fwrite(data, 1, size, _fp);
-                    return;
-                }
-            }
-            if (size) {
-                memcpy(_buffer + _used, data, size);
-                _used += size;
-            }
-        } else {
-            fwrite(data, 1, size, _fp);
-        }
-    } else {
-        if (BufferSize) {
-            if (size + _used >= _size) {
-                const size_t readSize = _size - _used;
-                memcpy(data, _buffer + _used, readSize);
-                size -= readSize;
-                data = ((char*)data) + readSize;
-                if (size > BufferSize) {
-                    size_t count = fread(data, 1, size, _fp);
-                    assert(count == size);
-                    if (count != size) {
-                        _error = true;
-                    }
-                    size = 0;
-                }
-                _size = fread(_buffer, 1, BufferSize, _fp);
+#if Archive_BufferSize
+        if (size + _used >= Archive_BufferSize) {
+            if (_used) {
+                const size_t writeSize = Archive_BufferSize - _used;
+                memcpy(_buffer + _used, data, writeSize);
+                size -= writeSize;
+                data = ((char*)data) + writeSize;
+                fwrite(_buffer, 1, Archive_BufferSize, _fp);
                 _used = 0;
             }
-            if (size) {
-                size_t maxSize = _size - _used;
-                assert(size <= maxSize);
-                if (size <= maxSize) {
-                    maxSize = size;
-                } else {
-                    _error = true;
-                }
-                if (maxSize) {
-                    memcpy(data, _buffer + _used, maxSize);
-                }
-                _used += size;
-            }
-        } else {
-            size_t count = fread(data, 1, size, _fp);
-            _used += size;
-            assert(count == size);
-            if (count != size) {
-                _error = true;
+            if (size > Archive_BufferSize) {
+                fwrite(data, 1, size, _fp);
+                return;
             }
         }
+        if (size) {
+            memcpy(_buffer + _used, data, size);
+            _used += size;
+        }
+#else//Archive_BufferSize
+        fwrite(data, 1, size, _fp);
+#endif//Archive_BufferSize
+    } else {
+#if Archive_BufferSize
+        if (size + _used >= _size) {
+            const size_t readSize = _size - _used;
+            memcpy(data, _buffer + _used, readSize);
+            size -= readSize;
+            data = ((char*)data) + readSize;
+            if (size > Archive_BufferSize) {
+                size_t count = fread(data, 1, size, _fp);
+                assert(count == size);
+                if (count != size) {
+                    _error = true;
+                }
+                size = 0;
+            }
+            _size = fread(_buffer, 1, Archive_BufferSize, _fp);
+            _used = 0;
+        }
+        if (size) {
+            size_t maxSize = _size - _used;
+            assert(size <= maxSize);
+            if (size <= maxSize) {
+                maxSize = size;
+            } else {
+                _error = true;
+            }
+            if (maxSize) {
+                memcpy(data, _buffer + _used, maxSize);
+            }
+            _used += size;
+        }
+#else//Archive_BufferSize
+        size_t count = fread(data, 1, size, _fp);
+        _used += size;
+        assert(count == size);
+        if (count != size) {
+            _error = true;
+        }
+#endif//Archive_BufferSize
     }
 }
 

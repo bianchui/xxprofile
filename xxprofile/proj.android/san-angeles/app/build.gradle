@@ -1,14 +1,21 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'key0'
+            keyPassword '123456'
+            storeFile file('../../../../AndroidCpp/key.keystore')
+            storePassword '123456'
+        }
+    }
     compileSdkVersion 25
-
     defaultConfig {
         applicationId 'com.example.SanAngeles'
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode  1
-        versionName  "1.0"
+        versionCode 1
+        versionName "1.0"
         externalNativeBuild {
             cmake {
                 cppFlags "-std=c++11"
@@ -26,6 +33,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
     externalNativeBuild {
@@ -36,6 +44,6 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
 }
 

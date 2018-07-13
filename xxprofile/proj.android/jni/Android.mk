@@ -12,6 +12,7 @@ LOCAL_C_INCLUDES := \
 
 LOCAL_CFLAGS += -fvisibility=hidden -fno-stack-protector
 LOCAL_CFLAGS += -DXX_PLATFORM_ANDROID=1
-LOCAL_CPPFLAGS += -std=c++11 -fno-rtti -fno-exceptions -fvisibility-inlines-hidden
+LOCAL_CPPFLAGS += -std=c++11 -fno-rtti -fno-exceptions -fno-stack-protector
+LOCAL_CPPFLAGS += -fvisibility=hidden -fvisibility-inlines-hidden
 
 include $(BUILD_STATIC_LIBRARY)

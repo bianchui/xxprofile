@@ -38,11 +38,9 @@ SNamePool::SNamePool() {
 }
 
 SNamePool::~SNamePool() {
-    if (true) {
-        // Do not real finish and clear or delete
-        return;
-    }
+#if 0// Do not real finish and clear or delete
     clear();
+#endif//0
 }
 
 void SNamePool::clear() {

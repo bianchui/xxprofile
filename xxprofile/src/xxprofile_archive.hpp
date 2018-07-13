@@ -7,7 +7,6 @@
 XX_NAMESPACE_BEGIN(xxprofile);
 
 class Archive {
-    enum { BufferSize = 1024 * 1024, };
     enum Flags {
         Flag_pointer8 = 1,
     };

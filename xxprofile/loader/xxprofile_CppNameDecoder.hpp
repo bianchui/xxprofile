@@ -89,6 +89,9 @@ struct CppNameDecoder {
     };
 
     CppNameDecoder(const char* name);
+
+    std::vector<Token> _tokens;
+    NameTree _root;
 };
 
 XX_NAMESPACE_END(xxprofile);

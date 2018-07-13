@@ -22,7 +22,7 @@ static ThreadLocal<XXProfileTLS> g_profile_tls;
 #endif//XX_ThreadLocal
 
 // XXProfile
-#if XX_ThreadLocal
+#if !XX_ThreadLocal
 static void profile_on_thread_exit(void* data) {
     XXProfileTLS* profile = (XXProfileTLS*)data;
     delete profile;

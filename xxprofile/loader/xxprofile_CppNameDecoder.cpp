@@ -1,3 +1,4 @@
+// Copyright 2018 bianchui. All rights reserved.
 #include "xxprofile_CppNameDecoder.hpp"
 #include <stdio.h>
 
@@ -310,10 +311,10 @@ CppNameDecoder::CppNameDecoder(const char* name) {
     printf("%s\n", name);
     Token token;
     struct NameBuilder {
-        std::vector<Token> _tokens;
-        NameTree _root;
+        std::vector<Token>& _tokens;
+        NameTree& _root;
 
-        NameBuilder() {
+        NameBuilder(std::vector<Token>& tokens, NameTree& root) : _tokens(tokens), _root(root) {
         }
 
         void build() {
@@ -347,7 +348,7 @@ CppNameDecoder::CppNameDecoder(const char* name) {
         }
     };
 
-    NameBuilder builder;
+    NameBuilder builder(_tokens, _root);
 
     do {
         parser.parseNext(token);
