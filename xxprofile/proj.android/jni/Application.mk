@@ -1,4 +1,4 @@
-APP_STL := gnustl_static
+APP_STL := c++_static
 APP_CPPFLAGS := -fno-rtti
 APP_CPPFLAGS += -fno-exceptions
 APP_CFLAGS += -fvisibility=hidden

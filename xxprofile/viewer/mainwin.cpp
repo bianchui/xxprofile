@@ -45,6 +45,7 @@ void MainWin::draw(int w, int h) {
     window_flags |= ImGuiWindowFlags_NoMove;
     window_flags |= ImGuiWindowFlags_NoResize;
     window_flags |= ImGuiWindowFlags_NoCollapse;
+    window_flags |= ImGuiWindowFlags_AlwaysVerticalScrollbar;
 
     if (!ImGui::Begin("ImGui Demo", NULL, window_flags)) {
         // Early out if the window is collapsed, as an optimization.
