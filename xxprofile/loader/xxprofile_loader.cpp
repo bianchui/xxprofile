@@ -6,13 +6,115 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
-uint64_t TreeItem::useCycles() const {
-    return node->_endTime - node->_beginTime;
+FORCEINLINE uint32_t Uint32Hash(uint32_t value, uint32_t hash = 0) {
+    // BKDR Hash Function
+    uint32_t seed = 131; // 31 131 1313 13131 131313 etc..
+    return hash * seed + value;
+    union B4 {
+        char ch[4];
+        uint32_t ui;
+    };
+    B4 b;
+    b.ui = value;
+    bool have = false;
+    for (uint32_t i = 0; i < 4; ++i) {
+        if (!have && !b.ch[3-i]) {
+            continue;
+        }
+        have = true;
+        hash = hash * seed + b.ch[3-i];
+    }
+    return hash;
 }
 
+//----------
+// TreeItem
+uint32_t TreeItem::hash() const {
+    if (!_hash) {
+        uint32_t h = Uint32Hash(_node->_name.id(), 0);
+
+        if (_children) {
+            for (uint32_t i = 0; i < _children->size(); ++i) {
+                h = Uint32Hash((*_children)[i]->hash(), h);
+            }
+        }
+        const_cast<uint32_t&>(_hash) = h;
+    }
+    return _hash;
+}
+
+bool TreeItem::same(const TreeItem& other) const {
+    if (hash() != other.hash()) {
+        return false;
+    }
+    if (_node->_name.id() != other._node->_name.id()) {
+        return false;
+    }
+    const size_t c0 = _children ? _children->size() : 0;
+    const size_t c1 = other._children ? other._children->size() : 0;
+    if (c0 != c1) {
+        return false;
+    }
+    if (!c0) {
+        return true;
+    }
+    for (size_t i = 0; i < c0; ++i) {
+        if (!(*_children)[i]->same(*(*other._children)[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+uint64_t TreeItem::useCycles() const {
+    return _node->_endTime - _node->_beginTime;
+}
+
+//----------
+// CombinedTreeItem
+bool CombinedTreeItem::addChild(CombinedTreeItem* child, TreeItem* item) {
+    if (!_children) {
+        _children = new std::vector<CombinedTreeItem*>();
+        child->combin(item);
+        _children->push_back(child);
+        return true;
+    }
+    const auto end = _children->end();
+    for (auto iter = _children->begin(); iter != end; ++iter) {
+        if ((*iter)->canCombin(item)) {
+            (*iter)->combin(item);
+            return false;
+        }
+    }
+    child->combin(item);
+    _children->push_back(child);
+    return true;
+}
+
+void CombinedTreeItem::combin(TreeItem* item) {
+    assert(item->_combined == NULL);
+    assert(item->_combinedNext == NULL);
+    if (_firstItem) {
+        assert(_combinedCount);
+        assert(_lastItem);
+        _lastItem->_combinedNext = item;
+    } else {
+        assert(_combinedCount == 0);
+        assert(_lastItem == NULL);
+        _firstItem = _lastItem = item;
+    }
+    item->_combined = this;
+    item->_combinedNext = _firstItem;
+    _combinedTime += item->_node->_endTime - item->_node->_beginTime;
+    ++_combinedCount;
+}
+
+//----------
+// FrameData
 void FrameData::init(Loader* loader) {
     assert(loader);
     assert(_allNodes == NULL);
+    _combinedNodeCount = NULL;
     if (_nodeCount) {
         assert(_nodes != NULL);
         assert(_frameCycles == 0);
@@ -25,15 +127,52 @@ void FrameData::init(Loader* loader) {
         for (uint32_t i = 0; i < nodeCount; ++i) {
             const xxprofile::XXProfileTreeNode* node = nodes + i;
             TreeItem* item = _allNodes + i;
-            item->node = node;
-            item->name = loader->name(node->_name);
+            item->_node = node;
+            item->_name = loader->name(node->_name);
             if (node->_parentNodeId) {
                 assert(node->_parentNodeId <= i);
+                if (node->_parentNodeId > i) {
+                    continue;
+                }
                 TreeItem* parentItem = _allNodes + (node->_parentNodeId - 1);
                 parentItem->addChild(item);
             } else {
                 _roots.push_back(item);
                 _frameCycles += item->useCycles();
+            }
+        }
+
+        // combin function calls
+        _allCombinedNodes = (CombinedTreeItem*)malloc(sizeof(CombinedTreeItem) * _nodeCount);
+        memset(_allCombinedNodes, 0, sizeof(CombinedTreeItem) * _nodeCount);
+        for (uint32_t i = 0; i < nodeCount; ++i) {
+            TreeItem* item = _allNodes + i;
+            CombinedTreeItem* combined = _allCombinedNodes + i;
+            assert(item->_combined == NULL);
+            if (item->_node->_parentNodeId) {
+                assert(item->_node->_parentNodeId <= i);
+                if (item->_node->_parentNodeId > i) {
+                    continue;
+                }
+                TreeItem* parentItem = _allNodes + (item->_node->_parentNodeId - 1);
+                assert(parentItem->_combined);
+                if (parentItem->_combined->addChild(combined, item)) {
+                    ++_combinedNodeCount;
+                }
+            } else {
+                bool isCombined = false;
+                for (auto iter = _combinedRoots.begin(); iter != _combinedRoots.end(); ++iter) {
+                    if ((*iter)->canCombin(item)) {
+                        (*iter)->combin(item);
+                        isCombined = true;
+                        break;
+                    }
+                }
+                if (!isCombined) {
+                    combined->combin(item);
+                    _combinedRoots.push_back(combined);
+                    ++_combinedNodeCount;
+                }
             }
         }
     }

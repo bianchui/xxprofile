@@ -13,10 +13,14 @@ public:
     void draw();
 
     void clear();
+    void setCombined(bool combined) {
+        _combined = combined;
+    }
 
 private:
     const xxprofile::Loader* _loader;
     const xxprofile::FrameData* _frameData;
+    bool _combined;
 };
 
 #endif//xxprofileviewer_FrameView_hpp

@@ -12,17 +12,26 @@ XX_NAMESPACE_BEGIN(xxprofile);
 struct XXProfileTreeNode;
 struct Loader;
 
+struct CombinedTreeItem;
 struct TreeItem {
-    const char* name;
-    const XXProfileTreeNode* node;
-    std::vector<TreeItem*>* children;
+    const char* _name;
+    const XXProfileTreeNode* _node;
+    std::vector<TreeItem*>* _children;
+    uint32_t _hash;
+    // for combined
+    TreeItem* _combinedNext;
+    CombinedTreeItem* _combined;
 
     void addChild(TreeItem* child) {
-        if (!children) {
-            children = new std::vector<TreeItem*>();
+        if (!_children) {
+            _children = new std::vector<TreeItem*>();
         }
-        children->push_back(child);
+        _children->push_back(child);
     }
+
+    uint32_t hash() const;
+
+    bool same(const TreeItem& other) const;
 
     uint64_t useCycles() const;
 };
@@ -47,8 +56,8 @@ public:
         if (_allNodes) {
             for (uint32_t i = 0; i < _nodeCount; ++i) {
                 auto& node = _allNodes[i];
-                if (node.children) {
-                    delete node.children;
+                if (node._children) {
+                    delete node._children;
                 }
             }
             free(_allNodes);
@@ -74,18 +83,59 @@ private:
     friend Loader;
 };
 
+struct CombinedTreeItem {
+    TreeItem* _firstItem;
+    TreeItem* _lastItem;
+    uint64_t _combinedTime;
+    size_t _combinedCount;
+    std::vector<CombinedTreeItem*>* _children;
+
+    bool addChild(CombinedTreeItem* child, TreeItem* item);
+    void combin(TreeItem* item);
+    size_t combinedCount() const {
+        return _combinedCount;
+    }
+    bool canCombin(TreeItem* item) const {
+        assert(_firstItem);
+        return _firstItem && _firstItem->same(*item);
+    }
+    uint64_t useCycles() const {
+        return _combinedTime;
+    }
+    const char* name() const {
+        assert(_firstItem);
+        return _firstItem->_name;
+    }
+};
+
 struct FrameData : FrameDataBase {
 protected:
     std::vector<TreeItem*> _roots;
+    uint32_t _combinedNodeCount;
+    CombinedTreeItem* _allCombinedNodes;
+    std::vector<CombinedTreeItem*> _combinedRoots;
 
 public:
-    FrameData() {
+    FrameData() : _combinedNodeCount(0), _allCombinedNodes(NULL) {
     }
 
-    FrameData(FrameData&& other) : FrameDataBase(std::move(other)), _roots(std::move(other._roots)) {
+    FrameData(FrameData&& other) : FrameDataBase(std::move(other)), _roots(std::move(other._roots)), _combinedRoots(std::move(other._combinedRoots)) {
+        _combinedNodeCount = other._combinedNodeCount;
+        other._combinedNodeCount = 0;
+        _allCombinedNodes = other._allCombinedNodes;
+        other._allCombinedNodes = NULL;
     }
 
     ~FrameData() {
+        if (_allCombinedNodes) {
+            for (uint32_t i = 0; i < _nodeCount; ++i) {
+                auto& node = _allCombinedNodes[i];
+                if (node._children) {
+                    delete node._children;
+                }
+            }
+            free(_allCombinedNodes);
+        }
     }
 
     void init(Loader* loader);
@@ -93,6 +143,15 @@ public:
     const std::vector<TreeItem*>& roots() const {
         return _roots;
     }
+
+    const std::vector<CombinedTreeItem*>& combinedRoots() const {
+        return _combinedRoots;
+    }
+
+    bool anyCombined() const {
+        return _combinedNodeCount != _nodeCount;
+    }
+
 private:
     XX_CLASS_DELETE_COPY(FrameData);
     XX_CLASS_DELETE_MOVE_ASSIGN(FrameData);
