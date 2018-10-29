@@ -3,6 +3,7 @@
 #define shared_utils_StrBuf_h__
 #include <stdio.h>
 #include <string>
+#include <stdlib.h>
 
 namespace shared {
 
