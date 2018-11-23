@@ -32,6 +32,7 @@ struct TreeItem {
     uint32_t hash() const;
 
     bool same(const TreeItem& other) const;
+    void debugDump(int indent) const;
 
     uint64_t useCycles() const;
 };

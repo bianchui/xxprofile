@@ -66,6 +66,15 @@ bool TreeItem::same(const TreeItem& other) const {
     return true;
 }
 
+void TreeItem::debugDump(int indent) const {
+    printf("%*s%s\n", indent * 2, "", _name);
+    if (_children) {
+        for (size_t i = 0; i < _children->size(); ++i) {
+            (*_children)[i]->debugDump(indent + 1);
+        }
+    }
+}
+
 uint64_t TreeItem::useCycles() const {
     return _node->_endTime - _node->_beginTime;
 }
