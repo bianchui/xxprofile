@@ -28,6 +28,30 @@
 
 #define ARRAY_COUNTOF(c) (sizeof(c) / sizeof(c[0]))
 
+#define CLASS_ZEROED_NEW() \
+/**/static void* operator new(size_t size) { \
+/**/    void* mem = malloc(size); \
+/**/    memset(mem, 0, size); \
+/**/    return mem; \
+/**/} \
+/**/static void operator delete(void* p) { \
+/**/    free(p); \
+/**/} \
+/**/static void* operator new(size_t size, const std::nothrow_t&) { \
+/**/    void* mem = malloc(size); \
+/**/    memset(mem, 0, size); \
+/**/    return mem; \
+/**/} \
+/**/static void operator delete(void* p, const std::nothrow_t&) { \
+/**/    free(p); \
+/**/} \
+/**/static void* operator new(size_t size, void* p) { \
+/**/    memset(p, 0, size); \
+/**/    return p; \
+/**/} \
+/**/static void operator delete(void* p, void*) { \
+/**/} \
+
 #ifdef NDEBUG
 
 #  define DEBUGF(...)
@@ -42,5 +66,12 @@
 
 #define NAMESPACE_BEGIN(ns) namespace ns {
 #define NAMESPACE_END(ns) }
+
+#ifndef NS_SHARED
+#  define NS_SHARED shared
+#endif//NS_SHARED
+
+#define SHARED_NAMESPACE_BEGIN NAMESPACE_BEGIN(NS_SHARED)
+#define SHARED_NAMESPACE_END NAMESPACE_END(NS_SHARED)
 
 #endif//__shared_SharedMacros_h__

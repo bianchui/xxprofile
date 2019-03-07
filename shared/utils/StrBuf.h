@@ -4,8 +4,9 @@
 #include <stdio.h>
 #include <string>
 #include <stdlib.h>
+#include "shared/SharedMacros.h"
 
-namespace shared {
+SHARED_NAMESPACE_BEGIN;
 
 class StrBufBase {
 public:
@@ -87,6 +88,9 @@ public:
 		_dbuf[len] = 0;
 		_length = len;
 	}
+    void assign(const std::string& str) {
+        assign(str.c_str(), str.length());
+    }
 	void append(const char* str, size_t len = -1) {
 		if (len == (size_t)-1) {
 			len = strlen(str);
@@ -209,6 +213,6 @@ private:
 
 typedef StrBufT<512> StrBuf;
 
-}
+SHARED_NAMESPACE_END;
 
 #endif//shared_utils_StrBuf_h__
