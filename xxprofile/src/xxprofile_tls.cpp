@@ -138,7 +138,7 @@ void XXProfileTLS::frameFlush() {
         uint32_t sizeOrg = (uint32_t)(count * sizeof(XXProfileTreeNode));
         uLongf compressedSize = sizeOrg;
         uint32_t sizeCom = 0;
-        if (Z_OK == compress2((Bytef*)_compressedBuf, &compressedSize, (const Bytef*)buffer, compressedSize, 9)) {
+        if (Z_OK == compress2((Bytef*)_compressedBuf, &compressedSize, (const Bytef*)buffer, compressedSize, 5)) {
             sizeCom = (uint32_t)compressedSize;
         } else {
             assert(false);

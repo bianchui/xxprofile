@@ -107,6 +107,16 @@ struct CombinedTreeItem {
         assert(_firstItem);
         return _firstItem->_name;
     }
+
+    void sortChildren() {
+        if (_children) {
+            std::sort(_children->begin(), _children->end(), CombinedTreeItem::compare);
+        }
+    }
+
+    static bool compare(const CombinedTreeItem* a, const CombinedTreeItem* b) {
+        return b->_combinedTime < a->_combinedTime;
+    }
 };
 
 struct FrameData : FrameDataBase {

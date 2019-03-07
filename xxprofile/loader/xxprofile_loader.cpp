@@ -184,6 +184,9 @@ void FrameData::init(Loader* loader) {
                 }
             }
         }
+        for (size_t i = 0; i < nodeCount; ++i) {
+            _allCombinedNodes[i].sortChildren();
+        }
     }
 }
 

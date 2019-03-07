@@ -17,7 +17,7 @@ static void mkdirs(const std::string& path) {
         }
         if (index != 0) {
             int ret = mkdir(path.substr(0, index).c_str(), S_IRWXU | S_IRWXG | S_IRWXO);
-            if (ret) {
+            if (ret && ret != 17) {
                 ndk_log("mkdir error %d:%s", errno, path.substr(0, index).c_str());
             }
         }
