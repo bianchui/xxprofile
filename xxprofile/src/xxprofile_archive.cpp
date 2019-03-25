@@ -100,7 +100,7 @@ bool Archive::eof() const {
 
 void Archive::serialize(void* data, size_t size) {
     assert(_fp);
-    if (!size) {
+    if (!size || !_fp) {
         return;
     }
     if (_write) {
