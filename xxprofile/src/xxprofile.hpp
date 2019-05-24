@@ -39,7 +39,7 @@ XX_NAMESPACE_END(xxprofile);
 
 #if defined(_DEBUG) || defined(DEBUG)
 #  ifndef XX_ENABLE_PROFILE
-#    define XX_ENABLE_PROFILE 1
+#    define XX_ENABLE_PROFILE 0
 #  endif//XX_ENABLE_PROFILE
 #endif//defined(_DEBUG) || defined(DEBUG)
 
@@ -67,6 +67,9 @@ XX_NAMESPACE_END(xxprofile);
 /**/static ::xxprofile::SName __xxprofile_name_##name##_name(#name); \
 /**/::xxprofile::XXProfileScope __xxprofile_scope_##name(__xxprofile_name_##name##_name); \
 
+#  define XX_PROFILE_SCOPE_DYNAMIC_NAME(name) \
+/**/::xxprofile::XXProfileScope __xxprofile_scope_##__LINE__(::xxprofile::SName(name)); \
+
 #  define XX_PROFILE_INCREASE_FRAME() \
 /**/::xxprofile::XXProfile::IncreaseFrame(); \
 
@@ -76,13 +79,17 @@ XX_NAMESPACE_END(xxprofile);
 #  define XX_PROFILE_STATIC_UNINIT() \
 /**/::xxprofile::XXProfile::StaticUninit(); \
 
+#  define XX_PROFILE_ENABLED_ONLY(x) x
+
 #else//XX_ENABLE_PROFILE
 
 #  define XX_PROFILE_SCOPE_FUNCTION()
 #  define XX_PROFILE_SCOPE_NAME(name)
+#  define XX_PROFILE_SCOPE_DYNAMIC_NAME(name)
 #  define XX_PROFILE_INCREASE_FRAME()
 #  define XX_PROFILE_STATIC_INIT(savePath)
 #  define XX_PROFILE_STATIC_UNINIT()
+#  define XX_PROFILE_ENABLED_ONLY(x)
 
 #endif//XX_ENABLE_PROFILE
 
