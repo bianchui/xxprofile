@@ -8,9 +8,48 @@
 
 SHARED_NAMESPACE_BEGIN;
 
+template <typename CharT>
+struct StrBufTraits;
+
+template <>
+struct StrBufTraits<char> {
+    typedef char CharT;
+    typedef std::string StringT;
+
+    static const char NilChar = '\0';
+
+    static inline size_t strlenT(const char* Str) {
+        return ::strlen(Str);
+    }
+    static inline int vsnprintfT(char* dst, size_t size, const char* format, va_list ap) {
+        return ::vsnprintf(dst, size, format, ap);
+    }
+};
+
+template <>
+struct StrBufTraits<wchar_t> {
+    typedef wchar_t CharT;
+    typedef std::wstring StringT;
+
+    static const wchar_t NilChar = L'\0';
+
+    static inline size_t strlenT(const wchar_t* Str) {
+        return ::wcslen(Str);
+    }
+
+    static inline int vsnprintfT(wchar_t* dst, size_t size, const wchar_t* format, va_list ap) {
+        return ::vswprintf(dst, size, format, ap);
+    }
+};
+
+template <typename T>
 class StrBufBase {
 public:
-	StrBufBase(char* buf, size_t capacity) : _sbuf(buf), _dbuf(buf) {
+    typedef T CharT;
+    typedef StrBufTraits<T> TraitsT;
+    typedef typename TraitsT::StringT StringT;
+
+    StrBufBase(CharT* buf, size_t capacity) : _sbuf(buf), _dbuf(buf) {
 		buf[0] = 0;
 		_capacity = capacity;
 		_length = 0;
@@ -41,7 +80,7 @@ public:
 			int n = (int)(_capacity - _length);
             va_list apcp;
             va_copy(apcp, ap);
-			int final_n = vsnprintf(_dbuf + _length, n, format, apcp);
+            int final_n = TraitsT::vsnprintfT(_dbuf + _length, n, format, apcp);
             va_end(apcp);
 			if (final_n < 0 || final_n >= n) {
 				int add = final_n - n + 1;
@@ -53,9 +92,9 @@ public:
 				} else {
 					_capacity += (size_t)add;
 				}
-				char* new_buf = (char*)malloc(_capacity);
+				char* new_buf = (char*)malloc(_capacity * sizeof(CharT));
 				if (_length) {
-					memcpy(new_buf, _dbuf, _length);
+					memcpy(new_buf, _dbuf, _length * sizeof(CharT));
 				}
 				if (_dbuf != _sbuf) {
 					free(_dbuf);
@@ -67,9 +106,9 @@ public:
 			}
 		}
 	}
-	void assign(const char* str, size_t len = -1) {
+	void assign(const CharT* str, size_t len = -1) {
 		if (len == (size_t)-1) {
-			len = strlen(str);
+			len = TraitsT::strlenT(str);
 		}
 		if (len) {
 			if (len + 1 > _capacity) {
@@ -80,10 +119,10 @@ public:
 				if (_dbuf != _sbuf) {
 					free(_dbuf);
 				}
-				_dbuf = (char*)malloc(_capacity);
+				_dbuf = (char*)malloc(_capacity * sizeof(CharT));
 
 			}
-			memcpy(_dbuf, str, len);
+			memcpy(_dbuf, str, len * sizeof(CharT));
 		}
 		_dbuf[len] = 0;
 		_length = len;
@@ -105,23 +144,23 @@ public:
 			if (new_capacity > _capacity) {
 				_capacity = new_capacity;
 			}
-			char* buf = (char*)malloc(_capacity);
+			char* buf = (char*)malloc(_capacity * sizeof(CharT));
 			if (_length) {
-				memcpy(buf, _dbuf, _length);
+				memcpy(buf, _dbuf, _length * sizeof(CharT));
 			}
 			if (_dbuf != _sbuf) {
 				free(_dbuf);
 			}
 			_dbuf = buf;
 		}
-		memcpy(_dbuf + _length, str, len);
+		memcpy(_dbuf + _length, str, len * sizeof(CharT));
 		_length += len;
 		_dbuf[_length] = 0;
 	}
     void append(char ch) {
         append(&ch, 1);
     }
-    void append(const std::string& str) {
+    void append(const StringT& str) {
         append(str.c_str(), str.length());
     }
     void append(const StrBufBase& str) {
@@ -163,17 +202,17 @@ public:
     bool empty() const {
         return !_length;
     }
-    std::string string() const {
-        return std::string(_dbuf, _length);
+    StringT string() const {
+        return StringT(_dbuf, _length);
     }
 
-    bool same(const std::string& str) const {
-        return _length == str.length() && memcmp(c_str(), str.c_str(), _length) == 0;
+    bool same(const StringT& str) const {
+        return _length == str.length() && memcmp(c_str(), str.c_str(), _length * sizeof(CharT)) == 0;
     }
 	
 private:
-	char* _sbuf;
-	char* _dbuf;
+	CharT* _sbuf;
+	CharT* _dbuf;
 	size_t _capacity;
 	size_t _length;
 
@@ -184,18 +223,21 @@ private:
 	StrBufBase& operator=(const StrBufBase& other) = delete;
 };
 
-template <size_t Capacity>
-class StrBufT : public StrBufBase {
+template <typename T, size_t Capacity>
+class StrBufT : public StrBufBase<T> {
 public:
-	StrBufT() : StrBufBase(_buf, Capacity) {
+    typedef StrBufBase<T> Base;
+    typedef typename Base::CharT CharT;
+
+    StrBufT() : Base(_buf, Capacity) {
 	}
-	StrBufT(const char* format, ...) : StrBufBase(_buf, Capacity) {
+	StrBufT(const char* format, ...) : Base(_buf, Capacity) {
 		va_list ap;
 		va_start(ap, format);
 		vprintf(format, ap);
 		va_end(ap);
 	}
-	StrBufT(const char* format, va_list ap) : StrBufBase(_buf, Capacity) {
+	StrBufT(const char* format, va_list ap) : Base(_buf, Capacity) {
 		vprintf(format, ap);
 	}
 	~StrBufT() {
@@ -208,10 +250,11 @@ private:
 	StrBufT& operator=(const StrBufT& other) = delete;
 
 private:
-	char _buf[Capacity];
+	CharT _buf[Capacity];
 };
 
-typedef StrBufT<512> StrBuf;
+typedef StrBufT<char, 512> StrBuf;
+typedef StrBufT<wchar_t, 512> WStrBuf;
 
 SHARED_NAMESPACE_END;
 
