@@ -14,6 +14,7 @@ struct StrBufTraits;
 template <>
 struct StrBufTraits<char> {
     typedef char CharT;
+    typedef wchar_t YCharT;
     typedef std::string StringT;
 
     static const char NilChar = '\0';
@@ -29,6 +30,7 @@ struct StrBufTraits<char> {
 template <>
 struct StrBufTraits<wchar_t> {
     typedef wchar_t CharT;
+    typedef char YCharT;
     typedef std::wstring StringT;
 
     static const wchar_t NilChar = L'\0';
@@ -48,6 +50,7 @@ public:
     typedef T CharT;
     typedef StrBufTraits<T> TraitsT;
     typedef typename TraitsT::StringT StringT;
+    typedef typename TraitsT::YCharT YCharT;
 
     StrBufBase(CharT* buf, size_t capacity) : _sbuf(buf), _dbuf(buf) {
 		buf[0] = 0;
@@ -59,23 +62,23 @@ public:
 			free(_dbuf);
 		}
 	}
-	void printf(const char* format, ...) {
+	void printf(const CharT* format, ...) {
 		va_list ap;
 		va_start(ap, format);
 		vprintf(format, ap);
 		va_end(ap);
 	}
-	void vprintf(const char* format, va_list ap) {
+	void vprintf(const CharT* format, va_list ap) {
         _length = 0;
         vappendf(format, ap);
 	}
-	void appendf(const char* format, ...) {
+	void appendf(const CharT* format, ...) {
 		va_list ap;
 		va_start(ap, format);
 		vappendf(format, ap);
 		va_end(ap);
 	}
-	void vappendf(const char* format, va_list ap) {
+	void vappendf(const CharT* format, va_list ap) {
 		while(1) {
 			int n = (int)(_capacity - _length);
             va_list apcp;
@@ -92,7 +95,7 @@ public:
 				} else {
 					_capacity += (size_t)add;
 				}
-				char* new_buf = (char*)malloc(_capacity * sizeof(CharT));
+				CharT* new_buf = (CharT*)malloc(_capacity * sizeof(CharT));
 				if (_length) {
 					memcpy(new_buf, _dbuf, _length * sizeof(CharT));
 				}
@@ -119,7 +122,7 @@ public:
 				if (_dbuf != _sbuf) {
 					free(_dbuf);
 				}
-				_dbuf = (char*)malloc(_capacity * sizeof(CharT));
+				_dbuf = (CharT*)malloc(_capacity * sizeof(CharT));
 
 			}
 			memcpy(_dbuf, str, len * sizeof(CharT));
@@ -127,10 +130,10 @@ public:
 		_dbuf[len] = 0;
 		_length = len;
 	}
-    void assign(const std::string& str) {
+    void assign(const StringT& str) {
         assign(str.c_str(), str.length());
     }
-	void append(const char* str, size_t len = -1) {
+	void append(const CharT* str, size_t len = -1) {
 		if (len == (size_t)-1) {
 			len = strlen(str);
 		}
@@ -144,7 +147,7 @@ public:
 			if (new_capacity > _capacity) {
 				_capacity = new_capacity;
 			}
-			char* buf = (char*)malloc(_capacity * sizeof(CharT));
+			CharT* buf = (CharT*)malloc(_capacity * sizeof(CharT));
 			if (_length) {
 				memcpy(buf, _dbuf, _length * sizeof(CharT));
 			}
@@ -157,7 +160,7 @@ public:
 		_length += len;
 		_dbuf[_length] = 0;
 	}
-    void append(char ch) {
+    void append(CharT ch) {
         append(&ch, 1);
     }
     void append(const StringT& str) {
@@ -175,19 +178,19 @@ public:
         _dbuf[_length] = 0;
     }
 
-	const char* c_str() const {
+	const CharT* c_str() const {
 		return _dbuf;
 	}
-	const char* get() const {
+	const CharT* get() const {
 		return _dbuf;
 	}
-	const char* data() const {
+	const CharT* data() const {
 		return _dbuf;
 	}
-	char* buf() {
+	CharT* buf() {
 		return _dbuf;
 	}
-	operator const char* () const {
+	operator const CharT* () const {
 		return c_str();
 	}
 	size_t length() const {
@@ -209,7 +212,10 @@ public:
     bool same(const StringT& str) const {
         return _length == str.length() && memcmp(c_str(), str.c_str(), _length * sizeof(CharT)) == 0;
     }
-	
+
+    void assignConvert(const YCharT* ychar, size_t len = size_t(-1));
+    void appendConvert(const YCharT* ychar, size_t len = size_t(-1));
+
 private:
 	CharT* _sbuf;
 	CharT* _dbuf;
@@ -231,13 +237,13 @@ public:
 
     StrBufT() : Base(_buf, Capacity) {
 	}
-	StrBufT(const char* format, ...) : Base(_buf, Capacity) {
+	StrBufT(const CharT* format, ...) : Base(_buf, Capacity) {
 		va_list ap;
 		va_start(ap, format);
 		vprintf(format, ap);
 		va_end(ap);
 	}
-	StrBufT(const char* format, va_list ap) : Base(_buf, Capacity) {
+	StrBufT(const CharT* format, va_list ap) : Base(_buf, Capacity) {
 		vprintf(format, ap);
 	}
 	~StrBufT() {
