@@ -254,7 +254,7 @@ private:
 };
 
 typedef StrBufT<char, 512> StrBuf;
-typedef StrBufT<wchar_t, 512> WStrBuf;
+typedef StrBufT<wchar_t, 256> WStrBuf;
 
 SHARED_NAMESPACE_END;
 
