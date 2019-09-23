@@ -5,6 +5,7 @@
 #include <string>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <assert.h>
 #include "shared/SharedMacros.h"
 
 SHARED_NAMESPACE_BEGIN;
@@ -48,14 +49,15 @@ struct StrBufTraits<wchar_t> {
 template <typename T>
 class StrBufBase {
 public:
+	enum { kMaxDoubleCapacity = 1024 * 1024 / sizeof(T) };
     typedef T CharT;
     typedef StrBufTraits<T> TraitsT;
     typedef typename TraitsT::StringT StringT;
     typedef typename TraitsT::YCharT YCharT;
 
-    StrBufBase(CharT* buf, size_t capacity) : _sbuf(buf), _dbuf(buf) {
+    StrBufBase(CharT* buf, size_t bufsize) : _sbuf(buf), _dbuf(buf) {
 		buf[0] = 0;
-		_capacity = capacity;
+		_capacity = bufsize;
 		_length = 0;
 	}
 	~StrBufBase() {
@@ -91,11 +93,7 @@ public:
 				if (add < 0) {
 					add = -add;
 				}
-				if ((size_t)add < _capacity) {
-					_capacity <<= 1;
-				} else {
-					_capacity += (size_t)add;
-				}
+				_capacity = calcCapacity(_capacity + add);
 				CharT* new_buf = (CharT*)malloc(_capacity * sizeof(CharT));
 				if (_length) {
 					memcpy(new_buf, _dbuf, _length * sizeof(CharT));
@@ -116,20 +114,15 @@ public:
 		}
 		if (len) {
 			if (len + 1 > _capacity) {
-				_capacity <<= 1;
-				if ((len + 1) > _capacity) {
-					_capacity = len + 1;
-				}
+				_capacity = calcCapacity(len + 1);
 				if (_dbuf != _sbuf) {
 					free(_dbuf);
 				}
 				_dbuf = (CharT*)malloc(_capacity * sizeof(CharT));
-
 			}
 			memcpy(_dbuf, str, len * sizeof(CharT));
 		}
-		_dbuf[len] = 0;
-		_length = len;
+		_dbuf[(_length = len)] = 0;
 	}
     void assign(const StringT& str) {
         assign(str.c_str(), str.length());
@@ -143,11 +136,7 @@ public:
 		}
 		size_t n = _capacity - _length;
 		if (n < len + 1) {
-			size_t new_capacity = _capacity + (len + 1);
-			_capacity <<= 1;
-			if (new_capacity > _capacity) {
-				_capacity = new_capacity;
-			}
+			_capacity = calcCapacity(_capacity + len + 1);
 			CharT* buf = (CharT*)malloc(_capacity * sizeof(CharT));
 			if (_length) {
 				memcpy(buf, _dbuf, _length * sizeof(CharT));
@@ -158,8 +147,7 @@ public:
 			_dbuf = buf;
 		}
 		memcpy(_dbuf + _length, str, len * sizeof(CharT));
-		_length += len;
-		_dbuf[_length] = 0;
+		_dbuf[(_length += len)] = 0;
 	}
     void append(CharT ch) {
         append(&ch, 1);
@@ -178,6 +166,41 @@ public:
         }
         _dbuf[_length] = 0;
     }
+
+	// CAUTION: when set larger than old size, buffer is not filled by zero by performance.
+	void resize(size_t length) {
+		if (length > _length) {
+			if (length >= _capacity) {
+				// enlarge
+				_capacity = calcCapacity(length + 1);
+				CharT* new_buf = (CharT*)malloc(_capacity * sizeof(CharT));
+				if (_length) {
+					memcpy(new_buf, _dbuf, (_length + 1) * sizeof(CharT));
+				}
+				if (_dbuf != _sbuf) {
+					free(_dbuf);
+				}
+				_dbuf = new_buf;
+			}
+		}
+		_dbuf[(_length = length)] = 0;
+	}
+	
+	// size is plus 1 to meet std::string::reserve
+	void reserve(size_t size) {
+		if (size >= _capacity) {
+			// enlarge
+			_capacity = calcCapacity(size + 1);
+			CharT* new_buf = (CharT*)malloc(_capacity * sizeof(CharT));
+			if (_length) {
+				memcpy(new_buf, _dbuf, (_length + 1) * sizeof(CharT));
+			}
+			if (_dbuf != _sbuf) {
+				free(_dbuf);
+			}
+			_dbuf = new_buf;
+		}
+	}
 
 	const CharT* c_str() const {
 		return _dbuf;
@@ -198,7 +221,7 @@ public:
 		return _length;
 	}
 	size_t capacity() const {
-		return _capacity;
+		return _capacity - 1;
 	}
 	void clear() {
 		_length = 0;
@@ -216,6 +239,22 @@ public:
 
     void assignConvert(const YCharT* ychar, size_t len = size_t(-1));
     void appendConvert(const YCharT* ychar, size_t len = size_t(-1));
+
+protected:
+	static inline size_t Align32(size_t org) {
+		static const size_t kAlign = 0x20;
+		return (org + kAlign - 1) & ~(kAlign - 1);
+	}
+	size_t calcCapacity(size_t needCapacity) const {
+		const size_t oldCapacity = _capacity;
+		assert(needCapacity > oldCapacity);
+		const size_t alignedCapacity = Align32(needCapacity);
+		size_t newCapacity = oldCapacity < kMaxDoubleCapacity ? (oldCapacity << 1) : (oldCapacity + kMaxDoubleCapacity);
+		if (newCapacity < alignedCapacity) {
+			newCapacity = alignedCapacity;
+		}
+		return newCapacity;
+	}
 
 private:
 	CharT* _sbuf;
