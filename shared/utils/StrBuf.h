@@ -89,19 +89,15 @@ public:
             int final_n = TraitsT::vsnprintfT(_dbuf + _length, n, format, apcp);
             va_end(apcp);
 			if (final_n < 0 || final_n >= n) {
+				if (errno == EILSEQ) {
+					_dbuf[_length] = 0;
+					return;
+				}
 				int add = final_n - n + 1;
 				if (add < 0) {
 					add = -add;
 				}
-				_capacity = calcCapacity(_capacity + add);
-				CharT* new_buf = (CharT*)malloc(_capacity * sizeof(CharT));
-				if (_length) {
-					memcpy(new_buf, _dbuf, _length * sizeof(CharT));
-				}
-				if (_dbuf != _sbuf) {
-					free(_dbuf);
-				}
-				_dbuf = new_buf;
+				enlargeToSize(_capacity + add);
 			} else {
 				_length += final_n;
 				break;
@@ -136,15 +132,7 @@ public:
 		}
 		size_t n = _capacity - _length;
 		if (n < len + 1) {
-			_capacity = calcCapacity(_capacity + len + 1);
-			CharT* buf = (CharT*)malloc(_capacity * sizeof(CharT));
-			if (_length) {
-				memcpy(buf, _dbuf, _length * sizeof(CharT));
-			}
-			if (_dbuf != _sbuf) {
-				free(_dbuf);
-			}
-			_dbuf = buf;
+			enlargeToSize(_capacity + len + 1);
 		}
 		memcpy(_dbuf + _length, str, len * sizeof(CharT));
 		_dbuf[(_length += len)] = 0;
@@ -171,16 +159,7 @@ public:
 	void resize(size_t length) {
 		if (length > _length) {
 			if (length >= _capacity) {
-				// enlarge
-				_capacity = calcCapacity(length + 1);
-				CharT* new_buf = (CharT*)malloc(_capacity * sizeof(CharT));
-				if (_length) {
-					memcpy(new_buf, _dbuf, (_length + 1) * sizeof(CharT));
-				}
-				if (_dbuf != _sbuf) {
-					free(_dbuf);
-				}
-				_dbuf = new_buf;
+				enlargeToSize(length + 1);
 			}
 		}
 		_dbuf[(_length = length)] = 0;
@@ -189,16 +168,7 @@ public:
 	// size is plus 1 to meet std::string::reserve
 	void reserve(size_t size) {
 		if (size >= _capacity) {
-			// enlarge
-			_capacity = calcCapacity(size + 1);
-			CharT* new_buf = (CharT*)malloc(_capacity * sizeof(CharT));
-			if (_length) {
-				memcpy(new_buf, _dbuf, (_length + 1) * sizeof(CharT));
-			}
-			if (_dbuf != _sbuf) {
-				free(_dbuf);
-			}
-			_dbuf = new_buf;
+			enlargeToSize(size + 1);
 		}
 	}
 
@@ -245,7 +215,7 @@ protected:
 		static const size_t kAlign = 0x20;
 		return (org + kAlign - 1) & ~(kAlign - 1);
 	}
-	size_t calcCapacity(size_t needCapacity) const {
+	inline size_t calcCapacity(size_t needCapacity) const {
 		const size_t oldCapacity = _capacity;
 		assert(needCapacity > oldCapacity);
 		const size_t alignedCapacity = Align32(needCapacity);
@@ -254,6 +224,20 @@ protected:
 			newCapacity = alignedCapacity;
 		}
 		return newCapacity;
+	}
+	inline void enlargeToSize(size_t size) {
+		assert(_length < _capacity);
+		_capacity = calcCapacity(size);
+		CharT* new_buf = (CharT*)malloc(_capacity * sizeof(CharT));
+		if (_length) {
+			memcpy(new_buf, _dbuf, (_length + 1) * sizeof(CharT));
+		} else {
+			new_buf[0] = 0;
+		}
+		if (_dbuf != _sbuf) {
+			free(_dbuf);
+		}
+		_dbuf = new_buf;
 	}
 
 private:
