@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <assert.h>
+#include <errno.h>
 #include "shared/SharedMacros.h"
 
 SHARED_NAMESPACE_BEGIN;
@@ -264,11 +265,11 @@ public:
 	StrBufT(const CharT* format, ...) : Base(_buf, Capacity) {
 		va_list ap;
 		va_start(ap, format);
-		vprintf(format, ap);
+		this->vprintf(format, ap);
 		va_end(ap);
 	}
 	StrBufT(const CharT* format, va_list ap) : Base(_buf, Capacity) {
-		vprintf(format, ap);
+		this->vprintf(format, ap);
 	}
 	~StrBufT() {
 	}

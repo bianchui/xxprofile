@@ -1,4 +1,4 @@
-#include "win_gettimeofday.hpp"
+#include "win_time.hpp"
 #include "inc_windows.h"
 #include <stdint.h>
 
@@ -11,7 +11,7 @@ int gettimeofday(struct timeval * tp, struct timezone * tzp) {
     // until 00:00:00 January 1, 1970 
     static const uint64_t EPOCH = ((uint64_t)116444736000000000ULL);
 
-    SYSTEMTIME  system_time;
+    SYSTEMTIME system_time;
 	union {
 		ULARGE_INTEGER ll;
 		FILETIME ft;
@@ -19,7 +19,7 @@ int gettimeofday(struct timeval * tp, struct timezone * tzp) {
  
     GetSystemTime(&system_time);
     SystemTimeToFileTime(&system_time, &time.ft);
-    tp->tv_sec = (long)((time.ll.QuadPart - EPOCH) / 10000000L);
+    tp->tv_sec = (time_t)((time.ll.QuadPart - EPOCH) / 10000000L);
     tp->tv_usec = (long)(system_time.wMilliseconds * 1000);
     return 0;
 }

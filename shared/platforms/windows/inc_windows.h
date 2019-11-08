@@ -12,6 +12,8 @@
 
 #include <windows.h>
 
+#undef ERROR
+
 // for winapifamily.h
 #ifndef WINAPI_FAMILY_PARTITION
 #  define WINAPI_FAMILY_PARTITION(Partitions)     (Partitions)
