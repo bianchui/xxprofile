@@ -6,7 +6,8 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
-#define Archive_BufferSize (1024 * 1024)
+//#define Archive_BufferSize (1024 * 1024)
+#define Archive_BufferSize 0
 
 Archive::Archive() {
     memset(this, 0, sizeof(Archive));
@@ -34,9 +35,9 @@ bool Archive::open(const char* name, bool write) {
     }
     _write = write;
     SFileHeader fh = {0};
-    static const uint32_t kMagic = 'RAPX'; // XPAR = XxProfile ARchive
+    static const char kMagic[] = "XPAR"; // XPAR = XxProfile ARchive
     if (_write) {
-        fh.magic = kMagic;
+        memcpy(&fh.magic, kMagic, 4);
         if (sizeof(void*) == 8) {
             fh.flags |= Flag_pointer8;
         }
@@ -50,7 +51,7 @@ bool Archive::open(const char* name, bool write) {
         _used = sizeof(fh);
 #endif//Archive_BufferSize
         fread(&fh, 1, sizeof(fh), _fp);
-        if (fh.magic != kMagic) {
+        if (memcmp(&fh.magic, kMagic, 4) != 0) {
             fclose(_fp);
             _fp = NULL;
             return false;
@@ -71,7 +72,7 @@ void Archive::flush() {
     if (_fp && _write && _used) {
         fwrite(_buffer, 1, _used, _fp);
         _used = 0;
-        fflush(_fp);
+        //fflush(_fp);
     }
 #endif//Archive_BufferSize
 }

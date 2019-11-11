@@ -42,11 +42,6 @@ public:
     void close();
     bool eof() const;
 
-    struct Chunk {
-        uint32_t chunkMagic;
-        uint32_t chunkSize;
-    };
-
     void serialize(void* data, size_t size);
 
     friend Archive& operator<<(Archive& ar, char& value) {

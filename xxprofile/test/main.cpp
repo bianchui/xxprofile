@@ -3,6 +3,7 @@
 #include "../src/xxprofile.hpp"
 #include "../src/xxprofile_archive.hpp"
 #include "../src/platforms/platform.hpp"
+#include <shared/time_conv.h>
 
 #include <vector>
 #include <thread>
@@ -16,6 +17,7 @@
 #include <unordered_set>
 #include <sys/syscall.h>
 #include <sys/types.h>
+#include <assert.h>
 
 __thread int a = 0;
 
@@ -371,10 +373,12 @@ void fun() {
 }
 
 void* static_thread(void* param) {
+    static constexpr uint32_t kTestCount = 100000;
+    const uint32_t id = (uint32_t)(uintptr_t)param;
+    const uint32_t start = id * kTestCount;
 
-    uint32_t start = (uint32_t)(uintptr_t)param;
     if (true) {
-        for (uint32_t i = 0; i < 1000; ++i) {
+        for (uint32_t i = 0; i < kTestCount; ++i) {
             fun();
             char namebuf[1024];
             sprintf(namebuf, "hahahahaha%d", start + i);
@@ -397,7 +401,7 @@ void test_cycles() {
 void test_threads() {
     pthread_t pt[3] = {0};
     for (size_t i = 0; i < XX_ARRAY_COUNTOF(pt); ++i) {
-        pthread_create(pt + i, NULL, static_thread, (void*)(100000 * i));
+        pthread_create(pt + i, NULL, static_thread, (void*)i);
     }
     static_thread(NULL);
 
@@ -410,6 +414,17 @@ void test_threads() {
 
 int main(int argc, const char * argv[]) {
     XX_PROFILE_STATIC_INIT(NULL);
+    
+#define TEST_ATOMIC(x, y) { std::atomic_int x; printf("%d\n", y); }
+    TEST_ATOMIC(i(0), i++);
+    TEST_ATOMIC(i(0), ++i);
+    TEST_ATOMIC(i(0), i.fetch_add(1));
+    TEST_ATOMIC(i(1), i.fetch_sub(1));
+ 
+    struct timespec start;
+    struct timespec end;
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    
     //testLoad();
 
     printf("Hello, World!\n");
@@ -418,7 +433,8 @@ int main(int argc, const char * argv[]) {
     //test_threads();
     static_thread(NULL);
 
-
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    printf("take: %d\n", (int)shared::timespec_sub_us(end, start));
     //testSave();
 
     //std::cout << a << std::endl;

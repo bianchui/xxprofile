@@ -96,6 +96,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		86A572E3237901E7007B1437 /* SharedMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedMacros.h; sourceTree = "<group>"; };
+		86A5731123790406007B1437 /* time_conv.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = time_conv.h; sourceTree = "<group>"; };
 		ED22005220E1D76F0076C22F /* xxprofileViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xxprofileViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED22005820E1D76F0076C22F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		ED22005A20E1D76F0076C22F /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -227,6 +229,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		86A572C0237901E7007B1437 /* shared */ = {
+			isa = PBXGroup;
+			children = (
+				86A572E3237901E7007B1437 /* SharedMacros.h */,
+				86A5731123790406007B1437 /* time_conv.h */,
+			);
+			name = shared;
+			path = ../../shared;
+			sourceTree = "<group>";
+		};
 		ED22005320E1D76F0076C22F /* xxprofileViewer */ = {
 			isa = PBXGroup;
 			children = (
@@ -400,6 +412,7 @@
 		ED84F6AF1FB1CF9B00C7B425 = {
 			isa = PBXGroup;
 			children = (
+				86A572C0237901E7007B1437 /* shared */,
 				ED5F72FE1FCD46C3004E945D /* src */,
 				ED81D1A820D37C2C0096FB53 /* test */,
 				ED7744D420EF4BC4002B0578 /* test_ios */,
@@ -827,6 +840,7 @@
 			buildSettings = {
 				DEVELOPMENT_TEAM = PEZE6XWYTJ;
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -836,6 +850,7 @@
 			buildSettings = {
 				DEVELOPMENT_TEAM = PEZE6XWYTJ;
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

@@ -103,7 +103,7 @@ XXProfileTreeNode* XXProfileTLS::newChunk() {
         _freeBuffers.pop_back();
     } else {
         node = (XXProfileTreeNode*)malloc(ChunkNodeCount * sizeof(XXProfileTreeNode));
-        memset(node, 0, ChunkNodeCount * sizeof(XXProfileTreeNode));
+        //memset(node, 0, ChunkNodeCount * sizeof(XXProfileTreeNode));
     }
     return node;
 }
@@ -150,7 +150,7 @@ void XXProfileTLS::frameFlush() {
         } else {
             _ar.serialize(buffer, sizeOrg);
         }
-        memset(buffer, 0, sizeOrg);
+        //memset(buffer, 0, sizeOrg);
         _freeBuffers.push_back(buffer);
     }
     _ar.flush();
