@@ -412,7 +412,11 @@ void test_threads() {
     //sleep(1);
 }
 
+#include "tests/tls_test.hpp"
+
 int main(int argc, const char * argv[]) {
+    test::test_tls_thread_local();
+    test::test_tls_pthread();
     XX_PROFILE_STATIC_INIT(NULL);
     
 #define TEST_ATOMIC(x, y) { std::atomic_int x; printf("%d\n", y); }

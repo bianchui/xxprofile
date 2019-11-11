@@ -31,4 +31,14 @@ function build_native_libs() {
     popd > /dev/null
 }
 
+function build_test_app() {
+    guard pushd $THIS_DIR/test > /dev/null
+    echo "Begin of building test app"
+    local cpu_num=`sysctl -n hw.ncpu`
+    local NDK_BUILD_OPTIONS="NDK_DEBUG=0 -j${cpu_num}"
+    guard ${NDK_BUILD_COMMAND} ${NDK_BUILD_OPTIONS} NDK_PROJECT_PATH=. NDK_APPLICATION_MK=Application.mk APP_BUILD_SCRIPT=Android.mk
+    popd > /dev/null
+}
+
 build_native_libs $1
+build_test_app $1
