@@ -13,6 +13,16 @@ struct timeval {
 
 int gettimeofday(struct timeval * tp, struct timezone * tzp);
 
+inline struct tm* localtime_r(const time_t* __t, struct tm* __tm) {
+	::localtime_s(__tm, __t);
+	return __tm;
+}
+
+inline struct tm* gmtime_r(const time_t* __t, struct tm* __tm) {
+	::gmtime_s(__tm, __t);
+	return __tm;
+} 
+
 SHARED_NAMESPACE_END;
 
 #endif//shared_platform_windows_win_time_hpp__

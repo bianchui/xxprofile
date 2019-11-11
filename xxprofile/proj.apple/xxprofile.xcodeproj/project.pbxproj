@@ -96,6 +96,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		86A572BE2378FF74007B1437 /* tls_test.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = tls_test.hpp; sourceTree = "<group>"; };
 		86A572E3237901E7007B1437 /* SharedMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedMacros.h; sourceTree = "<group>"; };
 		86A5731123790406007B1437 /* time_conv.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = time_conv.h; sourceTree = "<group>"; };
 		ED22005220E1D76F0076C22F /* xxprofileViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xxprofileViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -229,6 +230,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		86A572BB2378FF5F007B1437 /* tests */ = {
+			isa = PBXGroup;
+			children = (
+				86A572BE2378FF74007B1437 /* tls_test.hpp */,
+			);
+			path = tests;
+			sourceTree = "<group>";
+		};
 		86A572C0237901E7007B1437 /* shared */ = {
 			isa = PBXGroup;
 			children = (
@@ -403,6 +412,7 @@
 		ED81D1A820D37C2C0096FB53 /* test */ = {
 			isa = PBXGroup;
 			children = (
+				86A572BB2378FF5F007B1437 /* tests */,
 				ED81D1A920D37C2C0096FB53 /* main.cpp */,
 			);
 			name = test;
@@ -575,17 +585,17 @@
 					};
 					ED81D1A620D37C2C0096FB53 = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = PEZE6XWYTJ;
+						DevelopmentTeam = GJ7WKUP5MK;
 						ProvisioningStyle = Automatic;
 					};
 					ED84F6B71FB1CF9B00C7B425 = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = PEZE6XWYTJ;
+						DevelopmentTeam = GJ7WKUP5MK;
 						ProvisioningStyle = Automatic;
 					};
 					ED84F6C21FB1CFC900C7B425 = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = PEZE6XWYTJ;
+						DevelopmentTeam = GJ7WKUP5MK;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -838,8 +848,9 @@
 		ED81D1AC20D37C2C0096FB53 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEVELOPMENT_TEAM = PEZE6XWYTJ;
+				DEVELOPMENT_TEAM = GJ7WKUP5MK;
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				GCC_THREADSAFE_STATICS = YES;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -848,8 +859,9 @@
 		ED81D1AD20D37C2C0096FB53 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEVELOPMENT_TEAM = PEZE6XWYTJ;
+				DEVELOPMENT_TEAM = GJ7WKUP5MK;
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				GCC_THREADSAFE_STATICS = YES;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -962,13 +974,14 @@
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				DEVELOPMENT_TEAM = PEZE6XWYTJ;
+				DEVELOPMENT_TEAM = GJ7WKUP5MK;
 				EXECUTABLE_PREFIX = lib;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"XX_PLATFORM_MAC=1",
 					"XX_PLATFORM_APPLE=1",
 					"$(inherited)",
 				);
+				GCC_THREADSAFE_STATICS = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -978,13 +991,14 @@
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				DEVELOPMENT_TEAM = PEZE6XWYTJ;
+				DEVELOPMENT_TEAM = GJ7WKUP5MK;
 				EXECUTABLE_PREFIX = lib;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"XX_PLATFORM_MAC=1",
 					"XX_PLATFORM_APPLE=1",
 					"$(inherited)",
 				);
+				GCC_THREADSAFE_STATICS = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -993,12 +1007,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = PEZE6XWYTJ;
+				DEVELOPMENT_TEAM = GJ7WKUP5MK;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"XX_PLATFORM_IOS=1",
 					"XX_PLATFORM_APPLE=1",
 					"$(inherited)",
 				);
+				GCC_THREADSAFE_STATICS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1013,12 +1028,13 @@
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
-				DEVELOPMENT_TEAM = PEZE6XWYTJ;
+				DEVELOPMENT_TEAM = GJ7WKUP5MK;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"XX_PLATFORM_IOS=1",
 					"XX_PLATFORM_APPLE=1",
 					"$(inherited)",
 				);
+				GCC_THREADSAFE_STATICS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
