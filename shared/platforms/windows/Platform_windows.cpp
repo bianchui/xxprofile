@@ -1,5 +1,5 @@
 // Copyright 2019 bianchui. All rights reserved.
-#include "platform/Platform.h"
+#include "shared/platforms/Platform.h"
 #include "Platform_windows.h"
 #include "shared/platforms/windows/incwindows.h"
 

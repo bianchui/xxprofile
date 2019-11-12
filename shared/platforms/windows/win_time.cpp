@@ -1,3 +1,4 @@
+// Copyright 2019 bianchui. All rights reserved.
 #include "win_time.hpp"
 #include "inc_windows.h"
 #include <stdint.h>

@@ -1,5 +1,5 @@
 // Copyright 2018 bianchui. All rights reserved.
-#include "platform/Platform.h"
+#include "shared/platforms/Platform.h"
 #import <UIKit/UIDevice.h>
 #include <stdlib.h>
 #include <unistd.h>
