@@ -1,6 +1,5 @@
 // Copyright 2019 bianchui. All rights reserved.
 #include "shared/platforms/Platform.h"
-#include "Platform_windows.h"
 #include "shared/platforms/windows/inc_windows.h"
 
 SHARED_NAMESPACE_BEGIN;

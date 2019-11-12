@@ -11,19 +11,25 @@
 #endif
 #include <inttypes.h>
 
-#if PLATFORM_IS_TARGET(ANDROID) || PLATFORM_IS_TARGET(IOS)
-#include <sys/time.h>
+#if PLATFORM_IS_TARGET(WINDOWS)
+
+#  include "shared/platforms/windows/win_time.hpp"
+#  include "shared/platforms/windows/win_strings.h"
+
+#else
+#  include <sys/time.h>
+#  include <time.h>
 
 SHARED_NAMESPACE_BEGIN;
 
+// sys/time.h
 using ::timeval;
+using ::gettimeofday;
+using ::localtime_r;
+using ::gmtime_r;
 
 SHARED_NAMESPACE_END;
 
-#endif//ANDROID IOS
-
-#if PLATFORM_IS_TARGET(WINDOWS)
-#include "shared/platform/windows/Platform_windows.h"
 #endif//PLATFORM_IS_TARGET(WINDOWS)
 
 SHARED_NAMESPACE_BEGIN;
