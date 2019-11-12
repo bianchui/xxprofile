@@ -1,23 +1,21 @@
 // Copyright 2019 bianchui. All rights reserved.
 #include "shared/platforms/Platform.h"
 #include "Platform_windows.h"
-#include "shared/platforms/windows/incwindows.h"
+#include "shared/platforms/windows/inc_windows.h"
 
 SHARED_NAMESPACE_BEGIN;
 
-const DWORD MS_VC_EXCEPTION = 0x406D1388;
-
-#pragma pack(push,8)  
-typedef struct tagTHREADNAME_INFO {
-    DWORD dwType;     // Must be 0x1000.
-    LPCSTR szName;    // Pointer to name (in user addr space).
-    DWORD dwThreadID; // Thread ID (-1=caller thread).
-    DWORD dwFlags;    // Reserved for future use, must be zero.
-} THREADNAME_INFO;
-#pragma pack(pop)
-
 uint32_t OSGetVersion() {
-    return 0;
+    static uint32_t s_version;
+    if (!s_version) {
+        OSVERSIONINFOEXW osvi;
+        memset(&osvi, 0, sizeof(OSVERSIONINFOEXW));
+        osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEXW);
+        if (GetVersionExW((OSVERSIONINFO*)&osvi)) {
+            s_version = (uint32_t)((osvi.dwMajorVersion << 24) + (osvi.dwMinorVersion << 16) + osvi.dwBuildNumber);
+        }
+    }
+    return s_version;
 }
 
 uint32_t platformGetTid() {
@@ -25,6 +23,17 @@ uint32_t platformGetTid() {
 }
 
 static void SetThreadName(DWORD dwThreadID, const char* threadName) {
+    static constexpr DWORD MS_VC_EXCEPTION = 0x406D1388;
+
+#pragma pack(push,8)  
+    typedef struct tagTHREADNAME_INFO {
+        DWORD dwType;     // Must be 0x1000.
+        LPCSTR szName;    // Pointer to name (in user addr space).
+        DWORD dwThreadID; // Thread ID (-1=caller thread).
+        DWORD dwFlags;    // Reserved for future use, must be zero.
+    } THREADNAME_INFO;
+#pragma pack(pop)
+
     THREADNAME_INFO info;
     info.dwType = 0x1000;
     info.szName = threadName;

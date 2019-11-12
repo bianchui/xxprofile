@@ -74,19 +74,30 @@
 #define SHARED_NAMESPACE_BEGIN NAMESPACE_BEGIN(NS_SHARED)
 #define SHARED_NAMESPACE_END NAMESPACE_END(NS_SHARED)
 
-#ifdef _MSC_VER_ // for MSVC
-#  define forceinline __forceinline
-#elif defined __GNUC__ // for gcc on Linux/Apple OS X
-#  define forceinline __inline__ __attribute__((always_inline))
-#else
-#  error unknown compiler
-#  define forceinline
-#endif
 
-#ifdef _MSC_VER
+// compilers
+#ifdef _MSC_VER // for MSVC
+
+#  define UNUSED_VAR
+#  define forceinline __forceinline
 #  define STRUCT_PACKED __pragma(pack(1))
-#else//_MSC_VER
+#  define CHECK_FMT(a, b)
+
+#elif defined __GNUC__ // for gcc on Linux/Apple OS X
+
+#  define UNUSED_VAR __attribute__((__unused__))
+#  define forceinline __inline__ __attribute__((always_inline))
 #  define STRUCT_PACKED __attribute__((packed))
-#endif//_MSC_VER
+#  define CHECK_FMT(a, b) __attribute__((format(printf, a, b)))
+
+#else
+
+#  error unknown compiler
+#  define UNUSED_VAR
+#  define forceinline
+#  define STRUCT_PACKED
+#  define CHECK_FMT(a, b)
+
+#endif
 
 #endif//__shared_SharedMacros_h__

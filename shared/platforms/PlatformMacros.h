@@ -1,6 +1,6 @@
 // Copyright 2018 bianchui. All rights reserved.
-#ifndef __platform_PlatformMacro_h__
-#define __platform_PlatformMacro_h__
+#ifndef shared_platforms_PlatformMacros_h__
+#define shared_platforms_PlatformMacros_h__
 #include "PlatformTargets.h"
 
 #ifdef __OBJC__
@@ -14,4 +14,4 @@
 
 #endif//__OBJC__
 
-#endif//__platform_PlatformMacro_h__
+#endif//shared_platforms_PlatformMacros_h__

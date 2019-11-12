@@ -6,6 +6,11 @@
 #include "PlatformMacros.h"
 #include "PlatformTargets.h"
 
+#if PLATFORM_IS_TARGET(ANDROID)
+#  define __STDC_FORMAT_MACROS
+#endif
+#include <inttypes.h>
+
 #if PLATFORM_IS_TARGET(ANDROID) || PLATFORM_IS_TARGET(IOS)
 #include <sys/time.h>
 
@@ -33,6 +38,9 @@ uint32_t OSGetVersion();
 #define IS_OSVERSION_GREATER_THAN_OR_EQUAL_TO_2(major, minor) (shared::OSGetVersion() >= ((((uint32_t)(major)) << 24) + (((uint32_t)(minor)) << 16)))
 #define IS_OSVERSION_LESS_THAN_2(v)                           (shared::OSGetVersion() < ((((uint32_t)(major)) << 24) + (((uint32_t)(minor)) << 16)))
 #define IS_OSVERSION_LESS_THAN_OR_EQUAL_TO_2(v)               (shared::OSGetVersion() <= ((((uint32_t)(major)) << 24) + (((uint32_t)(minor)) << 16)))
+
+#define OSVERSION_MAJOR() ((uint32_t)(shared::OSGetVersion() >> 24))
+#define OSVERSION_MINOR() ((uint32_t)(shared::OSGetVersion() >> 16) & 0xff)
 
 uint32_t platformGetTid();
 const char* platformAbiName();
