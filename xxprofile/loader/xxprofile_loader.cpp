@@ -222,9 +222,9 @@ void Loader::load(Archive& ar) {
             size_t remainSize = sizeof(XXProfileTreeNode) * data._nodeCount;
             data._nodes = (XXProfileTreeNode*)malloc(remainSize);
             memset(data._nodes, 0, remainSize);
-            if (ar.version() == 1) {
+            if (ar.version() == XXPROFILE_VERSION_1) {
                 ar.serialize(data._nodes, remainSize);
-            } else if (ar.version() == 2) {
+            } else if (ar.version() == XXPROFILE_VERSION_2) {
                 bool hasError = false;
                 Bytef* buf = NULL;
                 size_t bufSize = 0;
