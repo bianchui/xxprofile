@@ -16,7 +16,7 @@ private:
         uint32_t magic;
         uint32_t version;
         uint32_t flags;
-        uint32_t dummy;
+        uint32_t compressMethod;
     };
 
 private:
@@ -26,6 +26,7 @@ private:
     char* _buffer;
     uint32_t _version;
     uint32_t _flags;
+    uint32_t _compressMethod;
     bool _write;
     bool _error;
 
@@ -35,6 +36,8 @@ public:
 
     void setVersion(uint32_t ver) { _version = ver; }
     uint32_t version() const { return _version; }
+    void setCompressMethod(uint32_t method) { _compressMethod = method; }
+    uint32_t getCompressMethod() const { return _compressMethod; }
     bool isWrite() const { return _write; }
     bool hasError() const { return _error; }
     bool open(const char* name, bool write);

@@ -13,6 +13,8 @@ struct XXProfileTreeNode {
     uint32_t _parentNodeId;
 };
 
+static_assert(sizeof(XXProfileTreeNode) == (8+8+4+4), "NodeSize");
+
 XX_NAMESPACE_END(xxprofile);
 
 #endif//xxprofile_data_hpp

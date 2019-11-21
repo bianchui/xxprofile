@@ -8,6 +8,7 @@ LOCAL_C_INCLUDES := \
 
 LOCAL_SRC_FILES := \
     ../../test/main.cpp \
+    ../../../shared/platforms/android/Platform_android.cpp \
 
 LOCAL_CFLAGS += -fPIE -funwind-tables
 LOCAL_LDFLAGS += -fPIE -pie

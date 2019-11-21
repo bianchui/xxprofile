@@ -1,5 +1,6 @@
 // Copyright 2017 bianchui. All rights reserved.
 #include "../src/xxprofile_internal.hpp"
+#include "../src/xxprofile_version.hpp"
 #include "xxprofile_loader.hpp"
 #include "xxprofile_CppNameDecoder.hpp"
 #include <zlib.h>
@@ -222,9 +223,9 @@ void Loader::load(Archive& ar) {
             size_t remainSize = sizeof(XXProfileTreeNode) * data._nodeCount;
             data._nodes = (XXProfileTreeNode*)malloc(remainSize);
             memset(data._nodes, 0, remainSize);
-            if (ar.version() == XXPROFILE_VERSION_1) {
+            if (ar.version() == EVersion::V1) {
                 ar.serialize(data._nodes, remainSize);
-            } else if (ar.version() == XXPROFILE_VERSION_2) {
+            } else if (ar.version() == EVersion::V2) {
                 bool hasError = false;
                 Bytef* buf = NULL;
                 size_t bufSize = 0;

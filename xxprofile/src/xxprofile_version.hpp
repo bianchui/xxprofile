@@ -2,27 +2,42 @@
 #ifndef xxprofile_version_h
 #define xxprofile_version_h
 
-#define XXPROFILE_VERSION_0 0
-#define XXPROFILE_VERSION_1 1
-#define XXPROFILE_VERSION_2 2
+XX_NAMESPACE_BEGIN(xxprofile);
 
-#define XXPROFILE_VERSION XXPROFILE_VERSION_2
+struct EVersion {
+    enum Enum {
+        V0 = 0,
+        V1 = 1,
+        V2 = 2,
+        V3 = 3,
+        
+        NOW = V2,
+    };
+};
+
+struct ECompressMethod {
+    enum Enum {
+        Zlib = 0,
+        Lzo = 1,
+        Lz4 = 2,
+    };
+};
 
 // file format
-// struct File { // start from here
-//     struct FileHeader { // offset 0x00
+// struct File {
+//     struct FileHeader {
 //         /*0x00*/ uint32_t magic   = "XPAR";
-//         /*0x04*/ uint32_t version = XXPROFILE_VERSION;
+//         /*0x04*/ uint32_t version = EVersion;
 //         /*0x08*/ uint32_t flags   = Archive::Flags;
-//         /*0x0C*/ uint32_t dummy   = 0;
+//         /*0x0C*/ uint32_t compressMethod = 0;
 //     };
 //
 //     struct Name {
 //         if (XX_PROFILE_DEBUG_Name_Serialize) {
 //             /*0x00*/ uint32_t id;
 //         }
-//         /*0x00+*/ uint32_t length;
-//         /*0x04+*/ char name[length];
+//         /*0x00*/ uint32_t length;
+//         /*0x04*/ char name[length];
 //     };
 //
 //     struct Names {
@@ -44,24 +59,28 @@
 //     };
 //
 //     struct FrameData {
+//         if (fileHdr.version == EVersion::V3) {
+//             /*0x00*/ uint32_t threadId;
+//         }
 //         /*0x00*/ uint32_t frameId;
 //         /*0x04*/ Names names;
 //         /*0x0?*/ uint32_t nodeCount;
-//         if (fileHdr.version == XXPROFILE_VERSION_1) {
+//         if (fileHdr.version == EVersion::V1) {
 //             /*    */ XXProfileTreeNode nodes[nodeCount];
-//         } else if (fileHdr.version >= XXPROFILE_VERSION_2) {
+//         } else if (fileHdr.version >= EVersion::V2) {
 //             /*    */ ChunkData_v2 chunks[nodeCount / ChunkData_v2.chunkNodeCount];
 //         }
 //     };
 //
-//     struct ThreadData { // offset 0x10
+//     struct ProfileData {
 //         /*0x00*/ double secondsPerCycle;
 //         /*0x08*/ FrameData frames[];
 //     };
 //
 //     /*0x00*/ FileHeader fileHdr;
-//     /*0x10*/ ThreadData data;
+//     /*0x10*/ ProfileData data;
 // };
-//
+
+XX_NAMESPACE_END(xxprofile);
 
 #endif /* xxprofile_version_h */

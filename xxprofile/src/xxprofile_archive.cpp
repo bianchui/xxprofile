@@ -6,29 +6,23 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
-//#define Archive_BufferSize (1024 * 1024)
-#define Archive_BufferSize 0
+#define Archive_WriteBufferSize 0
+#define Archive_ReadBufferSize (1024 * 1024)
 
 Archive::Archive() {
     memset(this, 0, sizeof(Archive));
-
-#if Archive_BufferSize
-    _buffer = (char*)malloc(Archive_BufferSize);
-#endif//Archive_BufferSize
     _version = 1;
 }
 
 Archive::~Archive() {
     close();
-#if Archive_BufferSize
-    if (_buffer) {
-        free(_buffer);
-    }
-#endif//Archive_BufferSize
 }
 
 bool Archive::open(const char* name, bool write) {
     assert(!_fp);
+    if (_fp) {
+        return false;
+    }
     _fp = fopen(name, write ? "wb" : "rb");
     if (!_fp) {
         return false;
@@ -37,20 +31,41 @@ bool Archive::open(const char* name, bool write) {
     SFileHeader fh = {0};
     static const char kMagic[] = "XPAR"; // XPAR = XxProfile ARchive
     if (_write) {
+#if Archive_WriteBufferSize
+        if (!_buffer) {
+            _buffer = (char*)malloc(Archive_WriteBufferSize);
+        }
+#endif//Archive_WriteBufferSize
         memcpy(&fh.magic, kMagic, 4);
         if (sizeof(void*) == 8) {
             fh.flags |= Flag_pointer8;
         }
         fh.version = _version;
+        fh.compressMethod = _compressMethod;
         fwrite(&fh, 1, sizeof(fh), _fp);
     } else {
-#if !Archive_BufferSize
+#if Archive_ReadBufferSize
+        if (!_buffer) {
+            _buffer = (char*)malloc(Archive_ReadBufferSize);
+        }
+        _size = fread(_buffer, 1, Archive_ReadBufferSize, _fp);
+        if (_size < sizeof(fh)) {
+            fclose(_fp);
+            _fp = NULL;
+            return false;
+        }
+        memcpy(&fh, _buffer, sizeof(fh));
+#else//Archive_ReadBufferSize
         fseek(_fp, 0, SEEK_END);
         _size = ftell(_fp);
         fseek(_fp, 0, SEEK_SET);
+        if (sizeof(fh) != fread(&fh, 1, sizeof(fh), _fp)) {
+            fclose(_fp);
+            _fp = NULL;
+            return false;
+        }
+#endif//Archive_ReadBufferSize
         _used = sizeof(fh);
-#endif//Archive_BufferSize
-        fread(&fh, 1, sizeof(fh), _fp);
         if (memcmp(&fh.magic, kMagic, 4) != 0) {
             fclose(_fp);
             _fp = NULL;
@@ -58,9 +73,7 @@ bool Archive::open(const char* name, bool write) {
         }
         _version = fh.version;
         _flags = fh.flags;
-#if Archive_BufferSize
-        _size = fread(_buffer, 1, Archive_BufferSize, _fp);
-#endif//Archive_BufferSize
+        _compressMethod = fh.compressMethod;
     }
     return _fp;
 }
@@ -68,35 +81,36 @@ bool Archive::open(const char* name, bool write) {
 void Archive::flush() {
     assert(_fp);
     assert(_write);
-#if Archive_BufferSize
+#if Archive_WriteBufferSize
     if (_fp && _write && _used) {
         fwrite(_buffer, 1, _used, _fp);
         _used = 0;
         //fflush(_fp);
     }
-#endif//Archive_BufferSize
+#endif//Archive_WriteBufferSize
 }
 
 void Archive::close() {
     if (_fp) {
-#if Archive_BufferSize
+#if Archive_WriteBufferSize
         if (_write && _used) {
             fwrite(_buffer, 1, _used, _fp);
         }
-#endif//Archive_BufferSize
+#endif//Archive_WriteBufferSize
         fclose(_fp);
     }
-    auto buffer = _buffer;
+    if (_buffer) {
+        free(_buffer);
+    }
     memset(this, 0, sizeof(Archive));
-    _buffer = buffer;
 }
 
 bool Archive::eof() const {
-#if Archive_BufferSize
-    return !_fp || ((!_write) && (_size < Archive_BufferSize && _used >= _size));
-#else//Archive_BufferSize
+#if Archive_ReadBufferSize
+    return !_fp || ((!_write) && (_size < Archive_ReadBufferSize && _used >= _size));
+#else//Archive_ReadBufferSize
     return !_fp || ((!_write) && (_used >= _size));
-#endif//Archive_BufferSize
+#endif//Archive_ReadBufferSize
 }
 
 void Archive::serialize(void* data, size_t size) {
@@ -113,17 +127,17 @@ void Archive::serialize(void* data, size_t size) {
             }
         });
         _size += size;
-#if Archive_BufferSize
-        if (size + _used >= Archive_BufferSize) {
+#if Archive_WriteBufferSize
+        if (size + _used >= Archive_WriteBufferSize) {
             if (_used) {
-                const size_t writeSize = Archive_BufferSize - _used;
+                const size_t writeSize = Archive_WriteBufferSize - _used;
                 memcpy(_buffer + _used, data, writeSize);
                 size -= writeSize;
                 data = ((char*)data) + writeSize;
-                fwrite(_buffer, 1, Archive_BufferSize, _fp);
+                fwrite(_buffer, 1, Archive_WriteBufferSize, _fp);
                 _used = 0;
             }
-            if (size > Archive_BufferSize) {
+            if (size > Archive_WriteBufferSize) {
                 fwrite(data, 1, size, _fp);
                 return;
             }
@@ -132,25 +146,30 @@ void Archive::serialize(void* data, size_t size) {
             memcpy(_buffer + _used, data, size);
             _used += size;
         }
-#else//Archive_BufferSize
+#else//Archive_WriteBufferSize
         fwrite(data, 1, size, _fp);
-#endif//Archive_BufferSize
+#endif//Archive_WriteBufferSize
     } else {
-#if Archive_BufferSize
+#if Archive_ReadBufferSize
         if (size + _used >= _size) {
-            const size_t readSize = _size - _used;
-            memcpy(data, _buffer + _used, readSize);
-            size -= readSize;
-            data = ((char*)data) + readSize;
-            if (size > Archive_BufferSize) {
-                size_t count = fread(data, 1, size, _fp);
-                assert(count == size);
-                if (count != size) {
+            const size_t copySize = _size - _used;
+            memcpy(data, _buffer + _used, copySize);
+            size -= copySize;
+            data = ((char*)data) + copySize;
+            if (size > Archive_ReadBufferSize) {
+                const size_t fullChunkSize = size - (size % Archive_ReadBufferSize);
+                const size_t count = fread(data, 1, fullChunkSize, _fp);
+                assert(count == fullChunkSize);
+                if (count != fullChunkSize) {
                     _error = true;
+                    _size = 0;
+                    _used = 0;
+                    return;
                 }
-                size = 0;
+                size -= fullChunkSize;
+                data = ((char*)data) + fullChunkSize;
             }
-            _size = fread(_buffer, 1, Archive_BufferSize, _fp);
+            _size = fread(_buffer, 1, Archive_ReadBufferSize, _fp);
             _used = 0;
         }
         if (size) {
@@ -166,14 +185,14 @@ void Archive::serialize(void* data, size_t size) {
             }
             _used += size;
         }
-#else//Archive_BufferSize
+#else//Archive_ReadBufferSize
         size_t count = fread(data, 1, size, _fp);
         _used += size;
         assert(count == size);
         if (count != size) {
             _error = true;
         }
-#endif//Archive_BufferSize
+#endif//Archive_ReadBufferSize
     }
 }
 

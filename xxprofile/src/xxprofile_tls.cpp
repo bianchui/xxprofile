@@ -1,6 +1,7 @@
 // Copyright 2017 bianchui. All rights reserved.
 #include "xxprofile_internal.hpp"
 #include "xxprofile_tls.hpp"
+#include "xxprofile_version.hpp"
 #include <vector>
 #include <assert.h>
 #include <unistd.h>
@@ -27,7 +28,7 @@ XXProfileTLS::XXProfileTLS(const char* path) {
 
     char name[PATH_MAX];
     sprintf(name, "%sThread_%d.xxprofile", path, _threadId);
-    _ar.setVersion(2);
+    _ar.setVersion(EVersion::V2);
     _ar.open(name, true);
 
     double secondsPerCycle = Timer::GetSecondsPerCycle();
@@ -138,7 +139,7 @@ void XXProfileTLS::frameFlush() {
         uint32_t sizeOrg = (uint32_t)(count * sizeof(XXProfileTreeNode));
         uLongf compressedSize = sizeOrg;
         uint32_t sizeCom = 0;
-        if (Z_OK == compress2((Bytef*)_compressedBuf, &compressedSize, (const Bytef*)buffer, compressedSize, 5)) {
+        if (Z_OK == compress2((Bytef*)_compressedBuf, &compressedSize, (const Bytef*)buffer, compressedSize, 1)) {
             sizeCom = (uint32_t)compressedSize;
         } else {
             assert(false);

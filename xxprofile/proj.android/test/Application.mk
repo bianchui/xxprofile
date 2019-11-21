@@ -7,3 +7,5 @@ APP_CPPFLAGS += -std=c++11 -fexceptions
 #APP_STL := gnustl_static
 #APP_STL := stlport_static
 APP_STL := c++_static
+
+NDK_TOOLCHAIN_VERSION := clang
