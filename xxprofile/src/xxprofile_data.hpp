@@ -1,3 +1,4 @@
+// Copyright 2017-2019 bianchui. All rights reserved.
 #ifndef xxprofile_data_hpp
 #define xxprofile_data_hpp
 #include "xxprofile_name.hpp"

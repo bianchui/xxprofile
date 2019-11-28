@@ -8,83 +8,75 @@
 #include "xxprofile_internal.hpp"
 #include "xxprofile.hpp"
 #include <assert.h>
+#include <mutex>
+#include <stdlib.h>
+#include <time.h>
+#include <sys/time.h>
 #include "xxprofile_tls.hpp"
-
-#define XX_ThreadLocal 1
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
-#if !XX_ThreadLocal
-static pthread_key_t g_profile_tls_key;
-//static pthread_once_t g_profile_init_once = PTHREAD_ONCE_INIT;
-#else//XX_ThreadLocal
+std::mutex g_mutex;
 static ThreadLocal<XXProfileTLS> g_profile_tls;
-#endif//XX_ThreadLocal
+static SharedArchive* g_archive;
 
-// XXProfile
-#if !XX_ThreadLocal
-static void profile_on_thread_exit(void* data) {
-    XXProfileTLS* profile = (XXProfileTLS*)data;
-    delete profile;
+static void StaticDeleteGArchive() {
+    if (g_archive) {
+        g_archive->release();
+        g_archive = NULL;
+    }
 }
 
-//static void profile_tls_init_once() {
-//}
-#endif//XX_ThreadLocal
-
-static std::string g_filePath;
-
-bool XXProfile::StaticInit(const char* savePath) {
-    
-#if !XX_ThreadLocal
-    //pthread_once(&g_profile_init_once, profile_tls_init_once);
-    if (!g_profile_tls_key) {
-        pthread_key_create(&g_profile_tls_key, profile_on_thread_exit);
-    }
-#endif//XX_ThreadLocal
-    Timer::InitTiming();
-    if (savePath) {
-        g_filePath.assign(savePath);
-        if (g_filePath.length() > 0 && g_filePath.back() != '/') {
-            g_filePath.push_back('/');
+static void StaticInitUnSafe(const char* savePath) {
+    if (!g_archive) {
+        std::string filePath;
+        if (savePath) {
+            filePath.assign(savePath);
+            if (filePath.length() > 0 && filePath.back() != '/') {
+                filePath.push_back('/');
+            }
+        } else {
+            filePath = systemGetWritablePath();
         }
-    } else {
-        g_filePath = systemGetWritablePath();
+        char timeBuf[64];
+#define XXProfile_TimeFormat "[%04d-%02d-%02d-%02d-%02d-%02d.%03d]"
+#define XXProfile_TImeArgs (lt.tm_year + 1900), (lt.tm_mon + 1), lt.tm_mday, lt.tm_hour, lt.tm_min, lt.tm_sec, (int)(tv.tv_usec / 1000)
+        struct timeval tv;
+        gettimeofday(&tv, 0);
+        struct tm lt;
+        localtime_r(&tv.tv_sec, &lt);
+        snprintf(timeBuf, 64, XXProfile_TimeFormat, XXProfile_TImeArgs);
+        timeBuf[63] = 0;
+        filePath.append(timeBuf);
+        filePath.append(systemGetAppName());
+        filePath.append(".xxprofile");
+        g_archive = new SharedArchive(filePath.c_str());
+        atexit(StaticDeleteGArchive);
     }
+}
+
+// XXProfile
+bool XXProfile::StaticInit(const char* savePath) {
+    std::unique_lock<std::mutex> lock(g_mutex);
+    StaticInitUnSafe(savePath);
     return true;
 }
 
 void XXProfile::StaticUninit() {
-#if !XX_ThreadLocal
-    if (g_profile_tls_key) {
-        XXProfileTLS* profile = (XXProfileTLS*)pthread_getspecific(g_profile_tls_key);
-        if (profile) {
-            delete profile;
-            pthread_setspecific(g_profile_tls_key, NULL);
-        }
-    }
-    pthread_key_delete(g_profile_tls_key);
-    g_profile_tls_key = 0;
-#endif//XX_ThreadLocal
+
 }
 
 XXProfileTLS* XXProfileTLS::Get() {
     XXProfileTLS* profile = NULL;
-#if XX_ThreadLocal
     profile = g_profile_tls.get();
     if (!profile) {
-        profile = new XXProfileTLS(g_filePath.c_str());
-        g_profile_tls.set(profile);
-    }
-#else//XX_ThreadLocal
-    if (g_profile_tls_key) {
-        profile = (XXProfileTLS*)pthread_getspecific(g_profile_tls_key);
-        if (!profile) {
-            profile = new XXProfileTLS();
-            pthread_setspecific(g_profile_tls_key, profile);
+        std::unique_lock<std::mutex> lock(g_mutex);
+        StaticInitUnSafe(NULL);
+        if (g_archive) {
+            profile = new XXProfileTLS(g_archive);
+            g_profile_tls.set(profile);
         }
     }
-#endif//XX_ThreadLocal
     return profile;
 }
 

@@ -4,8 +4,68 @@
 #include "xxprofile_loader.hpp"
 #include "xxprofile_CppNameDecoder.hpp"
 #include <zlib.h>
+#include <functional>
+#include "../src/compress/compress_zlib.cpp.h"
+#include "../src/compress/compress_lzo.cpp.h"
+#include "../src/compress/compress_lz4.cpp.h"
 
 XX_NAMESPACE_BEGIN(xxprofile);
+
+struct SDecompress {
+    typedef std::function<size_t (void*, size_t, const void*, size_t)> CompressFun_T;
+
+    SDecompressZlib zlib;
+    SDecompressLzo lzo;
+    SDecompressLz4 lz4;
+    uint32_t method;
+    CompressFun_T _decompress;
+
+    SDecompress(uint32_t method) {
+        _decompress = decompressFunction();
+    }
+    
+    size_t decompress1(void* dst, size_t dstSize, const void* src, size_t srcSize) {
+        switch (method) {
+            case ECompressMethod::Zlib:
+                return zlib.doDecompress(dst, dstSize, src, srcSize);
+
+            case ECompressMethod::Lzo:
+                return lzo.doDecompress(dst, dstSize, src, srcSize);
+
+            case ECompressMethod::Lz4:
+                return lz4.doDecompress(dst, dstSize, src, srcSize);
+
+            default:
+                return 0;
+        }
+    }
+
+    size_t decompress(void* dst, size_t dstSize, const void* src, size_t srcSize) {
+        if (_decompress) {
+            return _decompress(dst, dstSize, src, srcSize);
+        } else {
+            return 0;
+        }
+    }
+
+    size_t operator ()(void* dst, size_t dstSize, const void* src, size_t srcSize) {
+        return decompress(dst, dstSize, src, srcSize);
+    }
+
+    CompressFun_T decompressFunction() {
+        using namespace std::placeholders;
+        switch (method) {
+            case ECompressMethod::Zlib:
+                return std::bind(&SDecompressZlib::doDecompress, &zlib, _1, _2, _3, _4);
+            case ECompressMethod::Lzo:
+                return std::bind(&SDecompressLzo::doDecompress, &lzo, _1, _2, _3, _4);
+            case ECompressMethod::Lz4:
+                return std::bind(&SDecompressLz4::doDecompress, &lz4, _1, _2, _3, _4);
+            default:
+                return CompressFun_T();
+        }
+    }
+};
 
 FORCEINLINE uint32_t Uint32Hash(uint32_t value, uint32_t hash = 0) {
     // BKDR Hash Function
@@ -210,6 +270,7 @@ Loader::~Loader() {
 
 void Loader::load(Archive& ar) {
     ThreadData thread;
+    SDecompress decompress(ar.getCompressMethod());
     ar << thread._secondsPerCycle;
     thread._maxCycleCount = 0;
     while (!ar.eof() && !ar.hasError()) {
@@ -227,9 +288,9 @@ void Loader::load(Archive& ar) {
                 ar.serialize(data._nodes, remainSize);
             } else if (ar.version() == EVersion::V2) {
                 bool hasError = false;
-                Bytef* buf = NULL;
+                uint8_t* buf = NULL;
                 size_t bufSize = 0;
-                Bytef* cur = (Bytef*)data._nodes;
+                uint8_t* cur = (uint8_t*)data._nodes;
                 while (!ar.hasError()) {
                     uint32_t sizeOrg = 0, sizeCom = 0;
                     ar << sizeOrg;
@@ -249,14 +310,14 @@ void Loader::load(Archive& ar) {
                             }
                         } else {
                             bufSize = sizeOrg;
-                            buf = (Bytef*)malloc(bufSize);
+                            buf = (uint8_t*)malloc(bufSize);
                         }
                         ar.serialize(buf, sizeCom);
                         if (ar.hasError()) {
                             break;
                         }
-                        uLong destLen = sizeOrg;
-                        if (Z_OK != uncompress(cur, &destLen, buf, sizeCom) || destLen != sizeOrg) {
+                        size_t destLen = decompress(cur, sizeOrg, buf, sizeCom);
+                        if (destLen != sizeOrg) {
                             hasError = true;
                             break;
                         }

@@ -2,6 +2,14 @@
 #ifndef xxprofile_version_h
 #define xxprofile_version_h
 
+#define XXCOMPRESS_ZLIB 0
+#define XXCOMPRESS_LZO 1
+#define XXCOMPRESS_LZ4 2
+
+#define XXCOMPRESS_NOW XXCOMPRESS_LZ4
+
+#define XXISCOMPRESS(x) (XXCOMPRESS_NOW == XXCOMPRESS_##x)
+
 XX_NAMESPACE_BEGIN(xxprofile);
 
 struct EVersion {
@@ -17,9 +25,11 @@ struct EVersion {
 
 struct ECompressMethod {
     enum Enum {
-        Zlib = 0,
-        Lzo = 1,
-        Lz4 = 2,
+        Zlib = XXCOMPRESS_ZLIB,
+        Lzo = XXCOMPRESS_LZO,
+        Lz4 = XXCOMPRESS_LZ4,
+        
+        NOW = XXCOMPRESS_NOW,
     };
 };
 

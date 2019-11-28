@@ -6,11 +6,64 @@
 #include <assert.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <zlib.h>
+
+#if XXISCOMPRESS(ZLIB)
+#  include "compress/compress_zlib.cpp.h"
+#elif XXISCOMPRESS(LZO)
+#  include "compress/compress_lzo.cpp.h"
+#elif XXISCOMPRESS(LZ4)
+#  include "compress/compress_lz4.cpp.h"
+#else
+#  error compress method
+#endif//
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
+#if XXISCOMPRESS(ZLIB)
+typedef SCompressZlib SCompress;
+#elif XXISCOMPRESS(LZO)
+typedef SCompressLzo SCompress;
+#elif XXISCOMPRESS(LZ4)
+typedef SCompressLz4 SCompress;
+#else
+#  error compress method
+#endif//
+
 static std::atomic<uint32_t> g_frameId;
+
+// SharedArchive
+SharedArchive::SharedArchive(const char* path) {
+    _archive.setVersion(EVersion::NOW);
+    _archive.setCompressMethod(ECompressMethod::NOW);
+    _compressBufferSize = SCompress::CalcCompressedSize(XXProfileTLS::ChunkByteSize);
+    _compressBuffer = malloc(_compressBufferSize);
+
+    _archive.open(path, true);
+    Timer::InitTiming();
+    double secondsPerCycle = Timer::GetSecondsPerCycle();
+    _archive << secondsPerCycle;
+}
+
+SharedArchive::~SharedArchive() {
+    _archive.close();
+    
+    free(_compressBuffer);
+}
+
+int SharedArchive::addRef() {
+    const int ref = _refCount.fetch_add(1);
+    assert(ref > 0);
+    return ref + 1;
+}
+
+int SharedArchive::release() {
+    const int ref = _refCount.fetch_sub(1) - 1;
+    assert(ref >= 0);
+    if (ref == 0) {
+        delete this;
+    }
+    return ref;
+}
 
 // XXProfileTLS
 void* XXProfileTLS::operator new(size_t size) {
@@ -22,23 +75,16 @@ void XXProfileTLS::operator delete(void* p) {
     free(p);
 }
 
-XXProfileTLS::XXProfileTLS(const char* path) {
+XXProfileTLS::XXProfileTLS(SharedArchive* ar) {
     _threadId = systemGetTid();
     printf("Thread %d begin profile\n", _threadId);
-
-    char name[PATH_MAX];
-    sprintf(name, "%sThread_%d.xxprofile", path, _threadId);
-    _ar.setVersion(EVersion::V2);
-    _ar.open(name, true);
-
-    double secondsPerCycle = Timer::GetSecondsPerCycle();
-    _ar << secondsPerCycle;
+    assert(ar);
+    ar->addRef();
+    _sharedAr = ar;
 
     _stack.reserve(100);
     _buffers.reserve(10);
     _freeBuffers.reserve(10);
-
-    _compressedBuf = (unsigned char*)newChunk();
 }
 
 XXProfileTLS::~XXProfileTLS() {
@@ -50,14 +96,9 @@ XXProfileTLS::~XXProfileTLS() {
         free(*iter);
     }
     _freeBuffers.clear();
-    _ar.close();
-
-    if (_compressedBuf) {
-        free(_compressedBuf);
-        _compressedBuf = NULL;
-    }
 
     printf("Thread %d end profile\n", _threadId);
+    _sharedAr->release();
 }
 
 XXProfileTreeNode* XXProfileTLS::beginScope(SName name) {
@@ -124,37 +165,43 @@ void XXProfileTLS::tryFrameFlush() {
 // uint32_t nodeCount;
 // XXProfileTreeNode nodes[nodeCount];
 void XXProfileTLS::frameFlush() {
-    _ar << _frameId;
+    std::unique_lock<std::mutex> lock(_sharedAr->lock());
+    Archive& ar = _sharedAr->archive();
+    ar << _threadId;
+    ar << _frameId;
     XXLOG_DEBUG("frameFlush:frame %d\n", _frameId);
-    SName::Serialize(&_tag, _ar);
+    SName::Serialize(&_tag, ar);
     uint32_t nodeCount = (uint32_t)_buffers.size();
     if (nodeCount) {
         nodeCount = (nodeCount - 1) * ChunkNodeCount + _usedCount;
     }
-    _ar << nodeCount;
+    ar << nodeCount;
     XXLOG_DEBUG("  nodeCount %d\n", nodeCount);
+    void* compressBuffer = _sharedAr->compressBuffer();
+    const size_t compressBufferSize = _sharedAr->compressBufferSize();
+    SCompress compress;
     for (auto iter = _buffers.begin(); iter != _buffers.end(); ++iter) {
         XXProfileTreeNode* buffer = *iter;
         const size_t count = (buffer != _currentBuffer) ? ChunkNodeCount : _usedCount;
         uint32_t sizeOrg = (uint32_t)(count * sizeof(XXProfileTreeNode));
-        uLongf compressedSize = sizeOrg;
+        const size_t compressedSize = compress.doCompress(compressBuffer, compressBufferSize, buffer, sizeOrg);
         uint32_t sizeCom = 0;
-        if (Z_OK == compress2((Bytef*)_compressedBuf, &compressedSize, (const Bytef*)buffer, compressedSize, 1)) {
+        if (compressedSize && compressedSize < sizeOrg) {
             sizeCom = (uint32_t)compressedSize;
         } else {
             assert(false);
         }
-        _ar << sizeOrg;
-        _ar << sizeCom;
+        ar << sizeOrg;
+        ar << sizeCom;
         if (sizeCom) {
-            _ar.serialize(_compressedBuf, sizeCom);
+            ar.serialize(compressBuffer, sizeCom);
         } else {
-            _ar.serialize(buffer, sizeOrg);
+            ar.serialize(buffer, sizeOrg);
         }
         //memset(buffer, 0, sizeOrg);
         _freeBuffers.push_back(buffer);
     }
-    _ar.flush();
+    ar.flush();
 
     // reset
     _usedCount = 0;

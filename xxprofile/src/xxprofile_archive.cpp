@@ -1,3 +1,4 @@
+// Copyright 2017-2019 bianchui. All rights reserved.
 #include "xxprofile_internal.hpp"
 #include "xxprofile_archive.hpp"
 #include <assert.h>
@@ -11,7 +12,6 @@ XX_NAMESPACE_BEGIN(xxprofile);
 
 Archive::Archive() {
     memset(this, 0, sizeof(Archive));
-    _version = 1;
 }
 
 Archive::~Archive() {

@@ -2,12 +2,24 @@
 #ifndef tests_tls_test_hpp
 #define tests_tls_test_hpp
 #include <shared/SharedMacros.h>
+#include <shared/platforms/Platform.h>
 #include <shared/time_conv.h>
 #include <pthread.h>
 #include <thread>
 
 NAMESPACE_BEGIN(test);
 
+class ThreadLocalObject {
+public:
+    ThreadLocalObject() {
+        printf("%d: ABC\n", shared::platformGetTid());
+    }
+    ~ThreadLocalObject() {
+        printf("%d: ~ABC\n", shared::platformGetTid());
+    }
+};
+
+static thread_local ThreadLocalObject g_threadLocal;
 static thread_local int g_test_tls_test = 0;
 static volatile int g_add = 1;
 static pthread_key_t g_key;

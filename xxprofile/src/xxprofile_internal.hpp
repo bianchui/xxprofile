@@ -1,4 +1,4 @@
-// Copyright 2018 bianchui. All rights reserved.
+// Copyright 2017-2019 bianchui. All rights reserved.
 #ifndef xxprofile_internal_h
 #define xxprofile_internal_h
 

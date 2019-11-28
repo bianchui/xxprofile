@@ -10,11 +10,33 @@
 #include <unistd.h>
 #include <sys/syscall.h>
 #include <sys/types.h>
+#import <Foundation/Foundation.h>
+#include <string>
+#include <dlfcn.h>
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
 uint32_t systemGetTid() {
     return ::syscall(SYS_thread_selfid);
+}
+
+std::string systemGetAppName() {
+    std::string strRet;
+    NSString *name = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleIdentifierKey];
+    if (name != nil) {
+        strRet = [name UTF8String];
+    } else {
+        static int value_ = 0;
+        Dl_info info;
+        dladdr(&value_, &info);
+        const char* fname = strrchr(info.dli_fname, '/');
+        if (fname) {
+            strRet.assign(fname + 1);
+        } else {
+            strRet = info.dli_fname;
+        }
+    }
+    return strRet;
 }
 
 double Timer_apple::InitTiming(void) {

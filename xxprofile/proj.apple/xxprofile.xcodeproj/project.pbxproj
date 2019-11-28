@@ -76,6 +76,8 @@
 		86335013237BEFFA004F01C9 /* lzo_str.c in Sources */ = {isa = PBXBuildFile; fileRef = 86334F58237BEFFA004F01C9 /* lzo_str.c */; };
 		86335014237BEFFA004F01C9 /* lzo_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 86334F5B237BEFFA004F01C9 /* lzo_util.c */; };
 		86335019237BF168004F01C9 /* lz4.c in Sources */ = {isa = PBXBuildFile; fileRef = 86334DAF237BEFF9004F01C9 /* lz4.c */; };
+		868231EE238F91A500B5A1CD /* lz4hc.c in Sources */ = {isa = PBXBuildFile; fileRef = 868231ED238F91A500B5A1CD /* lz4hc.c */; };
+		868231EF238F91A500B5A1CD /* lz4hc.c in Sources */ = {isa = PBXBuildFile; fileRef = 868231ED238F91A500B5A1CD /* lz4hc.c */; };
 		86A573362379710E007B1437 /* Platform_macos.mm in Sources */ = {isa = PBXBuildFile; fileRef = 86A573182379710E007B1437 /* Platform_macos.mm */; };
 		86A573412379711A007B1437 /* Platform_ios.mm in Sources */ = {isa = PBXBuildFile; fileRef = 86A573162379710E007B1437 /* Platform_ios.mm */; };
 		ED22005920E1D76F0076C22F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = ED22005820E1D76F0076C22F /* main.m */; };
@@ -91,7 +93,7 @@
 		ED2207E120E2500D0076C22F /* mainwin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2207DE20E2500D0076C22F /* mainwin.cpp */; };
 		ED336CF620E4C2BD0085BF34 /* FramesLineView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED336CF420E4C2BD0085BF34 /* FramesLineView.cpp */; };
 		ED5F73081FCD46C3004E945D /* xxprofile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73011FCD46C3004E945D /* xxprofile.cpp */; };
-		ED5F730A1FCD46C3004E945D /* platform_apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73031FCD46C3004E945D /* platform_apple.cpp */; };
+		ED5F730A1FCD46C3004E945D /* platform_apple.mm in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73031FCD46C3004E945D /* platform_apple.mm */; };
 		ED5F730C1FCD46C3004E945D /* platform_base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73051FCD46C3004E945D /* platform_base.cpp */; };
 		ED5F73101FCD49F1004E945D /* xxprofile_name.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F730E1FCD49F1004E945D /* xxprofile_name.cpp */; };
 		ED6A3CF320DB87A6002A47A8 /* xxprofile_tls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED6A3CF120DB87A6002A47A8 /* xxprofile_tls.cpp */; };
@@ -120,7 +122,7 @@
 		ED94982A20EE15EC00FA04D0 /* apple_mac_WritablePath.mm in Sources */ = {isa = PBXBuildFile; fileRef = ED94982820EE15E300FA04D0 /* apple_mac_WritablePath.mm */; };
 		ED94983220EE19B700FA04D0 /* apple_ios_WritablePath.mm in Sources */ = {isa = PBXBuildFile; fileRef = ED94983020EE19B300FA04D0 /* apple_ios_WritablePath.mm */; };
 		ED94983820EE27D500FA04D0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED94983420EE1C3400FA04D0 /* Foundation.framework */; };
-		ED97396220D8F5B10067B5D9 /* platform_apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73031FCD46C3004E945D /* platform_apple.cpp */; };
+		ED97396220D8F5B10067B5D9 /* platform_apple.mm in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73031FCD46C3004E945D /* platform_apple.mm */; };
 		ED97396320D8F5B10067B5D9 /* platform_base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73051FCD46C3004E945D /* platform_base.cpp */; };
 		ED97396420D8F5B10067B5D9 /* xxprofile_archive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED81D19F20D374B40096FB53 /* xxprofile_archive.cpp */; };
 		ED97396520D8F5B10067B5D9 /* xxprofile_name.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F730E1FCD49F1004E945D /* xxprofile_name.cpp */; };
@@ -293,6 +295,11 @@
 		86334F5E237BEFFA004F01C9 /* stats1c.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stats1c.h; sourceTree = "<group>"; };
 		864D1276237B952400112D05 /* xxprofile_version.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_version.hpp; sourceTree = "<group>"; };
 		864D127A237B967900112D05 /* xxprofile.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = xxprofile.hpp; sourceTree = "<group>"; };
+		868231E9238B8C7B00B5A1CD /* compress_zlib.cpp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = compress_zlib.cpp.h; sourceTree = "<group>"; };
+		868231EA238E317B00B5A1CD /* compress_lzo.cpp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = compress_lzo.cpp.h; sourceTree = "<group>"; };
+		868231EB238E332900B5A1CD /* compress_lz4.cpp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = compress_lz4.cpp.h; sourceTree = "<group>"; };
+		868231EC238F91A500B5A1CD /* lz4hc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lz4hc.h; sourceTree = "<group>"; };
+		868231ED238F91A500B5A1CD /* lz4hc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lz4hc.c; sourceTree = "<group>"; };
 		86A572BE2378FF74007B1437 /* tls_test.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = tls_test.hpp; sourceTree = "<group>"; };
 		86A572E3237901E7007B1437 /* SharedMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedMacros.h; sourceTree = "<group>"; };
 		86A5731123790406007B1437 /* time_conv.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = time_conv.h; sourceTree = "<group>"; };
@@ -326,7 +333,7 @@
 		ED5F73001FCD46C3004E945D /* platform.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = platform.hpp; sourceTree = "<group>"; };
 		ED5F73011FCD46C3004E945D /* xxprofile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xxprofile.cpp; sourceTree = "<group>"; };
 		ED5F73021FCD46C3004E945D /* xxprofile.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xxprofile.hpp; sourceTree = "<group>"; };
-		ED5F73031FCD46C3004E945D /* platform_apple.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = platform_apple.cpp; sourceTree = "<group>"; };
+		ED5F73031FCD46C3004E945D /* platform_apple.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = platform_apple.mm; sourceTree = "<group>"; };
 		ED5F73051FCD46C3004E945D /* platform_base.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = platform_base.cpp; sourceTree = "<group>"; };
 		ED5F73061FCD46C3004E945D /* platform_base.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = platform_base.hpp; sourceTree = "<group>"; };
 		ED5F730E1FCD49F1004E945D /* xxprofile_name.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xxprofile_name.cpp; sourceTree = "<group>"; };
@@ -453,6 +460,8 @@
 		86334DA4237BEFF9004F01C9 /* lib */ = {
 			isa = PBXGroup;
 			children = (
+				868231ED238F91A500B5A1CD /* lz4hc.c */,
+				868231EC238F91A500B5A1CD /* lz4hc.h */,
 				86334DAF237BEFF9004F01C9 /* lz4.c */,
 				86334DB0237BEFF9004F01C9 /* lz4.h */,
 			);
@@ -629,6 +638,16 @@
 			path = xxprofile;
 			sourceTree = "<group>";
 		};
+		868231E8238B8C3400B5A1CD /* compress */ = {
+			isa = PBXGroup;
+			children = (
+				868231E9238B8C7B00B5A1CD /* compress_zlib.cpp.h */,
+				868231EA238E317B00B5A1CD /* compress_lzo.cpp.h */,
+				868231EB238E332900B5A1CD /* compress_lz4.cpp.h */,
+			);
+			path = compress;
+			sourceTree = "<group>";
+		};
 		86A572BB2378FF5F007B1437 /* tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -754,6 +773,7 @@
 		ED5F72FE1FCD46C3004E945D /* src */ = {
 			isa = PBXGroup;
 			children = (
+				868231E8238B8C3400B5A1CD /* compress */,
 				ED5F72FF1FCD46C3004E945D /* platforms */,
 				ED81D19F20D374B40096FB53 /* xxprofile_archive.cpp */,
 				ED81D1A020D374B40096FB53 /* xxprofile_archive.hpp */,
@@ -779,7 +799,7 @@
 				ED94982720EE15E300FA04D0 /* apple */,
 				ED81D19E20D368D50096FB53 /* posix */,
 				ED642F151FCE506C0067CEA4 /* platform_apple.hpp */,
-				ED5F73031FCD46C3004E945D /* platform_apple.cpp */,
+				ED5F73031FCD46C3004E945D /* platform_apple.mm */,
 				ED5F73061FCD46C3004E945D /* platform_base.hpp */,
 				ED5F73051FCD46C3004E945D /* platform_base.cpp */,
 				ED5F73001FCD46C3004E945D /* platform.hpp */,
@@ -1166,6 +1186,7 @@
 				86334FF5237BEFFA004F01C9 /* lzo1c_xx.c in Sources */,
 				86335003237BEFFA004F01C9 /* lzo1y_1.c in Sources */,
 				86335005237BEFFA004F01C9 /* lzo1y_d1.c in Sources */,
+				868231EE238F91A500B5A1CD /* lz4hc.c in Sources */,
 				ED94982A20EE15EC00FA04D0 /* apple_mac_WritablePath.mm in Sources */,
 				86335001237BEFFA004F01C9 /* lzo1x_d3.c in Sources */,
 				86334FF4237BEFFA004F01C9 /* lzo1c_rr.c in Sources */,
@@ -1210,7 +1231,7 @@
 				86334FE5237BEFFA004F01C9 /* lzo1b_xx.c in Sources */,
 				86334FEB237BEFFA004F01C9 /* lzo1c_6.c in Sources */,
 				86334FFB237BEFFA004F01C9 /* lzo1x_1k.c in Sources */,
-				ED5F730A1FCD46C3004E945D /* platform_apple.cpp in Sources */,
+				ED5F730A1FCD46C3004E945D /* platform_apple.mm in Sources */,
 				8633500E237BEFFA004F01C9 /* lzo2a_d1.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1221,10 +1242,11 @@
 			files = (
 				86335019237BF168004F01C9 /* lz4.c in Sources */,
 				ED94983220EE19B700FA04D0 /* apple_ios_WritablePath.mm in Sources */,
-				ED97396220D8F5B10067B5D9 /* platform_apple.cpp in Sources */,
+				ED97396220D8F5B10067B5D9 /* platform_apple.mm in Sources */,
 				ED6A3CF420DB87A6002A47A8 /* xxprofile_tls.cpp in Sources */,
 				ED97396320D8F5B10067B5D9 /* platform_base.cpp in Sources */,
 				ED97396420D8F5B10067B5D9 /* xxprofile_archive.cpp in Sources */,
+				868231EF238F91A500B5A1CD /* lz4hc.c in Sources */,
 				ED97396520D8F5B10067B5D9 /* xxprofile_name.cpp in Sources */,
 				ED97396620D8F5B10067B5D9 /* xxprofile.cpp in Sources */,
 			);
@@ -1276,7 +1298,10 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = GJ7WKUP5MK;
-				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"XXPROFILE_HAS_DECOMPRESS=1",
+					"$(inherited)",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../libs/imgui-1.62/",
 					"$(SRCROOT)/../../libs/imgui-1.62/examples/",
@@ -1298,7 +1323,10 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = GJ7WKUP5MK;
-				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"XXPROFILE_HAS_DECOMPRESS=1",
+					"$(inherited)",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../libs/imgui-1.62/",
 					"$(SRCROOT)/../../libs/imgui-1.62/examples/",
@@ -1484,7 +1512,10 @@
 					"$(inherited)",
 				);
 				GCC_THREADSAFE_STATICS = NO;
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../libs/lzo-2.10/include";
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../libs/lzo-2.10/include",
+					"$(SRCROOT)/../../",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1502,7 +1533,10 @@
 					"$(inherited)",
 				);
 				GCC_THREADSAFE_STATICS = NO;
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../libs/lzo-2.10/include";
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../libs/lzo-2.10/include",
+					"$(SRCROOT)/../../",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1518,7 +1552,10 @@
 					"$(inherited)",
 				);
 				GCC_THREADSAFE_STATICS = NO;
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../libs/lzo-2.10/include";
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../libs/lzo-2.10/include",
+					"$(SRCROOT)/../../",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1540,7 +1577,10 @@
 					"$(inherited)",
 				);
 				GCC_THREADSAFE_STATICS = NO;
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../libs/lzo-2.10/include";
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../libs/lzo-2.10/include",
+					"$(SRCROOT)/../../",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";

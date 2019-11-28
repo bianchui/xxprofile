@@ -414,6 +414,15 @@ void test_threads() {
 
 #include "tests/tls_test.hpp"
 
+// test result
+// 1000000 cycles
+//       |    1     |   1  |    5     |   5  |    9     |   9  |
+// ------|----------|------|----------|------|----------|------|
+// zlib: | 11291975 | 106M | 16611342 | 100M | 32523920 | 100M |
+// lzo:  |          |      |          |      |          |      |
+// lz4:  |  2921585 | 178M |  2247653 | 182M |  2676296 | 195M |
+// lz4hc:|  4684854 | 164M |  5630633 | 164M |  6930826 | 163M |
+
 int main(int argc, const char * argv[]) {
     test::test_tls_thread_local();
     test::test_tls_pthread();

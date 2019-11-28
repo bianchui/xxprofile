@@ -4,21 +4,55 @@
 #include "xxprofile.hpp"
 #include "xxprofile_archive.hpp"
 #include <vector>
+#include <mutex>
 #include "xxprofile_data.hpp"
 
 XX_NAMESPACE_BEGIN(xxprofile);
+
+class SharedArchive {
+public:
+    SharedArchive(const char* path);
+    ~SharedArchive();
+    
+    int addRef();
+    int release();
+    
+    void* compressBuffer() {
+        return _compressBuffer;
+    }
+    
+    size_t compressBufferSize() const {
+        return _compressBufferSize;
+    }
+    
+    std::mutex& lock() {
+        return _mutex;
+    }
+    
+    Archive& archive() {
+        return _archive;
+    }
+    
+private:
+    Archive _archive;
+    std::mutex _mutex;
+    std::atomic_int _refCount;
+    void* _compressBuffer;
+    size_t _compressBufferSize;
+};
 
 // XXProfileTLS
 class XXProfileTLS : public XXProfile {
 public:
     enum {
         ChunkNodeCount = 32 * 1024,
+        ChunkByteSize = ChunkNodeCount * sizeof(XXProfileTreeNode),
     };
 
     static XXProfileTLS* Get();
 
 public:
-    XXProfileTLS(const char* path);
+    explicit XXProfileTLS(SharedArchive* ar);
     ~XXProfileTLS();
 
     bool increaseFrame();
@@ -40,13 +74,13 @@ private:
         uint32_t nodeId;
     };
     std::vector<StackFrame> _stack;
-    unsigned char* _compressedBuf;
     uint32_t _frameId;
     uint32_t _usedCount;
     uint32_t _threadId;
     uint32_t _curNodeId;
     SName::IncrementSerializeTag _tag;
-    Archive _ar;
+   
+    SharedArchive* _sharedAr;
 
     // allocation
 private:

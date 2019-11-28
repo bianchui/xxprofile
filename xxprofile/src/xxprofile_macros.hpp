@@ -1,4 +1,4 @@
-// Copyright 2017 bianchui. All rights reserved.
+// Copyright 2017-2019 bianchui. All rights reserved.
 #ifndef xxprofile_macros_hpp
 #define xxprofile_macros_hpp
 #include <stdint.h>
