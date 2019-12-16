@@ -7,11 +7,11 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-#if XXISCOMPRESS(ZLIB)
+#if XX_IsCompress(ZLIB)
 #  include "compress/compress_zlib.cpp.h"
-#elif XXISCOMPRESS(LZO)
+#elif XX_IsCompress(LZO)
 #  include "compress/compress_lzo.cpp.h"
-#elif XXISCOMPRESS(LZ4)
+#elif XX_IsCompress(LZ4)
 #  include "compress/compress_lz4.cpp.h"
 #else
 #  error compress method
@@ -19,11 +19,11 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
-#if XXISCOMPRESS(ZLIB)
+#if XX_IsCompress(ZLIB)
 typedef SCompressZlib SCompress;
-#elif XXISCOMPRESS(LZO)
+#elif XX_IsCompress(LZO)
 typedef SCompressLzo SCompress;
-#elif XXISCOMPRESS(LZ4)
+#elif XX_IsCompress(LZ4)
 typedef SCompressLz4 SCompress;
 #else
 #  error compress method
@@ -160,6 +160,7 @@ void XXProfileTLS::tryFrameFlush() {
     }
 }
 
+// uint32_t threadId; // from version 3
 // uint32_t frameId;
 // SName::Serialize();
 // uint32_t nodeCount;

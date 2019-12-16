@@ -21,6 +21,7 @@ static ThreadLocal<XXProfileTLS> g_profile_tls;
 static SharedArchive* g_archive;
 
 static void StaticDeleteGArchive() {
+    std::unique_lock<std::mutex> lock(g_mutex);
     if (g_archive) {
         g_archive->release();
         g_archive = NULL;

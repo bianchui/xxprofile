@@ -1,6 +1,6 @@
 #!/bin/bash
 readonly ANDROID_SDK_ROOT=/Library/Java/android-sdk-macosx
-readonly ANDROID_NDK_ROOT=/Library/Java/android-sdk-macosx/ndk/20.0.5594570
+readonly ANDROID_NDK_ROOT=/Library/Java/android-ndk-r12b
 readonly THIS_DIR="$( cd "$(dirname "$0")" ; pwd -P )"
 
 readonly NDK_BUILD_COMMAND=${ANDROID_NDK_ROOT}/ndk-build

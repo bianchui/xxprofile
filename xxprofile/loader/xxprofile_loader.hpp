@@ -170,9 +170,11 @@ private:
 
 struct ThreadData {
     std::vector<FrameData> _frames;
+    uint32_t _threadId;
     uint64_t _maxCycleCount;
     double _secondsPerCycle;
     ThreadData() {
+        _threadId = 0;
         _maxCycleCount = 0;
         _secondsPerCycle = 0;
     }
@@ -181,12 +183,14 @@ struct ThreadData {
     void clear();
 
     ThreadData(ThreadData&& other) : _frames(std::move(other._frames)) {
+        _threadId = other._threadId;
         _maxCycleCount = other._maxCycleCount;
         _secondsPerCycle = other._secondsPerCycle;
     }
 
     void swap(ThreadData& other) {
         _frames.swap(other._frames);
+        std::swap(_threadId, other._threadId);
         std::swap(_maxCycleCount, other._maxCycleCount);
         std::swap(_secondsPerCycle, other._secondsPerCycle);
     }
@@ -196,6 +200,7 @@ private:
     XX_CLASS_DELETE_MOVE_ASSIGN(ThreadData);
 };
 
+// uint32_t threadId; // from version 3
 // uint32_t frameId;
 // SName::Serialize();
 // uint32_t nodeCount;
@@ -204,6 +209,7 @@ struct Loader {
     std::vector<ThreadData> _threads;
     SNamePool _namePool;
     std::vector<const char*> _names;
+    double _secondsPerCycle;
 
     Loader();
     ~Loader();
@@ -214,6 +220,7 @@ struct Loader {
     const char* name(SName name);
 
 protected:
+    ThreadData& getThreadFromId(uint32_t threadId);
     static const char* prepareName(const char* name);
 };
 

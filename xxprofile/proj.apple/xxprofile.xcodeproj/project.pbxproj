@@ -79,7 +79,6 @@
 		868231EE238F91A500B5A1CD /* lz4hc.c in Sources */ = {isa = PBXBuildFile; fileRef = 868231ED238F91A500B5A1CD /* lz4hc.c */; };
 		868231EF238F91A500B5A1CD /* lz4hc.c in Sources */ = {isa = PBXBuildFile; fileRef = 868231ED238F91A500B5A1CD /* lz4hc.c */; };
 		86A573362379710E007B1437 /* Platform_macos.mm in Sources */ = {isa = PBXBuildFile; fileRef = 86A573182379710E007B1437 /* Platform_macos.mm */; };
-		86A573412379711A007B1437 /* Platform_ios.mm in Sources */ = {isa = PBXBuildFile; fileRef = 86A573162379710E007B1437 /* Platform_ios.mm */; };
 		ED22005920E1D76F0076C22F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = ED22005820E1D76F0076C22F /* main.m */; };
 		ED22005C20E1D76F0076C22F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED22005B20E1D76F0076C22F /* ViewController.m */; };
 		ED22006120E1D76F0076C22F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ED22006020E1D76F0076C22F /* Assets.xcassets */; };
@@ -1031,7 +1030,7 @@
 					};
 					ED7744CC20EF4BC4002B0578 = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = PEZE6XWYTJ;
+						DevelopmentTeam = GJ7WKUP5MK;
 						ProvisioningStyle = Automatic;
 					};
 					ED81D1A620D37C2C0096FB53 = {
@@ -1135,7 +1134,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				86A573412379711A007B1437 /* Platform_ios.mm in Sources */,
 				ED7744E220EF4BC4002B0578 /* GameViewController.mm in Sources */,
 				ED7744DC20EF4BC4002B0578 /* AppDelegate.mm in Sources */,
 				ED7744D920EF4BC4002B0578 /* main.m in Sources */,
@@ -1306,6 +1304,7 @@
 					"$(SRCROOT)/../../libs/imgui-1.62/",
 					"$(SRCROOT)/../../libs/imgui-1.62/examples/",
 					"$(SRCROOT)/../../libs/glfw-3.2.1/include/",
+					"$(SRCROOT)/../../libs/lzo-2.10/include",
 					"$(SRCROOT)/../../",
 				);
 				INFOPLIST_FILE = xxprofileViewer/Info.plist;
@@ -1331,6 +1330,7 @@
 					"$(SRCROOT)/../../libs/imgui-1.62/",
 					"$(SRCROOT)/../../libs/imgui-1.62/examples/",
 					"$(SRCROOT)/../../libs/glfw-3.2.1/include/",
+					"$(SRCROOT)/../../libs/lzo-2.10/include",
 					"$(SRCROOT)/../../",
 				);
 				INFOPLIST_FILE = xxprofileViewer/Info.plist;
@@ -1345,7 +1345,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = PEZE6XWYTJ;
+				DEVELOPMENT_TEAM = GJ7WKUP5MK;
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				INFOPLIST_FILE = test_ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
@@ -1362,7 +1362,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = PEZE6XWYTJ;
+				DEVELOPMENT_TEAM = GJ7WKUP5MK;
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				INFOPLIST_FILE = test_ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;

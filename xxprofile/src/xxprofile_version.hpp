@@ -8,7 +8,7 @@
 
 #define XXCOMPRESS_NOW XXCOMPRESS_LZ4
 
-#define XXISCOMPRESS(x) (XXCOMPRESS_NOW == XXCOMPRESS_##x)
+#define XX_IsCompress(x) (XXCOMPRESS_NOW == XXCOMPRESS_##x)
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
@@ -19,7 +19,7 @@ struct EVersion {
         V2 = 2,
         V3 = 3,
         
-        NOW = V2,
+        NOW = V3,
     };
 };
 

@@ -36,7 +36,7 @@ public:
 private:
     Archive _archive;
     std::mutex _mutex;
-    std::atomic_int _refCount;
+    std::atomic_int _refCount = ATOMIC_VAR_INIT(1);
     void* _compressBuffer;
     size_t _compressBufferSize;
 };

@@ -14,26 +14,27 @@ XX_NAMESPACE_BEGIN(xxprofile);
 struct SDecompress {
     typedef std::function<size_t (void*, size_t, const void*, size_t)> CompressFun_T;
 
-    SDecompressZlib zlib;
-    SDecompressLzo lzo;
-    SDecompressLz4 lz4;
-    uint32_t method;
+    SDecompressZlib _zlib;
+    SDecompressLzo _lzo;
+    SDecompressLz4 _lz4;
+    uint32_t _method;
     CompressFun_T _decompress;
 
     SDecompress(uint32_t method) {
+        _method = method;
         _decompress = decompressFunction();
     }
     
     size_t decompress1(void* dst, size_t dstSize, const void* src, size_t srcSize) {
-        switch (method) {
+        switch (_method) {
             case ECompressMethod::Zlib:
-                return zlib.doDecompress(dst, dstSize, src, srcSize);
+                return _zlib.doDecompress(dst, dstSize, src, srcSize);
 
             case ECompressMethod::Lzo:
-                return lzo.doDecompress(dst, dstSize, src, srcSize);
+                return _lzo.doDecompress(dst, dstSize, src, srcSize);
 
             case ECompressMethod::Lz4:
-                return lz4.doDecompress(dst, dstSize, src, srcSize);
+                return _lz4.doDecompress(dst, dstSize, src, srcSize);
 
             default:
                 return 0;
@@ -54,13 +55,13 @@ struct SDecompress {
 
     CompressFun_T decompressFunction() {
         using namespace std::placeholders;
-        switch (method) {
+        switch (_method) {
             case ECompressMethod::Zlib:
-                return std::bind(&SDecompressZlib::doDecompress, &zlib, _1, _2, _3, _4);
+                return std::bind(&SDecompressZlib::doDecompress, &_zlib, _1, _2, _3, _4);
             case ECompressMethod::Lzo:
-                return std::bind(&SDecompressLzo::doDecompress, &lzo, _1, _2, _3, _4);
+                return std::bind(&SDecompressLzo::doDecompress, &_lzo, _1, _2, _3, _4);
             case ECompressMethod::Lz4:
-                return std::bind(&SDecompressLz4::doDecompress, &lz4, _1, _2, _3, _4);
+                return std::bind(&SDecompressLz4::doDecompress, &_lz4, _1, _2, _3, _4);
             default:
                 return CompressFun_T();
         }
@@ -268,15 +269,38 @@ Loader::~Loader() {
     clear();
 }
 
+ThreadData& Loader::getThreadFromId(uint32_t threadId) {
+    for (auto iter = _threads.begin(), end = _threads.end(); iter != end; ++iter) {
+        if (iter->_threadId == threadId) {
+            return *iter;
+        }
+    }
+    {
+        size_t index = _threads.size();
+        _threads.resize(index + 1);
+        ThreadData& thread = _threads[index];
+        thread._threadId = threadId;
+        thread._secondsPerCycle = this->_secondsPerCycle;
+        thread._maxCycleCount = 0;
+        return thread;
+    }
+}
+
 void Loader::load(Archive& ar) {
-    ThreadData thread;
     SDecompress decompress(ar.getCompressMethod());
-    ar << thread._secondsPerCycle;
-    thread._maxCycleCount = 0;
+    ar << this->_secondsPerCycle;
+    uint32_t threadId = 0;
     while (!ar.eof() && !ar.hasError()) {
+        if (ar.version() >= EVersion::V3) {
+            ar << threadId;
+            if (ar.eof() || ar.hasError()) {
+                break;
+            }
+        }
+        ThreadData& thread = getThreadFromId(threadId);
         FrameData data;
         ar << data._frameId;
-        XXLOG_DEBUG("Load.frame(%d)\n", data._frameId);
+        XXLOG_DEBUG("Load.frame(%d) for thread(%d)\n", data._frameId, threadId);
         _namePool.serialize(NULL, ar);
         ar << data._nodeCount;
         XXLOG_DEBUG("  nodeCount = %d\n", data._nodeCount);
@@ -286,7 +310,7 @@ void Loader::load(Archive& ar) {
             memset(data._nodes, 0, remainSize);
             if (ar.version() == EVersion::V1) {
                 ar.serialize(data._nodes, remainSize);
-            } else if (ar.version() == EVersion::V2) {
+            } else if (ar.version() >= EVersion::V2) {
                 bool hasError = false;
                 uint8_t* buf = NULL;
                 size_t bufSize = 0;
@@ -347,7 +371,6 @@ void Loader::load(Archive& ar) {
         }
         thread._frames.push_back(std::move(data));
     }
-    _threads.push_back(std::move(thread));
 }
 
 void Loader::clear() {
