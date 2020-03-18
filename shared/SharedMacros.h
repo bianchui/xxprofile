@@ -100,4 +100,10 @@
 
 #endif
 
+#ifdef __cplusplus
+#  define C_EXTERN_C extern "C"
+#else
+#  define C_EXTERN_C extern
+#endif
+
 #endif//__shared_SharedMacros_h__

@@ -53,6 +53,12 @@ const char* platformAbiName();
 void platformSetThreadName(const char* name);
 bool platformIsDebugable();
 
+#if defined(__x86_64__) || defined(_M_X64) || PLATFORM_IS_TARGET(WINDOWS) || defined(__aarch64__)
+# define PRItime_t PRIi64
+#elif defined(__i386) || defined(_M_IX86) || defined(__arm__)
+# define PRItime_t PRIi32
+#endif
+
 SHARED_NAMESPACE_END;
 
 #endif//shared_platforms_Platform_h
