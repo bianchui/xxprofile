@@ -248,9 +248,9 @@ private:
 	size_t _length;
 
 private:
-	StrBufBase(const StrBufBase&& other) = delete;
+	StrBufBase(StrBufBase&& other) = delete;
 	StrBufBase(const StrBufBase& other) = delete;
-	StrBufBase& operator=(const StrBufBase&& other) = delete;
+	StrBufBase& operator=(StrBufBase&& other) = delete;
 	StrBufBase& operator=(const StrBufBase& other) = delete;
 };
 
@@ -275,9 +275,9 @@ public:
 	}
 
 private:
-	StrBufT(const StrBufT&& other) = delete;
+	StrBufT(StrBufT&& other) = delete;
 	StrBufT(const StrBufT& other) = delete;
-	StrBufT& operator=(const StrBufT&& other) = delete;
+	StrBufT& operator=(StrBufT&& other) = delete;
 	StrBufT& operator=(const StrBufT& other) = delete;
 
 private:
