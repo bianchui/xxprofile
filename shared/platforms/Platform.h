@@ -6,9 +6,7 @@
 #include "PlatformMacros.h"
 #include "PlatformTargets.h"
 
-#if PLATFORM_IS_TARGET(ANDROID)
-#  define __STDC_FORMAT_MACROS
-#endif
+#define __STDC_FORMAT_MACROS
 #include <inttypes.h>
 
 #if PLATFORM_IS_TARGET(WINDOWS)
@@ -52,6 +50,13 @@ uint32_t platformGetTid();
 const char* platformAbiName();
 void platformSetThreadName(const char* name);
 bool platformIsDebugable();
+
+typedef struct _TLSKey* TLSKey;
+typedef void (*TLSValueDestructor)(void *);
+TLSKey platformTLSCreate(TLSValueDestructor des);
+void* platformTLSGet(TLSKey key);
+bool platformTLSSet(TLSKey key, void* value);
+void platformTLSDestroy(TLSKey key);
 
 #if defined(__x86_64__) || defined(_M_X64) || PLATFORM_IS_TARGET(WINDOWS) || defined(__aarch64__)
 # define PRItime_t PRIi64

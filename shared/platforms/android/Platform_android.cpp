@@ -64,4 +64,23 @@ void platformSetThreadName(const char* name) {
     pthread_setname_np(pthread_self(), name);
 }
 
+TLSKey platformTLSCreate(TLSValueDestructor des) {
+    static_assert(sizeof(pthread_key_t) <= sizeof(TLSKey), "TLSKeySize");
+    pthread_key_t thread_key;
+    pthread_key_create(&thread_key, des);
+    return (TLSKey)(uintptr_t)thread_key;
+}
+
+void* platformTLSGet(TLSKey key) {
+    return pthread_getspecific((pthread_key_t)(uintptr_t)key);
+}
+
+bool platformTLSSet(TLSKey key, void* value) {
+    return 0 == pthread_setspecific((pthread_key_t)(uintptr_t)key, value);
+}
+
+void platformTLSDestroy(TLSKey key) {
+    pthread_key_delete((pthread_key_t)(uintptr_t)key);
+}
+
 SHARED_NAMESPACE_END;
