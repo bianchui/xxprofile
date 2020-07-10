@@ -77,6 +77,7 @@
 // compilers
 #ifdef _MSC_VER // for MSVC
 
+#  define UNUSED(x) __pragma(warning(suppress:4100)) x
 #  define UNUSED_VAR
 #  define forceinline __forceinline
 #  define STRUCT_PACKED __pragma(pack(1))
@@ -90,6 +91,7 @@
 
 #elif defined __GNUC__ // for gcc on Linux/Apple OS X
 
+#  define UNUSED(x) (void)x
 #  define UNUSED_VAR __attribute__((__unused__))
 #  define forceinline __inline__ __attribute__((always_inline))
 #  define STRUCT_PACKED __attribute__((packed))
@@ -100,6 +102,7 @@
 #else
 
 #  error unknown compiler
+#  define UNUSED(x) (void)x
 #  define UNUSED_VAR
 #  define forceinline
 #  define STRUCT_PACKED
