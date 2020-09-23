@@ -4,11 +4,18 @@ var_scheme=xxprofile_ios
 var_project=xxprofile.xcodeproj
 
 function guard() {
-    $*
+    "$@"
     local exit_code=$?
     if [[ "${exit_code}" -ne 0 ]]; then
+        local func="${FUNCNAME[1]}"
+        [ x$func = x ] && func=MAIN
+        local linen="${BASH_LINENO[0]}"
+        local src="$THIS_DIR/$(basename "${BASH_SOURCE[0]}")"
         echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: **Error:${exit_code}** when executing command:" >&2
-        echo "**:$*" >&2
+        echo "**:$@" >&2
+        echo "**   pwd: $PWD" >&2
+        echo "**   src: $src($linen)" >&2
+        echo "**   fun: $func" >&2
         exit ${exit_code}
     fi
 }

@@ -22,12 +22,32 @@ function guard() {
     fi
 }
 
+function get_build_var_for_abi() {
+    NDK_PROJECT_PATH=.  make --no-print-dir -f $ANDROID_NDK_ROOT/build/core/build-local.mk DUMP_$1 APP_ABI=$2
+}
+
+function get_tool_for_abi() {
+    local TOOLCHAIN_PREFIX=`get_build_var_for_abi TOOLCHAIN_PREFIX $1`
+    which ${TOOLCHAIN_PREFIX}$2
+}
+
+function cp_abis() {
+    while [ "$1" != "" ]; do
+        guard mkdir -p build/$1
+        guard cp obj/local/$1/xxprofile.a build/$1/
+        local STRIP=`get_tool_for_abi $1 strip`
+        $STRIP -d build/$1/xxprofile.a
+        shift
+    done
+}
+
 function build_native_libs() {
     guard pushd $THIS_DIR > /dev/null
-    echo "Begin of building Native libraries"
+    echo "Begin of building xxprofile libraries"
     local cpu_num=`sysctl -n hw.ncpu`
     local NDK_BUILD_OPTIONS="NDK_DEBUG=0 -j${cpu_num}"
     guard ${NDK_BUILD_COMMAND} ${NDK_BUILD_OPTIONS}
+    cp_abis arm64-v8a armeabi armeabi-v7a x86 x86_64
     popd > /dev/null
 }
 

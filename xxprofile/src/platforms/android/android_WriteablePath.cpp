@@ -2,7 +2,6 @@
 #include <sys/stat.h>
 #include <android/log.h>
 #include <errno.h>
-#include <dlfcn.h>
 
 #define ndk_log(...) __android_log_print(ANDROID_LOG_INFO, "xxprofile", __VA_ARGS__)
 
@@ -25,22 +24,15 @@ static void mkdirs(const std::string& path) {
     }
 }
 
+std::string android_getDlName();
+
 std::string systemGetWritablePath() {
     static bool check_sdcard = true;
     static std::string sdcardPath;
     if (check_sdcard) {
         check_sdcard = false;
-        static int value_ = 0;
-        Dl_info info;
-        dladdr(&value_, &info);
-        const char* fname = strrchr(info.dli_fname, '/');
-        if (fname) {
-            ++fname;
-        } else {
-            fname = info.dli_fname;
-        }
         sdcardPath = "/sdcard/xxprofile/";
-        sdcardPath += fname;
+        sdcardPath += android_getDlName();
         sdcardPath += "/";
         mkdirs(sdcardPath);
         struct stat s;
