@@ -22,7 +22,7 @@ uint32_t systemGetTid() {
 
 std::string systemGetAppName() {
     std::string strRet;
-    NSString *name = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleIdentifierKey];
+    NSString *name = [[[NSBundle mainBundle] infoDictionary] objectForKey:(__bridge NSString*)kCFBundleIdentifierKey];
     if (name != nil) {
         strRet = [name UTF8String];
     } else {

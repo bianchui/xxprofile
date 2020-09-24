@@ -3,7 +3,7 @@ APP_CPPFLAGS := -fno-rtti
 APP_CPPFLAGS += -fno-exceptions
 APP_CFLAGS += -fvisibility=hidden
 APP_CFLAGS += -fno-stack-protector
-APP_CFLAGS += -O2
+APP_CFLAGS += -Os
 APP_CPPFLAGS += -fvisibility-inlines-hidden
 APP_CPPFLAGS += -D_GLIBCXX_HAVE_ATTRIBUTE_VISIBILITY=0
 APP_PLATFORM := android-19

@@ -1,5 +1,7 @@
-proj.android/build
-proj.android/obj
-proj.android/test/libs
-proj.android/test/obj
-proj.apple/build
+/out
+/proj.android/build
+/proj.android/obj
+/proj.android/test/libs
+/proj.android/test/obj
+/proj.apple/build
+/proj.apple/xxprofile.xcodeproj/xcshareddata

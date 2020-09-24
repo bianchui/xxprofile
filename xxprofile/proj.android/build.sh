@@ -23,6 +23,10 @@ function guard() {
 }
 
 function get_build_var_for_abi() {
+    # current dir is a vaild ndk-build dir
+    # with:
+    #   jni/Android.mk
+    #   jni/Application.mk
     NDK_PROJECT_PATH=.  make --no-print-dir -f $ANDROID_NDK_ROOT/build/core/build-local.mk DUMP_$1 APP_ABI=$2
 }
 
@@ -33,10 +37,10 @@ function get_tool_for_abi() {
 
 function cp_abis() {
     while [ "$1" != "" ]; do
-        guard mkdir -p build/$1
-        guard cp obj/local/$1/xxprofile.a build/$1/
+        guard mkdir -p ../out/android/$1
+        guard cp obj/local/$1/xxprofile.a ../out/android/$1/
         local STRIP=`get_tool_for_abi $1 strip`
-        $STRIP -d build/$1/xxprofile.a
+        $STRIP -d ../out/android/$1/xxprofile.a
         shift
     done
 }
