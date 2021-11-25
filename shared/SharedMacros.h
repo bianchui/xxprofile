@@ -76,8 +76,14 @@
 /**/aN, aN, aN, aN, aN, aN, aN, aN, aN, aN, aN, aN, aN, aN, aN, aN, \
 /**/a0)
 
-#define M_CONCAT2(x, a) x##a
-#define M_CONCAT(x, a) M_CONCAT2(x, a)
+#define M_CONCAT__(x, a) x##a
+#define M_CONCAT(x, a) M_CONCAT__(x, a)
+
+#define M_EXPEND__(x) x
+#define M_EXPEND(x) M_EXPEND__(x)
+
+#define M_STR_EXPEND__(x) #x
+#define M_STR_EXPEND(x) M_STR_EXPEND__(x)
 
 #define SWITCH_CASE_TO_STRING(x) case x: return #x;
 
@@ -138,7 +144,7 @@
 #    define UNALIGNED_DATA
 #  endif
 
-#elif defined __GNUC__ // for gcc on Linux/Apple OS X
+#elif defined __GNUC__ // for gcc/clang on Linux/Apple OS X
 
 #  define UNUSED(x) (void)x
 #  define UNUSED_VAR __attribute__((__unused__))

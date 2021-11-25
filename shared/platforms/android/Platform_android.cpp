@@ -19,9 +19,12 @@ uint32_t OSGetVersion() {
     return s_Android_SDK_INT;
 }
 
+//#define RT_DBG_ABI_BUILD
+
 // https://github.com/googlesamples/android-ndk/blob/master/hello-jni/app/src/main/cpp/hello-jni.c
 const char* platformAbiName() {
 #if defined(__arm__)
+
 #  if defined(__ARM_ARCH_7A__)
 #    if defined(__ARM_NEON__)
 #      if defined(__ARM_PCS_VFP)
@@ -37,8 +40,9 @@ const char* platformAbiName() {
 #      endif
 #    endif
 #  else
-#   define Android_ABI "armeabi"
-#  endif
+#    define Android_ABI "armeabi"
+#  endif//not __ARM_ARCH_7A__
+
 #elif defined(__i386__)
 #  define Android_ABI "x86"
 #elif defined(__x86_64__)
@@ -52,6 +56,11 @@ const char* platformAbiName() {
 #else
 #  define Android_ABI "unknown"
 #endif
+
+#  ifdef RT_DBG_ABI_BUILD
+#    pragma message("ABI: " M_EXPEND(Android_ABI))
+#  endif//RT_DBG_ABI_BUILD
+
     return Android_ABI;
 #undef Android_ABI
 }
