@@ -7,6 +7,7 @@
 #define PLATFORM_TARGET_ANDROID 2
 #define PLATFORM_TARGET_WINDOWS 3
 #define PLATFORM_TARGET_MACOS 4
+#define PLATFORM_TARGET_LINUX 5
 
 #if defined(__APPLE__)
 #  include <TargetConditionals.h>
