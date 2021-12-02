@@ -6,6 +6,9 @@
 
 SHARED_NAMESPACE_BEGIN;
 
+// MS: millisecond = 1 / 1,000
+// US: microsecond(μs) = 1 / 1,000,000
+// NS: nanosecond = 1 / 1,000,000,000
 struct TimeConv {
     static constexpr int32_t S_TO_MS = 1000;
     static constexpr int32_t S_TO_US = 1000 * 1000;
