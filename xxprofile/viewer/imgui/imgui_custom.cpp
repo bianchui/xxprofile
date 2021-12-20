@@ -1,3 +1,4 @@
+// Copyright 2018 bianchui. All rights reserved.
 #include "imgui_custom.hpp"
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui_internal.h"

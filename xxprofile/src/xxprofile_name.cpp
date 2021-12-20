@@ -339,6 +339,9 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
 #ifndef NDEBUG
                     for (SNameEntry* entry = head; entry; entry = entry->next) {
                         assert(entry->length != length || !entry->isEqual(newEntry->buf));
+                        if (entry->length == length && entry->isEqual(newEntry->buf)) {
+                            printf("Name: read same name %s %d vs %d\n", entry->buf, entry->id, newEntry->id);
+                        }
                     }
 #endif//NDEBUG
                     newEntry->next = head;
@@ -363,6 +366,7 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
                 SNameEntry* expectEntry = NULL;
                 if (!chunk[idxInChunk].compare_exchange_strong(expectEntry, newEntry, std::memory_order_release)) {
                     assert(false);
+                    printf("Name: read same name %s %d vs %d\n", newEntry->buf, newEntry->id, expectEntry->id);
                 };
 
                 XXDEBUG_ASSERT(id == debug_newMaxNameId + 1);

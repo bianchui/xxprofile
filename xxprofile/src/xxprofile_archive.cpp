@@ -66,6 +66,7 @@ bool Archive::open(const char* name, bool write) {
         }
 #endif//Archive_ReadBufferSize
         _used = sizeof(fh);
+        _filePointer = _used;
         if (memcmp(&fh.magic, kMagic, 4) != 0) {
             fclose(_fp);
             _fp = NULL;
@@ -155,6 +156,7 @@ void Archive::serialize(void* data, size_t size) {
             const size_t copySize = _size - _used;
             memcpy(data, _buffer + _used, copySize);
             size -= copySize;
+            _filePointer += copySize;
             data = ((char*)data) + copySize;
             if (size > Archive_ReadBufferSize) {
                 const size_t fullChunkSize = size - (size % Archive_ReadBufferSize);
@@ -168,20 +170,23 @@ void Archive::serialize(void* data, size_t size) {
                 }
                 size -= fullChunkSize;
                 data = ((char*)data) + fullChunkSize;
+                _filePointer += fullChunkSize;
             }
             _size = fread(_buffer, 1, Archive_ReadBufferSize, _fp);
             _used = 0;
         }
         if (size) {
             size_t maxSize = _size - _used;
-            assert(size <= maxSize);
+            //assert(size <= maxSize);
             if (size <= maxSize) {
                 maxSize = size;
             } else {
                 _error = true;
+                printf("Archive read overflow at 0x%x(%d), read %d\n", (uint32_t)_filePointer, (uint32_t)_filePointer, (uint32_t)size);
             }
             if (maxSize) {
                 memcpy(data, _buffer + _used, maxSize);
+                _filePointer += maxSize;
             }
             _used += size;
         }

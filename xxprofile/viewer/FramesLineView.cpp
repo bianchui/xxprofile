@@ -20,10 +20,26 @@ void FramesLineView::setLoader(const xxprofile::Loader* loader) {
     if (loader) {
         size_t tcount = loader->_threads.size();
         _threads.resize(tcount);
+        uint32_t minFrame = -1;
+        uint32_t maxFrame = -1;
+        for (size_t t = 0; t < tcount; ++t) {
+            const auto& loader_thread = loader->_threads[t];
+            if (loader_thread._frames.size() > 0) {
+                const auto& frame0 = loader_thread._frames[0];
+                if (minFrame == -1 || minFrame > frame0.frameId()) {
+                    minFrame = frame0.frameId();
+                }
+                const auto& frameN = loader_thread._frames.back();
+                if (maxFrame < frameN.frameId()) {
+                    maxFrame = frameN.frameId();
+                }
+            }
+        }
+
         for (size_t t = 0; t < tcount; ++t) {
             auto& thread = _threads[t];
             const auto& loader_thread = loader->_threads[t];
-            thread.init(&loader_thread);
+            thread.init(&loader_thread, minFrame, maxFrame);
         }
     }
 }

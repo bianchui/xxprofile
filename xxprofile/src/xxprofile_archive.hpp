@@ -21,6 +21,7 @@ private:
 
 private:
     FILE* _fp;
+    size_t _filePointer;
     size_t _size;
     size_t _used;
     char* _buffer;

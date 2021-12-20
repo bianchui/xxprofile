@@ -17,6 +17,10 @@ public:
 
     struct ThreadData {
         const xxprofile::ThreadData* _data;
+        std::vector<const xxprofile::FrameData*> _frames;
+
+        uint32_t _minFrame;
+        uint32_t _maxFrame;
 
         // frames
         int _startIndex;
@@ -29,7 +33,7 @@ public:
         std::vector<double> _timesForThumbnail;
         int _thumbnailSelectedCount;
 
-        void init(const xxprofile::ThreadData* data) {
+        void init(const xxprofile::ThreadData* data, uint32_t minFrame, uint32_t maxFrame) {
             assert(data);
             _data = data;
 
