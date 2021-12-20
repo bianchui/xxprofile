@@ -285,7 +285,7 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
             assert(id == id2);
 #endif//XX_PROFILE_DEBUG_Name_Serialize
 
-            if (id < maxNameId) {
+            if (id <= maxNameId) {
                 str.resize(length);
                 ar.serialize((void*)str.c_str(), length);
 #ifndef NDEBUG
