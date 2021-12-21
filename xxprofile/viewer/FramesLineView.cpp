@@ -21,7 +21,7 @@ void FramesLineView::setLoader(const xxprofile::Loader* loader) {
         size_t tcount = loader->_threads.size();
         _threads.resize(tcount);
         uint32_t minFrame = -1;
-        uint32_t maxFrame = -1;
+        uint32_t maxFrame = 0;
         for (size_t t = 0; t < tcount; ++t) {
             const auto& loader_thread = loader->_threads[t];
             if (loader_thread._frames.size() > 0) {
@@ -34,6 +34,9 @@ void FramesLineView::setLoader(const xxprofile::Loader* loader) {
                     maxFrame = frameN.frameId();
                 }
             }
+        }
+        if (minFrame == -1) {
+            minFrame = 0;
         }
 
         for (size_t t = 0; t < tcount; ++t) {
@@ -105,7 +108,9 @@ void FramesLineView::draw() {
                 ImGui::PlotHistogram(plot);
 
                 if (io.MouseDown[0] && plot.hoverItem >= 0) {
-                    thread.setThumbnailTrackingItem(plot.hoverItem);
+                    for (size_t j = 0; j < _threads.size(); ++j) {
+                        _threads[j].setThumbnailTrackingItem(plot.hoverItem);
+                    }
                 }
             }
 
@@ -121,8 +126,13 @@ void FramesLineView::draw() {
             ImGui::PlotHistogram(plot);
 
             if (io.MouseDown[0] && plot.hoverItem >= 0) {
+                for (size_t j = 0; j < _threads.size(); ++j) {
+                    if (j != t) {
+                        _threads[j].setFocus(false);
+                    }
+                }
                 thread.setFramesTrackingItem(plot.hoverItem);
-                _handler->onFrameSelectChange((int)t, thread._selectedItem);
+                _handler->onFrameSelectChange(thread.getTrackingFrame());
             }
         }
     }

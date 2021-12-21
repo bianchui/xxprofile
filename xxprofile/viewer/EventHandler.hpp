@@ -6,7 +6,7 @@
 #include <cmath>
 
 struct EventHandler {
-    virtual void onFrameSelectChange(int tid, int item) = 0;
+    virtual void onFrameSelectChange(const xxprofile::FrameData* frameData) = 0;
 };
 
 struct Math {

@@ -17,14 +17,14 @@ struct MainWin : EventHandler {
 
     xxprofile::Loader _loader;
 
-    void onFrameSelectChange(int tid, int item) override {
-        const xxprofile::FrameData* frameData = NULL;
-        if (tid < _loader._threads.size()) {
-            auto& thread = _loader._threads[tid];
-            if (item < thread._frames.size()) {
-                frameData = &thread._frames[item];
-            }
-        }
+    void onFrameSelectChange(const xxprofile::FrameData* frameData) override {
+        //const xxprofile::FrameData* frameData = NULL;
+        //if (tid < _loader._threads.size()) {
+        //    auto& thread = _loader._threads[tid];
+        //    if (item < thread._frames.size()) {
+        //        frameData = &thread._frames[item];
+        //    }
+        //}
         _frameView.setFrameData(frameData);
     }
 

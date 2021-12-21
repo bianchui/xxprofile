@@ -99,12 +99,10 @@ void ImGui::PlotEx(ImGuiPlotType plot_type, ImPlotWithHitTest& value) {
         const float t_step = 1.0f / (float)res_w;
         const float inv_scale = (value.scaleMin == value.scaleMax) ? 0.0f : (1.0f / (value.scaleMax - value.scaleMin));
 
-        float v0 = value.value(0);
         float t0 = 0.0f;
-        // Point in the normalized space of our target rectangle
-        ImVec2 tp0 = ImVec2( t0, 1.0f - ImSaturate((v0 - value.scaleMin) * inv_scale) );
+
         // Where does the zero line stands
-        float histogram_zero_line_t = (value.scaleMin * value.scaleMax < 0.0f) ? (-value.scaleMin * inv_scale) : (value.scaleMin < 0.0f ? 0.0f : 1.0f);
+        const float histogram_zero_line_t = (value.scaleMin * value.scaleMax < 0.0f) ? (-value.scaleMin * inv_scale) : (value.scaleMin < 0.0f ? 0.0f : 1.0f);
 
         const ImU32 col_base = GetColorU32((plot_type == ImGuiPlotType_Lines) ? ImGuiCol_PlotLines : ImGuiCol_PlotHistogram);
         const ImU32 col_hovered = GetColorU32((plot_type == ImGuiPlotType_Lines) ? ImGuiCol_PlotLinesHovered : ImGuiCol_PlotHistogramHovered);
@@ -115,12 +113,16 @@ void ImGui::PlotEx(ImGuiPlotType plot_type, ImPlotWithHitTest& value) {
             const float t1 = t0 + t_step;
             const int v1_idx = (int)(t0 * item_count + 0.5f);
             IM_ASSERT(v1_idx >= 0 && v1_idx < value.valuesCount);
-            const float v1 = value.value((v1_idx + 1) % value.valuesCount);
-            const ImVec2 tp1 = ImVec2( t1, 1.0f - ImSaturate((v1 - value.scaleMin) * inv_scale) );
+            const float v = value.value(v1_idx % value.valuesCount);
+
+            // Point in the normalized space of our target rectangle
+            ImVec2 tp = ImVec2( t0, 1.0f - ImSaturate((v - value.scaleMin) * inv_scale) );
 
             // NB: Draw calls are merged together by the DrawList system. Still, we should render our batch are lower level to save a bit of CPU.
-            const ImVec2 pos0 = ImLerp(inner_bb.Min, inner_bb.Max, tp0);
-            const ImVec2 pos1 = ImLerp(inner_bb.Min, inner_bb.Max, (plot_type == ImGuiPlotType_Lines) ? tp1 : ImVec2(tp1.x, histogram_zero_line_t));
+            const ImVec2 pos0_1 = ImLerp(inner_bb.Min, inner_bb.Max, tp);
+            const ImVec2 pos0(pos0_1.x, ImMin(pos0_1.y, pos0_1.y - (v > 0 ? 1 : 0)));
+            const ImVec2 pos1 = ImLerp(inner_bb.Min, inner_bb.Max, (plot_type == ImGuiPlotType_Lines) ? tp : ImVec2(t1, histogram_zero_line_t));
+            //printf("%d: %f: (%f, %f) (%f, %f)\n", n, v, pos0.x, pos0.y, pos1.x, pos1.y);
             const ImU32 col = v_hovered == v1_idx ? col_hovered : col_base;
 
             if (plot_type == ImGuiPlotType_Lines) {
@@ -141,12 +143,11 @@ void ImGui::PlotEx(ImGuiPlotType plot_type, ImPlotWithHitTest& value) {
             }
             
             t0 = t1;
-            tp0 = tp1;
         }
 
         if (value.selectedItem >= 0 && value.selectedCount > 0 && value.selectedItem < value.valuesCount) {
             vmin.x -= 1;
-            vmin.y -= 1;
+            vmin.y -= 2;
             vmax.x += 1;
             vmax.y += 1;
             window->DrawList->AddRect(vmin, vmax, col_selected);

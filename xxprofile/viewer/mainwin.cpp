@@ -16,7 +16,7 @@ bool MainWin::load(const char* file) {
     bool success = _load(file);
     _framesLineView.setLoader(&_loader);
     _frameView.setLoader(&_loader);
-    onFrameSelectChange(0, 0);
+    onFrameSelectChange(nullptr);
     return success;
 }
 
