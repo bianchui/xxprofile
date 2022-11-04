@@ -156,7 +156,7 @@ public:
         _dbuf[_length] = 0;
     }
 
-	// CAUTION: when set larger than old size, buffer is not filled by zero by performance.
+	// CAUTION: when set larger than old size, buffer is not filled by zero for performance.
 	void resize(size_t length) {
 		if (length > _length) {
 			if (length >= _capacity) {
