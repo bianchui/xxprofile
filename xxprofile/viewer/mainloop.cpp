@@ -108,10 +108,13 @@ void _mainLoop() {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        int display_w, display_h;
+        int display_w, display_h, w, h;
         glfwGetFramebufferSize(window, &display_w, &display_h);
+        glfwGetWindowSize(window, &w, &h);
+        io.DisplaySize = ImVec2((float)w, (float)h);
+        io.DisplayFramebufferScale = ImVec2(w > 0 ? ((float)display_w / w) : 0, h > 0 ? ((float)display_h / h) : 0);
 
-        mainwin.draw(display_w, display_h);
+        mainwin.draw(w, h);
 
         // Rendering
         ImGui::Render();
