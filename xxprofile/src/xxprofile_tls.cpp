@@ -116,7 +116,7 @@ XXProfileTreeNode* XXProfileTLS::beginScope(SName name) {
     return node;
 }
 
-void XXProfileTLS::endScope(XXProfileTreeNode* node) {
+bool XXProfileTLS::endScope(XXProfileTreeNode* node) {
     assert(!_stack.empty());
     assert(_stack.back().node == node);
     node->_endTime = Timer::Cycles64();
@@ -125,6 +125,7 @@ void XXProfileTLS::endScope(XXProfileTreeNode* node) {
     }
 
     tryFrameFlush();
+    return _stack.empty();
 }
 
 bool XXProfileTLS::increaseFrame() {

@@ -20,11 +20,12 @@ std::mutex g_mutex;
 static ThreadLocal<XXProfileTLS> g_profile_tls;
 static SharedArchive* g_archive;
 
-static void StaticDeleteGArchive() {
+static void StaticCloseGArchive() {
     std::unique_lock<std::mutex> lock(g_mutex);
     if (g_archive) {
+        g_archive->markClose();
         g_archive->release();
-        g_archive = NULL;
+        g_archive = nullptr;
     }
 }
 
@@ -52,7 +53,7 @@ static void StaticInitUnSafe(const char* savePath) {
         filePath.append(systemGetAppName());
         filePath.append(".xxprofile");
         g_archive = new SharedArchive(filePath.c_str());
-        atexit(StaticDeleteGArchive);
+        atexit(StaticCloseGArchive);
     }
 }
 
@@ -64,21 +65,30 @@ bool XXProfile::StaticInit(const char* savePath) {
 }
 
 void XXProfile::StaticUninit() {
-
+    StaticCloseGArchive();
 }
 
 XXProfileTLS* XXProfileTLS::Get() {
-    XXProfileTLS* profile = NULL;
+    XXProfileTLS* profile = nullptr;
     profile = g_profile_tls.get();
     if (!profile) {
         std::unique_lock<std::mutex> lock(g_mutex);
-        StaticInitUnSafe(NULL);
+        StaticInitUnSafe(nullptr);
         if (g_archive) {
             profile = new XXProfileTLS(g_archive);
             g_profile_tls.set(profile);
         }
     }
     return profile;
+}
+
+void XXProfileTLS::Clear() {
+    XXProfileTLS* profile = nullptr;
+    profile = g_profile_tls.get();
+    if (profile) {
+        g_profile_tls.set(nullptr);
+        delete profile;
+    }
 }
 
 bool XXProfile::IncreaseFrame() {
@@ -96,13 +106,16 @@ XXProfileScope::XXProfileScope(const SName name) {
     if (_profile) {
         _node = static_cast<XXProfileTLS*>(_profile)->beginScope(name);
     } else {
-        _node = NULL;
+        _node = nullptr;
     }
 }
 
 XXProfileScope::~XXProfileScope() {
     if (_profile) {
         static_cast<XXProfileTLS*>(_profile)->endScope(_node);
+        if (static_cast<XXProfileTLS*>(_profile)->isClosing()) {
+            XXProfileTLS::Clear();
+        }
     }
 }
 

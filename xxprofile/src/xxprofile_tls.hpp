@@ -32,11 +32,20 @@ public:
     Archive& archive() {
         return _archive;
     }
+
+    void markClose() {
+        _pendingClose = 1;
+    }
+
+    bool isClosing() const {
+        return _pendingClose > 0;
+    }
     
 private:
     Archive _archive;
     std::mutex _mutex;
     std::atomic_int _refCount = ATOMIC_VAR_INIT(1);
+    std::atomic_int _pendingClose = ATOMIC_VAR_INIT(0);
     void* _compressBuffer;
     size_t _compressBufferSize;
 };
@@ -50,6 +59,7 @@ public:
     };
 
     static XXProfileTLS* Get();
+    static void Clear();
 
 public:
     explicit XXProfileTLS(SharedArchive* ar);
@@ -57,7 +67,11 @@ public:
 
     bool increaseFrame();
     XXProfileTreeNode* beginScope(SName name);
-    void endScope(XXProfileTreeNode* node);
+    bool endScope(XXProfileTreeNode* node);
+
+    bool isClosing() const {
+        return _sharedAr->isClosing();
+    }
 
 public:
     static void* operator new(size_t size);
