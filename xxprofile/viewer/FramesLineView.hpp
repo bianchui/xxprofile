@@ -177,7 +177,7 @@ public:
                 const auto* frame = frames[index];
                 if (frame) {
                     double time = frame->frameCycles() * _data->_secondsPerCycle;
-                    buf.appendf("%d: ", frame->frameId());
+                    buf.appendf("%d: [%.3fms, %.3fms]", frame->frameId(), (frame->startTime() - _processStart) * _data->_secondsPerCycle * 1000, (frame->endTime() - _processStart) * _data->_secondsPerCycle * 1000);
                     Math::FormatTime(buf, time);
                 } else {
                     buf.appendf("no frame");
