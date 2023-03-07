@@ -88,11 +88,15 @@ void FrameView::draw() {
                 draw(*iter, parentCycles, children_name);
             }
         }
-        void tooltip(const xxprofile::TreeItem* item, double percentage) const {
+        void tooltip(const xxprofile::TreeItem* item, double percentage) {
             if (ImGui::IsItemHovered()) {
                 const double framePercentage = (item->useCycles() * 1000000 / frameCycles) * 0.0001;
                 ImGui::BeginTooltip();
                 ImGui::PushTextWrapPos(ImGui::GetFontSize() * 50.0f);
+                _timeBuffer.appendf("\nSelf:  ");
+                Math::FormatTime(_timeBuffer, (item->useCycles() - item->childrenCycles()) * _secondsPerCycle);
+                const double selfPercentage = ((item->useCycles() - item->childrenCycles()) * 1000000 / item->useCycles()) * 0.0001;
+                _timeBuffer.appendf("(%0.4f%%)", selfPercentage);
                 ImGui::Text("Frame: %0.4f%%\nParent:%0.4f%%\nTime:  %s\n%s", framePercentage, percentage, _timeBuffer.c_str(), item->_name);
                 ImGui::PopTextWrapPos();
                 ImGui::EndTooltip();
@@ -138,6 +142,10 @@ void FrameView::draw() {
                 ImGui::BeginTooltip();
                 ImGui::PushTextWrapPos(ImGui::GetFontSize() * 50.0f);
                 ImGui::Text("CallTimes: %d", (int)item->combinedCount());
+                _timeBuffer.appendf("\nSelf:  ");
+                Math::FormatTime(_timeBuffer, (item->useCycles() - item->childrenCycles()) * _secondsPerCycle);
+                const double selfPercentage = ((item->useCycles() - item->childrenCycles()) * 1000000 / item->useCycles()) * 0.0001;
+                _timeBuffer.appendf("(%0.4f%%)", selfPercentage);
                 ImGui::Text("Frame: %0.4f%%\nParent:%0.4f%%\nTime:  %s", framePercentage, percentage, _timeBuffer.c_str());
 
                 if (item->combinedCount() > 1) {

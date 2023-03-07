@@ -21,12 +21,14 @@ struct TreeItem {
     // for combined
     TreeItem* _combinedNext;
     CombinedTreeItem* _combined;
+    uint64_t _childrenCycles;
 
     void addChild(TreeItem* child) {
         if (!_children) {
             _children = new std::vector<TreeItem*>();
         }
         _children->push_back(child);
+        _childrenCycles += child->useCycles();
     }
 
     uint32_t hash() const;
@@ -35,6 +37,9 @@ struct TreeItem {
     void debugDump(int indent) const;
 
     uint64_t useCycles() const;
+    uint64_t childrenCycles() const {
+        return _childrenCycles;
+    }
 };
 
 struct FrameDataBase {
@@ -87,7 +92,8 @@ private:
 struct CombinedTreeItem {
     TreeItem* _firstItem;
     TreeItem* _lastItem;
-    uint64_t _combinedTime;
+    uint64_t _combinedCycles;
+    uint64_t _combinedChildrenCycles;
     size_t _combinedCount;
     std::vector<CombinedTreeItem*>* _children;
 
@@ -101,7 +107,10 @@ struct CombinedTreeItem {
         return _firstItem && _firstItem->same(*item);
     }
     uint64_t useCycles() const {
-        return _combinedTime;
+        return _combinedCycles;
+    }
+    uint64_t childrenCycles() const {
+        return _combinedChildrenCycles;
     }
     const char* name() const {
         assert(_firstItem);
@@ -115,7 +124,16 @@ struct CombinedTreeItem {
     }
 
     static bool compare(const CombinedTreeItem* a, const CombinedTreeItem* b) {
-        return b->_combinedTime < a->_combinedTime;
+        return b->_combinedCycles < a->_combinedCycles;
+    }
+
+    void calcCombinedChildrenCycles() {
+        if (_children) {
+            _combinedChildrenCycles = 0;
+            for (auto i = _children->begin(), end = _children->end(); i != end; ++i) {
+                _combinedChildrenCycles += (*i)->_combinedCycles;
+            }
+        }
     }
 };
 

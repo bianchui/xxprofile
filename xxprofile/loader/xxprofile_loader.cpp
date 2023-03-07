@@ -176,7 +176,7 @@ void CombinedTreeItem::combin(TreeItem* item) {
     }
     item->_combined = this;
     item->_combinedNext = _firstItem;
-    _combinedTime += item->_node->_endTime - item->_node->_beginTime;
+    _combinedCycles += item->useCycles();
     ++_combinedCount;
 }
 
@@ -187,12 +187,12 @@ void FrameData::init(Loader* loader) {
     assert(_allNodes == nullptr);
     _combinedNodeCount = 0;
     if (_nodeCount) {
+        const uint32_t nodeCount = _nodeCount;
         assert(_nodes != nullptr);
         assert(_frameCycles == 0);
-        _allNodes = (TreeItem*)malloc(sizeof(TreeItem) * _nodeCount);
-        memset(_allNodes, 0, sizeof(TreeItem) * _nodeCount);
+        _allNodes = (TreeItem*)malloc(sizeof(TreeItem) * nodeCount);
+        memset(_allNodes, 0, sizeof(TreeItem) * nodeCount);
         const xxprofile::XXProfileTreeNode* nodes = _nodes;
-        const uint32_t nodeCount = _nodeCount;
 
         _frameCycles = 0;
         for (uint32_t i = 0; i < nodeCount; ++i) {
@@ -214,8 +214,8 @@ void FrameData::init(Loader* loader) {
         }
 
         // combin function calls
-        _allCombinedNodes = (CombinedTreeItem*)malloc(sizeof(CombinedTreeItem) * _nodeCount);
-        memset(_allCombinedNodes, 0, sizeof(CombinedTreeItem) * _nodeCount);
+        _allCombinedNodes = (CombinedTreeItem*)malloc(sizeof(CombinedTreeItem) * nodeCount);
+        memset(_allCombinedNodes, 0, sizeof(CombinedTreeItem) * nodeCount);
         for (uint32_t i = 0; i < nodeCount; ++i) {
             TreeItem* item = _allNodes + i;
             CombinedTreeItem* combined = _allCombinedNodes + i;
@@ -248,6 +248,7 @@ void FrameData::init(Loader* loader) {
         }
         for (size_t i = 0; i < nodeCount; ++i) {
             _allCombinedNodes[i].sortChildren();
+            _allCombinedNodes[i].calcCombinedChildrenCycles();
         }
     }
 }
