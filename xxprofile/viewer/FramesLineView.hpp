@@ -21,6 +21,7 @@ public:
 
         uint32_t _minFrameId;
         uint32_t _maxFrameId;
+        uint64_t _processStart;
 
         bool _focus;
 
@@ -36,17 +37,20 @@ public:
             double data;
             uint32_t minFrameId;
             uint32_t maxFrameId;
+            double startTime;
+            double endTime;
         };
         std::vector<Thumbnail> _thumbnail;
         int _thumbnailSelectedCount;
 
-        void init(const xxprofile::ThreadData* data, uint32_t minFrameId, uint32_t maxFrameId) {
+        void init(const xxprofile::ThreadData* data, uint32_t minFrameId, uint32_t maxFrameId, uint64_t processStart) {
             assert(data);
             _focus = false;
             _data = data;
             _minFrameId = minFrameId;
             _maxFrameId = maxFrameId;
             _frames.resize(maxFrameId - minFrameId + 1);
+            _processStart = processStart;
 
             for (const xxprofile::FrameData& frame : data->_frames) {
                 assert(minFrameId <= frame.frameId());
@@ -87,12 +91,17 @@ public:
                         uint64_t maxCycles = 0;
                         uint32_t maxFrameId = minFrameId;
                         uint32_t frameCount = 0;
+                        uint64_t start = 0, end = 0;
                         while (frames < end_frames && frames->frameId() < endFrame) {
                             const uint64_t cycles = frames->frameCycles();
                             if (maxCycles < cycles) {
                                 maxCycles = cycles;
                             }
                             maxFrameId = frames->frameId();
+                            if (!frameCount) {
+                                start = frames->startTime();
+                            }
+                            end = frames->endTime();
                             ++frames;
                             ++frameCount;
                         }
@@ -100,10 +109,14 @@ public:
                         if (frameCount == 0) {
                             thumbnail[i].minFrameId = -1;
                             thumbnail[i].maxFrameId = -1;
+                            thumbnail[i].startTime = 0;
+                            thumbnail[i].endTime = 0;
                         } else {
                             thumbnail[i].minFrameId = minFrameId;
                             thumbnail[i].maxFrameId = maxFrameId;
                         }
+                        thumbnail[i].startTime = (start - _processStart) * _data->_secondsPerCycle;
+                        thumbnail[i].endTime = (end - _processStart) * _data->_secondsPerCycle;
                     }
                 }
             }
@@ -229,7 +242,7 @@ public:
             assert(idx < _thumbnail.size());
             const auto& v = _thumbnail[idx];
             if (v.minFrameId != -1) {
-                buf.printf("[%d, %d]\n", v.minFrameId, v.maxFrameId);
+                buf.printf("[%d, %d]\n[%.3fms, %.3fms]", v.minFrameId, v.maxFrameId, v.startTime * 1000, v.endTime * 1000);
                 Math::FormatTime(buf, v.data);
             } else {
                 buf.printf("no frames");

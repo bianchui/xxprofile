@@ -22,6 +22,7 @@ void FramesLineView::setLoader(const xxprofile::Loader* loader) {
         _threads.resize(tcount);
         uint32_t minFrame = -1;
         uint32_t maxFrame = 0;
+        uint64_t processStart = 0;
         for (size_t t = 0; t < tcount; ++t) {
             const auto& loader_thread = loader->_threads[t];
             if (loader_thread._frames.size() > 0) {
@@ -29,6 +30,8 @@ void FramesLineView::setLoader(const xxprofile::Loader* loader) {
                 if (minFrame == -1 || minFrame > frame0.frameId()) {
                     minFrame = frame0.frameId();
                 }
+                const auto startTime = frame0.startTime();
+                processStart = processStart == 0 || processStart > startTime ? startTime : processStart;
                 const auto& frameN = loader_thread._frames.back();
                 if (maxFrame < frameN.frameId()) {
                     maxFrame = frameN.frameId();
@@ -42,7 +45,7 @@ void FramesLineView::setLoader(const xxprofile::Loader* loader) {
         for (size_t t = 0; t < tcount; ++t) {
             auto& thread = _threads[t];
             const auto& loader_thread = loader->_threads[t];
-            thread.init(&loader_thread, minFrame, maxFrame);
+            thread.init(&loader_thread, minFrame, maxFrame, processStart);
         }
     }
 }

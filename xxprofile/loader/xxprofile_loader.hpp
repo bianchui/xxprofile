@@ -163,6 +163,26 @@ public:
         return _combinedNodeCount != _nodeCount;
     }
 
+    uint64_t startTime() const {
+        uint64_t time = _roots[0]->_node->_beginTime;
+        for (auto i = _roots.begin() + 1; i < _roots.end(); ++i) {
+            if (time > (*i)->_node->_beginTime) {
+                time = (*i)->_node->_beginTime;
+            }
+        }
+        return time;
+    }
+
+    uint64_t endTime() const {
+        uint64_t time = _roots[0]->_node->_endTime;
+        for (auto i = _roots.begin() + 1; i < _roots.end(); ++i) {
+            if (time < (*i)->_node->_endTime) {
+                time = (*i)->_node->_endTime;
+            }
+        }
+        return time;
+    }
+
 private:
     XX_CLASS_DELETE_COPY(FrameData);
     XX_CLASS_DELETE_MOVE_ASSIGN(FrameData);
