@@ -24,7 +24,7 @@ struct Math {
         } else if (v >= 0.000000001) {
             buf.appendf("%.3fns", v * 1000000000);
         } else {
-            buf.appendf("%8.4g", v);
+            buf.appendf("%.4g", v);
         }
     }
 };
