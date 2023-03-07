@@ -287,6 +287,7 @@ ThreadData& Loader::getThreadFromId(uint32_t threadId) {
 }
 
 void Loader::load(Archive& ar) {
+    _processStart = 0;
     SDecompress decompress(ar.getCompressMethod());
     ar << this->_secondsPerCycle;
     uint32_t threadId = 0;
@@ -370,6 +371,16 @@ void Loader::load(Archive& ar) {
             thread._maxCycleCount = data.frameCycles();
         }
         thread._frames.push_back(std::move(data));
+    }
+
+    size_t tcount = _threads.size();
+    for (size_t t = 0; t < tcount; ++t) {
+        const auto& loader_thread = _threads[t];
+        if (loader_thread._frames.size() > 0) {
+            const auto& frame0 = loader_thread._frames[0];
+            const auto startTime = frame0.startTime();
+            _processStart = _processStart == 0 || _processStart > startTime ? startTime : _processStart;
+        }
     }
 }
 

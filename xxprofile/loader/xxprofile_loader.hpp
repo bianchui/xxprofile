@@ -230,6 +230,7 @@ struct Loader {
     SNamePool _namePool;
     std::vector<const char*> _names;
     double _secondsPerCycle;
+    uint64_t _processStart;
 
     Loader();
     ~Loader();
