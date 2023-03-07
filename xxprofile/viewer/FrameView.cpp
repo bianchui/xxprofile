@@ -26,6 +26,7 @@ void FrameView::setFrameData(const xxprofile::FrameData* data) {
     }
     clear();
     _frameData = data;
+    _frameStart = data ? data->startTime() : 0;
 }
 
 static const ImVec4 kColorRed(1, 0, 0, 1);
@@ -45,6 +46,8 @@ void FrameView::draw() {
     typedef std::unordered_map<const char*, uint32_t> children_names_map;
     struct DrawTreeNode {
         double _secondsPerCycle;
+        uint64_t processStart;
+        uint64_t frameStart;
         uint64_t frameCycles;
         double frameTimes;
         ImGuiStyle* style;
@@ -155,6 +158,8 @@ void FrameView::draw() {
     if (_loader->_threads.size()) {
         drawtv._secondsPerCycle = _loader->_threads[0]._secondsPerCycle;
     }
+    drawtv.processStart = _loader->_processStart;
+    drawtv.frameStart = _frameStart;
     drawtv.frameCycles = _frameData->frameCycles();
     if (drawtv.frameCycles == 0) {
         drawtv.frameCycles = 1;

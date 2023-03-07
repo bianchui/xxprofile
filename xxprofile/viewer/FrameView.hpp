@@ -21,6 +21,7 @@ private:
     const xxprofile::Loader* _loader;
     const xxprofile::FrameData* _frameData;
     bool _combined;
+    uint64_t _frameStart;
 };
 
 #endif//xxprofileviewer_FrameView_hpp

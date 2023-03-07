@@ -163,15 +163,15 @@ bool CombinedTreeItem::addChild(CombinedTreeItem* child, TreeItem* item) {
 }
 
 void CombinedTreeItem::combin(TreeItem* item) {
-    assert(item->_combined == NULL);
-    assert(item->_combinedNext == NULL);
+    assert(item->_combined == nullptr);
+    assert(item->_combinedNext == nullptr);
     if (_firstItem) {
         assert(_combinedCount);
         assert(_lastItem);
         _lastItem->_combinedNext = item;
     } else {
         assert(_combinedCount == 0);
-        assert(_lastItem == NULL);
+        assert(_lastItem == nullptr);
         _firstItem = _lastItem = item;
     }
     item->_combined = this;
@@ -184,10 +184,10 @@ void CombinedTreeItem::combin(TreeItem* item) {
 // FrameData
 void FrameData::init(Loader* loader) {
     assert(loader);
-    assert(_allNodes == NULL);
-    _combinedNodeCount = NULL;
+    assert(_allNodes == nullptr);
+    _combinedNodeCount = 0;
     if (_nodeCount) {
-        assert(_nodes != NULL);
+        assert(_nodes != nullptr);
         assert(_frameCycles == 0);
         _allNodes = (TreeItem*)malloc(sizeof(TreeItem) * _nodeCount);
         memset(_allNodes, 0, sizeof(TreeItem) * _nodeCount);
@@ -219,7 +219,7 @@ void FrameData::init(Loader* loader) {
         for (uint32_t i = 0; i < nodeCount; ++i) {
             TreeItem* item = _allNodes + i;
             CombinedTreeItem* combined = _allCombinedNodes + i;
-            assert(item->_combined == NULL);
+            assert(item->_combined == nullptr);
             if (item->_node->_parentNodeId) {
                 assert(item->_node->_parentNodeId <= i);
                 if (item->_node->_parentNodeId > i) {
@@ -302,7 +302,7 @@ void Loader::load(Archive& ar) {
         FrameData data;
         ar << data._frameId;
         XXLOG_DEBUG("Load.frame(%d) for thread(%d)\n", data._frameId, threadId);
-        _namePool.serialize(NULL, ar);
+        _namePool.serialize(nullptr, ar);
         ar << data._nodeCount;
         XXLOG_DEBUG("  nodeCount = %d\n", data._nodeCount);
         if (!ar.hasError() && data._nodeCount > 0) {
@@ -313,7 +313,7 @@ void Loader::load(Archive& ar) {
                 ar.serialize(data._nodes, remainSize);
             } else if (ar.version() >= EVersion::V2) {
                 bool hasError = false;
-                uint8_t* buf = NULL;
+                uint8_t* buf = nullptr;
                 size_t bufSize = 0;
                 uint8_t* cur = (uint8_t*)data._nodes;
                 while (!ar.hasError()) {
@@ -400,7 +400,7 @@ const char* Loader::name(SName name) {
         return "";
     }
     uint32_t index = name.id() - 1;
-    const char* n = NULL;
+    const char* n = nullptr;
     if (index < _names.size()) {
         n = _names[index];
     } else {
