@@ -161,7 +161,11 @@ public:
             const int index = _startIndex + idx;
             if (index < frames.size()) {
                 const auto* frame = frames[index];
-                return frame ? frame->frameCycles() * _data->_secondsPerCycle : 0;
+                double val = frame ? frame->frameCycles() * _data->_secondsPerCycle : 0;
+                double maxV = _data->_maxCycleCount * _data->_secondsPerCycle;
+                val = pow(val / maxV, 1/1.5);
+                val *= maxV;
+                return val;
             } else {
                 assert(false);
                 return 0;
