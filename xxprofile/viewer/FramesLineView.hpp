@@ -50,6 +50,7 @@ public:
             _minFrameId = minFrameId;
             _maxFrameId = maxFrameId;
             _frames.resize(maxFrameId - minFrameId + 1);
+            std::fill(_frames.begin(), _frames.end(), nullptr);
             _processStart = processStart;
 
             for (const xxprofile::FrameData& frame : data->_frames) {
