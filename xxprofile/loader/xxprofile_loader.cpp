@@ -9,6 +9,8 @@
 #include "../src/compress/compress_lzo.cpp.h"
 #include "../src/compress/compress_lz4.cpp.h"
 
+#define NAME_NEEDS_FREE 0
+
 XX_NAMESPACE_BEGIN(xxprofile);
 
 struct SDecompress {
@@ -292,6 +294,10 @@ void Loader::load(Archive& ar) {
     SDecompress decompress(ar.getCompressMethod());
     ar << this->_secondsPerCycle;
     uint32_t threadId = 0;
+    uint64_t totalFileSize = 0;
+    uint64_t totalOrgSize = 0;
+    uint8_t* decompBuf = nullptr;
+    size_t decompBufSize = 0;
     while (!ar.eof() && !ar.hasError()) {
         if (ar.version() >= EVersion::V3) {
             ar << threadId;
@@ -302,10 +308,10 @@ void Loader::load(Archive& ar) {
         ThreadData& thread = getThreadFromId(threadId);
         FrameData data;
         ar << data._frameId;
-        XXLOG_DEBUG("Load.frame(%d) for thread(%d)\n", data._frameId, threadId);
+        XXLOG_DETAIL("Load.frame(%d) for thread(%d)\n", data._frameId, threadId);
         _namePool.serialize(nullptr, ar);
         ar << data._nodeCount;
-        XXLOG_DEBUG("  nodeCount = %d\n", data._nodeCount);
+        XXLOG_DETAIL("  nodeCount = %d\n", data._nodeCount);
         if (!ar.hasError() && data._nodeCount > 0) {
             size_t remainSize = sizeof(XXProfileTreeNode) * data._nodeCount;
             data._nodes = (XXProfileTreeNode*)malloc(remainSize);
@@ -328,6 +334,7 @@ void Loader::load(Archive& ar) {
                         hasError = true;
                         break;
                     }
+                    totalOrgSize += sizeOrg;
                     if (sizeCom) {
                         if (bufSize) {
                             if (bufSize < sizeOrg) {
@@ -336,7 +343,12 @@ void Loader::load(Archive& ar) {
                             }
                         } else {
                             bufSize = sizeOrg;
-                            buf = (uint8_t*)malloc(bufSize);
+                            if (decompBufSize < bufSize) {
+                                decompBuf = buf = (uint8_t*)realloc(decompBuf, bufSize);
+                                decompBufSize = bufSize;
+                            } else {
+                                buf = decompBuf;
+                            }
                         }
                         ar.serialize(buf, sizeCom);
                         if (ar.hasError()) {
@@ -347,8 +359,12 @@ void Loader::load(Archive& ar) {
                             hasError = true;
                             break;
                         }
+                        totalFileSize += sizeCom;
+                        XXLOG_DETAIL("%d: %lld => %lld %d => %d\n", data._frameId, totalFileSize, totalOrgSize, sizeCom, sizeOrg);
                     } else {
+                        totalFileSize += sizeOrg;
                         ar.serialize(cur, sizeOrg);
+                        XXLOG_DETAIL("%d: %lld => %lld %d\n", data._frameId, totalFileSize, totalOrgSize, sizeOrg);
                     }
                     cur += sizeOrg;
                     remainSize -= sizeOrg;
@@ -388,11 +404,13 @@ void Loader::load(Archive& ar) {
 void Loader::clear() {
     _threads.clear();
     _namePool.clear();
+#if NAME_NEEDS_FREE
     for (auto iter = _names.begin(); iter != _names.end(); ++iter) {
         if (*iter) {
             free((void*)*iter);
         }
     }
+#endif//NAME_NEEDS_FREE
     _names.clear();
 }
 
@@ -416,8 +434,11 @@ const char* Loader::name(SName name) {
 
 const char* Loader::prepareName(const char* name) {
     //CppNameDecoder decoder(name);
-
-    return strdup(name);
+#if NAME_NEEDS_FREE
+    return strdup(name)
+#else//NAME_NEEDS_FREE
+    return name;
+#endif//NAME_NEEDS_FREE
 }
 
 XX_NAMESPACE_END(xxprofile);
