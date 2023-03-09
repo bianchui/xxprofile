@@ -27,7 +27,7 @@ struct SCompressLz4 {
 };
 
 #ifdef XXPROFILE_HAS_DECOMPRESS
-struct SDecompressLz4 {
+struct SDecompressLz4 : IDecompress {
     size_t doDecompress(void* dst, size_t dstSize, const void* src, size_t srcSize) {
         return LZ4_decompress_safe((const char*)src, (char*)dst, (int)srcSize, (int)dstSize);
     }

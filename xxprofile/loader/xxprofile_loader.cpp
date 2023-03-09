@@ -16,57 +16,29 @@ XX_NAMESPACE_BEGIN(xxprofile);
 struct SDecompress {
     typedef std::function<size_t (void*, size_t, const void*, size_t)> CompressFun_T;
 
-    SDecompressZlib _zlib;
-    SDecompressLzo _lzo;
-    SDecompressLz4 _lz4;
     uint32_t _method;
-    CompressFun_T _decompress;
+    IDecompress* _decompress;
 
     SDecompress(uint32_t method) {
         _method = method;
-        _decompress = decompressFunction();
-    }
-    
-    size_t decompress1(void* dst, size_t dstSize, const void* src, size_t srcSize) {
         switch (_method) {
             case ECompressMethod::Zlib:
-                return _zlib.doDecompress(dst, dstSize, src, srcSize);
-
+                _decompress = new SDecompressZlib();
+                break;
             case ECompressMethod::Lzo:
-                return _lzo.doDecompress(dst, dstSize, src, srcSize);
-
+                _decompress = new SDecompressLzo();
+                break;
             case ECompressMethod::Lz4:
-                return _lz4.doDecompress(dst, dstSize, src, srcSize);
-
+                _decompress = new SDecompressLz4();
+                break;
             default:
-                return 0;
-        }
-    }
-
-    size_t decompress(void* dst, size_t dstSize, const void* src, size_t srcSize) {
-        if (_decompress) {
-            return _decompress(dst, dstSize, src, srcSize);
-        } else {
-            return 0;
+                assert(false);
+                break;
         }
     }
 
     size_t operator ()(void* dst, size_t dstSize, const void* src, size_t srcSize) {
-        return decompress(dst, dstSize, src, srcSize);
-    }
-
-    CompressFun_T decompressFunction() {
-        using namespace std::placeholders;
-        switch (_method) {
-            case ECompressMethod::Zlib:
-                return std::bind(&SDecompressZlib::doDecompress, &_zlib, _1, _2, _3, _4);
-            case ECompressMethod::Lzo:
-                return std::bind(&SDecompressLzo::doDecompress, &_lzo, _1, _2, _3, _4);
-            case ECompressMethod::Lz4:
-                return std::bind(&SDecompressLz4::doDecompress, &_lz4, _1, _2, _3, _4);
-            default:
-                return CompressFun_T();
-        }
+        return _decompress->doDecompress(dst, dstSize, src, srcSize);
     }
 };
 

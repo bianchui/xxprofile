@@ -87,4 +87,11 @@
 
 #define XXLOG(level, ...) XXLOG_##level(__VA_ARGS__)
 
+#ifdef XXPROFILE_HAS_DECOMPRESS
+struct IDecompress {
+    virtual ~IDecompress() {};
+    virtual size_t doDecompress(void* dst, size_t dstSize, const void* src, size_t srcSize) = 0;
+};
+#endif//XXPROFILE_HAS_DECOMPRESS
+
 #endif//xxprofile_internal_h

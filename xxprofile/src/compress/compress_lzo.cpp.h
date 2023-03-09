@@ -20,7 +20,7 @@ struct SCompressLzo {
 };
 
 #ifdef XXPROFILE_HAS_DECOMPRESS
-struct SDecompressLzo {
+struct SDecompressLzo : IDecompress {
     size_t doDecompress(void* dst, size_t dstSize, const void* src, size_t srcSize) {
         return 0;
     }

@@ -25,7 +25,7 @@ struct SCompressZlib {
 };
 
 #ifdef XXPROFILE_HAS_DECOMPRESS
-struct SDecompressZlib {
+struct SDecompressZlib : IDecompress {
     size_t doDecompress(void* dst, size_t dstSize, const void* src, size_t srcSize) {
         uLongf destLen = (uLongf)dstSize;
         if (Z_OK != uncompress((Bytef *)dst, &destLen, (const Bytef *)src, (uLong)srcSize)) {
