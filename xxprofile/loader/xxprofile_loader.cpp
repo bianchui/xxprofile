@@ -254,6 +254,7 @@ ThreadData& Loader::getThreadFromId(uint32_t threadId) {
         size_t index = _threads.size();
         _threads.resize(index + 1);
         ThreadData& thread = _threads[index];
+        thread._threadIndex = static_cast<uint32_t>(index);
         thread._threadId = threadId;
         thread._secondsPerCycle = this->_secondsPerCycle;
         thread._maxCycleCount = 0;
@@ -263,7 +264,7 @@ ThreadData& Loader::getThreadFromId(uint32_t threadId) {
 
 void Loader::load(Archive& ar) {
     _processStart = 0;
-    SDecompress decompress(ar.getCompressMethod());
+    std::vector<SDecompress> _threadsDecompress;
     ar << this->_secondsPerCycle;
     uint32_t threadId = 0;
     uint64_t totalFileSize = 0;
@@ -278,6 +279,10 @@ void Loader::load(Archive& ar) {
             }
         }
         ThreadData& thread = getThreadFromId(threadId);
+        if (thread._threadIndex == _threadsDecompress.size()) {
+            _threadsDecompress.push_back(SDecompress(ar.getCompressMethod()));
+        }
+        SDecompress& decompress = _threadsDecompress[thread._threadIndex];
         FrameData data;
         ar << data._frameId;
         XXLOG_DETAIL("Load.frame(%d) for thread(%d)\n", data._frameId, threadId);

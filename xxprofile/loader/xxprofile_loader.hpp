@@ -208,10 +208,12 @@ private:
 
 struct ThreadData {
     std::vector<FrameData> _frames;
+    uint32_t _threadIndex;
     uint32_t _threadId;
     uint64_t _maxCycleCount;
     double _secondsPerCycle;
     ThreadData() {
+        _threadIndex = 0;
         _threadId = 0;
         _maxCycleCount = 0;
         _secondsPerCycle = 0;
