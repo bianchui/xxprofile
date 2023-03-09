@@ -184,6 +184,7 @@ public:
                     double time = frame->frameCycles() * _data->_secondsPerCycle;
                     buf.appendf("%d: [%.3fms, %.3fms]", frame->frameId(), (frame->startTime() - _processStart) * _data->_secondsPerCycle * 1000, (frame->endTime() - _processStart) * _data->_secondsPerCycle * 1000);
                     Math::FormatTime(buf, time);
+                    buf.appendf("\nNodes: %d", frame->nodeCount());
                 } else {
                     buf.appendf("no frame");
                 }
