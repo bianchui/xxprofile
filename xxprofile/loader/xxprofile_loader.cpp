@@ -14,8 +14,6 @@
 XX_NAMESPACE_BEGIN(xxprofile);
 
 struct SDecompress {
-    typedef std::function<size_t (void*, size_t, const void*, size_t)> CompressFun_T;
-
     uint32_t _method;
     IDecompress* _decompress;
 
@@ -314,6 +312,7 @@ void Loader::load(Archive& ar) {
                     totalOrgSize += sizeOrg;
                     if (sizeCom) {
                         if (bufSize) {
+                            assert(sizeOrg <= bufSize);
                             if (bufSize < sizeOrg) {
                                 hasError = true;
                                 break;
@@ -321,11 +320,10 @@ void Loader::load(Archive& ar) {
                         } else {
                             bufSize = sizeOrg;
                             if (decompBufSize < bufSize) {
-                                decompBuf = buf = (uint8_t*)realloc(decompBuf, bufSize);
+                                decompBuf = (uint8_t*)realloc(decompBuf, bufSize);
                                 decompBufSize = bufSize;
-                            } else {
-                                buf = decompBuf;
                             }
+                            buf = decompBuf;
                         }
                         ar.serialize(buf, sizeCom);
                         if (ar.hasError()) {
@@ -349,9 +347,6 @@ void Loader::load(Archive& ar) {
                         break;
                     }
                 }
-                if (buf) {
-                    free(buf);
-                }
                 if (hasError || remainSize != 0) {
                     break;
                 }
@@ -365,6 +360,9 @@ void Loader::load(Archive& ar) {
             thread._maxCycleCount = data.frameCycles();
         }
         thread._frames.push_back(std::move(data));
+    }
+    if (decompBuf) {
+        free(decompBuf);
     }
 
     size_t tcount = _threads.size();

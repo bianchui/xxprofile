@@ -223,6 +223,7 @@ struct ThreadData {
     void clear();
 
     ThreadData(ThreadData&& other) : _frames(std::move(other._frames)) {
+        _threadIndex = other._threadIndex;
         _threadId = other._threadId;
         _maxCycleCount = other._maxCycleCount;
         _secondsPerCycle = other._secondsPerCycle;
@@ -230,6 +231,7 @@ struct ThreadData {
 
     void swap(ThreadData& other) {
         _frames.swap(other._frames);
+        std::swap(_threadIndex, other._threadIndex);
         std::swap(_threadId, other._threadId);
         std::swap(_maxCycleCount, other._maxCycleCount);
         std::swap(_secondsPerCycle, other._secondsPerCycle);
