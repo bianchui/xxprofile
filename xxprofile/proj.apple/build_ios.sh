@@ -69,8 +69,8 @@ function build_Config() {
 
     guard rm -f ${var_out_lib}_arm64.a ${var_out_lib}_armv7.a ${var_out_lib}_x86_64.a ${var_out_lib}_i386.a
 
-    mkdir -p ../out/ios/
-    guard cp ${var_out_lib}.a ../out/ios/
+    mkdir -p ../../out/ios/
+    guard cp ${var_out_lib}.a ../../out/ios/
 }
 
 pushd $THIS_DIR > /dev/null
