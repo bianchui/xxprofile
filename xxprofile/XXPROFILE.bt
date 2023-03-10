@@ -1,0 +1,72 @@
+//------------------------------------------------
+//--- 010 Editor v12.0.1 Binary Template
+//
+//      File: XXPROFILE.bt
+//   Authors: bianchui
+//   Version: 0.1
+//   Purpose: 
+//  Category: Archive
+// File Mask: *.xxprofile
+//  ID Bytes: 58 50 41 52 // XPAR = XxProfile ARchive
+//   History: 
+//------------------------------------------------
+
+
+// Define structures used in BMP files
+
+typedef struct {   // fh
+    CHAR  magic[4];
+    DWORD version;
+    DWORD flags;
+    DWORD compressMethod;
+} XXARCHIVE_FileHeader <bgcolor=cRed>;
+
+typedef struct {    // name
+    DWORD length;
+    CHAR  name[length];
+} Name;
+
+typedef struct {   // names
+    DWORD nameCount;
+    if (nameCount > 0) {
+        DWORD startIndex;
+        Name  name[nameCount] <optimize=false>;
+    }
+} Names <bgcolor=cBlue>;
+
+typedef struct {   // frameData
+    DWORD threadId;
+    DWORD frameId;
+    Names names;
+    DWORD nodeCount;
+} FrameData;
+
+
+typedef struct {   // profileData
+    double secondsPerCycle;
+    FrameData frame;
+} ProfileData;
+
+
+//---------------------------------------------
+// Custom read functions for color types - this allows the
+//  color to be displayed without having to open up the structure.
+
+
+//---------------------------------------------
+// Define the headers
+
+LittleEndian();
+SetBackColor( cLtGray );
+XXARCHIVE_FileHeader fh;
+ProfileData profileData;
+
+// Check for header
+
+if( fh.magic != "XPAR" ) {
+    Warning( "File is not a xxprofile. Template stopped." );
+    return -1;
+}
+
+// Define the bytes of the data
+SetBackColor( cLtAqua );
