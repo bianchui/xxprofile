@@ -4,7 +4,7 @@
 #include "EventHandler.hpp"
 #include <unordered_map>
 
-FrameView::FrameView() : _loader(NULL), _frameData(NULL), _combined(false) {
+FrameView::FrameView() : _loader(nullptr), _frameData(nullptr), _frameDetail(nullptr), _combined(false) {
     
 }
 
@@ -13,7 +13,11 @@ FrameView::~FrameView() {
 }
 
 void FrameView::clear() {
-    _frameData = NULL;
+    _frameData = nullptr;
+    if (_frameDetail) {
+        delete _frameDetail;
+        _frameDetail = nullptr;
+    }
 }
 
 void FrameView::setLoader(const xxprofile::Loader* loader) {
@@ -27,6 +31,9 @@ void FrameView::setFrameData(const xxprofile::FrameData* data) {
     clear();
     _frameData = data;
     _frameStart = data ? data->startTime() : 0;
+    if (data && _loader) {
+        _frameDetail = new xxprofile::FrameDetail(*_loader, *data);
+    }
 }
 
 static const ImVec4 kColorRed(1, 0, 0, 1);
@@ -34,10 +41,10 @@ static const ImVec4 kColorWhite(1, 1, 1, 1);
 static const ImVec4 kColorYellow(1, 1, 0, 1);
 
 void FrameView::draw() {
-    if (!_frameData) {
+    if (!_frameDetail) {
         return;
     }
-    if (_frameData->anyCombined()) {
+    if (_frameDetail->anyCombined()) {
         ImGui::Checkbox("Combined", &_combined);
     } else {
         _combined = false;
@@ -51,7 +58,7 @@ void FrameView::draw() {
         uint64_t frameCycles;
         double frameTimes;
         ImGuiStyle* style;
-        const xxprofile::FrameData* data;
+        const xxprofile::FrameDetail* data;
         shared::StrBuf _name;
         shared::StrBuf _timeBuffer;
         void draw(const xxprofile::TreeItem* item, uint64_t parentCycles, children_names_map& names) {
@@ -165,7 +172,7 @@ void FrameView::draw() {
         }
     };
     DrawTreeNode drawtv;
-    drawtv.data = _frameData;
+    drawtv.data = _frameDetail;
     drawtv._secondsPerCycle = 0;
     if (_loader->_threads.size()) {
         drawtv._secondsPerCycle = _loader->_threads[0]._secondsPerCycle;
@@ -180,9 +187,9 @@ void FrameView::draw() {
     drawtv.style = &style;
     const ImVec4 colorOld = style.Colors[ImGuiCol_Text];
     if (!_combined) {
-        drawtv.draw(_frameData->roots(), drawtv.frameCycles);
+        drawtv.draw(_frameDetail->roots(), drawtv.frameCycles);
     } else {
-        drawtv.drawCombined(_frameData->combinedRoots(), drawtv.frameCycles);
+        drawtv.drawCombined(_frameDetail->combinedRoots(), drawtv.frameCycles);
     }
     style.Colors[ImGuiCol_Text] = colorOld;
 }

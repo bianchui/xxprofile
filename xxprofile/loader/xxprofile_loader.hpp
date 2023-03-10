@@ -12,6 +12,50 @@ XX_NAMESPACE_BEGIN(xxprofile);
 struct XXProfileTreeNode;
 struct Loader;
 
+struct FrameData {
+    uint64_t _frameCycles;
+    uint64_t _startTime;
+    uint64_t _endTime;
+    uint32_t _frameId;
+    uint32_t _nodeCount;
+    XXProfileTreeNode* _nodes;
+
+    FrameData() {
+        memset(this, 0, sizeof(FrameData));
+    }
+    FrameData(FrameData&& other) {
+        memcpy(this, &other, sizeof(FrameData));
+        memset(&other, 0, sizeof(FrameData));
+    }
+    ~FrameData() {
+        if (_nodes) {
+            free(_nodes);
+        }
+    }
+
+    void init();
+
+    uint64_t frameCycles() const {
+        return _frameCycles;
+    }
+    uint64_t startTime() const {
+        return _startTime;
+    }
+    uint64_t endTime() const {
+        return _endTime;
+    }
+    uint32_t frameId() const {
+        return _frameId;
+    }
+    uint32_t nodeCount() const {
+        return _nodeCount;
+    }
+
+private:
+    XX_CLASS_DELETE_COPY(FrameData);
+    XX_CLASS_DELETE_MOVE_ASSIGN(FrameData);
+};
+
 struct CombinedTreeItem;
 struct TreeItem {
     const char* _name;
@@ -54,10 +98,12 @@ public:
     FrameDetailBase() {
         memset(this, 0, sizeof(FrameDetailBase));
     }
+#if 0
     FrameDetailBase(FrameDetailBase&& other) {
         memcpy(this, &other, sizeof(FrameDetailBase));
         memset(&other, 0, sizeof(FrameDetailBase));
     }
+#endif//0
     ~FrameDetailBase() {
         if (_allNodes) {
             for (uint32_t i = 0; i < _nodeCount; ++i) {
@@ -68,9 +114,11 @@ public:
             }
             free(_allNodes);
         }
+#if 0
         if (_nodes) {
             free(_nodes);
         }
+#endif//0
     }
 
     uint64_t frameCycles() const {
@@ -85,7 +133,7 @@ public:
 
 private:
     XX_CLASS_DELETE_COPY(FrameDetailBase);
-    XX_CLASS_DELETE_MOVE_ASSIGN(FrameDetailBase);
+    XX_CLASS_DELETE_MOVE(FrameDetailBase);
     friend Loader;
 };
 
@@ -145,15 +193,16 @@ protected:
     std::vector<CombinedTreeItem*> _combinedRoots;
 
 public:
-    FrameDetail() : _combinedNodeCount(0), _allCombinedNodes(NULL) {
-    }
+    FrameDetail(const Loader& loader, const FrameData& data);
 
+#if 0
     FrameDetail(FrameDetail&& other) : FrameDetailBase(std::move(other)), _roots(std::move(other._roots)), _combinedRoots(std::move(other._combinedRoots)) {
         _combinedNodeCount = other._combinedNodeCount;
         other._combinedNodeCount = 0;
         _allCombinedNodes = other._allCombinedNodes;
         other._allCombinedNodes = NULL;
     }
+#endif//0
 
     ~FrameDetail() {
         if (_allCombinedNodes) {
@@ -166,8 +215,6 @@ public:
             free(_allCombinedNodes);
         }
     }
-
-    void init(Loader* loader);
 
     const std::vector<TreeItem*>& roots() const {
         return _roots;
@@ -203,7 +250,7 @@ public:
 
 private:
     XX_CLASS_DELETE_COPY(FrameDetail);
-    XX_CLASS_DELETE_MOVE_ASSIGN(FrameDetail);
+    XX_CLASS_DELETE_MOVE(FrameDetail);
 };
 
 struct ThreadData {
@@ -250,7 +297,7 @@ private:
 struct Loader {
     std::vector<ThreadData> _threads;
     SNamePool _namePool;
-    std::vector<const char*> _names;
+    mutable std::vector<const char*> _names;
     double _secondsPerCycle;
     uint64_t _processStart;
 
@@ -260,7 +307,7 @@ struct Loader {
     void load(Archive& ar);
     void clear();
 
-    const char* name(SName name);
+    const char* name(SName name) const;
 
 protected:
     ThreadData& getThreadFromId(uint32_t threadId);

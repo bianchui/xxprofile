@@ -20,6 +20,7 @@ public:
 private:
     const xxprofile::Loader* _loader;
     const xxprofile::FrameData* _frameData;
+    const xxprofile::FrameDetail* _frameDetail;
     bool _combined;
     uint64_t _frameStart;
 };

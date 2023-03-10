@@ -61,6 +61,35 @@ FORCEINLINE uint32_t Uint32Hash(uint32_t value, uint32_t hash = 0) {
     return hash;
 }
 
+#pragma mark - FrameData
+
+void FrameData::init() {
+    if (_nodeCount) {
+        const uint32_t nodeCount = _nodeCount;
+        assert(_nodes != nullptr);
+        assert(_frameCycles == 0);
+        const xxprofile::XXProfileTreeNode* nodes = _nodes;
+
+        for (uint32_t i = 0; i < nodeCount; ++i) {
+            const xxprofile::XXProfileTreeNode* node = nodes + i;
+            if (!node->_parentNodeId) {
+                _frameCycles += node->_endTime - node->_beginTime;
+                if (i == 0) {
+                    _startTime = node->_beginTime;
+                    _endTime = node->_endTime;
+                } else {
+                    if (_startTime > node->_beginTime) {
+                        _startTime = node->_beginTime;
+                    }
+                    if (_endTime < node->_endTime) {
+                        _endTime = node->_endTime;
+                    }
+                }
+            }
+        }
+    }
+}
+
 #pragma mark - TreeItem
 
 uint32_t TreeItem::hash() const {
@@ -154,12 +183,14 @@ void CombinedTreeItem::combin(TreeItem* item) {
 
 #pragma mark - FrameDetail
 
-void FrameDetail::init(Loader* loader) {
-    assert(loader);
+FrameDetail::FrameDetail(const Loader& loader, const FrameData& data) {
     assert(_allNodes == nullptr);
     _combinedNodeCount = 0;
-    if (_nodeCount) {
-        const uint32_t nodeCount = _nodeCount;
+    _allCombinedNodes = nullptr;
+    _frameId = data._frameId;
+    const uint32_t nodeCount = _nodeCount = data._nodeCount;
+    _nodes = data._nodes;
+    if (nodeCount) {
         assert(_nodes != nullptr);
         assert(_frameCycles == 0);
         _allNodes = (TreeItem*)malloc(sizeof(TreeItem) * nodeCount);
@@ -171,7 +202,7 @@ void FrameDetail::init(Loader* loader) {
             const xxprofile::XXProfileTreeNode* node = nodes + i;
             TreeItem* item = _allNodes + i;
             item->_node = node;
-            item->_name = loader->name(node->_name);
+            item->_name = loader.name(node->_name);
             if (node->_parentNodeId) {
                 assert(node->_parentNodeId <= i);
                 if (node->_parentNodeId > i) {
@@ -359,7 +390,7 @@ void Loader::load(Archive& ar) {
         if (ar.hasError()) {
             break;
         }
-        data.init(this);
+        data.init();
         if (thread._maxCycleCount < data.frameCycles()) {
             thread._maxCycleCount = data.frameCycles();
         }
@@ -393,7 +424,7 @@ void Loader::clear() {
     _names.clear();
 }
 
-const char* Loader::name(SName name) {
+const char* Loader::name(SName name) const {
     if (name.id() == 0) {
         return "";
     }
