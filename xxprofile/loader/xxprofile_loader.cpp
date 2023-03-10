@@ -61,8 +61,8 @@ FORCEINLINE uint32_t Uint32Hash(uint32_t value, uint32_t hash = 0) {
     return hash;
 }
 
-//----------
-// TreeItem
+#pragma mark - TreeItem
+
 uint32_t TreeItem::hash() const {
     if (!_hash) {
         uint32_t h = Uint32Hash(_node->_name.id(), 0);
@@ -113,8 +113,8 @@ uint64_t TreeItem::useCycles() const {
     return _node->_endTime - _node->_beginTime;
 }
 
-//----------
-// CombinedTreeItem
+#pragma mark - CombinedTreeItem
+
 bool CombinedTreeItem::addChild(CombinedTreeItem* child, TreeItem* item) {
     if (!_children) {
         _children = new std::vector<CombinedTreeItem*>();
@@ -152,9 +152,9 @@ void CombinedTreeItem::combin(TreeItem* item) {
     ++_combinedCount;
 }
 
-//----------
-// FrameData
-void FrameData::init(Loader* loader) {
+#pragma mark - FrameDetail
+
+void FrameDetail::init(Loader* loader) {
     assert(loader);
     assert(_allNodes == nullptr);
     _combinedNodeCount = 0;
@@ -225,6 +225,8 @@ void FrameData::init(Loader* loader) {
     }
 }
 
+#pragma mark - ThreadData
+
 ThreadData::~ThreadData() {
     clear();
 }
@@ -234,6 +236,8 @@ void ThreadData::clear() {
     _secondsPerCycle = 0;
     _maxCycleCount = 0;
 }
+
+#pragma mark - Loader
 
 Loader::Loader() {
 }

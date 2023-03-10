@@ -42,7 +42,7 @@ struct TreeItem {
     }
 };
 
-struct FrameDataBase {
+struct FrameDetailBase {
 protected:
     uint64_t _frameCycles;
     uint32_t _frameId;
@@ -51,14 +51,14 @@ protected:
     TreeItem* _allNodes;
 
 public:
-    FrameDataBase() {
-        memset(this, 0, sizeof(FrameDataBase));
+    FrameDetailBase() {
+        memset(this, 0, sizeof(FrameDetailBase));
     }
-    FrameDataBase(FrameDataBase&& other) {
-        memcpy(this, &other, sizeof(FrameDataBase));
-        memset(&other, 0, sizeof(FrameDataBase));
+    FrameDetailBase(FrameDetailBase&& other) {
+        memcpy(this, &other, sizeof(FrameDetailBase));
+        memset(&other, 0, sizeof(FrameDetailBase));
     }
-    ~FrameDataBase() {
+    ~FrameDetailBase() {
         if (_allNodes) {
             for (uint32_t i = 0; i < _nodeCount; ++i) {
                 auto& node = _allNodes[i];
@@ -84,8 +84,8 @@ public:
     }
 
 private:
-    XX_CLASS_DELETE_COPY(FrameDataBase);
-    XX_CLASS_DELETE_MOVE_ASSIGN(FrameDataBase);
+    XX_CLASS_DELETE_COPY(FrameDetailBase);
+    XX_CLASS_DELETE_MOVE_ASSIGN(FrameDetailBase);
     friend Loader;
 };
 
@@ -137,7 +137,7 @@ struct CombinedTreeItem {
     }
 };
 
-struct FrameData : FrameDataBase {
+struct FrameDetail : FrameDetailBase {
 protected:
     std::vector<TreeItem*> _roots;
     uint32_t _combinedNodeCount;
@@ -145,17 +145,17 @@ protected:
     std::vector<CombinedTreeItem*> _combinedRoots;
 
 public:
-    FrameData() : _combinedNodeCount(0), _allCombinedNodes(NULL) {
+    FrameDetail() : _combinedNodeCount(0), _allCombinedNodes(NULL) {
     }
 
-    FrameData(FrameData&& other) : FrameDataBase(std::move(other)), _roots(std::move(other._roots)), _combinedRoots(std::move(other._combinedRoots)) {
+    FrameDetail(FrameDetail&& other) : FrameDetailBase(std::move(other)), _roots(std::move(other._roots)), _combinedRoots(std::move(other._combinedRoots)) {
         _combinedNodeCount = other._combinedNodeCount;
         other._combinedNodeCount = 0;
         _allCombinedNodes = other._allCombinedNodes;
         other._allCombinedNodes = NULL;
     }
 
-    ~FrameData() {
+    ~FrameDetail() {
         if (_allCombinedNodes) {
             for (uint32_t i = 0; i < _nodeCount; ++i) {
                 auto& node = _allCombinedNodes[i];
@@ -202,8 +202,8 @@ public:
     }
 
 private:
-    XX_CLASS_DELETE_COPY(FrameData);
-    XX_CLASS_DELETE_MOVE_ASSIGN(FrameData);
+    XX_CLASS_DELETE_COPY(FrameDetail);
+    XX_CLASS_DELETE_MOVE_ASSIGN(FrameDetail);
 };
 
 struct ThreadData {
