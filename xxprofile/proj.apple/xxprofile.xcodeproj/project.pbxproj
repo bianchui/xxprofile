@@ -506,19 +506,19 @@
 		86334D53237BEFE0004F01C9 /* libs */ = {
 			isa = PBXGroup;
 			children = (
-				86334D55237BEFF9004F01C9 /* lz4-1.9.2 */,
+				86334D55237BEFF9004F01C9 /* lz4-1.9.4 */,
 				86334E1B237BEFF9004F01C9 /* lzo-2.10 */,
 			);
 			name = libs;
 			path = ../../libs;
 			sourceTree = "<group>";
 		};
-		86334D55237BEFF9004F01C9 /* lz4-1.9.2 */ = {
+		86334D55237BEFF9004F01C9 /* lz4-1.9.4 */ = {
 			isa = PBXGroup;
 			children = (
 				86334DA4237BEFF9004F01C9 /* lib */,
 			);
-			path = "lz4-1.9.2";
+			path = "lz4-1.9.4";
 			sourceTree = "<group>";
 		};
 		86334DA4237BEFF9004F01C9 /* lib */ = {
