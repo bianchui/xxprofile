@@ -9,6 +9,12 @@
 /* Begin PBXBuildFile section */
 		59A5CA3729C088800043004A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CA3629C088800043004A /* main.cpp */; };
 		59A5CA7129C0892E0043004A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CA3629C088800043004A /* main.cpp */; };
+		59A5CA7629C08B870043004A /* test_zlib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CA7429C08B870043004A /* test_zlib.cpp */; };
+		59A5CA7729C08B870043004A /* test_zlib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CA7429C08B870043004A /* test_zlib.cpp */; };
+		59A5CA7A29C08C070043004A /* test_lz4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CA7829C08C070043004A /* test_lz4.cpp */; };
+		59A5CA7B29C08C070043004A /* test_lz4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CA7829C08C070043004A /* test_lz4.cpp */; };
+		59A5CA7C29C08C070043004A /* test_lzo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CA7929C08C070043004A /* test_lzo.cpp */; };
+		59A5CA7D29C08C070043004A /* test_lzo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CA7929C08C070043004A /* test_lzo.cpp */; };
 		86334F7B237BEFFA004F01C9 /* lz4.c in Sources */ = {isa = PBXBuildFile; fileRef = 86334DAF237BEFF9004F01C9 /* lz4.c */; };
 		86334FD2237BEFFA004F01C9 /* lzo1.c in Sources */ = {isa = PBXBuildFile; fileRef = 86334EFD237BEFF9004F01C9 /* lzo1.c */; };
 		86334FD3237BEFFA004F01C9 /* lzo1_99.c in Sources */ = {isa = PBXBuildFile; fileRef = 86334EFE237BEFF9004F01C9 /* lzo1_99.c */; };
@@ -175,6 +181,10 @@
 		59A5CA3629C088800043004A /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		59A5CA5829C088D90043004A /* test_compress_ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = test_compress_ios.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		59A5CA7229C089BF0043004A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		59A5CA7429C08B870043004A /* test_zlib.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = test_zlib.cpp; sourceTree = "<group>"; };
+		59A5CA7529C08B870043004A /* test_compress.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = test_compress.hpp; sourceTree = "<group>"; };
+		59A5CA7829C08C070043004A /* test_lz4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_lz4.cpp; sourceTree = "<group>"; };
+		59A5CA7929C08C070043004A /* test_lzo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_lzo.cpp; sourceTree = "<group>"; };
 		86334DAF237BEFF9004F01C9 /* lz4.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lz4.c; sourceTree = "<group>"; };
 		86334DB0237BEFF9004F01C9 /* lz4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lz4.h; sourceTree = "<group>"; };
 		86334ED1237BEFF9004F01C9 /* lzo1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lzo1.h; sourceTree = "<group>"; };
@@ -464,6 +474,10 @@
 			isa = PBXGroup;
 			children = (
 				59A5CA3629C088800043004A /* main.cpp */,
+				59A5CA7529C08B870043004A /* test_compress.hpp */,
+				59A5CA7829C08C070043004A /* test_lz4.cpp */,
+				59A5CA7929C08C070043004A /* test_lzo.cpp */,
+				59A5CA7429C08B870043004A /* test_zlib.cpp */,
 			);
 			name = test_compress;
 			path = ../test_compress;
@@ -1221,6 +1235,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59A5CA7A29C08C070043004A /* test_lz4.cpp in Sources */,
+				59A5CA7C29C08C070043004A /* test_lzo.cpp in Sources */,
+				59A5CA7629C08B870043004A /* test_zlib.cpp in Sources */,
 				59A5CA3729C088800043004A /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1229,6 +1246,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59A5CA7B29C08C070043004A /* test_lz4.cpp in Sources */,
+				59A5CA7D29C08C070043004A /* test_lzo.cpp in Sources */,
+				59A5CA7729C08B870043004A /* test_zlib.cpp in Sources */,
 				59A5CA7129C0892E0043004A /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1426,6 +1446,10 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../libs/lzo-2.10/include",
+					"$(SRCROOT)/../../",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 11.6;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -1452,6 +1476,10 @@
 				DEVELOPMENT_TEAM = 6D5DUQ6KTS;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../libs/lzo-2.10/include",
+					"$(SRCROOT)/../../",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 11.6;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1485,6 +1513,10 @@
 					"$(inherited)",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../libs/lzo-2.10/include",
+					"$(SRCROOT)/../../",
+				);
 				INFOPLIST_FILE = test_compress_ios/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -1527,6 +1559,10 @@
 				DEVELOPMENT_TEAM = 6D5DUQ6KTS;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../libs/lzo-2.10/include",
+					"$(SRCROOT)/../../",
+				);
 				INFOPLIST_FILE = test_compress_ios/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;

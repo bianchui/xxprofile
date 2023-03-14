@@ -88,10 +88,16 @@
 #define XXLOG(level, ...) XXLOG_##level(__VA_ARGS__)
 
 #ifdef XXPROFILE_HAS_DECOMPRESS
+
+XX_NAMESPACE_BEGIN(xxprofile);
+
 struct IDecompress {
     virtual ~IDecompress() {};
     virtual size_t doDecompress(void* dst, size_t dstSize, const void* src, size_t srcSize) = 0;
 };
+
+XX_NAMESPACE_END(xxprofile);
+
 #endif//XXPROFILE_HAS_DECOMPRESS
 
 #endif//xxprofile_internal_h
