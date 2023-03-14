@@ -15,6 +15,16 @@
 		59A5CA7B29C08C070043004A /* test_lz4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CA7829C08C070043004A /* test_lz4.cpp */; };
 		59A5CA7C29C08C070043004A /* test_lzo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CA7929C08C070043004A /* test_lzo.cpp */; };
 		59A5CA7D29C08C070043004A /* test_lzo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CA7929C08C070043004A /* test_lzo.cpp */; };
+		59A5CA8329C098440043004A /* lz4.c in Sources */ = {isa = PBXBuildFile; fileRef = 86334DAF237BEFF9004F01C9 /* lz4.c */; };
+		59A5CA8429C098480043004A /* lz4hc.c in Sources */ = {isa = PBXBuildFile; fileRef = 868231ED238F91A500B5A1CD /* lz4hc.c */; };
+		59A5CA8529C098490043004A /* lz4hc.c in Sources */ = {isa = PBXBuildFile; fileRef = 868231ED238F91A500B5A1CD /* lz4hc.c */; };
+		59A5CA8629C0984B0043004A /* lz4.c in Sources */ = {isa = PBXBuildFile; fileRef = 86334DAF237BEFF9004F01C9 /* lz4.c */; };
+		59A5CA8B29C0991C0043004A /* platform_apple.mm in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73031FCD46C3004E945D /* platform_apple.mm */; };
+		59A5CA8D29C0991C0043004A /* platform_apple.mm in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73031FCD46C3004E945D /* platform_apple.mm */; };
+		59A5CA8E29C0994C0043004A /* platform_base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73051FCD46C3004E945D /* platform_base.cpp */; };
+		59A5CA8F29C0994D0043004A /* platform_base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5F73051FCD46C3004E945D /* platform_base.cpp */; };
+		59A5CAAA29C09CFE0043004A /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = ED7D784C20F731670043FF99 /* libz.tbd */; };
+		59A5CAAC29C09D640043004A /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = ED7D784F20F7316F0043FF99 /* libz.tbd */; };
 		86334F7B237BEFFA004F01C9 /* lz4.c in Sources */ = {isa = PBXBuildFile; fileRef = 86334DAF237BEFF9004F01C9 /* lz4.c */; };
 		86334FD2237BEFFA004F01C9 /* lzo1.c in Sources */ = {isa = PBXBuildFile; fileRef = 86334EFD237BEFF9004F01C9 /* lzo1.c */; };
 		86334FD3237BEFFA004F01C9 /* lzo1_99.c in Sources */ = {isa = PBXBuildFile; fileRef = 86334EFE237BEFF9004F01C9 /* lzo1_99.c */; };
@@ -411,6 +421,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59A5CAAC29C09D640043004A /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -418,6 +429,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59A5CAAA29C09CFE0043004A /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1236,9 +1248,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				59A5CA7A29C08C070043004A /* test_lz4.cpp in Sources */,
+				59A5CA8E29C0994C0043004A /* platform_base.cpp in Sources */,
+				59A5CA8B29C0991C0043004A /* platform_apple.mm in Sources */,
 				59A5CA7C29C08C070043004A /* test_lzo.cpp in Sources */,
 				59A5CA7629C08B870043004A /* test_zlib.cpp in Sources */,
+				59A5CA8429C098480043004A /* lz4hc.c in Sources */,
 				59A5CA3729C088800043004A /* main.cpp in Sources */,
+				59A5CA8329C098440043004A /* lz4.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1246,9 +1262,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59A5CA8629C0984B0043004A /* lz4.c in Sources */,
+				59A5CA8F29C0994D0043004A /* platform_base.cpp in Sources */,
+				59A5CA8D29C0991C0043004A /* platform_apple.mm in Sources */,
 				59A5CA7B29C08C070043004A /* test_lz4.cpp in Sources */,
 				59A5CA7D29C08C070043004A /* test_lzo.cpp in Sources */,
 				59A5CA7729C08B870043004A /* test_zlib.cpp in Sources */,
+				59A5CA8529C098490043004A /* lz4hc.c in Sources */,
 				59A5CA7129C0892E0043004A /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
