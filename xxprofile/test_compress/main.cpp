@@ -9,8 +9,9 @@
 #include <iostream>
 #include "test_compress.hpp"
 #include "../src/platforms/platform.hpp"
+#include "../src/xxprofile_tls.hpp"
 
-static const uint32_t kSrcSize = 128 * 1024;
+static const uint32_t kSrcSize = xxprofile::XXProfileTLS::ChunkByteSize;
 
 void testCompress(const char* name, const char* buf, xxprofile::ICompress* compress, xxprofile::IDecompress* decompress) {
     static const uint32_t kTestTimes = 10000;
@@ -57,12 +58,16 @@ void testCompressChunked(const char* name, const char* buf, xxprofile::ICompress
     for (uint32_t i = 0; i < kSrcSize; ++i) {
         buf2[i] = rand();
     }
+    for (uint32_t i = 0; i < kSrcSize; i += 2) {
+        buf2[i] = i;
+    }
+    const char* buf3 = buf2;
     char* dec = new char[kSrcSize * 2];
 
     static const uint32_t kTestTImes = 10;
 
     for (uint32_t i = 0; i < kTestTImes; ++i) {
-        const char* src = buf2 ? buf2 : buf;
+        const char* src = buf3 ? buf3 : buf;
         auto comLen = (uint32_t)compress->doCompress(com, kSrcSize * 2, src, kSrcSize);
         auto decLen = (uint32_t)decompress->doDecompress(dec, kSrcSize * 2, com, comLen);
 
@@ -72,9 +77,10 @@ void testCompressChunked(const char* name, const char* buf, xxprofile::ICompress
             printf("%s:[%d] check: %s\n", name, i, memcmp(dec, src, kSrcSize) == 0 ? "true" : "false");
         }
 
-        if (buf2) {
-            delete[] buf2;
-            buf2 = nullptr;
+        if (buf3) {
+            buf3 = nullptr;
+        } else {
+            buf3 = buf2;
         }
     }
 
@@ -97,6 +103,7 @@ int main(int argc, const char * argv[]) {
     }
     if (true) {
         testCompressChunked("zlib", buf, compress_createChunkedZlib(), decompress_createChunkedZlib());
+        testCompressChunked("lz4", buf, compress_createChunkedLz4(), decompress_createChunkedLz4());
     }
     delete[] buf;
     return 0;

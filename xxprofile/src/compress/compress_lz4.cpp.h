@@ -26,12 +26,41 @@ struct SCompressLz4 : ICompress {
     
 };
 
+struct SCompressChunkedLz4 : ICompress {
+    LZ4_stream_t ctx;
+    SCompressChunkedLz4() {
+        LZ4_initStream(&ctx, sizeof (ctx));
+    }
+    ~SCompressChunkedLz4() {
+    }
+
+    size_t calcBound(size_t size) {
+        return LZ4_COMPRESSBOUND(size);
+    }
+
+    size_t doCompress(void* dst, size_t dstSize, const void* src, size_t srcSize) {
+        return LZ4_compress_fast_continue(&ctx, (const char*)src, (char*)dst, (int)srcSize, (int)dstSize, 1);
+    }
+};
+
 #ifdef XXPROFILE_HAS_DECOMPRESS
 struct SDecompressLz4 : IDecompress {
     size_t doDecompress(void* dst, size_t dstSize, const void* src, size_t srcSize) {
         return LZ4_decompress_safe((const char*)src, (char*)dst, (int)srcSize, (int)dstSize);
     }
 };
+
+struct SDecompressChunkedLz4 : IDecompress {
+    LZ4_streamDecode_t ctx;
+    SDecompressChunkedLz4() {
+        memset(&ctx, 0, sizeof(ctx));
+        LZ4_setStreamDecode(&ctx, nullptr, 0);
+    }
+    size_t doDecompress(void* dst, size_t dstSize, const void* src, size_t srcSize) {
+        return LZ4_decompress_safe_continue(&ctx, (const char*)src, (char*)dst, (int)srcSize, (int)dstSize);
+    }
+};
+
 #endif//XXPROFILE_HAS_DECOMPRESS
 
 XX_NAMESPACE_END(xxprofile);

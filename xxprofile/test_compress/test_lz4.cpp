@@ -10,3 +10,4 @@
 #include "../src/compress/compress_lz4.cpp.h"
 
 IMPL_COMPRESS(Lz4);
+IMPL_COMPRESS_CHUNKED(Lz4);
