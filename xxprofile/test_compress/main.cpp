@@ -68,13 +68,14 @@ void testCompressChunked(const char* name, const char* buf, xxprofile::ICompress
 
     for (uint32_t i = 0; i < kTestTImes; ++i) {
         const char* src = buf3 ? buf3 : buf;
-        auto comLen = (uint32_t)compress->doCompress(com, kSrcSize * 2, src, kSrcSize);
+        uint32_t size = rand() % kSrcSize;
+        auto comLen = (uint32_t)compress->doCompress(com, kSrcSize * 2, src, size);
         auto decLen = (uint32_t)decompress->doDecompress(dec, kSrcSize * 2, com, comLen);
 
-        printf("%s:[%d] %d => %d\n", name, i, kSrcSize, comLen);
-        printf("%s:[%d] check size: %s\n", name, i, decLen == kSrcSize ? "true" : "false");
+        printf("%s:[%d] %d => %d\n", name, i, size, comLen);
+        printf("%s:[%d] check size: %s\n", name, i, decLen == size ? "true" : "false");
         if (decLen == kSrcSize) {
-            printf("%s:[%d] check: %s\n", name, i, memcmp(dec, src, kSrcSize) == 0 ? "true" : "false");
+            printf("%s:[%d] check: %s\n", name, i, memcmp(dec, src, size) == 0 ? "true" : "false");
         }
 
         if (buf3) {
