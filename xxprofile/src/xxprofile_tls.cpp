@@ -195,11 +195,17 @@ void XXProfileTLS::frameFlush() {
         uint32_t sizeOrg = (uint32_t)(count * sizeof(XXProfileTreeNode));
         const size_t compressedSize = compress.doCompress(compressBuffer, compressBufferSize, buffer, sizeOrg);
         uint32_t sizeCom = 0;
+#if (XXCOMPRESS_NOW & XXCOMPRESS_CHUNKED_FLAG)
+        // chunked always cannot drop any compressed data
+        sizeCom = (uint32_t)compressedSize;
+#else//if chunked
+        // unchunked free to use smaller data
         if (compressedSize && compressedSize < sizeOrg) {
             sizeCom = (uint32_t)compressedSize;
         } else {
             assert(false);
         }
+#endif//if chunked
         ar << sizeOrg;
         ar << sizeCom;
         if (sizeCom) {

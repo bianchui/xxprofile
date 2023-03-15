@@ -302,8 +302,8 @@ void Loader::load(Archive& ar) {
     uint32_t threadId = 0;
     uint64_t totalFileSize = 0;
     uint64_t totalOrgSize = 0;
-    uint8_t* decompBuf = nullptr;
-    size_t decompBufSize = 0;
+    uint8_t* buf = nullptr;
+    size_t bufSize = 0;
     while (!ar.eof() && !ar.hasError()) {
         if (ar.version() >= EVersion::V3) {
             ar << threadId;
@@ -326,8 +326,6 @@ void Loader::load(Archive& ar) {
                 ar.serialize(data._nodes, remainSize);
             } else if (ar.version() >= EVersion::V2) {
                 bool hasError = false;
-                uint8_t* buf = nullptr;
-                size_t bufSize = 0;
                 uint8_t* cur = (uint8_t*)data._nodes;
                 while (!ar.hasError()) {
                     uint32_t sizeOrg = 0, sizeCom = 0;
@@ -342,19 +340,9 @@ void Loader::load(Archive& ar) {
                     }
                     totalOrgSize += sizeOrg;
                     if (sizeCom) {
-                        if (bufSize) {
-                            assert(sizeOrg <= bufSize);
-                            if (bufSize < sizeOrg) {
-                                hasError = true;
-                                break;
-                            }
-                        } else {
-                            bufSize = sizeOrg;
-                            if (decompBufSize < bufSize) {
-                                decompBuf = (uint8_t*)realloc(decompBuf, bufSize);
-                                decompBufSize = bufSize;
-                            }
-                            buf = decompBuf;
+                        if (bufSize < sizeCom) {
+                            bufSize = sizeCom < sizeOrg ? sizeOrg : sizeCom;
+                            buf = (uint8_t*)realloc(buf, bufSize);
                         }
                         ar.serialize(buf, sizeCom);
                         if (ar.hasError()) {
@@ -392,8 +380,9 @@ void Loader::load(Archive& ar) {
         }
         thread._frames.push_back(std::move(data));
     }
-    if (decompBuf) {
-        free(decompBuf);
+    if (buf) {
+        free(buf);
+        buf = nullptr;
     }
 
     size_t tcount = _threads.size();
