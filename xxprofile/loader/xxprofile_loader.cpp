@@ -3,8 +3,6 @@
 #include "../src/xxprofile_version.hpp"
 #include "xxprofile_loader.hpp"
 #include "xxprofile_CppNameDecoder.hpp"
-#include <zlib.h>
-#include <functional>
 #include "../src/compress/compress_zlib.cpp.h"
 #include "../src/compress/compress_lzo.cpp.h"
 #include "../src/compress/compress_lz4.cpp.h"
