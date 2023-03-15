@@ -10,7 +10,7 @@
 #include "../src/compress/compress_lz4.cpp.h"
 
 #define NAME_NEEDS_FREE 0
-#define TEST_CHUNKED 0
+#define TEST_COMPRESS 0
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
@@ -305,20 +305,45 @@ ThreadData& Loader::getThreadFromId(uint32_t threadId) {
     }
 }
 
+struct Buffer {
+    uint8_t* buf = nullptr;
+    uint64_t bufSize = 0;
+
+    ~Buffer() {
+        if (buf) {
+            free(buf);
+        }
+    }
+
+    uint8_t* get(size_t size) {
+        if (bufSize < size) {
+            bufSize = size + 1024;
+            buf = (uint8_t*)realloc(buf, bufSize);
+        }
+        return buf;
+    }
+};
+
+#if TEST_COMPRESS
+uint32_t compressSize(xxprofile::ICompress& compress, const void* data, uint32_t sizeData, Buffer& buf) {
+    uint32_t size = (uint32_t)compress.calcBound(sizeData);
+    return (uint32_t)compress.doCompress(buf.get(size), size, data, sizeData);
+}
+#endif//TEST_COMPRESS
+
 void Loader::load(Archive& ar) {
     _processStart = 0;
     SDecompress decompress(ar.getCompressMethod());
-#if TEST_CHUNKED
-    SCompressChunkedLz4 compress;
-    uint8_t* chunkedBuf = nullptr;
-    uint64_t chunkedBufSize = 0;
-#endif//TEST_CHUNKED
+#if TEST_COMPRESS
+    SCompressZlib compress;
+    SCompressChunkedZlib compressChunked;
+    Buffer compressBuf;
+#endif//TEST_COMPRESS
     ar << this->_secondsPerCycle;
     uint32_t threadId = 0;
     uint64_t totalFileSize = 0;
     uint64_t totalOrgSize = 0;
-    uint8_t* buf = nullptr;
-    size_t bufSize = 0;
+    Buffer buf;
     while (!ar.eof() && !ar.hasError()) {
         if (ar.version() >= EVersion::V3) {
             ar << threadId;
@@ -355,47 +380,36 @@ void Loader::load(Archive& ar) {
                     }
                     totalOrgSize += sizeOrg;
                     if (sizeCom) {
-                        if (bufSize < sizeCom) {
-                            bufSize = (sizeCom < sizeOrg ? sizeOrg : sizeCom) + 1024;
-                            buf = (uint8_t*)realloc(buf, bufSize);
-                        }
-                        ar.serialize(buf, sizeCom);
+                        auto comBuf = buf.get(sizeCom < sizeOrg ? sizeOrg : sizeCom);
+                        ar.serialize(comBuf, sizeCom);
                         if (ar.hasError()) {
                             break;
                         }
-                        size_t destLen = decompress(cur, sizeOrg, buf, sizeCom);
+                        size_t destLen = decompress(cur, sizeOrg, comBuf, sizeCom);
                         if (destLen != sizeOrg) {
                             hasError = true;
                             break;
                         }
                         totalFileSize += sizeCom;
                         XXLOG_DETAIL("%d: %lld => %lld %d => %d\n", data._frameId, totalFileSize, totalOrgSize, sizeCom, sizeOrg);
-#if TEST_CHUNKED
+#if TEST_COMPRESS
                         {
-                            uint32_t chunkedNeeds = (uint32_t)compress.calcBound(sizeOrg);
-                            if (chunkedBufSize < chunkedNeeds) {
-                                chunkedBufSize = chunkedNeeds + 1024;
-                                chunkedBuf = (uint8_t*)realloc(chunkedBuf, chunkedBufSize);
-                            }
-                            uint32_t chunkedCom = (uint32_t)compress.doCompress(chunkedBuf, chunkedBufSize, cur, sizeOrg);
-                            XXLOG_INFO("%d: chunked org: %d com: %d vs %d\n", data._frameId, sizeOrg, sizeCom, chunkedCom);
+                            uint32_t com = compressSize(compress, cur, sizeOrg, compressBuf);
+                            uint32_t chunkedCom = compressSize(compressChunked, cur, sizeOrg, compressBuf);
+                            XXLOG_INFO("%d: chunked org: %d => %d com: %d vs %d\n", data._frameId, sizeOrg, sizeCom, com, chunkedCom);
                         }
-#endif//TEST_CHUNKED
+#endif//TEST_COMPRESS
                     } else {
                         totalFileSize += sizeOrg;
                         ar.serialize(cur, sizeOrg);
                         XXLOG_DETAIL("%d: %lld => %lld %d\n", data._frameId, totalFileSize, totalOrgSize, sizeOrg);
-#if TEST_CHUNKED
+#if TEST_COMPRESS
                         {
-                            uint32_t chunkedNeeds = (uint32_t)compress.calcBound(sizeOrg);
-                            if (chunkedBufSize < chunkedNeeds) {
-                                chunkedBufSize = chunkedNeeds + 1024;
-                                chunkedBuf = (uint8_t*)realloc(chunkedBuf, chunkedBufSize);
-                            }
-                            uint32_t chunkedCom = (uint32_t)compress.doCompress(chunkedBuf, chunkedBufSize, cur, sizeOrg);
-                            XXLOG_INFO("%d: chunked org: %d com: %d vs %d\n", data._frameId, sizeOrg, sizeCom, chunkedCom);
+                            uint32_t com = compressSize(compress, cur, sizeOrg, compressBuf);
+                            uint32_t chunkedCom = compressSize(compressChunked, cur, sizeOrg, compressBuf);
+                            XXLOG_INFO("%d: chunked org: %d com: %d vs %d\n", data._frameId, sizeOrg, com, chunkedCom);
                         }
-#endif//TEST_CHUNKED
+#endif//TEST_COMPRESS
                     }
                     cur += sizeOrg;
                     remainSize -= sizeOrg;
@@ -416,10 +430,6 @@ void Loader::load(Archive& ar) {
             thread._maxCycleCount = data.frameCycles();
         }
         thread._frames.push_back(std::move(data));
-    }
-    if (buf) {
-        free(buf);
-        buf = nullptr;
     }
 
     size_t tcount = _threads.size();
