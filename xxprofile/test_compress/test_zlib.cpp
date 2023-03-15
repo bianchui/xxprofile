@@ -10,3 +10,4 @@
 #include "../src/compress/compress_zlib.cpp.h"
 
 IMPL_COMPRESS(Zlib);
+IMPL_COMPRESS_CHUNKED(Zlib);

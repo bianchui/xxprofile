@@ -50,14 +50,54 @@ void testCompress(const char* name, const char* buf, ICompress* compress, xxprof
     delete[] dec;
 }
 
+void testCompressChunked(const char* name, const char* buf, ICompress* compress, xxprofile::IDecompress* decompress) {
+    char* com = new char[kSrcSize * 2];
+    char* buf2 = new char[kSrcSize];
+    srand(0);
+    for (uint32_t i = 0; i < kSrcSize; ++i) {
+        buf2[i] = rand();
+    }
+    char* dec = new char[kSrcSize * 2];
+
+    static const uint32_t kTestTImes = 10;
+
+    for (uint32_t i = 0; i < kTestTImes; ++i) {
+        const char* src = buf2 ? buf2 : buf;
+        auto comLen = (uint32_t)compress->doCompress(com, kSrcSize * 2, src, kSrcSize);
+        auto decLen = (uint32_t)decompress->doDecompress(dec, kSrcSize * 2, com, comLen);
+
+        printf("%s:[%d] %d => %d\n", name, i, kSrcSize, comLen);
+        printf("%s:[%d] check size: %s\n", name, i, decLen == kSrcSize ? "true" : "false");
+        if (decLen == kSrcSize) {
+            printf("%s:[%d] check: %s\n", name, i, memcmp(dec, src, kSrcSize) == 0 ? "true" : "false");
+        }
+
+        if (buf2) {
+            delete[] buf2;
+            buf2 = nullptr;
+        }
+    }
+
+    if (buf2) {
+        delete[] buf2;
+    }
+    delete[] com;
+    delete[] dec;
+}
+
 int main(int argc, const char * argv[]) {
     xxprofile::Timer::InitTiming();
     char* buf = new char[kSrcSize];
     for (uint32_t i = 0; i < kSrcSize; ++i) {
         buf[i] = i;
     }
-    testCompress("zlib", buf, compress_createZlib(), decompress_createZlib());
-    testCompress("lz4", buf, compress_createLz4(), decompress_createLz4());
+    if (false) {
+        testCompress("zlib", buf, compress_createZlib(), decompress_createZlib());
+        testCompress("lz4", buf, compress_createLz4(), decompress_createLz4());
+    }
+    if (true) {
+        testCompressChunked("zlib", buf, compress_createChunkedZlib(), decompress_createChunkedZlib());
+    }
     delete[] buf;
     return 0;
 }

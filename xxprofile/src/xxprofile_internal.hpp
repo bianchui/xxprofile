@@ -87,6 +87,8 @@
 
 #define XXLOG(level, ...) XXLOG_##level(__VA_ARGS__)
 
+#define XXPROFILE_ZLIB_LEVEL 9
+
 #ifdef XXPROFILE_HAS_DECOMPRESS
 
 XX_NAMESPACE_BEGIN(xxprofile);
