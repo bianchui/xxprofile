@@ -67,8 +67,8 @@ function build_Config() {
 
     guard rm -f ${var_out_lib}_arm64.a ${var_out_lib}_x86_64.a
 
-    mkdir -p ../../out/mac/
-    guard cp ${var_out_lib}.a ../../out/mac/
+    mkdir -p ../../out/prebuilt/mac/
+    guard cp ${var_out_lib}.a ../../out/prebuilt/mac/
 }
 
 pushd $THIS_DIR > /dev/null

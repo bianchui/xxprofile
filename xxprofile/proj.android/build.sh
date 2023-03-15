@@ -37,10 +37,10 @@ function get_tool_for_abi() {
 
 function cp_abis() {
     while [ "$1" != "" ]; do
-        guard mkdir -p ../../out/android/$1
-        guard cp obj/local/$1/xxprofile.a ../../out/android/$1/
+        guard mkdir -p ../../out/prebuilt/android/$1
+        guard cp obj/local/$1/xxprofile.a ../../out/prebuilt/android/$1/
         local STRIP=`get_tool_for_abi $1 strip`
-        $STRIP -d ../../out/android/$1/xxprofile.a
+        $STRIP -d ../../out/prebuilt/android/$1/xxprofile.a
         shift
     done
 }
