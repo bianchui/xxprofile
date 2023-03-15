@@ -103,8 +103,10 @@ int main(int argc, const char * argv[]) {
         testCompress("lz4", buf, compress_createLz4(), decompress_createLz4());
     }
     if (true) {
-        testCompressChunked("zlib", buf, compress_createChunkedZlib(), decompress_createChunkedZlib());
-        testCompressChunked("lz4", buf, compress_createChunkedLz4(), decompress_createChunkedLz4());
+        testCompressChunked("zlib", buf, compress_createZlib(), decompress_createZlib());
+        testCompressChunked("zlibChunked", buf, compress_createChunkedZlib(), decompress_createChunkedZlib());
+        testCompressChunked("lz4", buf, compress_createZlib(), decompress_createZlib());
+        testCompressChunked("lz4Chunked", buf, compress_createChunkedLz4(), decompress_createChunkedLz4());
     }
     delete[] buf;
     return 0;

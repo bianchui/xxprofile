@@ -10,7 +10,7 @@ XX_NAMESPACE_BEGIN(xxprofile);
 struct SCompressZlib : ICompress {
     
     size_t calcBound(size_t size) {
-        return size;
+        return (size_t)deflateBound(nullptr, size) + 20;
     }
     
     size_t doCompress(void* dst, size_t dstSize, const void* src, size_t srcSize) {
@@ -29,7 +29,7 @@ struct SCompressChunkedZlib : ICompress {
 
     SCompressChunkedZlib() {
         memset(&stream, 0 , sizeof(stream));
-        int err = deflateInit(&stream, XXPROFILE_ZLIB_LEVEL);
+        int err = deflateInit2(&stream, XXPROFILE_ZLIB_LEVEL, Z_DEFLATED, MAX_WBITS, 8, Z_DEFAULT_STRATEGY);
         assert(err == Z_OK);
     }
 
@@ -70,7 +70,7 @@ struct SDecompressChunkedZlib : IDecompress {
 
     SDecompressChunkedZlib() {
         memset(&stream, 0 , sizeof(stream));
-        auto err = inflateInit(&stream);
+        auto err = inflateInit2(&stream, MAX_WBITS);
         assert(err == Z_OK);
     }
 
