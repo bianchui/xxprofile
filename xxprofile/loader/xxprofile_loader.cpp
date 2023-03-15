@@ -8,6 +8,7 @@
 #include "../src/compress/compress_zlib.cpp.h"
 #include "../src/compress/compress_lzo.cpp.h"
 #include "../src/compress/compress_lz4.cpp.h"
+#include "../src/compress/compress_zstd.cpp.h"
 
 #define NAME_NEEDS_FREE 0
 #define TEST_COMPRESS 0
@@ -30,6 +31,9 @@ struct SDecompress {
             case ECompressMethod::Lz4:
                 _decompress = new SDecompressLz4();
                 break;
+            case ECompressMethod::Zstd:
+                _decompress = new SDecompressZstd();
+                break;
             case ECompressMethod::ZlibChunked:
                 _decompress = new SDecompressChunkedZlib();
                 break;
@@ -38,6 +42,9 @@ struct SDecompress {
                 break;
             case ECompressMethod::Lz4Chunked:
                 _decompress = new SDecompressChunkedLz4();
+                break;
+            case ECompressMethod::ZstdChunked:
+                assert(false);
                 break;
             default:
                 assert(false);

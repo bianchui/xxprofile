@@ -1,10 +1,10 @@
 // Copyright 2017-2023 bianchui. All rights reserved.
-#include "../../../libs/zstd-1.5.4/lib/common/debug.c"
+//#include "../../../libs/zstd-1.5.4/lib/common/debug.c"
 #include "../../../libs/zstd-1.5.4/lib/common/entropy_common.c"
 #include "../../../libs/zstd-1.5.4/lib/common/error_private.c"
 #include "../../../libs/zstd-1.5.4/lib/common/fse_decompress.c"
-#include "../../../libs/zstd-1.5.4/lib/common/pool.c"
-#include "../../../libs/zstd-1.5.4/lib/common/threading.c"
+//#include "../../../libs/zstd-1.5.4/lib/common/pool.c"
+//#include "../../../libs/zstd-1.5.4/lib/common/threading.c"
 #include "../../../libs/zstd-1.5.4/lib/common/xxhash.c"
 #include "../../../libs/zstd-1.5.4/lib/common/zstd_common.c"
 
@@ -20,9 +20,11 @@
 #include "../../../libs/zstd-1.5.4/lib/compress/zstd_lazy.c"
 #include "../../../libs/zstd-1.5.4/lib/compress/zstd_ldm.c"
 #include "../../../libs/zstd-1.5.4/lib/compress/zstd_opt.c"
-#include "../../../libs/zstd-1.5.4/lib/compress/zstdmt_compress.c"
+//#include "../../../libs/zstd-1.5.4/lib/compress/zstdmt_compress.c"
 
+#ifdef XXPROFILE_HAS_DECOMPRESS
 #include "../../../libs/zstd-1.5.4/lib/decompress/huf_decompress.c"
 #include "../../../libs/zstd-1.5.4/lib/decompress/zstd_ddict.c"
 #include "../../../libs/zstd-1.5.4/lib/decompress/zstd_decompress_block.c"
 #include "../../../libs/zstd-1.5.4/lib/decompress/zstd_decompress.c"
+#endif//XXPROFILE_HAS_DECOMPRESS

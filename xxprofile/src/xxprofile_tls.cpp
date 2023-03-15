@@ -13,6 +13,8 @@
 #  include "compress/compress_lzo.cpp.h"
 #elif XX_IsCompress(LZ4) || XX_IsCompress(LZ4_CHUNKED)
 #  include "compress/compress_lz4.cpp.h"
+#elif XX_IsCompress(ZSTD) || XX_IsCompress(ZSTD_CHUNKED)
+#  include "compress/compress_zstd.cpp.h"
 #else
 #  error compress method
 #endif//
@@ -31,6 +33,10 @@ typedef SCompressChunkedLzo SCompress;
 typedef SCompressLz4 SCompress;
 #elif XX_IsCompress(LZ4_CHUNKED)
 typedef SCompressChunkedLz4 SCompress;
+#elif XX_IsCompress(ZSTD)
+typedef SCompressZstd SCompress;
+#elif XX_IsCompress(ZSTD_CHUNKED)
+typedef SCompressChunkedZstd SCompress;
 #else
 #  error compress method
 #endif//

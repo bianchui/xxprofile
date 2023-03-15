@@ -8,7 +8,6 @@
 
 #ifndef test_compress_hpp
 #define test_compress_hpp
-#define XXPROFILE_HAS_DECOMPRESS
 #include "../src/xxprofile_internal.hpp"
 
 #include <stdio.h>
