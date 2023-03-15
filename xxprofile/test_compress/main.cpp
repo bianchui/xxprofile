@@ -51,7 +51,7 @@ void testCompress(const char* name, const char* buf, xxprofile::ICompress* compr
     delete[] dec;
 }
 
-void testCompressChunked(const char* name, const char* buf, xxprofile::ICompress* compress, xxprofile::IDecompress* decompress) {
+void verifyCompress(const char* name, const char* buf, xxprofile::ICompress* compress, xxprofile::IDecompress* decompress) {
     char* com = new char[kSrcSize * 2];
     char* buf2 = new char[kSrcSize];
     srand(0);
@@ -101,12 +101,14 @@ int main(int argc, const char * argv[]) {
     if (false) {
         testCompress("zlib", buf, compress_createZlib(), decompress_createZlib());
         testCompress("lz4", buf, compress_createLz4(), decompress_createLz4());
+        testCompress("zstd", buf, compress_createZstd(), decompress_createZstd());
     }
     if (true) {
-        testCompressChunked("zlib", buf, compress_createZlib(), decompress_createZlib());
-        testCompressChunked("zlibChunked", buf, compress_createChunkedZlib(), decompress_createChunkedZlib());
-        testCompressChunked("lz4", buf, compress_createZlib(), decompress_createZlib());
-        testCompressChunked("lz4Chunked", buf, compress_createChunkedLz4(), decompress_createChunkedLz4());
+        verifyCompress("zlib", buf, compress_createZlib(), decompress_createZlib());
+        verifyCompress("zlibChunked", buf, compress_createChunkedZlib(), decompress_createChunkedZlib());
+        verifyCompress("lz4", buf, compress_createZlib(), decompress_createZlib());
+        verifyCompress("lz4Chunked", buf, compress_createChunkedLz4(), decompress_createChunkedLz4());
+        verifyCompress("zstd", buf, compress_createZstd(), decompress_createZstd());
     }
     delete[] buf;
     return 0;
