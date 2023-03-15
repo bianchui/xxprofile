@@ -49,6 +49,7 @@ struct SCompressChunkedZlib : ICompress {
 
         int err = deflate(&stream, Z_SYNC_FLUSH);
         assert(err == Z_OK);
+        assert(stream.avail_in == 0);
 
         return dstSize - stream.avail_out;
     }
@@ -85,6 +86,7 @@ struct SDecompressChunkedZlib : IDecompress {
 
         int err = inflate(&stream, Z_SYNC_FLUSH);
         assert(err == Z_OK);
+        assert(stream.avail_in == 0);
 
         return dstSize - stream.avail_out;
     }

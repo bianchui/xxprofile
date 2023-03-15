@@ -10,4 +10,4 @@
 #include "../src/compress/compress_zstd.cpp.h"
 
 IMPL_COMPRESS(Zstd);
-//IMPL_COMPRESS_CHUNKED(Zstd);
+IMPL_COMPRESS_CHUNKED(Zstd);

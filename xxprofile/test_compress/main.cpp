@@ -72,11 +72,17 @@ void verifyCompress(const char* name, const char* buf, xxprofile::ICompress* com
         auto comLen = (uint32_t)compress->doCompress(com, kSrcSize * 2, src, size);
         auto decLen = (uint32_t)decompress->doDecompress(dec, kSrcSize * 2, com, comLen);
 
-        printf("%s:[%d] %d => %d\n", name, i, size, comLen);
-        printf("%s:[%d] check size: %s\n", name, i, decLen == size ? "true" : "false");
-        if (decLen == kSrcSize) {
-            printf("%s:[%d] check: %s\n", name, i, memcmp(dec, src, size) == 0 ? "true" : "false");
+        printf("%s:[%d]", name, i);
+        if (decLen == size) {
+            if (memcmp(dec, src, size) == 0) {
+                printf(" ok");
+            } else {
+                printf(" error: data");
+            }
+        } else {
+            printf(" error: size: %d vs %d", decLen, size);
         }
+        printf(" %d => %d\n", size, comLen);
 
         if (buf3) {
             buf3 = nullptr;
@@ -109,6 +115,7 @@ int main(int argc, const char * argv[]) {
         verifyCompress("lz4", buf, compress_createZlib(), decompress_createZlib());
         verifyCompress("lz4Chunked", buf, compress_createChunkedLz4(), decompress_createChunkedLz4());
         verifyCompress("zstd", buf, compress_createZstd(), decompress_createZstd());
+        verifyCompress("zstdChunked", buf, compress_createChunkedZstd(), decompress_createChunkedZstd());
     }
     delete[] buf;
     return 0;

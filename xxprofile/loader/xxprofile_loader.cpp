@@ -38,12 +38,14 @@ struct SDecompress {
                 _decompress = new SDecompressChunkedZlib();
                 break;
             case ECompressMethod::LzoChunked:
+                //_decompress = new SDecompressChunkedLzo();
                 assert(false);
                 break;
             case ECompressMethod::Lz4Chunked:
                 _decompress = new SDecompressChunkedLz4();
                 break;
             case ECompressMethod::ZstdChunked:
+                _decompress = new SDecompressChunkedZstd();
                 assert(false);
                 break;
             default:
@@ -342,8 +344,8 @@ void Loader::load(Archive& ar) {
     _processStart = 0;
     SDecompress decompress(ar.getCompressMethod());
 #if TEST_COMPRESS
-    SCompressZlib compress;
-    SCompressChunkedZlib compressChunked;
+    SCompressZstd compress;
+    SCompressChunkedZstd compressChunked;
     Buffer compressBuf;
 #endif//TEST_COMPRESS
     ar << this->_secondsPerCycle;

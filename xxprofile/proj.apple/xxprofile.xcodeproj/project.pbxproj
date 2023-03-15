@@ -31,6 +31,7 @@
 		59A5CB1E29C1B9270043004A /* compress_zstd.lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CB1D29C1B9270043004A /* compress_zstd.lib.c */; };
 		59A5CB2029C1BEF40043004A /* huf_decompress_amd64.S in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CAD829C0A1990043004A /* huf_decompress_amd64.S */; };
 		59A5CB2229C1C2000043004A /* compress_zstd.lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CB1D29C1B9270043004A /* compress_zstd.lib.c */; };
+		59A5CB2329C1C6660043004A /* compress_zstd.lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CB1D29C1B9270043004A /* compress_zstd.lib.c */; };
 		86334F7B237BEFFA004F01C9 /* lz4.c in Sources */ = {isa = PBXBuildFile; fileRef = 86334DAF237BEFF9004F01C9 /* lz4.c */; };
 		86334FD2237BEFFA004F01C9 /* lzo1.c in Sources */ = {isa = PBXBuildFile; fileRef = 86334EFD237BEFF9004F01C9 /* lzo1.c */; };
 		86334FD3237BEFFA004F01C9 /* lzo1_99.c in Sources */ = {isa = PBXBuildFile; fileRef = 86334EFE237BEFF9004F01C9 /* lzo1_99.c */; };
@@ -1444,6 +1445,7 @@
 				59A5CA8629C0984B0043004A /* lz4.c in Sources */,
 				59A5CB1829C1B1B10043004A /* test_zstd.cpp in Sources */,
 				59A5CA8F29C0994D0043004A /* platform_base.cpp in Sources */,
+				59A5CB2329C1C6660043004A /* compress_zstd.lib.c in Sources */,
 				59A5CA8D29C0991C0043004A /* platform_apple.mm in Sources */,
 				59A5CA7B29C08C070043004A /* test_lz4.cpp in Sources */,
 				59A5CA7D29C08C070043004A /* test_lzo.cpp in Sources */,
