@@ -89,17 +89,24 @@
 
 #define XXPROFILE_ZLIB_LEVEL 9
 
-#ifdef XXPROFILE_HAS_DECOMPRESS
-
 XX_NAMESPACE_BEGIN(xxprofile);
+
+struct ICompress {
+    virtual ~ICompress() {}
+    virtual size_t calcBound(size_t size) = 0;
+    virtual size_t doCompress(void* dst, size_t dstSize, const void* src, size_t srcSize) = 0;
+};
+
+#ifdef XXPROFILE_HAS_DECOMPRESS
 
 struct IDecompress {
     virtual ~IDecompress() {};
     virtual size_t doDecompress(void* dst, size_t dstSize, const void* src, size_t srcSize) = 0;
 };
 
+#endif//XXPROFILE_HAS_DECOMPRESS
+
 XX_NAMESPACE_END(xxprofile);
 
-#endif//XXPROFILE_HAS_DECOMPRESS
 
 #endif//xxprofile_internal_h

@@ -12,7 +12,7 @@
 
 static const uint32_t kSrcSize = 128 * 1024;
 
-void testCompress(const char* name, const char* buf, ICompress* compress, xxprofile::IDecompress* decompress) {
+void testCompress(const char* name, const char* buf, xxprofile::ICompress* compress, xxprofile::IDecompress* decompress) {
     static const uint32_t kTestTimes = 10000;
 
     char* com = new char[kSrcSize * 2];
@@ -50,7 +50,7 @@ void testCompress(const char* name, const char* buf, ICompress* compress, xxprof
     delete[] dec;
 }
 
-void testCompressChunked(const char* name, const char* buf, ICompress* compress, xxprofile::IDecompress* decompress) {
+void testCompressChunked(const char* name, const char* buf, xxprofile::ICompress* compress, xxprofile::IDecompress* decompress) {
     char* com = new char[kSrcSize * 2];
     char* buf2 = new char[kSrcSize];
     srand(0);

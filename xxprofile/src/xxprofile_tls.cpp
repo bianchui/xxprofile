@@ -7,11 +7,11 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-#if XX_IsCompress(ZLIB)
+#if XX_IsCompress(ZLIB) || XX_IsCompress(ZLIB_CHUNKED)
 #  include "compress/compress_zlib.cpp.h"
-#elif XX_IsCompress(LZO)
+#elif XX_IsCompress(LZO) || XX_IsCompress(LZO_CHUNKED)
 #  include "compress/compress_lzo.cpp.h"
-#elif XX_IsCompress(LZ4)
+#elif XX_IsCompress(LZ4) || XX_IsCompress(LZ4_CHUNKED)
 #  include "compress/compress_lz4.cpp.h"
 #else
 #  error compress method
@@ -21,10 +21,16 @@ XX_NAMESPACE_BEGIN(xxprofile);
 
 #if XX_IsCompress(ZLIB)
 typedef SCompressZlib SCompress;
+#elif XX_IsCompress(ZLIB_CHUNKED)
+typedef SCompressChunkedZlib SCompress;
 #elif XX_IsCompress(LZO)
 typedef SCompressLzo SCompress;
+#elif XX_IsCompress(LZO_CHUNKED)
+typedef SCompressChunkedLzo SCompress;
 #elif XX_IsCompress(LZ4)
 typedef SCompressLz4 SCompress;
+#elif XX_IsCompress(LZ4_CHUNKED)
+typedef SCompressChunkedLz4 SCompress;
 #else
 #  error compress method
 #endif//
@@ -35,7 +41,8 @@ static std::atomic<uint32_t> g_frameId;
 SharedArchive::SharedArchive(const char* path) {
     _archive.setVersion(EVersion::NOW);
     _archive.setCompressMethod(ECompressMethod::NOW);
-    _compressBufferSize = SCompress::CalcCompressedSize(XXProfileTLS::ChunkByteSize);
+    _compress = new SCompress();
+    _compressBufferSize = _compress->calcBound(XXProfileTLS::ChunkByteSize);
     _compressBuffer = malloc(_compressBufferSize);
 
     _archive.open(path, true);
@@ -46,7 +53,7 @@ SharedArchive::SharedArchive(const char* path) {
 
 SharedArchive::~SharedArchive() {
     _archive.close();
-    
+    delete _compress;
     free(_compressBuffer);
 }
 
@@ -181,7 +188,7 @@ void XXProfileTLS::frameFlush() {
     XXLOG_DEBUG("  nodeCount %d\n", nodeCount);
     void* compressBuffer = _sharedAr->compressBuffer();
     const size_t compressBufferSize = _sharedAr->compressBufferSize();
-    SCompress compress;
+    ICompress& compress = *_sharedAr->compress();
     for (auto iter = _buffers.begin(); iter != _buffers.end(); ++iter) {
         XXProfileTreeNode* buffer = *iter;
         const size_t count = (buffer != _currentBuffer) ? ChunkNodeCount : _usedCount;

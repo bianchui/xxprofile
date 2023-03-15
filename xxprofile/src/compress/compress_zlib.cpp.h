@@ -7,9 +7,9 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
-struct SCompressZlib {
+struct SCompressZlib : ICompress {
     
-    static size_t CalcCompressedSize(size_t size) {
+    size_t calcBound(size_t size) {
         return size;
     }
     
@@ -24,7 +24,7 @@ struct SCompressZlib {
 
 };
 
-struct SCompressChunkedZlib {
+struct SCompressChunkedZlib : ICompress {
     z_stream stream;
 
     SCompressChunkedZlib() {
@@ -37,8 +37,8 @@ struct SCompressChunkedZlib {
         deflateEnd(&stream);
     }
 
-    static size_t CalcCompressedSize(size_t size) {
-        return size;
+    size_t calcBound(size_t size) {
+        return (size_t)deflateBound(&stream, (uLong)size);
     }
 
     size_t doCompress(void* dst, size_t dstSize, const void* src, size_t srcSize) {
@@ -48,6 +48,7 @@ struct SCompressChunkedZlib {
         stream.avail_out = (uInt)dstSize;
 
         int err = deflate(&stream, Z_SYNC_FLUSH);
+        assert(err == Z_OK);
 
         return dstSize - stream.avail_out;
     }
@@ -83,6 +84,7 @@ struct SDecompressChunkedZlib : IDecompress {
         stream.avail_out = (uInt)dstSize;
 
         int err = inflate(&stream, Z_SYNC_FLUSH);
+        assert(err == Z_OK);
 
         return dstSize - stream.avail_out;
     }

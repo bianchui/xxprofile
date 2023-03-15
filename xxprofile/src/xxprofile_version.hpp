@@ -6,6 +6,10 @@
 #define XXCOMPRESS_LZO 1
 #define XXCOMPRESS_LZ4 2
 
+#define XXCOMPRESS_ZLIB_CHUNKED 0x10
+#define XXCOMPRESS_LZO_CHUNKED 0x11
+#define XXCOMPRESS_LZ4_CHUNKED 0x12
+
 #define XXCOMPRESS_NOW XXCOMPRESS_LZ4
 
 #define XX_IsCompress(x) (XXCOMPRESS_NOW == XXCOMPRESS_##x)
@@ -28,7 +32,11 @@ struct ECompressMethod {
         Zlib = XXCOMPRESS_ZLIB,
         Lzo = XXCOMPRESS_LZO,
         Lz4 = XXCOMPRESS_LZ4,
-        
+
+        ZlibChunked = XXCOMPRESS_ZLIB_CHUNKED,
+        LzoChunked = XXCOMPRESS_LZO_CHUNKED,
+        Lz4Chunked = XXCOMPRESS_LZ4_CHUNKED,
+
         NOW = XXCOMPRESS_NOW,
     };
 };

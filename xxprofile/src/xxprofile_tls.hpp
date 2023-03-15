@@ -9,6 +9,8 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
+struct ICompress;
+
 class SharedArchive {
 public:
     SharedArchive(const char* path);
@@ -16,8 +18,12 @@ public:
     
     int addRef();
     int release();
+
+    ICompress* compress() const {
+        return _compress;
+    }
     
-    void* compressBuffer() {
+    void* compressBuffer() const {
         return _compressBuffer;
     }
     
@@ -46,6 +52,7 @@ private:
     std::mutex _mutex;
     std::atomic_int _refCount = ATOMIC_VAR_INIT(1);
     std::atomic_int _pendingClose = ATOMIC_VAR_INIT(0);
+    ICompress* _compress;
     void* _compressBuffer;
     size_t _compressBufferSize;
 };

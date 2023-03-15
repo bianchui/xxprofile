@@ -8,9 +8,9 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
-struct SCompressLz4 {
+struct SCompressLz4 : ICompress {
     
-    static size_t CalcCompressedSize(size_t size) {
+    size_t calcBound(size_t size) {
         return LZ4_COMPRESSBOUND(size);
     }
     
