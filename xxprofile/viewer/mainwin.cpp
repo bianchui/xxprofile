@@ -29,6 +29,48 @@ bool MainWin::_load(const char* file) {
     return true;
 }
 
+const char* formatTimeMS(char* buf, double time) {
+    if (time > 60) {
+        uint32_t minutes = (uint32_t)time / 60;
+        buf += sprintf(buf, "%d:", minutes);
+        time -= minutes * 60;
+        uint32_t seconds = (uint32_t)time;
+        buf += sprintf(buf, "%02d", seconds);
+        time -= seconds;
+    } else {
+        uint32_t seconds = (uint32_t)time;
+        buf += sprintf(buf, "%02d", seconds);
+        time -= seconds;
+    }
+    uint32_t ms = (uint32_t)(time * 1000);
+    sprintf(buf, ".%03d", ms);
+    return buf;
+}
+
+/**
+ * [time][frames][compressRate]
+ */
+std::string MainWin::getTitle() const {
+    std::string ret;
+    char buf[256];
+    if (!_loader._threads.empty()) {
+        uint64_t startTime = _loader._processStart;
+        uint64_t endTime = _loader._threads[0].endTime();
+        uint32_t frames = (uint32_t)_loader._threads[0]._frames.size();
+        for (auto iter = _loader._threads.begin() + 1, end = _loader._threads.end(); iter != end; ++iter) {
+            endTime = std::max(endTime, iter->endTime());
+            frames = std::max(frames, (uint32_t)iter->_frames.size());
+        }
+        formatTimeMS(buf, (endTime - startTime) * _loader._secondsPerCycle);
+        ret += "[";
+        ret += buf;
+        ret += "]";
+        sprintf(buf, "[%dFrames][%02.2f%%]", frames, (100.0 * _loader._fileSize / _loader._dataSize));
+        ret += buf;
+    }
+    return ret;
+}
+
 float GetItemMaxWidth() {
     float s = ImGui::GetIndent();
     float w = ImGui::GetContentWidth();

@@ -284,6 +284,22 @@ struct ThreadData {
         std::swap(_secondsPerCycle, other._secondsPerCycle);
     }
 
+    uint64_t startTime() const {
+        uint64_t ret = 0;
+        if (!_frames.empty()) {
+            ret = _frames[0].startTime();
+        }
+        return ret;
+    }
+
+    uint64_t endTime() const {
+        uint64_t ret = 0;
+        if (!_frames.empty()) {
+            ret = _frames.back().endTime();
+        }
+        return ret;
+    }
+
 private:
     XX_CLASS_DELETE_COPY(ThreadData);
     XX_CLASS_DELETE_MOVE_ASSIGN(ThreadData);
@@ -298,8 +314,10 @@ struct Loader {
     std::vector<ThreadData> _threads;
     SNamePool _namePool;
     mutable std::vector<const char*> _names;
-    double _secondsPerCycle;
-    uint64_t _processStart;
+    double _secondsPerCycle = 0;
+    uint64_t _processStart = 0;
+    uint64_t _fileSize = 0;
+    uint64_t _dataSize = 0;
 
     Loader();
     ~Loader();

@@ -340,6 +340,8 @@ uint32_t compressSize(xxprofile::ICompress& compress, const void* data, uint32_t
 
 void Loader::load(Archive& ar) {
     _processStart = 0;
+    _fileSize = 0;
+    _dataSize = 0;
     SDecompress decompress(ar.getCompressMethod());
 #if TEST_COMPRESS
     SCompressZstd compress;
@@ -348,8 +350,6 @@ void Loader::load(Archive& ar) {
 #endif//TEST_COMPRESS
     ar << this->_secondsPerCycle;
     uint32_t threadId = 0;
-    uint64_t totalFileSize = 0;
-    uint64_t totalOrgSize = 0;
     Buffer buf;
     while (!ar.eof() && !ar.hasError()) {
         if (ar.version() >= EVersion::V3) {
@@ -385,7 +385,7 @@ void Loader::load(Archive& ar) {
                         hasError = true;
                         break;
                     }
-                    totalOrgSize += sizeOrg;
+                    _dataSize += sizeOrg;
                     if (sizeCom) {
                         auto comBuf = buf.get(sizeCom < sizeOrg ? sizeOrg : sizeCom);
                         ar.serialize(comBuf, sizeCom);
@@ -397,7 +397,7 @@ void Loader::load(Archive& ar) {
                             hasError = true;
                             break;
                         }
-                        totalFileSize += sizeCom;
+                        _fileSize += sizeCom;
                         XXLOG_DETAIL("%d: %lld => %lld %d => %d\n", data._frameId, totalFileSize, totalOrgSize, sizeCom, sizeOrg);
 #if TEST_COMPRESS
                         {
@@ -407,7 +407,7 @@ void Loader::load(Archive& ar) {
                         }
 #endif//TEST_COMPRESS
                     } else {
-                        totalFileSize += sizeOrg;
+                        _fileSize += sizeOrg;
                         ar.serialize(cur, sizeOrg);
                         XXLOG_DETAIL("%d: %lld => %lld %d\n", data._frameId, totalFileSize, totalOrgSize, sizeOrg);
 #if TEST_COMPRESS
@@ -439,14 +439,8 @@ void Loader::load(Archive& ar) {
         thread._frames.push_back(std::move(data));
     }
 
-    size_t tcount = _threads.size();
-    for (size_t t = 0; t < tcount; ++t) {
-        const auto& loader_thread = _threads[t];
-        if (loader_thread._frames.size() > 0) {
-            const auto& frame0 = loader_thread._frames[0];
-            const auto startTime = frame0.startTime();
-            _processStart = _processStart == 0 || _processStart > startTime ? startTime : _processStart;
-        }
+    for (auto iter = _threads.begin(), end = _threads.end(); iter != end; ++iter) {
+        _processStart = _processStart == 0 ? iter->startTime() : std::min(_processStart, iter->startTime());
     }
 }
 
@@ -461,6 +455,11 @@ void Loader::clear() {
     }
 #endif//NAME_NEEDS_FREE
     _names.clear();
+
+    _secondsPerCycle = 0;
+    _processStart = 0;
+    _dataSize = 0;
+    _fileSize = 0;
 }
 
 const char* Loader::name(SName name) const {

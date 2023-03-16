@@ -1330,7 +1330,7 @@
 					};
 					ED7744CC20EF4BC4002B0578 = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = GJ7WKUP5MK;
+						DevelopmentTeam = 6D5DUQ6KTS;
 						ProvisioningStyle = Automatic;
 					};
 					ED81D1A620D37C2C0096FB53 = {
@@ -1857,7 +1857,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = GJ7WKUP5MK;
+				DEVELOPMENT_TEAM = 6D5DUQ6KTS;
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				INFOPLIST_FILE = test_ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
@@ -1874,7 +1874,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = GJ7WKUP5MK;
+				DEVELOPMENT_TEAM = 6D5DUQ6KTS;
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				INFOPLIST_FILE = test_ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;

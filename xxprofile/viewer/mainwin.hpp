@@ -9,6 +9,7 @@
 struct MainWin : EventHandler {
     MainWin();
     bool load(const char* file);
+    std::string getTitle() const;
 
     void draw(int w, int h);
 

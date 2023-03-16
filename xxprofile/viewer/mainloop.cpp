@@ -59,7 +59,7 @@ int glfw_onDocumentOpen(const char* name) {
         ++p_name;
     }
     shared::StrBuf title;
-    title.printf("%s - %s", p_name, kTitle);
+    title.printf("%s - %s - %s", p_name, mainwin.getTitle().c_str(), kTitle);
     glfw_setTitle(title);
     return GLFW_TRUE;
 }
