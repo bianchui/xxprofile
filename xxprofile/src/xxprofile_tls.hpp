@@ -79,6 +79,9 @@ public:
     bool isClosing() const {
         return _sharedAr->isClosing();
     }
+    bool canEndFrame() const {
+        return _stack.empty();
+    }
 
 public:
     static void* operator new(size_t size);

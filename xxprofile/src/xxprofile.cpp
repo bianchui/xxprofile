@@ -101,7 +101,12 @@ bool XXProfile::IncreaseFrame() {
 
 // XXProfileScope
 XXProfileScope::XXProfileScope(const SName name) {
-    _profile = XXProfileTLS::Get();
+    auto tls = XXProfileTLS::Get();
+    if (tls && tls->canEndFrame() && tls->isClosing()) {
+        XXProfileTLS::Clear();
+        tls = XXProfileTLS::Get();
+    }
+    _profile = tls;
     assert(_profile);
     if (_profile) {
         _node = static_cast<XXProfileTLS*>(_profile)->beginScope(name);
