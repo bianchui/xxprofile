@@ -89,7 +89,7 @@ NS_XXPROFILE_END;
 /**/::NS_XXPROFILE::XXProfileScope __xxprofile_scope_##name(__xxprofile_name_##name##_name); \
 
 #  define XX_PROFILE_SCOPE_DYNAMIC_NAME(name) \
-/**/::NS_XXPROFILE::XXProfileScope __xxprofile_scope_##__LINE__(::xxprofile::SName(name)); \
+/**/::NS_XXPROFILE::XXProfileScope __xxprofile_scope_##__LINE__##_##__COUNTER__((::xxprofile::SName((name)))); \
 
 #  define XX_PROFILE_INCREASE_FRAME() \
 /**/::NS_XXPROFILE::XXProfile::IncreaseFrame(); \
