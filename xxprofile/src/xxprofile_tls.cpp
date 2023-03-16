@@ -180,7 +180,7 @@ void XXProfileTLS::tryFrameFlush() {
 // uint32_t nodeCount;
 // XXProfileTreeNode nodes[nodeCount];
 void XXProfileTLS::frameFlush() {
-    std::unique_lock<std::mutex> lock(_sharedAr->lock());
+    SystemScopedLock lock(_sharedAr->lock());
     Archive& ar = _sharedAr->archive();
     ar << _threadId;
     ar << _frameId;

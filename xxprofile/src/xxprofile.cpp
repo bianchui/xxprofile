@@ -8,7 +8,6 @@
 #include "xxprofile_internal.hpp"
 #include "xxprofile.hpp"
 #include <assert.h>
-#include <mutex>
 #include <stdlib.h>
 #include <time.h>
 #include <sys/time.h>
@@ -16,12 +15,12 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
-std::mutex g_mutex;
+SystemLock g_mutex;
 static ThreadLocal<XXProfileTLS> g_profile_tls;
 static SharedArchive* g_archive;
 
 static void StaticCloseGArchive() {
-    std::unique_lock<std::mutex> lock(g_mutex);
+    SystemScopedLock lock(g_mutex);
     if (g_archive) {
         g_archive->markClose();
         g_archive->release();
@@ -59,7 +58,7 @@ static void StaticInitUnSafe(const char* savePath) {
 
 // XXProfile
 bool XXProfile::StaticInit(const char* savePath) {
-    std::unique_lock<std::mutex> lock(g_mutex);
+    SystemScopedLock lock(g_mutex);
     StaticInitUnSafe(savePath);
     return true;
 }
@@ -72,7 +71,7 @@ XXProfileTLS* XXProfileTLS::Get() {
     XXProfileTLS* profile = nullptr;
     profile = g_profile_tls.get();
     if (!profile) {
-        std::unique_lock<std::mutex> lock(g_mutex);
+        SystemScopedLock lock(g_mutex);
         StaticInitUnSafe(nullptr);
         if (g_archive) {
             profile = new XXProfileTLS(g_archive);

@@ -11,13 +11,33 @@
 #include <vector>
 #include <stdlib.h>
 #include <assert.h>
-#include <string>
 #include "xxprofile_archive.hpp"
 #include "xxprofile_namepool.hpp"
 
 #define XX_PROFILE_DEBUG_Name_Serialize 0
 
 XX_NAMESPACE_BEGIN(xxprofile);
+
+template <typename T>
+struct UniqueArrayPtr {
+    T* ptr = nullptr;
+    ~UniqueArrayPtr() {
+        if (ptr) {
+            delete[] ptr;
+        }
+    }
+
+    void reset(T* p) {
+        if (ptr) {
+            delete[] ptr;
+        }
+        ptr = p;
+    }
+
+    T* get() const {
+        return ptr;
+    }
+};
 
 FORCEINLINE uint32_t SNamePool::StringHash(const char* lpszStr) {
     // BKDR Hash Function
@@ -258,8 +278,10 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
         }
         uint32_t startIndex;
         ar << startIndex;
-        std::string str;
-        str.reserve(256);
+        char strBuf[256];
+        size_t strCap = sizeof(strBuf);
+        UniqueArrayPtr<char> dyNameBuf;
+        char* str = strBuf;
         SystemScopedLock lock(_lock);
         const uint32_t maxNameId = _nameCount.load(std::memory_order_acquire);
         std::atomic<SNameEntry*>* chunk = NULL;
@@ -286,8 +308,16 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
 #endif//XX_PROFILE_DEBUG_Name_Serialize
 
             if (id <= maxNameId) {
-                str.resize(length);
-                ar.serialize((void*)str.c_str(), length);
+                if (length >= strCap) {
+                    strCap *= 2;
+                    if (length >= strCap) {
+                        strCap = length + 1;
+                    }
+                    dyNameBuf.reset(new char[strCap]);
+                    str = dyNameBuf.get();
+                }
+                ar.serialize(str, length);
+                str[length] = 0;
 #ifndef NDEBUG
                 // check only
                 if (currentChunkId != chunkId) {
@@ -305,7 +335,7 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
                 }
                 assert(entry->id == id);
                 assert(entry->length == length);
-                assert(strcmp(entry->buf, str.c_str()) == 0);
+                assert(strcmp(entry->buf, str) == 0);
 #endif//NDEBUG
             } else {
                 const size_t size = SNameEntry::CalcEntrySize(length);

@@ -4,7 +4,6 @@
 #include "xxprofile.hpp"
 #include "xxprofile_archive.hpp"
 #include <vector>
-#include <mutex>
 #include "xxprofile_data.hpp"
 
 XX_NAMESPACE_BEGIN(xxprofile);
@@ -31,7 +30,7 @@ public:
         return _compressBufferSize;
     }
     
-    std::mutex& lock() {
+    SystemLock& lock() {
         return _mutex;
     }
     
@@ -49,7 +48,7 @@ public:
     
 private:
     Archive _archive;
-    std::mutex _mutex;
+    SystemLock _mutex;
     std::atomic_int _refCount = ATOMIC_VAR_INIT(1);
     std::atomic_int _pendingClose = ATOMIC_VAR_INIT(0);
     ICompress* _compress;
