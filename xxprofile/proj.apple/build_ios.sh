@@ -1,6 +1,6 @@
 #!/bin/bash
 readonly THIS_DIR="$( cd "$(dirname "$0")" ; pwd -P )"
-var_libname=xxprofile_ios
+var_libname=xxprofile
 var_scheme=xxprofile_ios
 var_project=xxprofile.xcodeproj
 
@@ -32,23 +32,22 @@ function move2trash() {
     fi
 }
 
-function build_Config_Sdk_Arch() {
+function build_Config_Sdk() {
     local param_config=$1
-    local param_arch=$2
-    local param_sdk=$3
+    local param_sdk=$2
 
-    local var_tmp_path=$THIS_DIR/build/tmps/ios_${param_config}/${param_arch}
+    local var_tmp_path=$THIS_DIR/build/tmps/ios_${param_config}/${param_sdk}
     local var_out_path=$THIS_DIR/build/libs/ios_${param_config}
     local var_PRODUCTS_DIR=${var_tmp_path}/Build/Products
     local var_TMP_DIR=${var_tmp_path}/Build/Intermediates.noindex
-    echo building ${param_config}_${param_arch} ...
+    echo building ${param_config}_${param_sdk} ...
     rm -f -R ${var_tmp_path}
     mkdir -p ${var_tmp_path}
-    # -showBuildSettings>${param_arch}.txt
-    guard xcodebuild -project ${var_project} -sdk ${param_sdk} -arch ${param_arch} -scheme ${var_scheme} -derivedDataPath ${var_tmp_path} -configuration ${param_config} BUILD_DIR=$var_PRODUCTS_DIR BUILD_ROOT=$var_PRODUCTS_DIR OBJROOT=$var_TMP_DIR -quiet
+    # -showBuildSettings>ios_${param_sdk}.txt
+    guard xcodebuild -project ${var_project} -sdk ${param_sdk} -scheme ${var_scheme} -destination generic/platform=${param_sdk} -derivedDataPath ${var_tmp_path} -configuration ${param_config} BUILD_DIR=$var_PRODUCTS_DIR BUILD_ROOT=$var_PRODUCTS_DIR OBJROOT=$var_TMP_DIR -quiet
 
     mkdir -p ${var_out_path}
-    guard strip -S -x $var_PRODUCTS_DIR/${param_config}-${param_sdk}/lib${var_libname}.a -o ${var_out_path}/lib${var_libname}_${param_arch}.a
+    guard strip -S -x $var_PRODUCTS_DIR/${param_config}-${param_sdk}/lib${var_scheme}.a -o ${var_out_path}/lib${var_libname}_${param_sdk}.a
 
     #guard cp -R -n ${var_tmp_path}/Build/Products/${param_config}-${param_sdk}/usr/local/ ${var_out_path}
 }
@@ -60,17 +59,15 @@ function build_Config() {
     local var_out_lib=${var_out_path}/lib${var_libname}
     rm -f -R ${var_out_path}
     mkdir -p ${var_out_path}
-    build_Config_Sdk_Arch ${param_config} arm64 iphoneos
-    build_Config_Sdk_Arch ${param_config} armv7 iphoneos
-    build_Config_Sdk_Arch ${param_config} x86_64 iphonesimulator
-    build_Config_Sdk_Arch ${param_config} i386 iphonesimulator
+    build_Config_Sdk ${param_config} iphoneos
+    build_Config_Sdk ${param_config} iphonesimulator
 
-    guard lipo -output ${var_out_lib}.a -create ${var_out_lib}_arm64.a ${var_out_lib}_armv7.a ${var_out_lib}_x86_64.a ${var_out_lib}_i386.a
+    guard xcodebuild -create-xcframework -library ${var_out_lib}_iphoneos.a -library ${var_out_lib}_iphonesimulator.a -output ${var_out_lib}.xcframework
 
-    guard rm -f ${var_out_lib}_arm64.a ${var_out_lib}_armv7.a ${var_out_lib}_x86_64.a ${var_out_lib}_i386.a
+    guard rm -f ${var_out_lib}_iphoneos.a ${var_out_lib}_iphonesimulator.a
 
     mkdir -p ../../out/prebuilt/ios/
-    guard cp ${var_out_lib}.a ../../out/prebuilt/ios/
+    guard cp -rf ${var_out_lib}.xcframework ../../out/prebuilt/ios/
 }
 
 pushd $THIS_DIR > /dev/null
