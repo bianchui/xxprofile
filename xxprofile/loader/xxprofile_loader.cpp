@@ -347,6 +347,7 @@ void Loader::load(Archive& ar) {
     SCompressZstd compress;
     SCompressChunkedZstd compressChunked;
     Buffer compressBuf;
+    uint64_t fileSizeTest = 0;
 #endif//TEST_COMPRESS
     ar << this->_secondsPerCycle;
     uint32_t threadId = 0;
@@ -403,6 +404,7 @@ void Loader::load(Archive& ar) {
                         {
                             uint32_t com = compressSize(compress, cur, sizeOrg, compressBuf);
                             uint32_t chunkedCom = compressSize(compressChunked, cur, sizeOrg, compressBuf);
+                            fileSizeTest += com;
                             XXLOG_INFO("%d: chunked org: %d => %d com: %d vs %d\n", data._frameId, sizeOrg, sizeCom, com, chunkedCom);
                         }
 #endif//TEST_COMPRESS
@@ -414,6 +416,7 @@ void Loader::load(Archive& ar) {
                         {
                             uint32_t com = compressSize(compress, cur, sizeOrg, compressBuf);
                             uint32_t chunkedCom = compressSize(compressChunked, cur, sizeOrg, compressBuf);
+                            fileSizeTest += com;
                             XXLOG_INFO("%d: chunked org: %d com: %d vs %d\n", data._frameId, sizeOrg, com, chunkedCom);
                         }
 #endif//TEST_COMPRESS
@@ -438,7 +441,10 @@ void Loader::load(Archive& ar) {
         }
         thread._frames.push_back(std::move(data));
     }
-
+#if TEST_COMPRESS
+    XXLOG_INFO("Data compress: %d %02.2f%% %lld / %lld\n", ar.getCompressMethod(), (100.0 * _fileSize / _dataSize), _fileSize, _dataSize);
+    XXLOG_INFO("Test compress: %02.2f%% %lld\n", (100.0 * fileSizeTest / _dataSize), fileSizeTest);
+#endif//TEST_COMPRESS
     for (auto iter = _threads.begin(), end = _threads.end(); iter != end; ++iter) {
         _processStart = _processStart == 0 ? iter->startTime() : std::min(_processStart, iter->startTime());
     }

@@ -13,8 +13,21 @@
 
 static const uint32_t kSrcSize = xxprofile::XXProfileTLS::ChunkByteSize;
 
+void printMK(char* buf, uint64_t size) {
+    const uint64_t KB = 1024ll;
+    const uint64_t MB = 1024ll * KB;
+    if (size >= MB * 10) {
+        sprintf(buf, "%.3fMB", size * 1.0 / MB);
+    } else if (size >= KB * 10) {
+        sprintf(buf, "%.3fKB", size * 1.0 / KB);
+    } else {
+        sprintf(buf, "%dB", (uint32_t)size);
+    }
+}
+
 void testCompress(const char* name, const char* buf, xxprofile::ICompress* compress, xxprofile::IDecompress* decompress) {
     static const uint32_t kTestTimes = 10000;
+    char buffer[64];
 
     char* com = new char[kSrcSize * 2];
     char* dec = new char[kSrcSize * 2];
@@ -35,7 +48,8 @@ void testCompress(const char* name, const char* buf, xxprofile::ICompress* compr
 
     auto end = xxprofile::Timer::Seconds();
 
-    printf("%s: compress: %f %d => %d\n", name, end - start, kSrcSize, comLen);
+    printMK(buffer, uint64_t(kTestTimes * kSrcSize / (end - start)));
+    printf("%s: compress: %f %d => %d %s/s\n", name, end - start, kSrcSize, comLen, buffer);
 
     start = xxprofile::Timer::Seconds();
 
@@ -45,7 +59,8 @@ void testCompress(const char* name, const char* buf, xxprofile::ICompress* compr
 
     end = xxprofile::Timer::Seconds();
 
-    printf("%s: deccompress: %f %d => %d\n", name, end - start, comLen, decLen);
+    printMK(buffer, uint64_t(kTestTimes * kSrcSize / (end - start)));
+    printf("%s: deccompress: %f %d => %d %s/s\n", name, end - start, comLen, decLen, buffer);
 
     delete[] com;
     delete[] dec;
@@ -104,7 +119,7 @@ int main(int argc, const char * argv[]) {
     for (uint32_t i = 0; i < kSrcSize; ++i) {
         buf[i] = i;
     }
-    if (false) {
+    if (true) {
         testCompress("zlib", buf, compress_createZlib(), decompress_createZlib());
         testCompress("lz4", buf, compress_createLz4(), decompress_createLz4());
         testCompress("zstd", buf, compress_createZstd(), decompress_createZstd());
