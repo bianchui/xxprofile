@@ -87,7 +87,7 @@
 
 #define XXLOG(level, ...) XXLOG_##level(__VA_ARGS__)
 
-#define XXPROFILE_ZLIB_LEVEL 9
+#define XXPROFILE_ZLIB_LEVEL 1
 #define XXPROFILE_ZSTD_LEVEL 1
 
 XX_NAMESPACE_BEGIN(xxprofile);

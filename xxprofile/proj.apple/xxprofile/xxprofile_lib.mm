@@ -14,6 +14,7 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
+#ifndef XXPROFILE_HAS_DECOMPRESS
 #if XX_IsCompress(LZ4) || XX_IsCompress(LZ4_CHUNKED)
 #  include "../../../libs/lz4-1.9.4/lib/lz4.c"
 #  ifdef XX_LZ4_USE_HC
@@ -24,5 +25,6 @@
 #if XX_IsCompress(ZSTD) || XX_IsCompress(ZSTD_CHUNKED)
 #  include "../../src/compress/compress_zstd.lib.c"
 #endif//XX_IsCompress(ZSTD) || XX_IsCompress(ZSTD_CHUNKED)
+#endif//ifndef XXPROFILE_HAS_DECOMPRESS
 
 #pragma clang diagnostic pop
