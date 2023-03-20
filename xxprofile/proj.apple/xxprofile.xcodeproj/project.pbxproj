@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		598D812329C83F9A00F658D5 /* huf_decompress_amd64.S in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CAD829C0A1990043004A /* huf_decompress_amd64.S */; };
 		59A5CA3729C088800043004A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CA3629C088800043004A /* main.cpp */; };
 		59A5CA7129C0892E0043004A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CA3629C088800043004A /* main.cpp */; };
 		59A5CA7629C08B870043004A /* test_zlib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CA7429C08B870043004A /* test_zlib.cpp */; };
@@ -1449,6 +1450,7 @@
 				59A5CA8D29C0991C0043004A /* platform_apple.mm in Sources */,
 				59A5CA7B29C08C070043004A /* test_lz4.cpp in Sources */,
 				59A5CA7D29C08C070043004A /* test_lzo.cpp in Sources */,
+				598D812329C83F9A00F658D5 /* huf_decompress_amd64.S in Sources */,
 				59A5CA7729C08B870043004A /* test_zlib.cpp in Sources */,
 				59A5CA8529C098490043004A /* lz4hc.c in Sources */,
 				59A5CA7129C0892E0043004A /* main.cpp in Sources */,
