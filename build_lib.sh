@@ -20,7 +20,6 @@ function guard() {
 
 guard pushd $THIS_DIR/xxprofile/proj.apple
   guard ./build_ios.sh
-  guard ./build_mac.sh
   guard ./build_viewer.sh
 guard popd
 
