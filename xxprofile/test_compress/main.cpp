@@ -127,7 +127,7 @@ int main(int argc, const char * argv[]) {
     if (true) {
         verifyCompress("zlib", buf, compress_createZlib(), decompress_createZlib());
         verifyCompress("zlibChunked", buf, compress_createChunkedZlib(), decompress_createChunkedZlib());
-        verifyCompress("lz4", buf, compress_createZlib(), decompress_createZlib());
+        verifyCompress("lz4", buf, compress_createLz4(), decompress_createLz4());
         verifyCompress("lz4Chunked", buf, compress_createChunkedLz4(), decompress_createChunkedLz4());
         verifyCompress("zstd", buf, compress_createZstd(), decompress_createZstd());
         verifyCompress("zstdChunked", buf, compress_createChunkedZstd(), decompress_createChunkedZstd());
