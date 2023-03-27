@@ -1,6 +1,6 @@
 #!/bin/bash
-readonly ANDROID_SDK_ROOT=/Library/Java/android-sdk-macosx
-readonly ANDROID_NDK_ROOT=/Library/Java/android-ndk-r12b
+readonly ANDROID_SDK_ROOT=$HOME/Library/Android/sdk
+readonly ANDROID_NDK_ROOT=$ANDROID_SDK_ROOT/ndk/20.0.5594570
 readonly THIS_DIR="$( cd "$(dirname "$0")" ; pwd -P )"
 
 readonly NDK_BUILD_COMMAND=${ANDROID_NDK_ROOT}/ndk-build
@@ -51,7 +51,7 @@ function build_native_libs() {
     local cpu_num=`sysctl -n hw.ncpu`
     local NDK_BUILD_OPTIONS="NDK_DEBUG=0 -j${cpu_num}"
     guard ${NDK_BUILD_COMMAND} ${NDK_BUILD_OPTIONS}
-    cp_abis arm64-v8a armeabi armeabi-v7a x86 x86_64
+    cp_abis arm64-v8a armeabi-v7a x86 x86_64
     popd > /dev/null
 }
 
