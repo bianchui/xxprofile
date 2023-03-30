@@ -61,6 +61,7 @@ FORCEINLINE uint32_t Uint32Hash(uint32_t value, uint32_t hash = 0) {
     // BKDR Hash Function
     uint32_t seed = 131; // 31 131 1313 13131 131313 etc..
     return hash * seed + value;
+#if 0
     union B4 {
         char ch[4];
         uint32_t ui;
@@ -76,6 +77,7 @@ FORCEINLINE uint32_t Uint32Hash(uint32_t value, uint32_t hash = 0) {
         hash = hash * seed + b.ch[3-i];
     }
     return hash;
+#endif//0
 }
 
 #pragma mark - FrameData

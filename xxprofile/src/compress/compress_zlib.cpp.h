@@ -30,6 +30,7 @@ struct SCompressChunkedZlib : ICompress {
     SCompressChunkedZlib() {
         memset(&stream, 0 , sizeof(stream));
         int err = deflateInit2(&stream, XXPROFILE_ZLIB_LEVEL, Z_DEFLATED, MAX_WBITS, 8, Z_DEFAULT_STRATEGY);
+        UNUSED(err);
         assert(err == Z_OK);
     }
 
@@ -48,6 +49,7 @@ struct SCompressChunkedZlib : ICompress {
         stream.avail_out = (uInt)dstSize;
 
         int err = deflate(&stream, Z_SYNC_FLUSH);
+        UNUSED(err);
         assert(err == Z_OK);
         assert(stream.avail_in == 0);
 
@@ -72,6 +74,7 @@ struct SDecompressChunkedZlib : IDecompress {
     SDecompressChunkedZlib() {
         memset(&stream, 0 , sizeof(stream));
         auto err = inflateInit2(&stream, MAX_WBITS);
+        UNUSED(err);
         assert(err == Z_OK);
     }
 
@@ -85,6 +88,7 @@ struct SDecompressChunkedZlib : IDecompress {
         stream.avail_out = (uInt)dstSize;
 
         int err = inflate(&stream, Z_SYNC_FLUSH);
+        UNUSED(err);
         assert(err == Z_OK);
         assert(stream.avail_in == 0);
 

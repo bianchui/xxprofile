@@ -81,6 +81,7 @@ void CppNameDecoder::TokenParser::_putBackToken(Token& token) {
     _current = token.begin;
 }
 
+#if 0
 // https://en.cppreference.com/w/cpp/language/expressions#Operators
 // https://en.wikipedia.org/wiki/Operators_in_C_and_C%2B%2B
 static const char* const kOperators[] = {
@@ -137,6 +138,7 @@ static const char* const kOperators[] = {
     // Other operators
     "()", // R K::operator ()(S a, T b, ...);
 };
+#endif//0
 
 void CppNameDecoder::TokenParser::_parseNextWithFixedOperator(Token& token) {
     _parseNextSimple(token);

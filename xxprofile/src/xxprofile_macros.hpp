@@ -32,4 +32,42 @@
 #define XX_NAMESPACE_BEGIN(ns) namespace ns {
 #define XX_NAMESPACE_END(ns) }
 
+// compilers
+#ifdef _MSC_VER // for MSVC
+
+#  define UNUSED(x) __pragma(warning(suppress:4100)) x
+#  define UNUSED_VAR
+#  define forceinline __forceinline
+#  define STRUCT_PACKED __pragma(pack(1))
+#  define CHECK_FMT(a, b)
+
+#  if defined _M_X64 || defined _M_ARM || defined _M_ARM64
+#    define UNALIGNED_DATA __unaligned
+#  else
+#    define UNALIGNED_DATA
+#  endif
+
+#elif defined __GNUC__ // for gcc/clang on Linux/Apple OS X
+
+#  define UNUSED(x) (void)x
+#  define UNUSED_VAR __attribute__((__unused__))
+#  define forceinline __inline__ __attribute__((always_inline))
+#  define STRUCT_PACKED __attribute__((packed))
+#  define CHECK_FMT(a, b) __attribute__((format(printf, a, b)))
+
+#  define UNALIGNED_DATA
+
+#else
+
+#  error unknown compiler
+#  define UNUSED(x) (void)x
+#  define UNUSED_VAR
+#  define forceinline
+#  define STRUCT_PACKED
+#  define CHECK_FMT(a, b)
+
+#  define UNALIGNED_DATA
+
+#endif
+
 #endif//xxprofile_macros_hpp

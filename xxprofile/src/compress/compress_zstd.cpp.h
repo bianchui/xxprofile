@@ -38,6 +38,7 @@ struct SCompressChunkedZstd : ICompress {
         ZSTD_inBuffer input = { src, srcSize, 0 };
         ZSTD_outBuffer output = { dst, dstSize, 0 };
         size_t const err = ZSTD_compressStream2(ctx, &output, &input, ZSTD_e_flush);
+        UNUSED(err);
         assert(!ZSTD_isError(err));
         assert(input.size == input.pos);
         return output.pos;
@@ -65,6 +66,7 @@ struct SDecompressChunkedZstd : IDecompress {
         ZSTD_inBuffer input = { src, srcSize, 0 };
         ZSTD_outBuffer output = { dst, dstSize, 0 };
         size_t const err = ZSTD_decompressStream(ctx, &output, &input);
+        UNUSED(err);
         assert(!ZSTD_isError(err));
         assert(input.size == input.pos);
         return output.pos;
