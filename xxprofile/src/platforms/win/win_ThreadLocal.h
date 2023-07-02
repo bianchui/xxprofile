@@ -10,33 +10,33 @@ template <typename T>
 class ThreadLocal_win {
 public:
     ThreadLocal_win() {
-        _fls = FlsAlloc(_on_thread_exit);
+        _fls = ::FlsAlloc(_on_thread_exit);
     }
     ~ThreadLocal_win() {
         T* p = get();
         if (p) {
             delete p;
         }
-        FlsAlloc(_fls);
+        ::FlsFree(_fls);
     }
 
     void set(T* value) {
-        FlsSetValue(_fls, (void*)value);
+        ::FlsSetValue(_fls, (void*)value);
     }
 
     T* get() {
-        return (T*)FlsGetValue(_fls);
+        return (T*)::FlsGetValue(_fls);
     }
 
 private:
-    static void _on_thread_exit(void* data) {
+    static void __stdcall _on_thread_exit(void* data) {
         T* p = (T*)data;
         delete p;
     }
 
 protected:
     DWORD _fls;
-    XX_CLASS_DELETE_COPY_AND_MOVE(ThreadLocal_pthread);
+    XX_CLASS_DELETE_COPY_AND_MOVE(ThreadLocal_win);
 };
 
 XX_NAMESPACE_END(xxprofile);

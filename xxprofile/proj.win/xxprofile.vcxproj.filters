@@ -10,12 +10,12 @@
     <Filter Include="src\helper">
       <UniqueIdentifier>{97e32edb-9754-4017-b2f6-4f870c0ad60a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\platforms\win">
+      <UniqueIdentifier>{95e8c119-5b2c-43c6-b7fe-088daaa58591}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\xxprofile.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\xxprofile_build.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\src\xxprofile_name.cpp">
@@ -24,12 +24,15 @@
     <ClCompile Include="..\src\platforms\platform_base.cpp">
       <Filter>src\platforms</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\xxprofile_tls.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\xxprofile_archive.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\xxprofile.hpp">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\xxprofile_build.hpp">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\src\xxprofile_name.hpp">
@@ -50,11 +53,41 @@
     <ClInclude Include="..\src\helper\SimpleConfig.h">
       <Filter>src\helper</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\platforms\platform_win.h">
+    <ClInclude Include="..\src\platforms\win\win_inc_windows.h">
+      <Filter>src\platforms\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\platforms\win\win_SystemLock.h">
+      <Filter>src\platforms\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\platforms\win\win_ThreadLocal.h">
+      <Filter>src\platforms\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\platforms\win\win_timer.h">
+      <Filter>src\platforms\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\platforms\platform_win.hpp">
       <Filter>src\platforms</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\platforms\platform_inc_windows.h">
-      <Filter>src\platforms</Filter>
+    <ClInclude Include="..\src\xxprofile_data.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\xxprofile_internal.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\xxprofile_macros.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\xxprofile_namepool.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\xxprofile_tls.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\xxprofile_version.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\xxprofile_archive.hpp">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

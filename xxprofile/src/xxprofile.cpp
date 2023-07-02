@@ -10,7 +10,10 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <time.h>
-#include <sys/time.h>
+#ifndef XX_PLATFORM_WINDOWS
+#  include <sys/time.h>
+#endif//XX_PLATFORM_WINDOWS
+
 #include "xxprofile_tls.hpp"
 
 XX_NAMESPACE_BEGIN(xxprofile);
@@ -41,12 +44,22 @@ static void StaticInitUnSafe(const char* savePath) {
         }
         char timeBuf[64];
 #define XXProfile_TimeFormat "[%04d-%02d-%02d-%02d-%02d-%02d.%03d]"
-#define XXProfile_TImeArgs (lt.tm_year + 1900), (lt.tm_mon + 1), lt.tm_mday, lt.tm_hour, lt.tm_min, lt.tm_sec, (int)(tv.tv_usec / 1000)
+#ifndef XX_PLATFORM_WINDOWS
+#define XXProfile_TimeArgs \
+/**/(lt.tm_year + 1900), (lt.tm_mon + 1), lt.tm_mday, \
+/**/lt.tm_hour, lt.tm_min, lt.tm_sec, (int)(tv.tv_usec / 1000)
         struct timeval tv;
         gettimeofday(&tv, 0);
         struct tm lt;
         localtime_r(&tv.tv_sec, &lt);
-        snprintf(timeBuf, 64, XXProfile_TimeFormat, XXProfile_TImeArgs);
+#else//XX_PLATFORM_WINDOWS
+#define XXProfile_TimeArgs \
+/**/ st.wYear, st.wMonth, st.wDay, \
+/**/ st.wHour, st.wMinute, st.wSecond, st.wMilliseconds
+        SYSTEMTIME st;
+        GetLocalTime(&st);
+#endif//XX_PLATFORM_WINDOWS
+        snprintf(timeBuf, 64, XXProfile_TimeFormat, XXProfile_TimeArgs);
         timeBuf[63] = 0;
         filePath.append(timeBuf);
         filePath.append(systemGetAppName());

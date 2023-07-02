@@ -11,7 +11,7 @@
 
 #if defined(XX_PLATFORM_WINDOWS) && XX_PLATFORM_WINDOWS
 // win
-#  include "platform_win.h"
+#  include "platform_win.hpp"
 
 #elif defined(__APPLE__) && defined(__MACH__)
 // ios & mac

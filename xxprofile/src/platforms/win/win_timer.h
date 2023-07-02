@@ -11,7 +11,7 @@ struct Timer_win : Timer_base {
     static double InitTiming() {
         uint64_t frequency;
         ::QueryPerformanceFrequency((LARGE_INTEGER*)&frequency);
-        secondsPerCycle = 1.0 ／ (double)frequency;
+        secondsPerCycle = 1.0 / (double)frequency;
         return Seconds();
     }
 

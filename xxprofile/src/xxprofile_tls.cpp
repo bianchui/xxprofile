@@ -4,7 +4,9 @@
 #include "xxprofile_version.hpp"
 #include <vector>
 #include <assert.h>
-#include <unistd.h>
+#ifndef XX_PLATFORM_WINDOWS
+#  include <unistd.h>
+#endif//XX_PLATFORM_WINDOWS
 #include <stdlib.h>
 
 #if XX_IsCompress(ZLIB) || XX_IsCompress(ZLIB_CHUNKED)

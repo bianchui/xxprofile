@@ -4,7 +4,7 @@
 
 #ifndef _WIN32_WINNT
 # if !defined(WP8)
-#  define _WIN32_WINNT 0x0500
+#  define _WIN32_WINNT 0x0600
 # else//!defined(WP8)
 #  define _WIN32_WINNT 0x0600
 # endif//!defined(WP8)

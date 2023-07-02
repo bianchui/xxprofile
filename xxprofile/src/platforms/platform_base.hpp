@@ -13,7 +13,9 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
-#define FORCEINLINE inline
+#ifndef FORCEINLINE
+#  define FORCEINLINE inline
+#endif//FORCEINLINE
 
 struct Timer_base {
     //** start interfaces
