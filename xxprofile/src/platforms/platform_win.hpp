@@ -5,11 +5,24 @@
 #include "win/win_SystemLock.h"
 #include "win/win_timer.h"
 #include "win/win_ThreadLocal.h"
+#include <string>
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
 FORCEINLINE uint32_t systemGetTid() {
     return ::GetCurrentThreadId();
+}
+
+FORCEINLINE std::string systemGetWritablePath() {
+    char buf[MAX_PATH];
+    GetCurrentDirectoryA(MAX_PATH, buf);
+    return buf;
+}
+
+FORCEINLINE std::string systemGetAppName() {
+    char buf[MAX_PATH];
+    GetModuleFileNameA(nullptr, buf, MAX_PATH);
+    return buf;
 }
 
 typedef SystemLock_win SystemLock;

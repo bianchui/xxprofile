@@ -1,25 +1,29 @@
 // Copyright 2018 bianchui. All rights reserved.
 #define XX_ENABLE_PROFILE 1
+#ifdef XX_PLATFORM_WINDOWS
+#  define HAVE_PRETTY_FUNCTION 0
+#endif//XX_PLATFORM_WINDOWS
 #include "../src/xxprofile.hpp"
 #include "../src/xxprofile_archive.hpp"
 #include "../src/platforms/platform.hpp"
-#include <shared/time_conv.h>
+#include <thread>
+#include <chrono>
 
 #include <vector>
 #include <thread>
 #include <iostream>
-#include <pthread.h>
-#include <unistd.h>
 #include <time.h>
 #include <map>
 #include <set>
 #include <unordered_map>
 #include <unordered_set>
-#include <sys/syscall.h>
-#include <sys/types.h>
+//#include <sys/syscall.h>
+//#include <sys/types.h>
 #include <assert.h>
 
+#ifndef XX_PLATFORM_WINDOWS
 __thread int a = 0;
+#endif//XX_PLATFORM_WINDOWS
 
 #define OPERATOR_0PARAM(op) int operator op() { XX_PROFILE_SCOPE_FUNCTION(); return 1; }
 #define OPERATOR_1PARAM(op) int operator op(int a0) { XX_PROFILE_SCOPE_FUNCTION(); return 1; }
@@ -372,9 +376,8 @@ void fun() {
     sss.abcde();
 }
 
-void* static_thread(void* param) {
+void* static_thread(uint32_t id) {
     static constexpr uint32_t kTestCount = 100000;
-    const uint32_t id = (uint32_t)(uintptr_t)param;
     const uint32_t start = id * kTestCount;
 
     if (true) {
@@ -399,20 +402,22 @@ void test_cycles() {
 }
 
 void test_threads() {
-    pthread_t pt[3] = {0};
-    for (size_t i = 0; i < XX_ARRAY_COUNTOF(pt); ++i) {
-        pthread_create(pt + i, NULL, static_thread, (void*)i);
+    std::thread threads[3];
+    for (size_t i = 0; i < XX_ARRAY_COUNTOF(threads); ++i) {
+        threads[i] = std::thread(static_thread, i);
     }
     static_thread(NULL);
 
-    for (size_t i = 0; i < XX_ARRAY_COUNTOF(pt); ++i) {
-        pthread_join(pt[i], NULL);
+    for (size_t i = 0; i < XX_ARRAY_COUNTOF(threads); ++i) {
+        threads[i].join();
     }
 
     //sleep(1);
 }
 
-#include "tests/tls_test.hpp"
+#ifndef XX_PLATFORM_WINDOWS
+#  include "tests/tls_test.hpp"
+#endif//XX_PLATFORM_WINDOWS
 
 // test result
 // 1000000 cycles
@@ -436,10 +441,8 @@ int main(int argc, const char * argv[]) {
     TEST_ATOMIC(i(0), ++i);
     TEST_ATOMIC(i(0), i.fetch_add(1));
     TEST_ATOMIC(i(1), i.fetch_sub(1));
- 
-    struct timespec start;
-    struct timespec end;
-    clock_gettime(CLOCK_MONOTONIC, &start);
+
+    auto start = std::chrono::steady_clock::now();
     
     //testLoad();
 
@@ -449,8 +452,9 @@ int main(int argc, const char * argv[]) {
     //test_threads();
     static_thread(NULL);
 
-    clock_gettime(CLOCK_MONOTONIC, &end);
-    printf("take: %d\n", (int)shared::timespec_sub_us(end, start));
+    auto end = std::chrono::steady_clock::now();
+    std::chrono::duration<double> diff = end - start;
+    std::cout << "take: " << diff.count() << "s\n";
     //testSave();
 
     //std::cout << a << std::endl;
