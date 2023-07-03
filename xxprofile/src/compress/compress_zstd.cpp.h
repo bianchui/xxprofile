@@ -1,7 +1,7 @@
 // Copyright 2017-2023 bianchui. All rights reserved.
 #ifndef compress_zstd_cpp_h
 #define compress_zstd_cpp_h
-#include <libs/zstd-1.5.4/lib/zstd.h>
+#include <libs/zstd-1.5.5/lib/zstd.h>
 #include "../xxprofile_internal.hpp"
 
 XX_NAMESPACE_BEGIN(xxprofile);
