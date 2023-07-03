@@ -2284,7 +2284,6 @@ SRes LzmaEnc_Encode(CLzmaEncHandle pp, ISeqOutStream *outStream, ISeqInStream *i
   return LzmaEnc_Encode2((CLzmaEnc *)pp, progress);
 }
 
-#ifndef XX_NO_LZMA2
 SRes LzmaEnc_WriteProperties(CLzmaEncHandle pp, Byte *props, SizeT *size)
 {
   CLzmaEnc *p = (CLzmaEnc *)pp;
@@ -2313,7 +2312,6 @@ SRes LzmaEnc_WriteProperties(CLzmaEncHandle pp, Byte *props, SizeT *size)
     props[1 + i] = (Byte)(dictSize >> (8 * i));
   return SZ_OK;
 }
-#endif//XX_NO_LZMA2
 
 SRes LzmaEnc_MemEncode(CLzmaEncHandle pp, Byte *dest, SizeT *destLen, const Byte *src, SizeT srcLen,
     int writeEndMark, ICompressProgress *progress, ISzAlloc *alloc, ISzAlloc *allocBig)

@@ -36,6 +36,9 @@
 		59A5CB2329C1C6660043004A /* compress_zstd.lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CB1D29C1B9270043004A /* compress_zstd.lib.c */; };
 		86334F7B237BEFFA004F01C9 /* lz4.c in Sources */ = {isa = PBXBuildFile; fileRef = 86334DAF237BEFF9004F01C9 /* lz4.c */; };
 		868231EE238F91A500B5A1CD /* lz4hc.c in Sources */ = {isa = PBXBuildFile; fileRef = 868231ED238F91A500B5A1CD /* lz4hc.c */; };
+		86DB7F272A529FB90023C6C4 /* test_lzma.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86DB7F262A529FB90023C6C4 /* test_lzma.cpp */; };
+		86DB7F292A52B5860023C6C4 /* compress_lzma_enc.lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 86DB7F282A52B5860023C6C4 /* compress_lzma_enc.lib.c */; };
+		86DB7F2B2A52B68E0023C6C4 /* compress_lzma_dec.lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 86DB7F2A2A52B68D0023C6C4 /* compress_lzma_dec.lib.c */; };
 		ED22005920E1D76F0076C22F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = ED22005820E1D76F0076C22F /* main.m */; };
 		ED22005C20E1D76F0076C22F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED22005B20E1D76F0076C22F /* ViewController.m */; };
 		ED22006120E1D76F0076C22F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ED22006020E1D76F0076C22F /* Assets.xcassets */; };
@@ -327,6 +330,18 @@
 		868231ED238F91A500B5A1CD /* lz4hc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lz4hc.c; sourceTree = "<group>"; };
 		86A572BE2378FF74007B1437 /* tls_test.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = tls_test.hpp; sourceTree = "<group>"; };
 		86A572E3237901E7007B1437 /* SharedMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedMacros.h; sourceTree = "<group>"; };
+		86DB7F182A529E040023C6C4 /* compress_lzma.cpp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = compress_lzma.cpp.h; sourceTree = "<group>"; };
+		86DB7F1B2A529F4D0023C6C4 /* LzHash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LzHash.h; sourceTree = "<group>"; };
+		86DB7F1C2A529F4D0023C6C4 /* LzmaEnc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = LzmaEnc.c; sourceTree = "<group>"; };
+		86DB7F1D2A529F4D0023C6C4 /* LzFind.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = LzFind.c; sourceTree = "<group>"; };
+		86DB7F1E2A529F4D0023C6C4 /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
+		86DB7F1F2A529F4D0023C6C4 /* LzmaDec.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = LzmaDec.c; sourceTree = "<group>"; };
+		86DB7F202A529F4D0023C6C4 /* LzmaEnc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LzmaEnc.h; sourceTree = "<group>"; };
+		86DB7F212A529F4D0023C6C4 /* LzFind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LzFind.h; sourceTree = "<group>"; };
+		86DB7F222A529F4D0023C6C4 /* LzmaDec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LzmaDec.h; sourceTree = "<group>"; };
+		86DB7F262A529FB90023C6C4 /* test_lzma.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_lzma.cpp; sourceTree = "<group>"; };
+		86DB7F282A52B5860023C6C4 /* compress_lzma_enc.lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = compress_lzma_enc.lib.c; sourceTree = "<group>"; };
+		86DB7F2A2A52B68D0023C6C4 /* compress_lzma_dec.lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = compress_lzma_dec.lib.c; sourceTree = "<group>"; };
 		ED22005220E1D76F0076C22F /* xxprofileViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xxprofileViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED22005820E1D76F0076C22F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		ED22005A20E1D76F0076C22F /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -481,6 +496,7 @@
 				59A5CA3629C088800043004A /* main.cpp */,
 				59A5CA7529C08B870043004A /* test_compress.hpp */,
 				59A5CA7829C08C070043004A /* test_lz4.cpp */,
+				86DB7F262A529FB90023C6C4 /* test_lzma.cpp */,
 				59A5CA7929C08C070043004A /* test_lzo.cpp */,
 				59A5CA7429C08B870043004A /* test_zlib.cpp */,
 				59A5CB1629C1B1B10043004A /* test_zstd.cpp */,
@@ -601,6 +617,7 @@
 		86334D53237BEFE0004F01C9 /* libs */ = {
 			isa = PBXGroup;
 			children = (
+				86DB7F1A2A529F4D0023C6C4 /* lzma */,
 				59A5CAB229C0A1990043004A /* zstd-1.5.5 */,
 				86334D55237BEFF9004F01C9 /* lz4-1.9.4 */,
 				86334E1B237BEFF9004F01C9 /* lzo-2.10 */,
@@ -801,9 +818,12 @@
 		868231E8238B8C3400B5A1CD /* compress */ = {
 			isa = PBXGroup;
 			children = (
-				868231E9238B8C7B00B5A1CD /* compress_zlib.cpp.h */,
-				868231EA238E317B00B5A1CD /* compress_lzo.cpp.h */,
 				868231EB238E332900B5A1CD /* compress_lz4.cpp.h */,
+				86DB7F2A2A52B68D0023C6C4 /* compress_lzma_dec.lib.c */,
+				86DB7F282A52B5860023C6C4 /* compress_lzma_enc.lib.c */,
+				86DB7F182A529E040023C6C4 /* compress_lzma.cpp.h */,
+				868231EA238E317B00B5A1CD /* compress_lzo.cpp.h */,
+				868231E9238B8C7B00B5A1CD /* compress_zlib.cpp.h */,
 				59A5CB1429C163FA0043004A /* compress_zstd.cpp.h */,
 				59A5CB1D29C1B9270043004A /* compress_zstd.lib.c */,
 			);
@@ -825,6 +845,21 @@
 			);
 			name = shared;
 			path = ../../shared;
+			sourceTree = "<group>";
+		};
+		86DB7F1A2A529F4D0023C6C4 /* lzma */ = {
+			isa = PBXGroup;
+			children = (
+				86DB7F1D2A529F4D0023C6C4 /* LzFind.c */,
+				86DB7F212A529F4D0023C6C4 /* LzFind.h */,
+				86DB7F1B2A529F4D0023C6C4 /* LzHash.h */,
+				86DB7F1F2A529F4D0023C6C4 /* LzmaDec.c */,
+				86DB7F222A529F4D0023C6C4 /* LzmaDec.h */,
+				86DB7F1C2A529F4D0023C6C4 /* LzmaEnc.c */,
+				86DB7F202A529F4D0023C6C4 /* LzmaEnc.h */,
+				86DB7F1E2A529F4D0023C6C4 /* Types.h */,
+			);
+			path = lzma;
 			sourceTree = "<group>";
 		};
 		ED22005320E1D76F0076C22F /* xxprofileViewer */ = {
@@ -1316,6 +1351,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				59A5CA7A29C08C070043004A /* test_lz4.cpp in Sources */,
+				86DB7F2B2A52B68E0023C6C4 /* compress_lzma_dec.lib.c in Sources */,
 				59A5CA8E29C0994C0043004A /* platform_base.cpp in Sources */,
 				59A5CA8B29C0991C0043004A /* platform_apple.mm in Sources */,
 				59A5CA7C29C08C070043004A /* test_lzo.cpp in Sources */,
@@ -1324,7 +1360,9 @@
 				59A5CB1729C1B1B10043004A /* test_zstd.cpp in Sources */,
 				59A5CB0629C0A1990043004A /* huf_decompress_amd64.S in Sources */,
 				59A5CA3729C088800043004A /* main.cpp in Sources */,
+				86DB7F272A529FB90023C6C4 /* test_lzma.cpp in Sources */,
 				59A5CB1E29C1B9270043004A /* compress_zstd.lib.c in Sources */,
+				86DB7F292A52B5860023C6C4 /* compress_lzma_enc.lib.c in Sources */,
 				59A5CA8329C098440043004A /* lz4.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -150,6 +150,7 @@ int main(int argc, const char * argv[]) {
         testCompress("zlib", buf, compress_createZlib(), decompress_createZlib());
         testCompress("lz4", buf, compress_createLz4(), decompress_createLz4());
         testCompress("zstd", buf, compress_createZstd(), decompress_createZstd());
+        testCompress("lzma", buf, compress_createLzma(), decompress_createLzma());
     }
     if (true) {
         verifyCompress("zlib", buf, compress_createZlib(), decompress_createZlib());
@@ -158,6 +159,8 @@ int main(int argc, const char * argv[]) {
         verifyCompress("lz4Chunked", buf, compress_createChunkedLz4(), decompress_createChunkedLz4());
         verifyCompress("zstd", buf, compress_createZstd(), decompress_createZstd());
         verifyCompress("zstdChunked", buf, compress_createChunkedZstd(), decompress_createChunkedZstd());
+        verifyCompress("lzma", buf, compress_createLzma(), decompress_createLzma());
+        verifyCompress("lzmaChunked", buf, compress_createChunkedLzma(), decompress_createChunkedLzma());
     }
     delete[] buf;
     return 0;
