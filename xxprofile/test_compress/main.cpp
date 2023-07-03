@@ -26,7 +26,7 @@ void printMK(char* buf, uint64_t size) {
 }
 
 void testCompress(const char* name, const char* buf, xxprofile::ICompress* compress, xxprofile::IDecompress* decompress) {
-    static const uint32_t kTestTimes = 10000;
+    static const uint32_t kTestTimes = 100;
     char buffer[64];
 
     char* com = new char[kSrcSize * 2];
@@ -113,12 +113,39 @@ void verifyCompress(const char* name, const char* buf, xxprofile::ICompress* com
     delete[] dec;
 }
 
+/*
+ * Apple M1 Max
+ * zlib_1: compress:      0.825550 | 786432 => 341099 | 90.849MB/s
+ * zlib_1: deccompress:   0.249963 | 341099 => 786432 | 300.044MB/s
+ * zlib_9: compress:      5.201362 | 786432 => 315490 | 14.419MB/s
+ * zlib_9: deccompress:   0.236646 | 315490 => 786432 | 316.929MB/s
+ * lz4_fast: compress:    0.101061 | 786432 => 436912 | 742.124MB/s
+ * lz4_fast: deccompress: 0.015143 | 436912 => 786432 | 4952.865MB/s
+ * zstd_1: compress:      0.130582 | 786432 => 352384 | 574.353MB/s
+ * zstd_1: deccompress:   0.093797 | 352384 => 786432 | 799.596MB/s
+ * zstd_3: compress:      0.270600 | 786432 => 319612 | 277.162MB/s
+ * zstd_3: deccompress:   0.099471 | 319612 => 786432 | 753.989MB/s
+ * zstd_6: compress:      0.655533 | 786432 => 306143 | 114.411MB/s
+ * zstd_6: deccompress:   0.097566 | 306143 => 786432 | 768.711MB/s
+ * zstd_15: compress:     2.453033 | 786432 => 303360 | 30.574MB/s
+ * zstd_15: deccompress:  0.096327 | 303360 => 786432 | 778.602MB/s
+ */
+
+void readFile(char* buf, const char* name) {
+    FILE* fp = fopen(name, "rb");
+    if (fp) {
+        fread(buf, 1, kSrcSize, fp);
+        fclose(fp);
+    }
+}
+
 int main(int argc, const char * argv[]) {
     xxprofile::Timer::InitTiming();
     char* buf = new char[kSrcSize];
     for (uint32_t i = 0; i < kSrcSize; ++i) {
-        buf[i] = i;
+        buf[i] = i + rand();
     }
+    readFile(buf, argc > 1 ? argv[1] : argv[0]);
     if (true) {
         testCompress("zlib", buf, compress_createZlib(), decompress_createZlib());
         testCompress("lz4", buf, compress_createLz4(), decompress_createLz4());
