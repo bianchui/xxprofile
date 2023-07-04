@@ -1,3 +1,5 @@
+#define ZSTDLIB_VISIBLE
+#define ZSTDERRORLIB_VISIBILITY
 #include "../../src/platforms/platform_base.cpp"
 #include "../../src/platforms/platform_apple.mm"
 #ifdef XX_PLATFORM_APPLE
@@ -18,10 +20,10 @@
 #    include "../../../libs/lz4-1.9.4/lib/lz4hc.c"
 #  endif//XX_LZ4_USE_HC
 #endif//XX_IsCompress(LZ4) || XX_IsCompress(LZ4_CHUNKED)
+#endif//ifndef XXPROFILE_HAS_DECOMPRESS
 
 #if XX_IsCompress(ZSTD) || XX_IsCompress(ZSTD_CHUNKED)
 #  include "../../src/compress/compress_zstd.lib.c"
 #endif//XX_IsCompress(ZSTD) || XX_IsCompress(ZSTD_CHUNKED)
-#endif//ifndef XXPROFILE_HAS_DECOMPRESS
 
 #pragma clang diagnostic pop

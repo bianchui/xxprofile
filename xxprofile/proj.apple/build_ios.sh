@@ -111,7 +111,7 @@ function build_framework_Config() {
     guard rm -rf ${var_out_path}/macOS
 
     mkdir -p ../../out/prebuilt/
-    guard cp -rf ${var_out_lib}.xcframework ../../out/prebuilt/
+    guard cp -Rf ${var_out_lib}.xcframework ../../out/prebuilt/
 }
 
 pushd $THIS_DIR > /dev/null
