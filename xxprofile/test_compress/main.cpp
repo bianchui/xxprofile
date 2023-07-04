@@ -131,8 +131,10 @@ void verifyCompress(const char* name, const char* buf, xxprofile::ICompress* com
  * zstd_6: deccompress:   0.097566 | 306143 => 786432 | 768.711MB/s
  * zstd_15: compress:     2.453033 | 786432 => 303360 | 30.574MB/s
  * zstd_15: deccompress:  0.096327 | 303360 => 786432 | 778.602MB/s
+ * zstd_22: compress:    11.911026 | 786432 => 290409 | 6447.807KB/s
+ * zstd_22: deccompress:  0.116586 | 290409 => 786432 | 643.304MB/s
  * lzma_1: compress:     13.694698 | 786432 => 264920 | 5608.009KB/s
- * lzma_1: deccompress:   1.288919 2| 64920 => 786432 | 58.188MB/s
+ * lzma_1: deccompress:   1.288919 | 264920 => 786432 | 58.188MB/s
  * lzma_4: compress:     13.994129 | 786432 => 264825 | 5488.015KB/s
  * lzma_4: deccompress:   1.310372 | 264825 => 786432 | 57.236MB/s
  */
