@@ -1,8 +1,5 @@
 // Copyright 2018 bianchui. All rights reserved.
 #define XX_ENABLE_PROFILE 1
-#ifdef XX_PLATFORM_WINDOWS
-#  define HAVE_PRETTY_FUNCTION 0
-#endif//XX_PLATFORM_WINDOWS
 #include "../src/xxprofile.hpp"
 #include "../src/xxprofile_archive.hpp"
 #include "../src/platforms/platform.hpp"
