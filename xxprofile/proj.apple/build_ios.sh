@@ -106,9 +106,9 @@ function build_framework_Config() {
         -framework ${var_out_path}/macOS/${var_libname}.framework \
         -output ${var_out_lib}.xcframework
 
-    guard rm -f ${var_out_path}/iphoneos/${var_libname}.framework
-    guard rm -f ${var_out_path}/iphonesimulator/${var_libname}.framework
-    guard rm -f ${var_out_path}/macOS/${var_libname}.framework
+    guard rm -rf ${var_out_path}/iphoneos
+    guard rm -rf ${var_out_path}/iphonesimulator
+    guard rm -rf ${var_out_path}/macOS
 
     mkdir -p ../../out/prebuilt/
     guard cp -rf ${var_out_lib}.xcframework ../../out/prebuilt/

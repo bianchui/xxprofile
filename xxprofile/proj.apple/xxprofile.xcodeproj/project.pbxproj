@@ -38,12 +38,8 @@
 		86DB7F2B2A52B68E0023C6C4 /* compress_lzma_dec.lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 86DB7F2A2A52B68D0023C6C4 /* compress_lzma_dec.lib.c */; };
 		86DB7F3C2A5401AB0023C6C4 /* xxprofile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86DB7F362A5401AA0023C6C4 /* xxprofile.framework */; };
 		86DB7F3D2A5401AB0023C6C4 /* xxprofile.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 86DB7F362A5401AA0023C6C4 /* xxprofile.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		86DB7F612A5403490023C6C4 /* xxprofile_mac1.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86DB7F552A5402650023C6C4 /* xxprofile_mac1.framework */; };
-		86DB7F622A5403490023C6C4 /* xxprofile_mac1.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 86DB7F552A5402650023C6C4 /* xxprofile_mac1.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		86DB7F6A2A5405A00023C6C4 /* xxprofile_lib.mm in Sources */ = {isa = PBXBuildFile; fileRef = ED5C76D9251C5A9400BE9A19 /* xxprofile_lib.mm */; };
-		86DB7F6B2A5405A00023C6C4 /* xxprofile_lib.mm in Sources */ = {isa = PBXBuildFile; fileRef = ED5C76D9251C5A9400BE9A19 /* xxprofile_lib.mm */; };
 		86DB7F6C2A5405AA0023C6C4 /* huf_decompress_amd64.S in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CAD829C0A1990043004A /* huf_decompress_amd64.S */; };
-		86DB7F6D2A5405AB0023C6C4 /* huf_decompress_amd64.S in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CAD829C0A1990043004A /* huf_decompress_amd64.S */; };
 		ED22005920E1D76F0076C22F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = ED22005820E1D76F0076C22F /* main.m */; };
 		ED22005C20E1D76F0076C22F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED22005B20E1D76F0076C22F /* ViewController.m */; };
 		ED22006120E1D76F0076C22F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ED22006020E1D76F0076C22F /* Assets.xcassets */; };
@@ -89,13 +85,6 @@
 			remoteGlobalIDString = 86DB7F352A5401AA0023C6C4;
 			remoteInfo = xxprofile.framework;
 		};
-		86DB7F632A5403490023C6C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = ED84F6B01FB1CF9B00C7B425 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 86DB7F542A5402650023C6C4;
-			remoteInfo = xxprofile_mac_fw;
-		};
 		ED2207C020E1E3E00076C22F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = ED2207BC20E1E3E00076C22F /* GLFW.xcodeproj */;
@@ -139,7 +128,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				86DB7F622A5403490023C6C4 /* xxprofile_mac1.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -384,7 +372,6 @@
 		86DB7F282A52B5860023C6C4 /* compress_lzma_enc.lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = compress_lzma_enc.lib.c; sourceTree = "<group>"; };
 		86DB7F2A2A52B68D0023C6C4 /* compress_lzma_dec.lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = compress_lzma_dec.lib.c; sourceTree = "<group>"; };
 		86DB7F362A5401AA0023C6C4 /* xxprofile.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = xxprofile.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		86DB7F552A5402650023C6C4 /* xxprofile_mac1.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = xxprofile_mac1.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED22005220E1D76F0076C22F /* xxprofileViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xxprofileViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED22005820E1D76F0076C22F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		ED22005A20E1D76F0076C22F /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -491,13 +478,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		86DB7F522A5402650023C6C4 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		ED22004F20E1D76F0076C22F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -528,7 +508,6 @@
 				ED7D785120F731740043FF99 /* libz.tbd in Frameworks */,
 				ED94983820EE27D500FA04D0 /* Foundation.framework in Frameworks */,
 				ED81D1B220D3B1610096FB53 /* libxxprofile_mac.a in Frameworks */,
-				86DB7F612A5403490023C6C4 /* xxprofile_mac1.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1131,7 +1110,6 @@
 				59A5CA3429C088800043004A /* test_compress */,
 				59A5CA5829C088D90043004A /* test_compress_ios.app */,
 				86DB7F362A5401AA0023C6C4 /* xxprofile.framework */,
-				86DB7F552A5402650023C6C4 /* xxprofile_mac1.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1172,13 +1150,6 @@
 
 /* Begin PBXHeadersBuildPhase section */
 		86DB7F312A5401AA0023C6C4 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		86DB7F502A5402650023C6C4 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1240,24 +1211,6 @@
 			productReference = 86DB7F362A5401AA0023C6C4 /* xxprofile.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		86DB7F542A5402650023C6C4 /* xxprofile_mac1 */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 86DB7F5D2A5402660023C6C4 /* Build configuration list for PBXNativeTarget "xxprofile_mac1" */;
-			buildPhases = (
-				86DB7F502A5402650023C6C4 /* Headers */,
-				86DB7F512A5402650023C6C4 /* Sources */,
-				86DB7F522A5402650023C6C4 /* Frameworks */,
-				86DB7F532A5402650023C6C4 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = xxprofile_mac1;
-			productName = xxprofile_mac.framework;
-			productReference = 86DB7F552A5402650023C6C4 /* xxprofile_mac1.framework */;
-			productType = "com.apple.product-type.framework";
-		};
 		ED22005120E1D76F0076C22F /* xxprofileViewer */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = ED22006820E1D76F0076C22F /* Build configuration list for PBXNativeTarget "xxprofileViewer" */;
@@ -1307,7 +1260,6 @@
 			);
 			dependencies = (
 				ED81D1AF20D392100096FB53 /* PBXTargetDependency */,
-				86DB7F642A5403490023C6C4 /* PBXTargetDependency */,
 			);
 			name = test;
 			productName = test;
@@ -1371,11 +1323,6 @@
 						CreatedOnToolsVersion = 14.2;
 						ProvisioningStyle = Manual;
 					};
-					86DB7F542A5402650023C6C4 = {
-						CreatedOnToolsVersion = 14.2;
-						DevelopmentTeam = 6D5DUQ6KTS;
-						ProvisioningStyle = Automatic;
-					};
 					ED22005120E1D76F0076C22F = {
 						CreatedOnToolsVersion = 8.3.3;
 						DevelopmentTeam = 6D5DUQ6KTS;
@@ -1431,7 +1378,6 @@
 				59A5CA3329C088800043004A /* test_compress */,
 				59A5CA5729C088D90043004A /* test_compress_ios */,
 				86DB7F352A5401AA0023C6C4 /* xxprofile */,
-				86DB7F542A5402650023C6C4 /* xxprofile_mac1 */,
 			);
 		};
 /* End PBXProject section */
@@ -1455,13 +1401,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		86DB7F342A5401AA0023C6C4 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		86DB7F532A5402650023C6C4 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1537,15 +1476,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		86DB7F512A5402650023C6C4 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				86DB7F6D2A5405AB0023C6C4 /* huf_decompress_amd64.S in Sources */,
-				86DB7F6B2A5405A00023C6C4 /* xxprofile_lib.mm in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		ED22004E20E1D76F0076C22F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1610,11 +1540,6 @@
 			isa = PBXTargetDependency;
 			target = 86DB7F352A5401AA0023C6C4 /* xxprofile */;
 			targetProxy = 86DB7F3A2A5401AB0023C6C4 /* PBXContainerItemProxy */;
-		};
-		86DB7F642A5403490023C6C4 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 86DB7F542A5402650023C6C4 /* xxprofile_mac1 */;
-			targetProxy = 86DB7F632A5403490023C6C4 /* PBXContainerItemProxy */;
 		};
 		ED81D1AF20D392100096FB53 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1921,105 +1846,6 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		86DB7F5E2A5402660023C6C4 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 6D5DUQ6KTS;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"XX_PLATFORM_MACOS=1",
-					"XX_PLATFORM_APPLE=1",
-					"$(inherited)",
-				);
-				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/../../libs/lzo-2.10/include",
-					"$(SRCROOT)/../../",
-				);
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2023 bianchui. All rights reserved.";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.0;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.github.bianchui.xxprofile-mac-framework";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		86DB7F5F2A5402660023C6C4 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 6D5DUQ6KTS;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"XX_PLATFORM_MACOS=1",
-					"XX_PLATFORM_APPLE=1",
-					"$(inherited)",
-				);
-				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/../../libs/lzo-2.10/include",
-					"$(SRCROOT)/../../",
-				);
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2023 bianchui. All rights reserved.";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.0;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.github.bianchui.xxprofile-mac-framework";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -2361,15 +2187,6 @@
 			buildConfigurations = (
 				86DB7F3F2A5401AB0023C6C4 /* Debug */,
 				86DB7F402A5401AB0023C6C4 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		86DB7F5D2A5402660023C6C4 /* Build configuration list for PBXNativeTarget "xxprofile_mac1" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				86DB7F5E2A5402660023C6C4 /* Debug */,
-				86DB7F5F2A5402660023C6C4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
