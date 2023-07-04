@@ -36,10 +36,10 @@
 		86DB7F272A529FB90023C6C4 /* test_lzma.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86DB7F262A529FB90023C6C4 /* test_lzma.cpp */; };
 		86DB7F292A52B5860023C6C4 /* compress_lzma_enc.lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 86DB7F282A52B5860023C6C4 /* compress_lzma_enc.lib.c */; };
 		86DB7F2B2A52B68E0023C6C4 /* compress_lzma_dec.lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 86DB7F2A2A52B68D0023C6C4 /* compress_lzma_dec.lib.c */; };
-		86DB7F3C2A5401AB0023C6C4 /* xxprofile_ios_fw.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86DB7F362A5401AA0023C6C4 /* xxprofile_ios_fw.framework */; };
-		86DB7F3D2A5401AB0023C6C4 /* xxprofile_ios_fw.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 86DB7F362A5401AA0023C6C4 /* xxprofile_ios_fw.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		86DB7F612A5403490023C6C4 /* xxprofile_mac_fw.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86DB7F552A5402650023C6C4 /* xxprofile_mac_fw.framework */; };
-		86DB7F622A5403490023C6C4 /* xxprofile_mac_fw.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 86DB7F552A5402650023C6C4 /* xxprofile_mac_fw.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		86DB7F3C2A5401AB0023C6C4 /* xxprofile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86DB7F362A5401AA0023C6C4 /* xxprofile.framework */; };
+		86DB7F3D2A5401AB0023C6C4 /* xxprofile.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 86DB7F362A5401AA0023C6C4 /* xxprofile.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		86DB7F612A5403490023C6C4 /* xxprofile_mac1.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86DB7F552A5402650023C6C4 /* xxprofile_mac1.framework */; };
+		86DB7F622A5403490023C6C4 /* xxprofile_mac1.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 86DB7F552A5402650023C6C4 /* xxprofile_mac1.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		86DB7F6A2A5405A00023C6C4 /* xxprofile_lib.mm in Sources */ = {isa = PBXBuildFile; fileRef = ED5C76D9251C5A9400BE9A19 /* xxprofile_lib.mm */; };
 		86DB7F6B2A5405A00023C6C4 /* xxprofile_lib.mm in Sources */ = {isa = PBXBuildFile; fileRef = ED5C76D9251C5A9400BE9A19 /* xxprofile_lib.mm */; };
 		86DB7F6C2A5405AA0023C6C4 /* huf_decompress_amd64.S in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CAD829C0A1990043004A /* huf_decompress_amd64.S */; };
@@ -128,7 +128,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				86DB7F3D2A5401AB0023C6C4 /* xxprofile_ios_fw.framework in Embed Frameworks */,
+				86DB7F3D2A5401AB0023C6C4 /* xxprofile.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -139,7 +139,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				86DB7F622A5403490023C6C4 /* xxprofile_mac_fw.framework in Embed Frameworks */,
+				86DB7F622A5403490023C6C4 /* xxprofile_mac1.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -383,8 +383,8 @@
 		86DB7F262A529FB90023C6C4 /* test_lzma.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_lzma.cpp; sourceTree = "<group>"; };
 		86DB7F282A52B5860023C6C4 /* compress_lzma_enc.lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = compress_lzma_enc.lib.c; sourceTree = "<group>"; };
 		86DB7F2A2A52B68D0023C6C4 /* compress_lzma_dec.lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = compress_lzma_dec.lib.c; sourceTree = "<group>"; };
-		86DB7F362A5401AA0023C6C4 /* xxprofile_ios_fw.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = xxprofile_ios_fw.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		86DB7F552A5402650023C6C4 /* xxprofile_mac_fw.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = xxprofile_mac_fw.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		86DB7F362A5401AA0023C6C4 /* xxprofile.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = xxprofile.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		86DB7F552A5402650023C6C4 /* xxprofile_mac1.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = xxprofile_mac1.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED22005220E1D76F0076C22F /* xxprofileViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xxprofileViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED22005820E1D76F0076C22F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		ED22005A20E1D76F0076C22F /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -517,7 +517,7 @@
 				ED7744D320EF4BC4002B0578 /* ModelIO.framework in Frameworks */,
 				ED7744CF20EF4BC4002B0578 /* Metal.framework in Frameworks */,
 				ED7744D120EF4BC4002B0578 /* MetalKit.framework in Frameworks */,
-				86DB7F3C2A5401AB0023C6C4 /* xxprofile_ios_fw.framework in Frameworks */,
+				86DB7F3C2A5401AB0023C6C4 /* xxprofile.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -528,7 +528,7 @@
 				ED7D785120F731740043FF99 /* libz.tbd in Frameworks */,
 				ED94983820EE27D500FA04D0 /* Foundation.framework in Frameworks */,
 				ED81D1B220D3B1610096FB53 /* libxxprofile_mac.a in Frameworks */,
-				86DB7F612A5403490023C6C4 /* xxprofile_mac_fw.framework in Frameworks */,
+				86DB7F612A5403490023C6C4 /* xxprofile_mac1.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1130,8 +1130,8 @@
 				ED7744CD20EF4BC4002B0578 /* test_ios.app */,
 				59A5CA3429C088800043004A /* test_compress */,
 				59A5CA5829C088D90043004A /* test_compress_ios.app */,
-				86DB7F362A5401AA0023C6C4 /* xxprofile_ios_fw.framework */,
-				86DB7F552A5402650023C6C4 /* xxprofile_mac_fw.framework */,
+				86DB7F362A5401AA0023C6C4 /* xxprofile.framework */,
+				86DB7F552A5402650023C6C4 /* xxprofile_mac1.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1222,9 +1222,9 @@
 			productReference = 59A5CA5829C088D90043004A /* test_compress_ios.app */;
 			productType = "com.apple.product-type.application";
 		};
-		86DB7F352A5401AA0023C6C4 /* xxprofile_ios_fw */ = {
+		86DB7F352A5401AA0023C6C4 /* xxprofile */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 86DB7F422A5401AB0023C6C4 /* Build configuration list for PBXNativeTarget "xxprofile_ios_fw" */;
+			buildConfigurationList = 86DB7F422A5401AB0023C6C4 /* Build configuration list for PBXNativeTarget "xxprofile" */;
 			buildPhases = (
 				86DB7F312A5401AA0023C6C4 /* Headers */,
 				86DB7F322A5401AA0023C6C4 /* Sources */,
@@ -1235,14 +1235,14 @@
 			);
 			dependencies = (
 			);
-			name = xxprofile_ios_fw;
+			name = xxprofile;
 			productName = xxprofile.framework;
-			productReference = 86DB7F362A5401AA0023C6C4 /* xxprofile_ios_fw.framework */;
+			productReference = 86DB7F362A5401AA0023C6C4 /* xxprofile.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		86DB7F542A5402650023C6C4 /* xxprofile_mac_fw */ = {
+		86DB7F542A5402650023C6C4 /* xxprofile_mac1 */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 86DB7F5D2A5402660023C6C4 /* Build configuration list for PBXNativeTarget "xxprofile_mac_fw" */;
+			buildConfigurationList = 86DB7F5D2A5402660023C6C4 /* Build configuration list for PBXNativeTarget "xxprofile_mac1" */;
 			buildPhases = (
 				86DB7F502A5402650023C6C4 /* Headers */,
 				86DB7F512A5402650023C6C4 /* Sources */,
@@ -1253,9 +1253,9 @@
 			);
 			dependencies = (
 			);
-			name = xxprofile_mac_fw;
+			name = xxprofile_mac1;
 			productName = xxprofile_mac.framework;
-			productReference = 86DB7F552A5402650023C6C4 /* xxprofile_mac_fw.framework */;
+			productReference = 86DB7F552A5402650023C6C4 /* xxprofile_mac1.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		ED22005120E1D76F0076C22F /* xxprofileViewer */ = {
@@ -1431,8 +1431,8 @@
 				ED22005120E1D76F0076C22F /* xxprofileViewer */,
 				59A5CA3329C088800043004A /* test_compress */,
 				59A5CA5729C088D90043004A /* test_compress_ios */,
-				86DB7F352A5401AA0023C6C4 /* xxprofile_ios_fw */,
-				86DB7F542A5402650023C6C4 /* xxprofile_mac_fw */,
+				86DB7F352A5401AA0023C6C4 /* xxprofile */,
+				86DB7F542A5402650023C6C4 /* xxprofile_mac1 */,
 			);
 		};
 /* End PBXProject section */
@@ -1609,12 +1609,12 @@
 /* Begin PBXTargetDependency section */
 		86DB7F3B2A5401AB0023C6C4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 86DB7F352A5401AA0023C6C4 /* xxprofile_ios_fw */;
+			target = 86DB7F352A5401AA0023C6C4 /* xxprofile */;
 			targetProxy = 86DB7F3A2A5401AB0023C6C4 /* PBXContainerItemProxy */;
 		};
 		86DB7F642A5403490023C6C4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 86DB7F542A5402650023C6C4 /* xxprofile_mac_fw */;
+			target = 86DB7F542A5402650023C6C4 /* xxprofile_mac1 */;
 			targetProxy = 86DB7F632A5403490023C6C4 /* PBXContainerItemProxy */;
 		};
 		ED81D1AF20D392100096FB53 /* PBXTargetDependency */ = {
@@ -1830,6 +1830,7 @@
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -1881,6 +1882,7 @@
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -2347,7 +2349,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		86DB7F422A5401AB0023C6C4 /* Build configuration list for PBXNativeTarget "xxprofile_ios_fw" */ = {
+		86DB7F422A5401AB0023C6C4 /* Build configuration list for PBXNativeTarget "xxprofile" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				86DB7F3F2A5401AB0023C6C4 /* Debug */,
@@ -2356,7 +2358,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		86DB7F5D2A5402660023C6C4 /* Build configuration list for PBXNativeTarget "xxprofile_mac_fw" */ = {
+		86DB7F5D2A5402660023C6C4 /* Build configuration list for PBXNativeTarget "xxprofile_mac1" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				86DB7F5E2A5402660023C6C4 /* Debug */,
