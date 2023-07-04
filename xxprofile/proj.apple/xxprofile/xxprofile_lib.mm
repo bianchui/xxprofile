@@ -1,11 +1,8 @@
 #include "../../src/platforms/platform_base.cpp"
 #include "../../src/platforms/platform_apple.mm"
-#ifdef XX_PLATFORM_IOS
-#  include "../../src/platforms/apple/apple_ios_WritablePath.mm"
-#endif//XX_PLATFORM_IOS
-#ifdef XX_PLATFORM_MACOS
-#  include "../../src/platforms/apple/apple_macos_WritablePath.mm"
-#endif//XX_PLATFORM_MACOS
+#ifdef XX_PLATFORM_APPLE
+#  include "../../src/platforms/apple/apple_WritablePath.mm"
+#endif//XX_PLATFORM_APPLE
 #include "../../src/xxprofile_archive.cpp"
 #include "../../src/xxprofile_name.cpp"
 #include "../../src/xxprofile_tls.cpp"

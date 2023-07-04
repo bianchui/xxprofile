@@ -1,4 +1,5 @@
 // Copyright 2017-2023 bianchui. All rights reserved.
+#define DEBUGLEVEL 0
 #include "../../../libs/zstd-1.5.5/lib/common/debug.c"
 #include "../../../libs/zstd-1.5.5/lib/common/entropy_common.c"
 #include "../../../libs/zstd-1.5.5/lib/common/error_private.c"

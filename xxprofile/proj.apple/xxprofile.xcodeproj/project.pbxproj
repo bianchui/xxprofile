@@ -40,6 +40,9 @@
 		86DB7F3D2A5401AB0023C6C4 /* xxprofile.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 86DB7F362A5401AA0023C6C4 /* xxprofile.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		86DB7F6A2A5405A00023C6C4 /* xxprofile_lib.mm in Sources */ = {isa = PBXBuildFile; fileRef = ED5C76D9251C5A9400BE9A19 /* xxprofile_lib.mm */; };
 		86DB7F6C2A5405AA0023C6C4 /* huf_decompress_amd64.S in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CAD829C0A1990043004A /* huf_decompress_amd64.S */; };
+		86DB7F732A542C360023C6C4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED94983420EE1C3400FA04D0 /* Foundation.framework */; };
+		86DB7F752A542E730023C6C4 /* xxprofile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86DB7F362A5401AA0023C6C4 /* xxprofile.framework */; };
+		86DB7F762A542E730023C6C4 /* xxprofile.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 86DB7F362A5401AA0023C6C4 /* xxprofile.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		ED22005920E1D76F0076C22F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = ED22005820E1D76F0076C22F /* main.m */; };
 		ED22005C20E1D76F0076C22F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED22005B20E1D76F0076C22F /* ViewController.m */; };
 		ED22006120E1D76F0076C22F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ED22006020E1D76F0076C22F /* Assets.xcassets */; };
@@ -70,10 +73,7 @@
 		ED7744F120EF53C0002B0578 /* libxxprofile_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED84F6C31FB1CFC900C7B425 /* libxxprofile_ios.a */; };
 		ED7D784D20F731670043FF99 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = ED7D784C20F731670043FF99 /* libz.tbd */; };
 		ED7D785020F7316F0043FF99 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = ED7D784F20F7316F0043FF99 /* libz.tbd */; };
-		ED7D785120F731740043FF99 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = ED7D784F20F7316F0043FF99 /* libz.tbd */; };
 		ED81D1AA20D37C2C0096FB53 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED81D1A920D37C2C0096FB53 /* main.cpp */; };
-		ED81D1B220D3B1610096FB53 /* libxxprofile_mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED84F6B81FB1CF9B00C7B425 /* libxxprofile_mac.a */; };
-		ED94983820EE27D500FA04D0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED94983420EE1C3400FA04D0 /* Foundation.framework */; };
 		EDA4401620E9C1EE00C9AE65 /* imgui_custom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDA4401420E9C1EE00C9AE65 /* imgui_custom.cpp */; };
 /* End PBXBuildFile section */
 
@@ -85,19 +85,19 @@
 			remoteGlobalIDString = 86DB7F352A5401AA0023C6C4;
 			remoteInfo = xxprofile.framework;
 		};
+		86DB7F772A542E730023C6C4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = ED84F6B01FB1CF9B00C7B425 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 86DB7F352A5401AA0023C6C4;
+			remoteInfo = xxprofile;
+		};
 		ED2207C020E1E3E00076C22F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = ED2207BC20E1E3E00076C22F /* GLFW.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = A757DDD898AC4177871D3F8E;
 			remoteInfo = glfw;
-		};
-		ED81D1AE20D392100096FB53 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = ED84F6B01FB1CF9B00C7B425 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = ED84F6B71FB1CF9B00C7B425;
-			remoteInfo = xxprofile_mac;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -122,12 +122,13 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		86DB7F652A5403490023C6C4 /* Embed Frameworks */ = {
+		86DB7F792A542E730023C6C4 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				86DB7F762A542E730023C6C4 /* xxprofile.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -445,8 +446,7 @@
 		ED84F6B81FB1CF9B00C7B425 /* libxxprofile_mac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libxxprofile_mac.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED84F6C31FB1CFC900C7B425 /* libxxprofile_ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libxxprofile_ios.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED885C2420F2FDD800AFDE20 /* xxprofile_data.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_data.hpp; sourceTree = "<group>"; };
-		ED94982820EE15E300FA04D0 /* apple_macos_WritablePath.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = apple_macos_WritablePath.mm; sourceTree = "<group>"; };
-		ED94983020EE19B300FA04D0 /* apple_ios_WritablePath.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = apple_ios_WritablePath.mm; sourceTree = "<group>"; };
+		ED94983020EE19B300FA04D0 /* apple_WritablePath.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = apple_WritablePath.mm; sourceTree = "<group>"; };
 		ED94983420EE1C3400FA04D0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		EDA4401420E9C1EE00C9AE65 /* imgui_custom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgui_custom.cpp; sourceTree = "<group>"; };
 		EDA4401520E9C1EE00C9AE65 /* imgui_custom.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = imgui_custom.hpp; sourceTree = "<group>"; };
@@ -505,9 +505,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ED7D785120F731740043FF99 /* libz.tbd in Frameworks */,
-				ED94983820EE27D500FA04D0 /* Foundation.framework in Frameworks */,
-				ED81D1B220D3B1610096FB53 /* libxxprofile_mac.a in Frameworks */,
+				86DB7F752A542E730023C6C4 /* xxprofile.framework in Frameworks */,
+				86DB7F732A542C360023C6C4 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1117,8 +1116,7 @@
 		ED94982720EE15E300FA04D0 /* apple */ = {
 			isa = PBXGroup;
 			children = (
-				ED94983020EE19B300FA04D0 /* apple_ios_WritablePath.mm */,
-				ED94982820EE15E300FA04D0 /* apple_macos_WritablePath.mm */,
+				ED94983020EE19B300FA04D0 /* apple_WritablePath.mm */,
 			);
 			path = apple;
 			sourceTree = "<group>";
@@ -1254,12 +1252,12 @@
 				ED81D1A320D37C2C0096FB53 /* Sources */,
 				ED81D1A420D37C2C0096FB53 /* Frameworks */,
 				ED81D1A520D37C2C0096FB53 /* CopyFiles */,
-				86DB7F652A5403490023C6C4 /* Embed Frameworks */,
+				86DB7F792A542E730023C6C4 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				ED81D1AF20D392100096FB53 /* PBXTargetDependency */,
+				86DB7F782A542E730023C6C4 /* PBXTargetDependency */,
 			);
 			name = test;
 			productName = test;
@@ -1335,8 +1333,7 @@
 					};
 					ED81D1A620D37C2C0096FB53 = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = 6D5DUQ6KTS;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 					ED84F6B71FB1CF9B00C7B425 = {
 						CreatedOnToolsVersion = 8.3.3;
@@ -1541,10 +1538,10 @@
 			target = 86DB7F352A5401AA0023C6C4 /* xxprofile */;
 			targetProxy = 86DB7F3A2A5401AB0023C6C4 /* PBXContainerItemProxy */;
 		};
-		ED81D1AF20D392100096FB53 /* PBXTargetDependency */ = {
+		86DB7F782A542E730023C6C4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = ED84F6B71FB1CF9B00C7B425 /* xxprofile_mac */;
-			targetProxy = ED81D1AE20D392100096FB53 /* PBXContainerItemProxy */;
+			target = 86DB7F352A5401AA0023C6C4 /* xxprofile */;
+			targetProxy = 86DB7F772A542E730023C6C4 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1764,7 +1761,6 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"XX_PLATFORM_IOS=1",
 					"XX_PLATFORM_APPLE=1",
 					"$(inherited)",
 				);
@@ -1820,7 +1816,6 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"XX_PLATFORM_IOS=1",
 					"XX_PLATFORM_APPLE=1",
 					"$(inherited)",
 				);
@@ -1916,7 +1911,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				INFOPLIST_FILE = test_ios/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.google.bianchui.xxprofile-test-ios";
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.bianchui.test;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1932,7 +1927,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				INFOPLIST_FILE = test_ios/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.google.bianchui.xxprofile-test-ios";
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.bianchui.test;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1943,22 +1938,32 @@
 		ED81D1AC20D37C2C0096FB53 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEVELOPMENT_TEAM = 6D5DUQ6KTS;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				GCC_THREADSAFE_STATICS = YES;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../";
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.bianchui.test;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
 		};
 		ED81D1AD20D37C2C0096FB53 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEVELOPMENT_TEAM = 6D5DUQ6KTS;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				GCC_THREADSAFE_STATICS = YES;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../";
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.bianchui.test;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};
@@ -2075,7 +2080,6 @@
 				EXECUTABLE_PREFIX = lib;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"XXPROFILE_HAS_DECOMPRESS=1",
-					"XX_PLATFORM_MACOS=1",
 					"XX_PLATFORM_APPLE=1",
 					"$(inherited)",
 				);
@@ -2097,7 +2101,6 @@
 				EXECUTABLE_PREFIX = lib;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"XXPROFILE_HAS_DECOMPRESS=1",
-					"XX_PLATFORM_MACOS=1",
 					"XX_PLATFORM_APPLE=1",
 					"$(inherited)",
 				);
@@ -2116,7 +2119,6 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = GJ7WKUP5MK;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"XX_PLATFORM_IOS=1",
 					"XX_PLATFORM_APPLE=1",
 					"$(inherited)",
 				);
@@ -2141,7 +2143,6 @@
 				COPY_PHASE_STRIP = YES;
 				DEVELOPMENT_TEAM = GJ7WKUP5MK;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"XX_PLATFORM_IOS=1",
 					"XX_PLATFORM_APPLE=1",
 					"$(inherited)",
 				);

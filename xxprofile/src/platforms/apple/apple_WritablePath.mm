@@ -1,15 +1,19 @@
 #include "../platform.hpp"
 #import <Foundation/Foundation.h>
+#include <TargetConditionals.h>
 #include <sys/stat.h>
 #include <dlfcn.h>
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
 std::string systemGetWritablePath() {
+    // save to document folder
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     std::string strRet = [documentsDirectory UTF8String];
     strRet.append("/");
+
+#if TARGET_OS_IOS == 0
     NSString *name = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleIdentifierKey];
     if (name != nil) {
         strRet.append("xxprofile/");
@@ -32,6 +36,7 @@ std::string systemGetWritablePath() {
             mkdir(strRet.c_str(), S_IRWXU | S_IRWXG | S_IRWXO);
         }
     }
+#endif//TARGET_OS_MAC == 1
     return strRet;
 }
 
