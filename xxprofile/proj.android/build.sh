@@ -50,7 +50,7 @@ function cp_abis_so() {
         guard mkdir -p ../../out/prebuilt/android/$1
         guard cp libs/$1/xxprofile.so ../../out/prebuilt/android/$1/
         local STRIP=`get_tool_for_abi $1 strip`
-        $STRIP -d ../../out/prebuilt/android/$1/xxprofile.so
+        $STRIP -S -x ../../out/prebuilt/android/$1/xxprofile.so
         shift
     done
 }
