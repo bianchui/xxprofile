@@ -378,7 +378,8 @@
 		86DB7F282A52B5860023C6C4 /* compress_lzma_enc.lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = compress_lzma_enc.lib.c; sourceTree = "<group>"; };
 		86DB7F2A2A52B68D0023C6C4 /* compress_lzma_dec.lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = compress_lzma_dec.lib.c; sourceTree = "<group>"; };
 		86DB7F362A5401AA0023C6C4 /* xxprofile.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = xxprofile.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		86DB7FA62A5548AF0023C6C4 /* android_WritablePath.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = android_WritablePath.cpp; sourceTree = "<group>"; };
+		86DB7FA72A5556100023C6C4 /* platform_android.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = platform_android.hpp; sourceTree = "<group>"; };
+		86DB7FA82A5556110023C6C4 /* platform_android.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = platform_android.cpp; sourceTree = "<group>"; };
 		ED22005220E1D76F0076C22F /* xxprofileViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xxprofileViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED22005820E1D76F0076C22F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		ED22005A20E1D76F0076C22F /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -905,14 +906,6 @@
 			path = lzma;
 			sourceTree = "<group>";
 		};
-		86DB7FA52A5548AF0023C6C4 /* android */ = {
-			isa = PBXGroup;
-			children = (
-				86DB7FA62A5548AF0023C6C4 /* android_WritablePath.cpp */,
-			);
-			path = android;
-			sourceTree = "<group>";
-		};
 		ED22005320E1D76F0076C22F /* xxprofileViewer */ = {
 			isa = PBXGroup;
 			children = (
@@ -1022,13 +1015,14 @@
 		ED5F72FF1FCD46C3004E945D /* platforms */ = {
 			isa = PBXGroup;
 			children = (
-				86DB7FA52A5548AF0023C6C4 /* android */,
 				ED94982720EE15E300FA04D0 /* apple */,
 				ED81D19E20D368D50096FB53 /* posix */,
+				86DB7FA82A5556110023C6C4 /* platform_android.cpp */,
+				86DB7FA72A5556100023C6C4 /* platform_android.hpp */,
 				ED642F151FCE506C0067CEA4 /* platform_apple.hpp */,
 				ED5F73031FCD46C3004E945D /* platform_apple.mm */,
-				ED5F73061FCD46C3004E945D /* platform_base.hpp */,
 				ED5F73051FCD46C3004E945D /* platform_base.cpp */,
+				ED5F73061FCD46C3004E945D /* platform_base.hpp */,
 				ED5F73001FCD46C3004E945D /* platform.hpp */,
 			);
 			path = platforms;
