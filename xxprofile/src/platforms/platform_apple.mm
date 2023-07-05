@@ -18,6 +18,14 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
+void log(const char* format, ...) {
+    va_list ap;
+    va_start(ap, format);
+    vprintf(format, ap);
+    va_end(ap);
+    printf("\n");
+}
+
 uint32_t systemGetTid() {
 #if 1
     uint64_t tid64;

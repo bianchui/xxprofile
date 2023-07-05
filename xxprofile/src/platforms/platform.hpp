@@ -39,6 +39,8 @@ std::string systemGetWritablePath();
 uint32_t systemGetTid();
 std::string systemGetAppName();
 
+void log(const char* format, ...);
+
 class SystemScopedLock {
 public:
     SystemScopedLock(SystemLock& Lock) : _Lock(Lock) {

@@ -92,7 +92,7 @@ void XXProfileTLS::operator delete(void* p) {
 
 XXProfileTLS::XXProfileTLS(SharedArchive* ar) {
     _threadId = systemGetTid();
-    printf("Thread %d begin profile\n", _threadId);
+    log("Thread %d begin profile", _threadId);
     assert(ar);
     ar->addRef();
     _sharedAr = ar;
@@ -112,7 +112,7 @@ XXProfileTLS::~XXProfileTLS() {
     }
     _freeBuffers.clear();
 
-    printf("Thread %d end profile\n", _threadId);
+    log("Thread %d end profile", _threadId);
     _sharedAr->release();
 }
 
