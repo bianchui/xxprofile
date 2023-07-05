@@ -58,6 +58,7 @@ function build_Config_Sdk() {
         guard strip -S -x $var_PRODUCTS_DIR/${param_config}-${param_sdk}/lib${param_scheme}.a -o ${var_out_path}/${param_sdk}/lib${var_libname}.a
     elif [ "${param_type}" == "framework" ]; then
         guard cp -R -n $var_PRODUCTS_DIR/${param_config}-${param_sdk}/${param_scheme}.framework ${var_out_path}/${param_sdk}/
+        guard strip -S -x ${var_out_path}/${param_sdk}/${param_scheme}.framework/xxprofile
     fi
 
     #guard cp -R -n ${var_tmp_path}/Build/Products/${param_config}-${param_sdk}/usr/local/ ${var_out_path}
