@@ -35,7 +35,7 @@ function get_tool_for_abi() {
     which ${TOOLCHAIN_PREFIX}$2
 }
 
-function cp_abis() {
+function cp_abis_a() {
     while [ "$1" != "" ]; do
         guard mkdir -p ../../out/prebuilt/android/$1
         guard cp obj/local/$1/xxprofile.a ../../out/prebuilt/android/$1/
@@ -45,13 +45,25 @@ function cp_abis() {
     done
 }
 
+function cp_abis_so() {
+    while [ "$1" != "" ]; do
+        guard mkdir -p ../../out/prebuilt/android/$1
+        guard cp libs/$1/xxprofile.so ../../out/prebuilt/android/$1/
+        local STRIP=`get_tool_for_abi $1 strip`
+        $STRIP -d ../../out/prebuilt/android/$1/xxprofile.so
+        shift
+    done
+}
+
 function build_native_libs() {
     guard pushd $THIS_DIR > /dev/null
     echo "Begin of building xxprofile libraries"
     local cpu_num=`sysctl -n hw.ncpu`
     local NDK_BUILD_OPTIONS="NDK_DEBUG=0 -j${cpu_num}"
-    guard ${NDK_BUILD_COMMAND} ${NDK_BUILD_OPTIONS}
-    cp_abis arm64-v8a armeabi-v7a x86 x86_64
+    guard ${NDK_BUILD_COMMAND} ${NDK_BUILD_OPTIONS} NDK_PROJECT_PATH=. NDK_APPLICATION_MK=jni/Application.mk APP_BUILD_SCRIPT=jni/Android.mk
+    cp_abis_a arm64-v8a armeabi-v7a x86 x86_64
+    guard ${NDK_BUILD_COMMAND} ${NDK_BUILD_OPTIONS} NDK_PROJECT_PATH=. NDK_APPLICATION_MK=jni/Application.mk APP_BUILD_SCRIPT=jni/Android_so.mk
+    cp_abis_so arm64-v8a armeabi-v7a x86 x86_64
     popd > /dev/null
 }
 

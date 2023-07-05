@@ -391,7 +391,9 @@ void* static_thread(uint32_t id) {
             char namebuf[1024];
             sprintf(namebuf, "hahahahaha%d", start + i);
             //xxprofile::SName name(namebuf);
-            XX_PROFILE_INCREASE_FRAME();
+            if (id == 0) {
+                XX_PROFILE_INCREASE_FRAME();
+            }
         }
     }
     return NULL;
@@ -412,9 +414,9 @@ void test_threads() {
     static const uint32_t kThreadCount = 3;
     std::thread threads[kThreadCount];
     for (size_t i = 0; i < kThreadCount; ++i) {
-        threads[i] = std::thread(static_thread, i);
+        threads[i] = std::thread(static_thread, i + 1);
     }
-    static_thread(NULL);
+    static_thread(0);
 
     for (size_t i = 0; i < kThreadCount; ++i) {
         threads[i].join();
@@ -459,8 +461,8 @@ int main(int argc, const char * argv[]) {
     printf("Hello, World!\n");
 
     //test_cycles();
-    //test_threads();
-    static_thread(NULL);
+    test_threads();
+    static_thread(0);
 
     auto end = std::chrono::steady_clock::now();
     std::chrono::duration<double> diff = end - start;
