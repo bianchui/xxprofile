@@ -2,9 +2,6 @@
 #define ZSTDERRORLIB_VISIBILITY
 #include "../../src/platforms/platform_base.cpp"
 #include "../../src/platforms/platform_apple.mm"
-#ifdef XX_PLATFORM_APPLE
-#  include "../../src/platforms/apple/apple_WritablePath.mm"
-#endif//XX_PLATFORM_APPLE
 #include "../../src/xxprofile_archive.cpp"
 #include "../../src/xxprofile_name.cpp"
 #include "../../src/xxprofile_tls.cpp"

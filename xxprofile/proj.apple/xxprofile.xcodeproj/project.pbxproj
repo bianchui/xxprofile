@@ -453,7 +453,6 @@
 		ED84F6B81FB1CF9B00C7B425 /* libxxprofile_mac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libxxprofile_mac.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED84F6C31FB1CFC900C7B425 /* libxxprofile_ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libxxprofile_ios.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED885C2420F2FDD800AFDE20 /* xxprofile_data.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_data.hpp; sourceTree = "<group>"; };
-		ED94983020EE19B300FA04D0 /* apple_WritablePath.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = apple_WritablePath.mm; sourceTree = "<group>"; };
 		ED94983420EE1C3400FA04D0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		EDA4401420E9C1EE00C9AE65 /* imgui_custom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgui_custom.cpp; sourceTree = "<group>"; };
 		EDA4401520E9C1EE00C9AE65 /* imgui_custom.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = imgui_custom.hpp; sourceTree = "<group>"; };
@@ -1125,7 +1124,6 @@
 		ED94982720EE15E300FA04D0 /* apple */ = {
 			isa = PBXGroup;
 			children = (
-				ED94983020EE19B300FA04D0 /* apple_WritablePath.mm */,
 			);
 			path = apple;
 			sourceTree = "<group>";
