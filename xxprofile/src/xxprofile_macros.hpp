@@ -41,6 +41,7 @@
 #  define STRUCT_PACKED __pragma(pack(1))
 #  define CHECK_FMT(a, b)
 #  define XX_LIB_EXPORT __declspec(dllexport)
+#  define XX_LIB_HIDDEN
 #  define XX_LIB_IMPORT __declspec(dllimport)
 
 #  if defined _M_X64 || defined _M_ARM || defined _M_ARM64
@@ -57,6 +58,7 @@
 #  define STRUCT_PACKED __attribute__((packed))
 #  define CHECK_FMT(a, b) __attribute__((format(printf, a, b)))
 #  define XX_LIB_EXPORT __attribute__ ((visibility ("default")))
+#  define XX_LIB_HIDDEN __attribute__ ((visibility ("hidden")))
 #  define XX_LIB_IMPORT
 
 #  define UNALIGNED_DATA
@@ -70,6 +72,7 @@
 #  define STRUCT_PACKED
 #  define CHECK_FMT(a, b)
 #  define XX_LIB_EXPORT
+#  define XX_LIB_HIDDEN
 #  define XX_LIB_IMPORT
 
 #  define UNALIGNED_DATA

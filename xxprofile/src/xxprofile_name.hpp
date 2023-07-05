@@ -30,7 +30,7 @@ public:
     struct IncrementSerializeTag {
         uint32_t fromId;
     };
-    static void Serialize(IncrementSerializeTag* tag, Archive& ar);
+    static XX_LIB_HIDDEN void Serialize(IncrementSerializeTag* tag, Archive& ar);
 };
 
 XX_NAMESPACE_END(xxprofile);

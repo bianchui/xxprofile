@@ -106,12 +106,16 @@ function build_framework_Config() {
         -framework ${var_out_path}/macOS/${var_libname}.framework \
         -output ${var_out_lib}.xcframework
 
+    nm ${var_out_path}/macOS/${var_libname}.framework/${var_libname} | grep " T "
+    otool -D ${var_out_path}/macOS/${var_libname}.framework/${var_libname}
+
     guard rm -rf ${var_out_path}/iphoneos
     guard rm -rf ${var_out_path}/iphonesimulator
     guard rm -rf ${var_out_path}/macOS
 
     mkdir -p ../../out/prebuilt/
     guard cp -Rf ${var_out_lib}.xcframework ../../out/prebuilt/
+
 }
 
 pushd $THIS_DIR > /dev/null
