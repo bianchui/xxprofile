@@ -50,7 +50,7 @@ function cp_abis_so() {
         guard mkdir -p ../../out/prebuilt/android/$1
         guard cp libs/$1/xxprofile.so ../../out/prebuilt/android/$1/
         local STRIP=`get_tool_for_abi $1 strip`
-        $STRIP -S -x ../../out/prebuilt/android/$1/xxprofile.so
+        $STRIP -s -x ../../out/prebuilt/android/$1/xxprofile.so
         shift
     done
 }
@@ -64,6 +64,8 @@ function build_native_libs() {
     cp_abis_a arm64-v8a armeabi-v7a x86 x86_64
     guard ${NDK_BUILD_COMMAND} ${NDK_BUILD_OPTIONS} NDK_PROJECT_PATH=. NDK_APPLICATION_MK=jni/Application.mk APP_BUILD_SCRIPT=jni/Android_so.mk
     cp_abis_so arm64-v8a armeabi-v7a x86 x86_64
+    local NM=`get_tool_for_abi arm64-v8a nm`
+    $NM -D -C ../../out/prebuilt/android/arm64-v8a/xxprofile.so | grep " T "
     popd > /dev/null
 }
 
