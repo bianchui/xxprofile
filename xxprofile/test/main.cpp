@@ -1,8 +1,12 @@
 // Copyright 2018 bianchui. All rights reserved.
 #define XX_ENABLE_PROFILE 1
-#include "../src/xxprofile.hpp"
-#include "../src/xxprofile_archive.hpp"
-#include "../src/platforms/platform.hpp"
+#ifndef XX_INTERNAL_TEST
+#include "../include/xxprofile/xxprofile.hpp"
+#else//XX_INTERNAL_TEST
+#  include "../src/xxprofile.hpp"
+#  include "../src/xxprofile_archive.hpp"
+#  include "../src/platforms/platform.hpp"
+#endif//XX_INTERNAL_TEST
 #include <thread>
 #include <chrono>
 
@@ -187,6 +191,7 @@ protected:
     AAA<std::vector<T>> aaa;
 };
 
+#ifdef XX_INTERNAL_TEST
 void testLoad() {
     xxprofile::Archive ari;
     ari.open("test.xxprofile", false);
@@ -200,7 +205,9 @@ void testLoad() {
         xxprofile::SName::Serialize(&tag, aro);
     }
 }
+#endif//XX_INTERNAL_TEST
 
+#ifdef XX_INTERNAL_TEST
 #define Real_SAVE 1
 void testSave() {
     XX_PROFILE_SCOPE_FUNCTION();
@@ -243,6 +250,7 @@ void testSave() {
     xxprofile::SName::Serialize(&tag, ar);
 #endif
 }
+#endif//XX_INTERNAL_TEST
 
 template <size_t len>
 inline void fun_get2(const int (&buf)[len]) {
@@ -389,6 +397,7 @@ void* static_thread(uint32_t id) {
     return NULL;
 }
 
+#ifdef XX_INTERNAL_TEST
 void test_cycles() {
     uint64_t cycles = xxprofile::Timer::Cycles64();
     for (uint32_t i = 0; i < 1000000; ++i) {
@@ -397,24 +406,28 @@ void test_cycles() {
         cycles = cycles2;
     }
 }
+#endif//XX_INTERNAL_TEST
 
 void test_threads() {
-    std::thread threads[3];
-    for (size_t i = 0; i < XX_ARRAY_COUNTOF(threads); ++i) {
+    static const uint32_t kThreadCount = 3;
+    std::thread threads[kThreadCount];
+    for (size_t i = 0; i < kThreadCount; ++i) {
         threads[i] = std::thread(static_thread, i);
     }
     static_thread(NULL);
 
-    for (size_t i = 0; i < XX_ARRAY_COUNTOF(threads); ++i) {
+    for (size_t i = 0; i < kThreadCount; ++i) {
         threads[i].join();
     }
 
     //sleep(1);
 }
 
+#ifdef XX_INTERNAL_TEST
 #ifndef XX_PLATFORM_WINDOWS
 #  include "tests/tls_test.hpp"
 #endif//XX_PLATFORM_WINDOWS
+#endif//XX_INTERNAL_TEST
 
 // test result
 // 1000000 cycles

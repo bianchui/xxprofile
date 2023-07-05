@@ -59,6 +59,9 @@ function build_Config_Sdk() {
     elif [ "${param_type}" == "framework" ]; then
         guard cp -R -n $var_PRODUCTS_DIR/${param_config}-${param_sdk}/${param_scheme}.framework ${var_out_path}/${param_sdk}/
         guard strip -S -x ${var_out_path}/${param_sdk}/${param_scheme}.framework/xxprofile
+        if [[ -d ${var_out_path}/${param_sdk}/${param_scheme}.framework/_CodeSignature ]]; then
+            guard codesign -f -s - ${var_out_path}/${param_sdk}/${param_scheme}.framework
+        fi
     fi
 
     #guard cp -R -n ${var_tmp_path}/Build/Products/${param_config}-${param_sdk}/usr/local/ ${var_out_path}

@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		86DB7F732A542C360023C6C4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED94983420EE1C3400FA04D0 /* Foundation.framework */; };
+		86DB7F9C2A5522140023C6C4 /* xxprofile.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86DB7F9A2A5522110023C6C4 /* xxprofile.xcframework */; };
+		86DB7F9D2A5522AE0023C6C4 /* xxprofile.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86DB7F9A2A5522110023C6C4 /* xxprofile.xcframework */; };
+		86DB7F9E2A5522AE0023C6C4 /* xxprofile.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 86DB7F9A2A5522110023C6C4 /* xxprofile.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		ED7744CF20EF4BC4002B0578 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED7744CE20EF4BC4002B0578 /* Metal.framework */; };
 		ED7744D120EF4BC4002B0578 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED7744D020EF4BC4002B0578 /* MetalKit.framework */; };
 		ED7744D320EF4BC4002B0578 /* ModelIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED7744D220EF4BC4002B0578 /* ModelIO.framework */; };
@@ -30,6 +33,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				86DB7F9E2A5522AE0023C6C4 /* xxprofile.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -59,6 +63,7 @@
 		864D127A237B967900112D05 /* xxprofile.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = xxprofile.hpp; sourceTree = "<group>"; };
 		86A572BE2378FF74007B1437 /* tls_test.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = tls_test.hpp; sourceTree = "<group>"; };
 		86A572E3237901E7007B1437 /* SharedMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedMacros.h; sourceTree = "<group>"; };
+		86DB7F9A2A5522110023C6C4 /* xxprofile.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = xxprofile.xcframework; path = ../../out/prebuilt/xxprofile.xcframework; sourceTree = "<group>"; };
 		ED7744CD20EF4BC4002B0578 /* test_ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = test_ios.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED7744CE20EF4BC4002B0578 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 		ED7744D020EF4BC4002B0578 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
@@ -92,6 +97,7 @@
 				ED7D784D20F731670043FF99 /* libz.tbd in Frameworks */,
 				ED7744D320EF4BC4002B0578 /* ModelIO.framework in Frameworks */,
 				ED7744CF20EF4BC4002B0578 /* Metal.framework in Frameworks */,
+				86DB7F9D2A5522AE0023C6C4 /* xxprofile.xcframework in Frameworks */,
 				ED7744D120EF4BC4002B0578 /* MetalKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -101,6 +107,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				86DB7F732A542C360023C6C4 /* Foundation.framework in Frameworks */,
+				86DB7F9C2A5522140023C6C4 /* xxprofile.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -204,6 +211,7 @@
 		ED94983320EE1C3400FA04D0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				86DB7F9A2A5522110023C6C4 /* xxprofile.xcframework */,
 				ED7D784F20F7316F0043FF99 /* libz.tbd */,
 				ED7D784C20F731670043FF99 /* libz.tbd */,
 				ED94983420EE1C3400FA04D0 /* Foundation.framework */,
@@ -358,7 +366,10 @@
 				DEVELOPMENT_TEAM = 6D5DUQ6KTS;
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				INFOPLIST_FILE = test_ios/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.bianchui.test;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -374,7 +385,10 @@
 				DEVELOPMENT_TEAM = 6D5DUQ6KTS;
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				INFOPLIST_FILE = test_ios/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.bianchui.test;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
