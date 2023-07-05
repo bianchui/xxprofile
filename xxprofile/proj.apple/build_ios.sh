@@ -85,7 +85,8 @@ function build_static_Config() {
     guard rm -rf ${var_out_path}/macOS
 
     mkdir -p ../../out/prebuilt/
-    guard cp -rf ${var_out_lib}.xcframework ../../out/prebuilt/
+    guard rm -rf ../../out/prebuilt/lib${var_libname}.xcframework
+    guard cp -Rf ${var_out_lib}.xcframework ../../out/prebuilt/
 }
 
 function build_framework_Config() {
@@ -106,7 +107,7 @@ function build_framework_Config() {
         -framework ${var_out_path}/macOS/${var_libname}.framework \
         -output ${var_out_lib}.xcframework
 
-    nm ${var_out_path}/macOS/${var_libname}.framework/${var_libname} | grep " T "
+    nm ${var_out_path}/macOS/${var_libname}.framework/${var_libname} | grep " T " | c++filt
     otool -D ${var_out_path}/macOS/${var_libname}.framework/${var_libname}
 
     guard rm -rf ${var_out_path}/iphoneos
@@ -114,8 +115,8 @@ function build_framework_Config() {
     guard rm -rf ${var_out_path}/macOS
 
     mkdir -p ../../out/prebuilt/
+    rm -rf ../../out/prebuilt/${var_libname}.xcframework
     guard cp -Rf ${var_out_lib}.xcframework ../../out/prebuilt/
-
 }
 
 pushd $THIS_DIR > /dev/null
