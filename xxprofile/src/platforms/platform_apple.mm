@@ -17,7 +17,13 @@
 XX_NAMESPACE_BEGIN(xxprofile);
 
 uint32_t systemGetTid() {
+#if 1
+    uint64_t tid64;
+    pthread_threadid_np(NULL, &tid64);
+    return static_cast<uint32_t>(tid64);
+#else
     return ::syscall(SYS_thread_selfid);
+#endif
 }
 
 std::string systemGetAppName() {

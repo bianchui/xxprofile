@@ -45,6 +45,9 @@
 		86DB7F762A542E730023C6C4 /* xxprofile.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 86DB7F362A5401AA0023C6C4 /* xxprofile.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		86DB7F7E2A5438F80023C6C4 /* lz4hc.c in Sources */ = {isa = PBXBuildFile; fileRef = 868231ED238F91A500B5A1CD /* lz4hc.c */; };
 		86DB7F7F2A5438F80023C6C4 /* lz4.c in Sources */ = {isa = PBXBuildFile; fileRef = 86334DAF237BEFF9004F01C9 /* lz4.c */; };
+		86DB7F942A550EB80023C6C4 /* compress_lzma_enc.lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 86DB7F282A52B5860023C6C4 /* compress_lzma_enc.lib.c */; };
+		86DB7F952A550EBD0023C6C4 /* compress_lzma_dec.lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 86DB7F2A2A52B68D0023C6C4 /* compress_lzma_dec.lib.c */; };
+		86DB7F962A550ED00023C6C4 /* test_lzma.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86DB7F262A529FB90023C6C4 /* test_lzma.cpp */; };
 		ED22005920E1D76F0076C22F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = ED22005820E1D76F0076C22F /* main.m */; };
 		ED22005C20E1D76F0076C22F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED22005B20E1D76F0076C22F /* ViewController.m */; };
 		ED22006120E1D76F0076C22F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ED22006020E1D76F0076C22F /* Assets.xcassets */; };
@@ -1453,6 +1456,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				59A5CA8629C0984B0043004A /* lz4.c in Sources */,
+				86DB7F942A550EB80023C6C4 /* compress_lzma_enc.lib.c in Sources */,
 				59A5CB1829C1B1B10043004A /* test_zstd.cpp in Sources */,
 				59A5CA8F29C0994D0043004A /* platform_base.cpp in Sources */,
 				59A5CB2329C1C6660043004A /* compress_zstd.lib.c in Sources */,
@@ -1463,6 +1467,8 @@
 				59A5CA7729C08B870043004A /* test_zlib.cpp in Sources */,
 				59A5CA8529C098490043004A /* lz4hc.c in Sources */,
 				59A5CA7129C0892E0043004A /* main.cpp in Sources */,
+				86DB7F952A550EBD0023C6C4 /* compress_lzma_dec.lib.c in Sources */,
+				86DB7F962A550ED00023C6C4 /* test_lzma.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
