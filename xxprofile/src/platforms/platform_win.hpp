@@ -22,6 +22,10 @@ FORCEINLINE std::string systemGetWritablePath() {
 FORCEINLINE std::string systemGetAppName() {
     char buf[MAX_PATH];
     GetModuleFileNameA(nullptr, buf, MAX_PATH);
+    char* ch = strrchr(buf, '\\');
+    if (ch) {
+        return ch + 1;
+    }
     return buf;
 }
 

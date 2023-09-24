@@ -6,8 +6,7 @@
 XX_NAMESPACE_BEGIN(xxprofile);
 
 // XXProfileTreeNode
-class XXProfileTreeNode {
-public:
+struct XXProfileTreeNode {
     uint64_t _beginTime;
     uint64_t _endTime;
     SName _name;
