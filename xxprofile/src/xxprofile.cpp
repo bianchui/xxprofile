@@ -36,11 +36,16 @@ static void StaticInitUnSafe(const char* savePath) {
         std::string filePath;
         if (savePath) {
             filePath.assign(savePath);
-            if (filePath.length() > 0 && filePath.back() != '/') {
-                filePath.push_back('/');
-            }
         } else {
             filePath = systemGetWritablePath();
+        }
+#ifdef XX_PLATFORM_WINDOWS
+        const char dir_sp = '\\';
+#else
+        const char dir_sp = '/';
+#endif  // XX_PLATFORM_WINDOWS
+        if (filePath.length() > 0 && filePath.back() != dir_sp) {
+            filePath.push_back(dir_sp);
         }
         char timeBuf[64];
 #define XXProfile_TimeFormat "[%04d-%02d-%02d-%02d-%02d-%02d.%03d]"

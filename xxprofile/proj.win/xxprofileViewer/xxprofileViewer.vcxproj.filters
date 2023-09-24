@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="res">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="viewer">
+      <UniqueIdentifier>
+      </UniqueIdentifier>
+      <Extensions>
+      </Extensions>
+    </Filter>
+    <Filter Include="viewer\imgui">
+      <UniqueIdentifier>{a0dd2ae2-9bd2-4c9d-9dfa-da2d614a62f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="loader">
+      <UniqueIdentifier>
+      </UniqueIdentifier>
+      <Extensions>
+      </Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\viewer\FrameView.hpp">
+      <Filter>viewer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\viewer\mainwin.hpp">
+      <Filter>viewer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\viewer\EventHandler.hpp">
+      <Filter>viewer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\viewer\FramesLineView.hpp">
+      <Filter>viewer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\viewer\imgui\imgui_custom.hpp">
+      <Filter>viewer\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\viewer\imgui\imgui_custom_internal.hpp">
+      <Filter>viewer\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>res</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>res</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\loader\xxprofile_CppNameDecoder.hpp">
+      <Filter>loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\loader\xxprofile_loader.hpp">
+      <Filter>loader</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="xxprofileViewer.rc">
+      <Filter>res</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>res</Filter>
+    </Image>
+    <Image Include="xxprofileViewer.ico">
+      <Filter>res</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\viewer\FrameView.cpp">
+      <Filter>viewer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\viewer\mainloop.cpp">
+      <Filter>viewer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\viewer\mainwin.cpp">
+      <Filter>viewer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\viewer\FramesLineView.cpp">
+      <Filter>viewer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\viewer\imgui\imgui_custom.cpp">
+      <Filter>viewer\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\loader\xxprofile_loader.cpp">
+      <Filter>loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\loader\xxprofile_CppNameDecoder.cpp">
+      <Filter>loader</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
