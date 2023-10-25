@@ -1014,7 +1014,6 @@
 		ED5F72FF1FCD46C3004E945D /* platforms */ = {
 			isa = PBXGroup;
 			children = (
-				ED94982720EE15E300FA04D0 /* apple */,
 				ED81D19E20D368D50096FB53 /* posix */,
 				86DB7FA82A5556110023C6C4 /* platform_android.cpp */,
 				86DB7FA72A5556100023C6C4 /* platform_android.hpp */,
@@ -1119,13 +1118,6 @@
 				86DB7F362A5401AA0023C6C4 /* xxprofile.framework */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		ED94982720EE15E300FA04D0 /* apple */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = apple;
 			sourceTree = "<group>";
 		};
 		ED94983320EE1C3400FA04D0 /* Frameworks */ = {

@@ -318,6 +318,9 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
                 }
                 ar.serialize(str, length);
                 str[length] = 0;
+                if (ar.hasError()) {
+                    break;
+                }
 #ifndef NDEBUG
                 // check only
                 if (currentChunkId != chunkId) {
