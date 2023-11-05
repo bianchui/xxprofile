@@ -10,7 +10,7 @@ XX_NAMESPACE_BEGIN(xxprofile);
 struct SCompressZlib : ICompress {
     
     size_t calcBound(size_t size) {
-        return (size_t)deflateBound(nullptr, size) + 20;
+        return (size_t)deflateBound(nullptr, (uLong)size) + 20;
     }
     
     size_t doCompress(void* dst, size_t dstSize, const void* src, size_t srcSize) {

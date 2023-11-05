@@ -13,7 +13,7 @@
 XX_NAMESPACE_BEGIN(xxprofile);
 
 class XXProfile;
-class XXProfileTreeNode;
+struct XXProfileTreeNode;
 
 class XX_LIB_API XXProfile {
 public:

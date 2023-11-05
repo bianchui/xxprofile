@@ -156,7 +156,7 @@ void _mainLoop() {
 }
 
 extern "C" void mainLoop() {
-    XX_PROFILE_STATIC_INIT();
+    XX_PROFILE_STATIC_INIT(NULL);
     _mainLoop();
     XX_PROFILE_STATIC_UNINIT();
 }
