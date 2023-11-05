@@ -15,18 +15,18 @@ XX_NAMESPACE_BEGIN(xxprofile);
 class XXProfile;
 class XXProfileTreeNode;
 
-class XXProfile {
+class XX_LIB_API XXProfile {
 public:
     static bool StaticInit(const char* savePath);
     static void StaticUninit();
     static bool IncreaseFrame();
 };
 
-class XXProfileScope {
+class XX_LIB_API XXProfileScope {
 public:
     XXProfileScope(const SName name);
     ~XXProfileScope();
-    
+
 private:
     XXProfileTreeNode* _node;
     XXProfile* _profile;
@@ -49,9 +49,11 @@ XX_NAMESPACE_END(xxprofile);
 
 #if XX_ENABLE_PROFILE
 
-#ifndef HAVE_PRETTY_FUNCTION
-#define HAVE_PRETTY_FUNCTION 1
-#endif//HAVE_PRETTY_FUNCTION
+#ifdef _MSC_VER
+#  define HAVE_PRETTY_FUNCTION 0
+#else//_MSC_VER
+#  define HAVE_PRETTY_FUNCTION 1
+#endif//_MSC_VER
 
 #if HAVE_PRETTY_FUNCTION
 #  define XX_PROFILE_FUNCTION __PRETTY_FUNCTION__
@@ -70,7 +72,7 @@ XX_NAMESPACE_END(xxprofile);
 /**/::xxprofile::XXProfileScope __xxprofile_scope_##name(__xxprofile_name_##name##_name); \
 
 #  define XX_PROFILE_SCOPE_DYNAMIC_NAME(name) \
-/**/::xxprofile::XXProfileScope __xxprofile_scope_##__LINE__(::xxprofile::SName(name)); \
+/**/::xxprofile::XXProfileScope __xxprofile_scope_##__LINE__##_##__COUNTER__(::xxprofile::SName(name)); \
 
 #  define XX_PROFILE_INCREASE_FRAME() \
 /**/::xxprofile::XXProfile::IncreaseFrame(); \

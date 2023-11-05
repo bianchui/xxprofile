@@ -1,11 +1,12 @@
 // Copyright 2018 bianchui. All rights reserved.
 #define XX_ENABLE_PROFILE 1
-#ifdef XX_PLATFORM_WINDOWS
-#  define HAVE_PRETTY_FUNCTION 0
-#endif//XX_PLATFORM_WINDOWS
-#include "../src/xxprofile.hpp"
-#include "../src/xxprofile_archive.hpp"
-#include "../src/platforms/platform.hpp"
+#ifndef XX_INTERNAL_TEST
+#include "../include/xxprofile/xxprofile.hpp"
+#else//XX_INTERNAL_TEST
+#  include "../src/xxprofile.hpp"
+#  include "../src/xxprofile_archive.hpp"
+#  include "../src/platforms/platform.hpp"
+#endif//XX_INTERNAL_TEST
 #include <thread>
 #include <chrono>
 
@@ -190,6 +191,7 @@ protected:
     AAA<std::vector<T>> aaa;
 };
 
+#ifdef XX_INTERNAL_TEST
 void testLoad() {
     xxprofile::Archive ari;
     ari.open("test.xxprofile", false);
@@ -203,7 +205,9 @@ void testLoad() {
         xxprofile::SName::Serialize(&tag, aro);
     }
 }
+#endif//XX_INTERNAL_TEST
 
+#ifdef XX_INTERNAL_TEST
 #define Real_SAVE 1
 void testSave() {
     XX_PROFILE_SCOPE_FUNCTION();
@@ -246,6 +250,7 @@ void testSave() {
     xxprofile::SName::Serialize(&tag, ar);
 #endif
 }
+#endif//XX_INTERNAL_TEST
 
 template <size_t len>
 inline void fun_get2(const int (&buf)[len]) {
@@ -386,12 +391,15 @@ void* static_thread(uint32_t id) {
             char namebuf[1024];
             sprintf(namebuf, "hahahahaha%d", start + i);
             //xxprofile::SName name(namebuf);
-            XX_PROFILE_INCREASE_FRAME();
+            if (id == 0) {
+                XX_PROFILE_INCREASE_FRAME();
+            }
         }
     }
     return NULL;
 }
 
+#ifdef XX_INTERNAL_TEST
 void test_cycles() {
     uint64_t cycles = xxprofile::Timer::Cycles64();
     for (uint32_t i = 0; i < 1000000; ++i) {
@@ -400,24 +408,28 @@ void test_cycles() {
         cycles = cycles2;
     }
 }
+#endif//XX_INTERNAL_TEST
 
 void test_threads() {
-    std::thread threads[3];
-    for (size_t i = 0; i < XX_ARRAY_COUNTOF(threads); ++i) {
-        threads[i] = std::thread(static_thread, i);
+    static const uint32_t kThreadCount = 3;
+    std::thread threads[kThreadCount];
+    for (size_t i = 0; i < kThreadCount; ++i) {
+        threads[i] = std::thread(static_thread, i + 1);
     }
-    static_thread(NULL);
+    static_thread(0);
 
-    for (size_t i = 0; i < XX_ARRAY_COUNTOF(threads); ++i) {
+    for (size_t i = 0; i < kThreadCount; ++i) {
         threads[i].join();
     }
 
     //sleep(1);
 }
 
+#ifdef XX_INTERNAL_TEST
 #ifndef XX_PLATFORM_WINDOWS
 #  include "tests/tls_test.hpp"
 #endif//XX_PLATFORM_WINDOWS
+#endif//XX_INTERNAL_TEST
 
 // test result
 // 1000000 cycles
@@ -449,8 +461,8 @@ int main(int argc, const char * argv[]) {
     printf("Hello, World!\n");
 
     //test_cycles();
-    //test_threads();
-    static_thread(NULL);
+    test_threads();
+    static_thread(0);
 
     auto end = std::chrono::steady_clock::now();
     std::chrono::duration<double> diff = end - start;

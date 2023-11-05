@@ -2,7 +2,9 @@
 .google
 .idea
 .gradle
-app/build
+/app/.externalNativeBuild
+/app/.cxx
+/app/build
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
@@ -10,4 +12,4 @@ app/build
 /build
 /captures
 .externalNativeBuild
-gradle
+/gradle/wrapper/gradle-wrapper.jar

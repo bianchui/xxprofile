@@ -26,7 +26,7 @@ void printMK(char* buf, uint64_t size) {
 }
 
 void testCompress(const char* name, const char* buf, xxprofile::ICompress* compress, xxprofile::IDecompress* decompress) {
-    static const uint32_t kTestTimes = 10000;
+    static const uint32_t kTestTimes = 100;
     char buffer[64];
 
     char* com = new char[kSrcSize * 2];
@@ -38,6 +38,8 @@ void testCompress(const char* name, const char* buf, xxprofile::ICompress* compr
     printf("%s: check size: %s\n", name, decLen == kSrcSize ? "true" : "false");
     if (decLen == kSrcSize) {
         printf("%s: check: %s\n", name, memcmp(dec, buf, kSrcSize) == 0 ? "true" : "false");
+    } else {
+        printf("%s: size: %d vs %d\n", name, decLen, kSrcSize);
     }
 
     auto start = xxprofile::Timer::Seconds();
@@ -113,16 +115,42 @@ void verifyCompress(const char* name, const char* buf, xxprofile::ICompress* com
     delete[] dec;
 }
 
+/*
+ * Apple M1 Max
+|          | size   | compress                 | deccompress              |
+| -------- | ------ | ------------------------ | ------------------------ |
+| zlib_1   | 341099 |  0.825550 |   90.849MB/s |  0.249963 |  300.044MB/s |
+| zlib_9   | 315490 |  5.201362 |   14.419MB/s |  0.236646 |  316.929MB/s |
+| lz4_fast | 436912 |  0.101061 |  742.124MB/s |  0.015143 | 4952.865MB/s |
+| zstd_1   | 352384 |  0.130582 |  574.353MB/s |  0.093797 |  799.596MB/s |
+| zstd_3   | 319612 |  0.270600 |  277.162MB/s |  0.099471 |  753.989MB/s |
+| zstd_6   | 306143 |  0.655533 |  114.411MB/s |  0.097566 |  768.711MB/s |
+| zstd_15  | 303360 |  2.453033 |   30.574MB/s |  0.096327 |  778.602MB/s |
+| zstd_22  | 290409 | 11.911026 |    6.447MB/s |  0.116586 |  643.304MB/s |
+| lzma_1   | 264920 | 13.694698 |    5.608MB/s |  1.288919 |   58.188MB/s |
+| lzma_4   | 264825 | 13.994129 |    5.488MB/s |  1.310372 |   57.236MB/s |
+ */
+
+void readFile(char* buf, const char* name) {
+    FILE* fp = fopen(name, "rb");
+    if (fp) {
+        fread(buf, 1, kSrcSize, fp);
+        fclose(fp);
+    }
+}
+
 int main(int argc, const char * argv[]) {
     xxprofile::Timer::InitTiming();
     char* buf = new char[kSrcSize];
     for (uint32_t i = 0; i < kSrcSize; ++i) {
-        buf[i] = i;
+        buf[i] = i + rand();
     }
+    readFile(buf, argc > 1 ? argv[1] : argv[0]);
     if (true) {
         testCompress("zlib", buf, compress_createZlib(), decompress_createZlib());
         testCompress("lz4", buf, compress_createLz4(), decompress_createLz4());
         testCompress("zstd", buf, compress_createZstd(), decompress_createZstd());
+        testCompress("lzma", buf, compress_createLzma(), decompress_createLzma());
     }
     if (true) {
         verifyCompress("zlib", buf, compress_createZlib(), decompress_createZlib());
@@ -131,6 +159,8 @@ int main(int argc, const char * argv[]) {
         verifyCompress("lz4Chunked", buf, compress_createChunkedLz4(), decompress_createChunkedLz4());
         verifyCompress("zstd", buf, compress_createZstd(), decompress_createZstd());
         verifyCompress("zstdChunked", buf, compress_createChunkedZstd(), decompress_createChunkedZstd());
+        verifyCompress("lzma", buf, compress_createLzma(), decompress_createLzma());
+        verifyCompress("lzmaChunked", buf, compress_createChunkedLzma(), decompress_createChunkedLzma());
     }
     delete[] buf;
     return 0;

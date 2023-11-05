@@ -14,7 +14,7 @@ XX_NAMESPACE_BEGIN(xxprofile);
 
 class Archive;
 
-struct SName {
+struct XX_LIB_API SName {
 private:
     uint32_t _id;
     

@@ -44,7 +44,6 @@ struct SDecompress {
                 break;
             case ECompressMethod::ZstdChunked:
                 _decompress = new SDecompressChunkedZstd();
-                assert(false);
                 break;
             default:
                 assert(false);

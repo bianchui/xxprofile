@@ -14,11 +14,11 @@ target_include_directories(sanangeles PRIVATE
     ../../../src/
 )
 
-add_library(xxprofile STATIC IMPORTED)
+add_library(xxprofile SHARED IMPORTED)
 set_target_properties(
     xxprofile
     PROPERTIES
-    IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/../../obj/local/${ANDROID_ABI}/xxprofile.a
+    IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/../../libs/${ANDROID_ABI}/xxprofile.so
 )
 
 # Include libraries needed for sanangeles lib
