@@ -96,7 +96,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>XX_PLATFORM_WINDOWS=1;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../../;../../../libs/zlib/src;../../../libs/lz4-1.9.4/lib;../../../libs/lz4-2.10/src;../../../libs/imgui-1.62;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../../;../../../libs/zlib/src;../../../libs/lz4-1.9.4/lib;../../../libs/lz4-2.10/src;../../../libs/imgui-1.62;../../../libs/imgui-1.62/examples;../../../libs/lzo-2.10/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -111,7 +111,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>XX_PLATFORM_WINDOWS=1;_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../../;../../../libs/zlib/src;../../../libs/lz4-1.9.4/lib;../../../libs/lz4-2.10/src;../../../libs/imgui-1.62;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../../;../../../libs/zlib/src;../../../libs/lz4-1.9.4/lib;../../../libs/lz4-2.10/src;../../../libs/imgui-1.62;../../../libs/imgui-1.62/examples;../../../libs/lzo-2.10/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -126,7 +126,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>XX_PLATFORM_WINDOWS=1;_CRT_SECURE_NO_WARNINGS;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../../;../../../libs/zlib/src;../../../libs/lz4-1.9.4/lib;../../../libs/lz4-2.10/src;../../../libs/imgui-1.62;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../../;../../../libs/zlib/src;../../../libs/lz4-1.9.4/lib;../../../libs/lz4-2.10/src;../../../libs/imgui-1.62;../../../libs/imgui-1.62/examples;../../../libs/lzo-2.10/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -141,7 +141,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>XX_PLATFORM_WINDOWS=1;_CRT_SECURE_NO_WARNINGS;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../../;../../../libs/zlib/src;../../../libs/lz4-1.9.4/lib;../../../libs/lz4-2.10/src;../../../libs/imgui-1.62;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../../;../../../libs/zlib/src;../../../libs/lz4-1.9.4/lib;../../../libs/lz4-2.10/src;../../../libs/imgui-1.62;../../../libs/imgui-1.62/examples;../../../libs/lzo-2.10/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

@@ -5,6 +5,10 @@
 #include "xxprofile_macros.hpp"
 #include "platforms/platform.hpp"
 
+#ifdef _MSC_VER
+#  pragma warning(disable: 4068)
+#endif//_MSC_VER
+
 #ifndef NDEBUG
 #  define XXDEBUG_ONLY(x) x
 #else//NDEBUG
