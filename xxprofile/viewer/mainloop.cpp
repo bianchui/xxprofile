@@ -132,6 +132,9 @@ void _mainLoop() {
             const uint64_t used = end - start;
             const uint64_t minTime = 33000;
             if (used < minTime) {
+#ifdef _WIN32
+                Sleep(minTime / 1000);
+#else//_WIN32
                 struct timespec rqtp, rmtp;
                 rqtp.tv_sec = 0;
                 rqtp.tv_nsec = (minTime - used) * 1000;
@@ -142,6 +145,7 @@ void _mainLoop() {
                     }
                     rqtp = rmtp;
                 }
+#endif  //_WIN32
             }
         }
     }
