@@ -94,13 +94,15 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>XXPROFILE_HAS_DECOMPRESS=1;XX_PLATFORM_WINDOWS=1;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_GLFW_WIN32=1;XXPROFILE_HAS_DECOMPRESS=1;XX_PLATFORM_WINDOWS=1;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>../../../;../../../libs/zlib/src;../../../libs/lz4-1.9.4/lib;../../../libs/lz4-2.10/src;../../../libs/imgui-1.62;../../../libs/imgui-1.62/examples;../../../libs/lzo-2.10/include;../../../libs/glfw-3.2.1/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -109,28 +111,32 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>XXPROFILE_HAS_DECOMPRESS=1;XX_PLATFORM_WINDOWS=1;_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_GLFW_WIN32=1;XXPROFILE_HAS_DECOMPRESS=1;XX_PLATFORM_WINDOWS=1;_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>../../../;../../../libs/zlib/src;../../../libs/lz4-1.9.4/lib;../../../libs/lz4-2.10/src;../../../libs/imgui-1.62;../../../libs/imgui-1.62/examples;../../../libs/lzo-2.10/include;../../../libs/glfw-3.2.1/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>XXPROFILE_HAS_DECOMPRESS=1;XX_PLATFORM_WINDOWS=1;_CRT_SECURE_NO_WARNINGS;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_GLFW_WIN32=1;XXPROFILE_HAS_DECOMPRESS=1;XX_PLATFORM_WINDOWS=1;_CRT_SECURE_NO_WARNINGS;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>../../../;../../../libs/zlib/src;../../../libs/lz4-1.9.4/lib;../../../libs/lz4-2.10/src;../../../libs/imgui-1.62;../../../libs/imgui-1.62/examples;../../../libs/lzo-2.10/include;../../../libs/glfw-3.2.1/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -139,20 +145,46 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>XXPROFILE_HAS_DECOMPRESS=1;XX_PLATFORM_WINDOWS=1;_CRT_SECURE_NO_WARNINGS;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_GLFW_WIN32=1;XXPROFILE_HAS_DECOMPRESS=1;XX_PLATFORM_WINDOWS=1;_CRT_SECURE_NO_WARNINGS;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>../../../;../../../libs/zlib/src;../../../libs/lz4-1.9.4/lib;../../../libs/lz4-2.10/src;../../../libs/imgui-1.62;../../../libs/imgui-1.62/examples;../../../libs/lzo-2.10/include;../../../libs/glfw-3.2.1/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\libs\imgui-1.62\examples\imgui_impl_glfw.h" />
+    <ClInclude Include="..\..\..\libs\imgui-1.62\examples\imgui_impl_opengl2.h" />
+    <ClInclude Include="..\..\..\libs\imgui-1.62\imconfig.h" />
+    <ClInclude Include="..\..\..\libs\imgui-1.62\imgui.h" />
+    <ClInclude Include="..\..\..\libs\imgui-1.62\imgui_internal.h" />
     <ClInclude Include="..\..\loader\xxprofile_CppNameDecoder.hpp" />
     <ClInclude Include="..\..\loader\xxprofile_loader.hpp" />
+    <ClInclude Include="..\..\src\helper\CommonMacros.h" />
+    <ClInclude Include="..\..\src\helper\SimpleArray.h" />
+    <ClInclude Include="..\..\src\helper\SimpleConfig.h" />
+    <ClInclude Include="..\..\src\platforms\platform.hpp" />
+    <ClInclude Include="..\..\src\platforms\platform_base.hpp" />
+    <ClInclude Include="..\..\src\platforms\platform_win.hpp" />
+    <ClInclude Include="..\..\src\platforms\win\win_inc_windows.h" />
+    <ClInclude Include="..\..\src\platforms\win\win_SystemLock.h" />
+    <ClInclude Include="..\..\src\platforms\win\win_ThreadLocal.h" />
+    <ClInclude Include="..\..\src\platforms\win\win_timer.h" />
+    <ClInclude Include="..\..\src\xxprofile.hpp" />
+    <ClInclude Include="..\..\src\xxprofile_archive.hpp" />
+    <ClInclude Include="..\..\src\xxprofile_data.hpp" />
+    <ClInclude Include="..\..\src\xxprofile_internal.hpp" />
+    <ClInclude Include="..\..\src\xxprofile_macros.hpp" />
+    <ClInclude Include="..\..\src\xxprofile_name.hpp" />
+    <ClInclude Include="..\..\src\xxprofile_namepool.hpp" />
+    <ClInclude Include="..\..\src\xxprofile_tls.hpp" />
+    <ClInclude Include="..\..\src\xxprofile_version.hpp" />
     <ClInclude Include="..\..\viewer\EventHandler.hpp" />
     <ClInclude Include="..\..\viewer\FramesLineView.hpp" />
     <ClInclude Include="..\..\viewer\FrameView.hpp" />
@@ -170,13 +202,40 @@
     <Image Include="xxprofileViewer.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\context.c" />
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\egl_context.c" />
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\init.c" />
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\input.c" />
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\monitor.c" />
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\vulkan.c" />
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\wgl_context.c" />
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\win32_init.c" />
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\win32_joystick.c" />
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\win32_monitor.c" />
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\win32_time.c" />
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\win32_tls.c" />
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\win32_window.c" />
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\window.c" />
+    <ClCompile Include="..\..\..\libs\imgui-1.62\examples\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\..\..\libs\imgui-1.62\examples\imgui_impl_opengl2.cpp" />
+    <ClCompile Include="..\..\..\libs\imgui-1.62\imgui.cpp" />
+    <ClCompile Include="..\..\..\libs\imgui-1.62\imgui_draw.cpp" />
+    <ClCompile Include="..\..\..\libs\lz4-1.9.4\lib\lz4.c" />
+    <ClCompile Include="..\..\..\libs\lz4-1.9.4\lib\lz4hc.c" />
     <ClCompile Include="..\..\loader\xxprofile_CppNameDecoder.cpp" />
     <ClCompile Include="..\..\loader\xxprofile_loader.cpp" />
+    <ClCompile Include="..\..\src\compress\compress_zstd.lib.c" />
+    <ClCompile Include="..\..\src\platforms\platform_base.cpp" />
+    <ClCompile Include="..\..\src\xxprofile.cpp" />
+    <ClCompile Include="..\..\src\xxprofile_archive.cpp" />
+    <ClCompile Include="..\..\src\xxprofile_name.cpp" />
+    <ClCompile Include="..\..\src\xxprofile_tls.cpp" />
     <ClCompile Include="..\..\viewer\FramesLineView.cpp" />
     <ClCompile Include="..\..\viewer\FrameView.cpp" />
     <ClCompile Include="..\..\viewer\imgui\imgui_custom.cpp" />
     <ClCompile Include="..\..\viewer\mainloop.cpp" />
     <ClCompile Include="..\..\viewer\mainwin.cpp" />
+    <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\libs\zlib\build\proj.windows\zlib.vcxproj">

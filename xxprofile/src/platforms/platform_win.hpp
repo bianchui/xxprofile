@@ -9,6 +9,9 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
+FORCEINLINE void log(const char* format, ...) {
+}
+
 FORCEINLINE uint32_t systemGetTid() {
     return ::GetCurrentThreadId();
 }

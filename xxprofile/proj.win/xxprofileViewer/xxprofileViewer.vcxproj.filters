@@ -20,6 +20,45 @@
       <Extensions>
       </Extensions>
     </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>
+      </UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\platforms">
+      <UniqueIdentifier>
+      </UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\platforms\win">
+      <UniqueIdentifier>
+      </UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\helper">
+      <UniqueIdentifier>
+      </UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\compress">
+      <UniqueIdentifier>
+      </UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs">
+      <UniqueIdentifier>
+      </UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\lz4-1.9.4">
+      <UniqueIdentifier>
+      </UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\imgui-1.62">
+      <UniqueIdentifier>
+      </UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\imgui-1.62\impl">
+      <UniqueIdentifier>
+      </UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\glfw-3.2.1">
+      <UniqueIdentifier>{a3302a63-a150-4698-9f8e-c3e9929f3219}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\viewer\FrameView.hpp">
@@ -51,6 +90,78 @@
     </ClInclude>
     <ClInclude Include="..\..\loader\xxprofile_loader.hpp">
       <Filter>loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\xxprofile.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\xxprofile_archive.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\xxprofile_data.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\xxprofile_internal.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\xxprofile_macros.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\xxprofile_name.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\xxprofile_namepool.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\xxprofile_tls.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\xxprofile_version.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\platforms\platform.hpp">
+      <Filter>src\platforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\platforms\platform_base.hpp">
+      <Filter>src\platforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\platforms\platform_win.hpp">
+      <Filter>src\platforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\platforms\win\win_inc_windows.h">
+      <Filter>src\platforms\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\platforms\win\win_SystemLock.h">
+      <Filter>src\platforms\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\platforms\win\win_ThreadLocal.h">
+      <Filter>src\platforms\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\platforms\win\win_timer.h">
+      <Filter>src\platforms\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\helper\CommonMacros.h">
+      <Filter>src\helper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\helper\SimpleArray.h">
+      <Filter>src\helper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\helper\SimpleConfig.h">
+      <Filter>src\helper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libs\imgui-1.62\imgui.h">
+      <Filter>libs\imgui-1.62</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libs\imgui-1.62\imgui_internal.h">
+      <Filter>libs\imgui-1.62</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libs\imgui-1.62\imconfig.h">
+      <Filter>libs\imgui-1.62</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libs\imgui-1.62\examples\imgui_impl_glfw.h">
+      <Filter>libs\imgui-1.62\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libs\imgui-1.62\examples\imgui_impl_opengl2.h">
+      <Filter>libs\imgui-1.62\impl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -87,6 +198,87 @@
     </ClCompile>
     <ClCompile Include="..\..\loader\xxprofile_CppNameDecoder.cpp">
       <Filter>loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\xxprofile.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\xxprofile_archive.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\xxprofile_name.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\xxprofile_tls.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\platforms\platform_base.cpp">
+      <Filter>src\platforms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\compress\compress_zstd.lib.c">
+      <Filter>src\compress</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libs\lz4-1.9.4\lib\lz4.c">
+      <Filter>libs\lz4-1.9.4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libs\lz4-1.9.4\lib\lz4hc.c">
+      <Filter>libs\lz4-1.9.4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libs\imgui-1.62\imgui_draw.cpp">
+      <Filter>libs\imgui-1.62</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libs\imgui-1.62\imgui.cpp">
+      <Filter>libs\imgui-1.62</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libs\imgui-1.62\examples\imgui_impl_glfw.cpp">
+      <Filter>libs\imgui-1.62\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libs\imgui-1.62\examples\imgui_impl_opengl2.cpp">
+      <Filter>libs\imgui-1.62\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\init.c">
+      <Filter>libs\glfw-3.2.1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\win32_joystick.c">
+      <Filter>libs\glfw-3.2.1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\win32_init.c">
+      <Filter>libs\glfw-3.2.1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\window.c">
+      <Filter>libs\glfw-3.2.1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\win32_window.c">
+      <Filter>libs\glfw-3.2.1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\input.c">
+      <Filter>libs\glfw-3.2.1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\win32_monitor.c">
+      <Filter>libs\glfw-3.2.1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\win32_time.c">
+      <Filter>libs\glfw-3.2.1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\vulkan.c">
+      <Filter>libs\glfw-3.2.1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\monitor.c">
+      <Filter>libs\glfw-3.2.1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\wgl_context.c">
+      <Filter>libs\glfw-3.2.1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\win32_tls.c">
+      <Filter>libs\glfw-3.2.1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\context.c">
+      <Filter>libs\glfw-3.2.1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\egl_context.c">
+      <Filter>libs\glfw-3.2.1</Filter>
+    </ClCompile>
+    <ClCompile Include="main.c">
+      <Filter>viewer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
