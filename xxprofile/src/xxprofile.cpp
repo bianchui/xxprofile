@@ -48,7 +48,7 @@ static void StaticInitUnSafe(const char* savePath) {
             filePath.push_back(dir_sp);
         }
         char timeBuf[64];
-#define XXProfile_TimeFormat "[%04d-%02d-%02d-%02d-%02d-%02d.%03d]"
+#define XXProfile_TimeFormat "[%04d%02d%02d-%02d%02d%02d.%03d]"
 #ifndef XX_PLATFORM_WINDOWS
 #define XXProfile_TimeArgs \
 /**/(lt.tm_year + 1900), (lt.tm_mon + 1), lt.tm_mday, \

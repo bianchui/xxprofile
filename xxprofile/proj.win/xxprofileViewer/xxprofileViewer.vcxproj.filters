@@ -277,7 +277,7 @@
     <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\egl_context.c">
       <Filter>libs\glfw-3.2.1</Filter>
     </ClCompile>
-    <ClCompile Include="main.c">
+    <ClCompile Include="..\..\viewer\main.c">
       <Filter>viewer</Filter>
     </ClCompile>
   </ItemGroup>

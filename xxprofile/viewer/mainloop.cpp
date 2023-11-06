@@ -64,7 +64,7 @@ int glfw_onDocumentOpen(const char* name) {
     return GLFW_TRUE;
 }
 
-void _mainLoop() {
+void _mainLoop(const char* openFile) {
     XX_PROFILE_SCOPE_FUNCTION();
     // Setup window
     glfwSetErrorCallback(glfw_error_callback);
@@ -89,6 +89,10 @@ void _mainLoop() {
     ImGui_ImplOpenGL2_Init();
 
     setupStyle();
+
+    if (openFile) {
+        glfw_onDocumentOpen(openFile);
+    }
 
     const ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
@@ -159,8 +163,8 @@ void _mainLoop() {
     glfwTerminate();
 }
 
-extern "C" void mainLoop() {
+extern "C" void mainLoop(const char* openFile) {
     XX_PROFILE_STATIC_INIT(NULL);
-    _mainLoop();
+    _mainLoop(openFile);
     XX_PROFILE_STATIC_UNINIT();
 }
