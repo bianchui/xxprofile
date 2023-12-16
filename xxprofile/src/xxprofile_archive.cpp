@@ -154,6 +154,12 @@ void Archive::serialize(void* data, size_t size) {
 #if Archive_ReadBufferSize
         if (size + _used >= _size) {
             const size_t copySize = _size - _used;
+            assert(copySize < 1000000);
+            if (copySize == 0) {
+                _error = true;
+                _size = 0;
+                _used = 0;
+            }
             memcpy(data, _buffer + _used, copySize);
             size -= copySize;
             _filePointer += copySize;
@@ -188,7 +194,7 @@ void Archive::serialize(void* data, size_t size) {
                 memcpy(data, _buffer + _used, maxSize);
                 _filePointer += maxSize;
             }
-            _used += size;
+            _used += maxSize;
         }
 #else//Archive_ReadBufferSize
         size_t count = fread(data, 1, size, _fp);
