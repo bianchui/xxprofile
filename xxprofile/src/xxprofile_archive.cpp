@@ -151,6 +151,9 @@ void Archive::serialize(void* data, size_t size) {
         fwrite(data, 1, size, _fp);
 #endif//Archive_WriteBufferSize
     } else {
+        if (_error) {
+            return;
+        }
 #if Archive_ReadBufferSize
         if (size + _used >= _size) {
             const size_t copySize = _size - _used;
@@ -159,6 +162,7 @@ void Archive::serialize(void* data, size_t size) {
                 _error = true;
                 _size = 0;
                 _used = 0;
+                return;
             }
             memcpy(data, _buffer + _used, copySize);
             size -= copySize;
