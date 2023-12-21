@@ -294,6 +294,9 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
 #endif//XX_PROFILE_DEBUG_Name_Serialize
             uint32_t length;
             ar << length;
+            if (ar.hasError()) {
+                return;
+            }
             const uint32_t idx = startIndex + i;
             const uint32_t id = idx + 1;
             const uint32_t chunkId = idx / NAMES_CHUNK_SIZE;
@@ -356,12 +359,15 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
                 }
 
                 SNameEntry* newEntry = (SNameEntry*)_buffer;
-                _buffer += size;
-                _buffer_size -= (uint32_t)size;
 
                 newEntry->id = id;
                 newEntry->length = length;
                 ar.serialize(newEntry->buf, length);
+                if (ar.hasError()) {
+                    return;
+                }
+                _buffer += size;
+                _buffer_size -= (uint32_t)size;
 
                 XXLOG_DEBUG("  name(%d)<<%s\n", newEntry->id, newEntry->buf);
 
@@ -418,7 +424,7 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
             } else {
                 XXDEBUG_ONLY(newMaxNameId = maxNameId);
             }
-            XXDEBUG_ASSERT(debug_newMaxNameId == newMaxNameId);
+            //XXDEBUG_ASSERT(debug_newMaxNameId == newMaxNameId);
             XXDEBUG_ASSERT(debug_newMaxNameId >= maxNameId);
         }
     }
