@@ -4,6 +4,7 @@
 
 #include "xxprofile_macros.hpp"
 #include "platforms/platform.hpp"
+#include <assert.h>
 
 #ifdef _MSC_VER
 #  pragma warning(disable: 4068)

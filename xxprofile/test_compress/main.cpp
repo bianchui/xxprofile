@@ -11,7 +11,7 @@
 #include "../src/platforms/platform.hpp"
 #include "../src/xxprofile_tls.hpp"
 
-static const uint32_t kSrcSize = xxprofile::XXProfileTLS::ChunkByteSize;
+static size_t kSrcSize = xxprofile::XXProfileTLS::ChunkByteSize;
 
 void printMK(char* buf, uint64_t size) {
     const uint64_t KB = 1024ll;
@@ -131,21 +131,32 @@ void verifyCompress(const char* name, const char* buf, xxprofile::ICompress* com
 | lzma_4   | 264825 | 13.994129 |    5.488MB/s |  1.310372 |   57.236MB/s |
  */
 
-void readFile(char* buf, const char* name) {
+char* readFile(const char* name) {
     FILE* fp = fopen(name, "rb");
+    char* buf = nullptr;
     if (fp) {
+        fseek(fp, 0, SEEK_END);
+        size_t size = ftell(fp);
+        fseek(fp, 0, SEEK_SET);
+        kSrcSize = size;
+        buf = new char[size];
         fread(buf, 1, kSrcSize, fp);
         fclose(fp);
     }
+    return buf;
 }
 
-int main(int argc, const char * argv[]) {
-    xxprofile::Timer::InitTiming();
+char* newRandData() {
     char* buf = new char[kSrcSize];
     for (uint32_t i = 0; i < kSrcSize; ++i) {
         buf[i] = i + rand();
     }
-    readFile(buf, argc > 1 ? argv[1] : argv[0]);
+    return buf;
+}
+
+int main(int argc, const char * argv[]) {
+    xxprofile::Timer::InitTiming();
+    char* buf = readFile(argc > 1 ? argv[1] : argv[0]);
     if (true) {
         testCompress("zlib", buf, compress_createZlib(), decompress_createZlib());
         testCompress("lz4", buf, compress_createLz4(), decompress_createLz4());
