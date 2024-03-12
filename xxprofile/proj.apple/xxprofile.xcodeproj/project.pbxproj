@@ -49,6 +49,8 @@
 		86DB7F942A550EB80023C6C4 /* compress_lzma_enc.lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 86DB7F282A52B5860023C6C4 /* compress_lzma_enc.lib.c */; };
 		86DB7F952A550EBD0023C6C4 /* compress_lzma_dec.lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 86DB7F2A2A52B68D0023C6C4 /* compress_lzma_dec.lib.c */; };
 		86DB7F962A550ED00023C6C4 /* test_lzma.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86DB7F262A529FB90023C6C4 /* test_lzma.cpp */; };
+		86DDA41A2BA050300012FA7A /* test_memcpy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86DDA4182BA050300012FA7A /* test_memcpy.cpp */; };
+		86DDA41B2BA050300012FA7A /* test_memcpy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86DDA4182BA050300012FA7A /* test_memcpy.cpp */; };
 		ED22005C20E1D76F0076C22F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ED22005B20E1D76F0076C22F /* ViewController.m */; };
 		ED22006120E1D76F0076C22F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ED22006020E1D76F0076C22F /* Assets.xcassets */; };
 		ED2207B420E1DFAC0076C22F /* imgui_draw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2207B120E1DFAC0076C22F /* imgui_draw.cpp */; };
@@ -381,6 +383,7 @@
 		86DB7F362A5401AA0023C6C4 /* xxprofile.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = xxprofile.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		86DB7FA72A5556100023C6C4 /* platform_android.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = platform_android.hpp; sourceTree = "<group>"; };
 		86DB7FA82A5556110023C6C4 /* platform_android.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = platform_android.cpp; sourceTree = "<group>"; };
+		86DDA4182BA050300012FA7A /* test_memcpy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_memcpy.cpp; sourceTree = "<group>"; };
 		ED22005220E1D76F0076C22F /* xxprofileViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xxprofileViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED22005A20E1D76F0076C22F /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		ED22005B20E1D76F0076C22F /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
@@ -541,6 +544,7 @@
 				59A5CA7829C08C070043004A /* test_lz4.cpp */,
 				86DB7F262A529FB90023C6C4 /* test_lzma.cpp */,
 				59A5CA7929C08C070043004A /* test_lzo.cpp */,
+				86DDA4182BA050300012FA7A /* test_memcpy.cpp */,
 				59A5CA7429C08B870043004A /* test_zlib.cpp */,
 				59A5CB1629C1B1B10043004A /* test_zstd.cpp */,
 			);
@@ -1429,6 +1433,7 @@
 				59A5CA8429C098480043004A /* lz4hc.c in Sources */,
 				59A5CB1729C1B1B10043004A /* test_zstd.cpp in Sources */,
 				59A5CB0629C0A1990043004A /* huf_decompress_amd64.S in Sources */,
+				86DDA41A2BA050300012FA7A /* test_memcpy.cpp in Sources */,
 				59A5CA3729C088800043004A /* main.cpp in Sources */,
 				86DB7F272A529FB90023C6C4 /* test_lzma.cpp in Sources */,
 				59A5CB1E29C1B9270043004A /* compress_zstd.lib.c in Sources */,
@@ -1450,6 +1455,7 @@
 				59A5CA7B29C08C070043004A /* test_lz4.cpp in Sources */,
 				59A5CA7D29C08C070043004A /* test_lzo.cpp in Sources */,
 				598D812329C83F9A00F658D5 /* huf_decompress_amd64.S in Sources */,
+				86DDA41B2BA050300012FA7A /* test_memcpy.cpp in Sources */,
 				59A5CA7729C08B870043004A /* test_zlib.cpp in Sources */,
 				59A5CA8529C098490043004A /* lz4hc.c in Sources */,
 				59A5CA7129C0892E0043004A /* main.cpp in Sources */,

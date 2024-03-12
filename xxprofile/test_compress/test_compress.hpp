@@ -17,24 +17,28 @@ xxprofile::ICompress* compress_createLzo();
 xxprofile::ICompress* compress_createLz4();
 xxprofile::ICompress* compress_createZstd();
 xxprofile::ICompress* compress_createLzma();
+xxprofile::ICompress* compress_createMemcpy();
 
 xxprofile::IDecompress* decompress_createZlib();
 xxprofile::IDecompress* decompress_createLzo();
 xxprofile::IDecompress* decompress_createLz4();
 xxprofile::IDecompress* decompress_createZstd();
 xxprofile::IDecompress* decompress_createLzma();
+xxprofile::IDecompress* decompress_createMemcpy();
 
 xxprofile::ICompress* compress_createChunkedZlib();
 xxprofile::ICompress* compress_createChunkedLzo();
 xxprofile::ICompress* compress_createChunkedLz4();
 xxprofile::ICompress* compress_createChunkedZstd();
 xxprofile::ICompress* compress_createChunkedLzma();
+xxprofile::ICompress* compress_createChunkedMemcpy();
 
 xxprofile::IDecompress* decompress_createChunkedZlib();
 xxprofile::IDecompress* decompress_createChunkedLzo();
 xxprofile::IDecompress* decompress_createChunkedLz4();
 xxprofile::IDecompress* decompress_createChunkedZstd();
 xxprofile::IDecompress* decompress_createChunkedLzma();
+xxprofile::IDecompress* decompress_createChunkedMemcpy();
 
 #define IMPL_COMPRESS(x) \
 /**/xxprofile::ICompress* compress_create##x() {\

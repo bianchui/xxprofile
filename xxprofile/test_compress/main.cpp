@@ -174,6 +174,7 @@ int main(int argc, const char * argv[]) {
         testCompress("lz4", buf, compress_createLz4(), decompress_createLz4());
         testCompress("zstd", buf, compress_createZstd(), decompress_createZstd());
         testCompress("lzma", buf, compress_createLzma(), decompress_createLzma());
+        testCompress("mcpy", buf, compress_createMemcpy(), decompress_createMemcpy());
     }
     if (true) {
         verifyCompress("zlib", buf, compress_createZlib(), decompress_createZlib());
