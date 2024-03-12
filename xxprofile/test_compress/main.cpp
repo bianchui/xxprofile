@@ -13,7 +13,8 @@
 
 static size_t kSrcSize = xxprofile::XXProfileTLS::ChunkByteSize;
 
-void printMK(char* buf, uint64_t size) {
+template <size_t bufSize>
+void printMK(char (&buf)[bufSize], uint64_t size) {
     const uint64_t KB = 1024ll;
     const uint64_t MB = 1024ll * KB;
     if (size >= MB * 10) {
@@ -156,7 +157,18 @@ char* newRandData() {
 
 int main(int argc, const char * argv[]) {
     xxprofile::Timer::InitTiming();
-    char* buf = readFile(argc > 1 ? argv[1] : argv[0]);
+    const char* fileName = argc > 1 ? argv[1] : argv[0];
+#if XX_IS_TARGET(IOS)
+    std::string path;
+    if (argc > 1) {
+        path = argv[0];
+        path.resize(path.rfind('/') + 1);
+        path += argv[1];
+        fileName = path.c_str();
+    }
+#endif//XX_IS_TARGET(IOS)
+    printf("%s\n", fileName);
+    char* buf = readFile(fileName);
     if (true) {
         testCompress("zlib", buf, compress_createZlib(), decompress_createZlib());
         testCompress("lz4", buf, compress_createLz4(), decompress_createLz4());
