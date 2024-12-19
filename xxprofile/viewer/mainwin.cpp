@@ -88,6 +88,7 @@ void MainWin::draw(int w, int h) {
     window_flags |= ImGuiWindowFlags_NoResize;
     window_flags |= ImGuiWindowFlags_NoCollapse;
     window_flags |= ImGuiWindowFlags_AlwaysVerticalScrollbar;
+    window_flags |= ImGuiWindowFlags_MenuBar;
 
     if (!ImGui::Begin("MainWin", NULL, window_flags)) {
         // Early out if the window is collapsed, as an optimization.
@@ -99,9 +100,20 @@ void MainWin::draw(int w, int h) {
 
     //ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.65f);    // 2/3 of the space for widget and 1/3 for labels
     ImGui::PushItemWidth(-140);                                 // Right align, keep 140 pixels for labels
+    if (ImGui::BeginMenuBar()) {
+        if (ImGui::BeginMenu("Menu")) {
+            ImGui::Combo("View Type", &_viewType, "Frame\0Timeline\0\0");
+            ImGui::EndMenu();
+        }
+        ImGui::EndMenuBar();
+    }
 
-    _framesLineView.draw();
-    _frameView.draw();
+    if (_viewType == 0) {
+        _framesLineView.draw();
+        _frameView.draw();
+    } else if (_viewType == 1) {
+        //_timeLineView.draw();
+    }
 
     ImGui::End();
 }

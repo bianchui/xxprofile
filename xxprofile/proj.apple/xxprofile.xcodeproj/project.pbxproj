@@ -83,6 +83,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		86D5F3292D13E1E1004A40F0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 86D5F3222D13E1E1004A40F0 /* imguiex.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6D2FC5541B2E632000C130BA;
+			remoteInfo = "imguiex-ios";
+		};
+		86D5F32B2D13E1E1004A40F0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 86D5F3222D13E1E1004A40F0 /* imguiex.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1A1A0F1F1CB39FB50090F036;
+			remoteInfo = "imguiex-osx";
+		};
 		ED0020D02D2C168300873DAD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = ED84F6B01FB1CF9B00C7B425 /* Project object */;
@@ -337,6 +351,7 @@
 		868231ED238F91A500B5A1CD /* lz4hc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lz4hc.c; sourceTree = "<group>"; };
 		86A572BE2378FF74007B1437 /* tls_test.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = tls_test.hpp; sourceTree = "<group>"; };
 		86A572E3237901E7007B1437 /* SharedMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedMacros.h; sourceTree = "<group>"; };
+		86D5F3222D13E1E1004A40F0 /* imguiex.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = imguiex.xcodeproj; path = "../../libs/imgui-1.62/examples/example_apple/imguiex.xcodeproj"; sourceTree = "<group>"; };
 		86DB7F182A529E040023C6C4 /* compress_lzma.cpp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = compress_lzma.cpp.h; sourceTree = "<group>"; };
 		86DB7F1B2A529F4D0023C6C4 /* LzHash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LzHash.h; sourceTree = "<group>"; };
 		86DB7F1C2A529F4D0023C6C4 /* LzmaEnc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = LzmaEnc.c; sourceTree = "<group>"; };
@@ -864,6 +879,15 @@
 			path = ../../shared;
 			sourceTree = "<group>";
 		};
+		86D5F3232D13E1E1004A40F0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				86D5F32A2D13E1E1004A40F0 /* imguiex-ios.app */,
+				86D5F32C2D13E1E1004A40F0 /* imguiex-osx.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		86DB7F1A2A529F4D0023C6C4 /* lzma */ = {
 			isa = PBXGroup;
 			children = (
@@ -1066,6 +1090,7 @@
 		ED84F6AF1FB1CF9B00C7B425 = {
 			isa = PBXGroup;
 			children = (
+				86D5F3222D13E1E1004A40F0 /* imguiex.xcodeproj */,
 				86334D53237BEFE0004F01C9 /* libs */,
 				86A572C0237901E7007B1437 /* shared */,
 				864D1278237B966700112D05 /* include */,
@@ -1336,6 +1361,10 @@
 					ProductGroup = ED2207BD20E1E3E00076C22F /* Products */;
 					ProjectRef = ED2207BC20E1E3E00076C22F /* GLFW.xcodeproj */;
 				},
+				{
+					ProductGroup = 86D5F3232D13E1E1004A40F0 /* Products */;
+					ProjectRef = 86D5F3222D13E1E1004A40F0 /* imguiex.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -1352,6 +1381,20 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		86D5F32A2D13E1E1004A40F0 /* imguiex-ios.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "imguiex-ios.app";
+			remoteRef = 86D5F3292D13E1E1004A40F0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		86D5F32C2D13E1E1004A40F0 /* imguiex-osx.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "imguiex-osx.app";
+			remoteRef = 86D5F32B2D13E1E1004A40F0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		ED2207C120E1E3E00076C22F /* libglfw3.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;

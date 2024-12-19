@@ -13,6 +13,7 @@ struct MainWin : EventHandler {
 
     void draw(int w, int h);
 
+    int _viewType; // 0: frame, 1: timeline
     FramesLineView _framesLineView;
     FrameView _frameView;
 
