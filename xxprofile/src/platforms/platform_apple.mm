@@ -15,6 +15,7 @@
 #include <dlfcn.h>
 #include <TargetConditionals.h>
 #include <sys/stat.h>
+#include <libproc.h>
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
@@ -72,16 +73,23 @@ std::string systemGetWritablePath() {
         strRet.append("/");
         mkdir(strRet.c_str(), S_IRWXU | S_IRWXG | S_IRWXO);
     } else {
+#if 0
         static int value_ = 0;
         Dl_info info;
         dladdr(&value_, &info);
-        const char* fname = strrchr(info.dli_fname, '/');
+        const char* fullpath = info.dli_fname;
+#else
+        char pathbuf[PROC_PIDPATHINFO_MAXSIZE];
+        proc_pidpath(getpid(), pathbuf, sizeof(pathbuf));
+        const char* fullpath = pathbuf;
+#endif//
+        const char* fname = strrchr(fullpath, '/');
         if (fname) {
-            strRet.assign(info.dli_fname, fname + 1 - info.dli_fname);
+            strRet.assign(fullpath, fname + 1 - fullpath);
         } else {
             strRet.append("xxprofile/");
             mkdir(strRet.c_str(), S_IRWXU | S_IRWXG | S_IRWXO);
-            strRet.append(info.dli_fname);
+            strRet.append(fullpath);
             strRet.append("/");
             mkdir(strRet.c_str(), S_IRWXU | S_IRWXG | S_IRWXO);
         }

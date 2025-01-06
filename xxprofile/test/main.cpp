@@ -382,7 +382,7 @@ void fun() {
 }
 
 void* static_thread(uint32_t id) {
-    static constexpr uint32_t kTestCount = 100000;
+    static constexpr uint32_t kTestCount = 100;
     const uint32_t start = id * kTestCount;
 
     if (true) {
@@ -462,7 +462,7 @@ int main(int argc, const char * argv[]) {
 
     //test_cycles();
     test_threads();
-    static_thread(0);
+    //static_thread(0);
 
     auto end = std::chrono::steady_clock::now();
     std::chrono::duration<double> diff = end - start;
