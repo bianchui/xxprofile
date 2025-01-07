@@ -341,6 +341,7 @@ uint32_t compressSize(xxprofile::ICompress& compress, const void* data, uint32_t
 
 void Loader::load(Archive& ar) {
     _processStart = 0;
+    _processEnd = 0;
     _fileSize = 0;
     _dataSize = 0;
     SDecompress decompress(ar.getCompressMethod());
@@ -446,9 +447,16 @@ void Loader::load(Archive& ar) {
     XXLOG_INFO("Data compress: %d %02.2f%% %lld / %lld\n", ar.getCompressMethod(), (100.0 * _fileSize / _dataSize), _fileSize, _dataSize);
     XXLOG_INFO("Test compress: %02.2f%% %lld\n", (100.0 * fileSizeTest / _dataSize), fileSizeTest);
 #endif//TEST_COMPRESS
-    for (auto iter = _threads.begin(), end = _threads.end(); iter != end; ++iter) {
-        _processStart = _processStart == 0 ? iter->startTime() : std::min(_processStart, iter->startTime());
+    if (!_threads.empty()) {
+        auto iter = _threads.begin();
+        _processStart = iter->startTime();
+        _processEnd = iter->endTime();
+        for (const auto end = _threads.end(); iter != end; ++iter) {
+            _processStart = std::min(_processStart, iter->startTime());
+            _processEnd = std::max(_processStart, iter->startTime());
+        }
     }
+
 }
 
 void Loader::clear() {
@@ -465,6 +473,7 @@ void Loader::clear() {
 
     _secondsPerCycle = 0;
     _processStart = 0;
+    _processEnd = 0;
     _dataSize = 0;
     _fileSize = 0;
 }

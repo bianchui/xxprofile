@@ -317,6 +317,7 @@ struct Loader {
     mutable std::vector<const char*> _names;
     double _secondsPerCycle = 0;
     uint64_t _processStart = 0;
+    uint64_t _processEnd = 0;
     uint64_t _fileSize = 0;
     uint64_t _dataSize = 0;
 
