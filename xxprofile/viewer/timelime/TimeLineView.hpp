@@ -8,9 +8,30 @@
 
 #ifndef TimeLineView_hpp
 #define TimeLineView_hpp
+#include "../../loader/xxprofile_loader.hpp"
+#include "../EventHandler.hpp"
 
 class TimeLineView {
 public:
+    struct ThreadData {
+        const xxprofile::ThreadData* _data;
+
+        bool _expended;
+    };
+
+    TimeLineView(EventHandler* handler);
+    ~TimeLineView();
+
+    float getHeight();
+    void setLoader(const xxprofile::Loader* loader);
+    void clear();
+
+    void draw();
+
+private:
+    EventHandler* _handler;
+    const xxprofile::Loader* _loader;
+    std::vector<ThreadData> _threads;
 };
 
 #endif /* TimeLineView_hpp */

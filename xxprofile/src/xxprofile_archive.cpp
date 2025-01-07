@@ -7,7 +7,7 @@
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
-#define Archive_WriteBufferSize 0
+#define Archive_WriteBufferSize 512 * 1024
 #define Archive_ReadBufferSize (1024 * 1024)
 
 Archive::Archive() {

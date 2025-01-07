@@ -5,6 +5,7 @@
 #include "xxprofile_archive.hpp"
 #include <vector>
 #include "xxprofile_data.hpp"
+#include "xxprofile_name.hpp"
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
@@ -45,6 +46,8 @@ public:
     bool isClosing() const {
         return _pendingClose > 0;
     }
+
+    void writeNames();
     
 private:
     Archive _archive;
@@ -54,6 +57,7 @@ private:
     ICompress* _compress;
     void* _compressBuffer;
     size_t _compressBufferSize;
+    SName::IncrementSerializeTag _tag;
 };
 
 // XXProfileTLS
@@ -101,8 +105,7 @@ private:
     uint32_t _usedCount;
     uint32_t _threadId;
     uint32_t _curNodeId;
-    SName::IncrementSerializeTag _tag;
-   
+
     SharedArchive* _sharedAr;
 
     // allocation

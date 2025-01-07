@@ -55,6 +55,7 @@ SharedArchive::SharedArchive(const char* path) {
     _compressBuffer = malloc(_compressBufferSize);
 
     _archive.open(path, true);
+    _tag.fromId = 0;
     Timer::InitTiming();
     double secondsPerCycle = Timer::GetSecondsPerCycle();
     _archive << secondsPerCycle;
@@ -79,6 +80,10 @@ int SharedArchive::release() {
         delete this;
     }
     return ref;
+}
+
+inline void SharedArchive::writeNames() {
+    SName::Serialize(&_tag, _archive);
 }
 
 // XXProfileTLS
@@ -195,7 +200,7 @@ void XXProfileTLS::frameFlush() {
     ar << _threadId;
     ar << _frameId;
     XXLOG_DEBUG("frameFlush:frame %d\n", _frameId);
-    SName::Serialize(&_tag, ar);
+    _sharedAr->writeNames();
     uint32_t nodeCount = (uint32_t)_buffers.size();
     if (nodeCount) {
         nodeCount = (nodeCount - 1) * ChunkNodeCount + _usedCount;
