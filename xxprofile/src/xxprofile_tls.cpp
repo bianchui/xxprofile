@@ -8,6 +8,7 @@
 #  include <unistd.h>
 #endif//XX_PLATFORM_WINDOWS
 #include <stdlib.h>
+#include <stddef.h>
 
 #if XX_IsCompress(ZLIB) || XX_IsCompress(ZLIB_CHUNKED)
 #  include "compress/compress_zlib.cpp.h"
@@ -182,6 +183,13 @@ void XXProfileTLS::tryFrameFlush() {
 // uint32_t nodeCount;
 // XXProfileTreeNode nodes[nodeCount];
 void XXProfileTLS::frameFlush() {
+    static SName xxflush("xxflush");
+    uint64_t flush_node[3];
+    static_assert(sizeof(flush_node) == sizeof(XXProfileTreeNode), "sizeof XXProfileTreeNode");
+    static_assert(0 == offsetof(XXProfileTreeNode, _beginTime), "offsetof XXProfileTreeNode._beginTime");
+    flush_node[0] = Timer::Cycles64();
+    static_assert(2 * sizeof(uint64_t) == offsetof(XXProfileTreeNode, _name), "offsetof XXProfileTreeNode._name");
+    flush_node[2] = xxflush.id();
     SystemScopedLock lock(_sharedAr->lock());
     Archive& ar = _sharedAr->archive();
     ar << _threadId;
@@ -192,6 +200,7 @@ void XXProfileTLS::frameFlush() {
     if (nodeCount) {
         nodeCount = (nodeCount - 1) * ChunkNodeCount + _usedCount;
     }
+    ++nodeCount;
     ar << nodeCount;
     XXLOG_DEBUG("  nodeCount %d\n", nodeCount);
     void* compressBuffer = _sharedAr->compressBuffer();
@@ -225,6 +234,14 @@ void XXProfileTLS::frameFlush() {
         _freeBuffers.push_back(buffer);
     }
     ar.flush();
+    {
+        uint32_t sizeOrg = sizeof(flush_node), sizeCom = 0;
+        static_assert(1 * sizeof(uint64_t) == offsetof(XXProfileTreeNode, _endTime), "offsetof XXProfileTreeNode._endTime");
+        flush_node[1] = Timer::Cycles64();
+        ar << sizeOrg;
+        ar << sizeCom;
+        ar.serialize(&flush_node, sizeof(flush_node));
+    }
 
     // reset
     _usedCount = 0;
