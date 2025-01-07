@@ -15,7 +15,9 @@
 #include <dlfcn.h>
 #include <TargetConditionals.h>
 #include <sys/stat.h>
-#include <libproc.h>
+#if TARGET_OS_IOS == 0
+#  include <libproc.h>
+#endif//TARGET_OS_IOS == 0
 
 XX_NAMESPACE_BEGIN(xxprofile);
 

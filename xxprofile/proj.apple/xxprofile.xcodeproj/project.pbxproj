@@ -37,8 +37,6 @@
 		86DB7F272A529FB90023C6C4 /* test_lzma.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86DB7F262A529FB90023C6C4 /* test_lzma.cpp */; };
 		86DB7F292A52B5860023C6C4 /* compress_lzma_enc.lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 86DB7F282A52B5860023C6C4 /* compress_lzma_enc.lib.c */; };
 		86DB7F2B2A52B68E0023C6C4 /* compress_lzma_dec.lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 86DB7F2A2A52B68D0023C6C4 /* compress_lzma_dec.lib.c */; };
-		86DB7F3C2A5401AB0023C6C4 /* xxprofile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86DB7F362A5401AA0023C6C4 /* xxprofile.framework */; };
-		86DB7F3D2A5401AB0023C6C4 /* xxprofile.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 86DB7F362A5401AA0023C6C4 /* xxprofile.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		86DB7F6A2A5405A00023C6C4 /* xxprofile_lib.mm in Sources */ = {isa = PBXBuildFile; fileRef = ED5C76D9251C5A9400BE9A19 /* xxprofile_lib.mm */; };
 		86DB7F6C2A5405AA0023C6C4 /* huf_decompress_amd64.S in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CAD829C0A1990043004A /* huf_decompress_amd64.S */; };
 		86DB7F732A542C360023C6C4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED94983420EE1C3400FA04D0 /* Foundation.framework */; };
@@ -84,13 +82,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		86DB7F3A2A5401AB0023C6C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = ED84F6B01FB1CF9B00C7B425 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 86DB7F352A5401AA0023C6C4;
-			remoteInfo = xxprofile.framework;
-		};
 		ED0020D02D2C168300873DAD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = ED84F6B01FB1CF9B00C7B425 /* Project object */;
@@ -116,17 +107,6 @@
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 1;
-		};
-		86DB7F3E2A5401AB0023C6C4 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				86DB7F3D2A5401AB0023C6C4 /* xxprofile.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		ED81D1A520D37C2C0096FB53 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -494,7 +474,6 @@
 				ED7744D320EF4BC4002B0578 /* ModelIO.framework in Frameworks */,
 				ED7744CF20EF4BC4002B0578 /* Metal.framework in Frameworks */,
 				ED7744D120EF4BC4002B0578 /* MetalKit.framework in Frameworks */,
-				86DB7F3C2A5401AB0023C6C4 /* xxprofile.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1216,12 +1195,10 @@
 				ED7744C920EF4BC4002B0578 /* Sources */,
 				ED7744CA20EF4BC4002B0578 /* Frameworks */,
 				ED7744CB20EF4BC4002B0578 /* Resources */,
-				86DB7F3E2A5401AB0023C6C4 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				86DB7F3B2A5401AB0023C6C4 /* PBXTargetDependency */,
 			);
 			name = test_ios;
 			productName = test_ios;
@@ -1522,11 +1499,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		86DB7F3B2A5401AB0023C6C4 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 86DB7F352A5401AA0023C6C4 /* xxprofile */;
-			targetProxy = 86DB7F3A2A5401AB0023C6C4 /* PBXContainerItemProxy */;
-		};
 		ED0020D12D2C168300873DAD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = ED84F6B71FB1CF9B00C7B425 /* xxprofile_mac */;
@@ -2129,7 +2101,7 @@
 					"$(SRCROOT)/../../libs/lzo-2.10/include",
 					"$(SRCROOT)/../../",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -2153,7 +2125,7 @@
 					"$(SRCROOT)/../../libs/lzo-2.10/include",
 					"$(SRCROOT)/../../",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
