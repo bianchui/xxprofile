@@ -81,13 +81,19 @@ FORCEINLINE uint32_t Uint32Hash(uint32_t value, uint32_t hash = 0) {
 
 #pragma mark - FrameData
 
-void FrameData::init() {
+static std::vector<uint32_t> g_depth;
+
+bool FrameData::init() {
     if (_nodeCount) {
         const uint32_t nodeCount = _nodeCount;
         assert(_nodes != nullptr);
         assert(_frameCycles == 0);
         const xxprofile::XXProfileTreeNode* nodes = _nodes;
 
+        g_depth.resize(nodeCount);
+        memset(g_depth.data(), 0, nodeCount * sizeof(uint32_t));
+
+        uint32_t maxDepth = 0;
         for (uint32_t i = 0; i < nodeCount; ++i) {
             const xxprofile::XXProfileTreeNode* node = nodes + i;
             if (!node->_parentNodeId) {
@@ -103,9 +109,18 @@ void FrameData::init() {
                         _endTime = node->_endTime;
                     }
                 }
+            } else if (node->_parentNodeId < nodeCount) {
+                depth = g_depth[i] = g_depth[node->_parentNodeId] + 1;
+                if (maxDepth < depth) {
+                    maxDepth = depth;
+                }
+            } else {
+                return false;
             }
         }
+        _maxCallDepth = maxDepth + 1;
     }
+    return true;
 }
 
 #pragma mark - TreeItem
@@ -437,9 +452,14 @@ void Loader::load(Archive& ar) {
         if (ar.hasError()) {
             break;
         }
-        data.init();
+        if (!data.init()) {
+            break;
+        }
         if (thread._maxCycleCount < data.frameCycles()) {
             thread._maxCycleCount = data.frameCycles();
+        }
+        if (thread._maxCallDepth < data.maxCallDepth()) {
+            thread._maxCallDepth = data.maxCallDepth();
         }
         thread._frames.push_back(std::move(data));
     }

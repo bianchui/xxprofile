@@ -19,6 +19,7 @@ struct FrameData {
     uint64_t _endTime;
     uint32_t _frameId;
     uint32_t _nodeCount;
+    uint32_t _maxCallDepth;
     XXProfileTreeNode* _nodes;
 
     FrameData() {
@@ -34,7 +35,7 @@ struct FrameData {
         }
     }
 
-    void init();
+    bool init();
 
     uint64_t frameCycles() const {
         return _frameCycles;
@@ -50,6 +51,9 @@ struct FrameData {
     }
     uint32_t nodeCount() const {
         return _nodeCount;
+    }
+    uint32_t maxCallDepth() const {
+        return _maxCallDepth;
     }
 
 private:
@@ -259,11 +263,13 @@ struct ThreadData {
     uint32_t _threadIndex;
     uint32_t _threadId;
     uint64_t _maxCycleCount;
+    uint32_t _maxCallDepth;
     double _secondsPerCycle;
     ThreadData() {
         _threadIndex = 0;
         _threadId = 0;
         _maxCycleCount = 0;
+        _maxCallDepth = 0;
         _secondsPerCycle = 0;
     }
 
@@ -274,6 +280,7 @@ struct ThreadData {
         _threadIndex = other._threadIndex;
         _threadId = other._threadId;
         _maxCycleCount = other._maxCycleCount;
+        _maxCallDepth = other._maxCallDepth;
         _secondsPerCycle = other._secondsPerCycle;
     }
 
@@ -282,6 +289,7 @@ struct ThreadData {
         std::swap(_threadIndex, other._threadIndex);
         std::swap(_threadId, other._threadId);
         std::swap(_maxCycleCount, other._maxCycleCount);
+        std::swap(_maxCallDepth, other._maxCallDepth);
         std::swap(_secondsPerCycle, other._secondsPerCycle);
     }
 
