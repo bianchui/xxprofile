@@ -22,6 +22,12 @@ uint32_t systemGetTid() {
     return ::gettid();
 }
 
+std::string systemGetThreadName() {
+    char name[64];
+    pthread_getname_np(pthread_self(), name, sizeof(name));
+    return name;
+}
+
 static const std::string& getBid();
 
 static void getDlInfo(Dl_info* info) {

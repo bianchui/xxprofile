@@ -39,6 +39,12 @@ uint32_t systemGetTid() {
 #endif
 }
 
+std::string systemGetThreadName() {
+    char name[64];
+    pthread_getname_np(pthread_self(), name, sizeof(name));
+    return name;
+}
+
 std::string systemGetAppName() {
     std::string strRet;
     NSString *name = [[[NSBundle mainBundle] infoDictionary] objectForKey:(__bridge NSString*)kCFBundleIdentifierKey];
