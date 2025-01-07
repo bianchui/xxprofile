@@ -21,8 +21,8 @@ private:
     uint32_t _id;
     
 public:
-    SName(const char* name);
-    SName(uint32_t id);
+    explicit SName(const char* name);
+    explicit SName(uint32_t id);
     const char* c_str() const;
     uint32_t id() const {
         return _id;

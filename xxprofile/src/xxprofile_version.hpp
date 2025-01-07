@@ -25,9 +25,16 @@ struct EVersion {
         V0 = 0,
         V1 = 1,
         V2 = 2,
+        /**
+         * add thread id
+         */
         V3 = 3,
-        
-        NOW = V3,
+        /**
+         * add thread name
+         */
+        V4 = 4,
+
+        NOW = V4,
     };
 };
 

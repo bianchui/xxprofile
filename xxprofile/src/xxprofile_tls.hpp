@@ -60,6 +60,8 @@ private:
     SName::IncrementSerializeTag _tag;
 };
 
+#define kInvalidThreadNameId ((uint32_t)-1)
+
 // XXProfileTLS
 class XXProfileTLS : public XXProfile {
 public:
@@ -105,6 +107,7 @@ private:
     uint32_t _usedCount;
     uint32_t _threadId;
     uint32_t _curNodeId;
+    uint32_t _threadNameId;
 
     SharedArchive* _sharedAr;
 

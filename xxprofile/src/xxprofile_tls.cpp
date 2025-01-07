@@ -98,6 +98,7 @@ void XXProfileTLS::operator delete(void* p) {
 
 XXProfileTLS::XXProfileTLS(SharedArchive* ar) {
     _threadId = systemGetTid();
+    _threadNameId = kInvalidThreadNameId;
     log("Thread %d begin profile", _threadId);
     assert(ar);
     ar->addRef();
@@ -198,6 +199,11 @@ void XXProfileTLS::frameFlush() {
     SystemScopedLock lock(_sharedAr->lock());
     Archive& ar = _sharedAr->archive();
     ar << _threadId;
+    if (_threadNameId == kInvalidThreadNameId) {
+        SName threadName(systemGetThreadName().c_str());
+        _threadNameId = threadName.id();
+        ar << _threadNameId;
+    }
     ar << _frameId;
     XXLOG_DEBUG("frameFlush:frame %d\n", _frameId);
     _sharedAr->writeNames();

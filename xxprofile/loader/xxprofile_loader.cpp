@@ -377,6 +377,9 @@ void Loader::load(Archive& ar) {
             }
         }
         ThreadData& thread = getThreadFromId(threadId);
+        if (ar.version() >= EVersion::V4 && thread._threadNameId == ThreadData::kInvalidThreadNameId) {
+            ar << thread._threadNameId;
+        }
         FrameData data;
         ar << data._frameId;
         XXLOG_DETAIL("Load.frame(%d) for thread(%d)\n", data._frameId, threadId);
