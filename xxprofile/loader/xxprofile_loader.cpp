@@ -377,13 +377,17 @@ void Loader::load(Archive& ar) {
             }
         }
         ThreadData& thread = getThreadFromId(threadId);
-        if (ar.version() >= EVersion::V4 && thread._threadNameId == ThreadData::kInvalidThreadNameId) {
-            ar << thread._threadNameId;
+        uint32_t threadNameId = -1;
+        if (ar.version() >= EVersion::V4 && thread._threadName == nullptr) {
+            ar << threadNameId;
         }
         FrameData data;
         ar << data._frameId;
         XXLOG_DETAIL("Load.frame(%d) for thread(%d)\n", data._frameId, threadId);
         _namePool.serialize(nullptr, ar);
+        if (threadNameId != -1) {
+            thread._threadName = name(*reinterpret_cast<const SName*>(&threadNameId));
+        }
         ar << data._nodeCount;
         XXLOG_DETAIL("  nodeCount = %d\n", data._nodeCount);
         if (!ar.hasError() && data._nodeCount > 0) {

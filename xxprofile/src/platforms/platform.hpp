@@ -49,6 +49,7 @@ XX_NAMESPACE_BEGIN(xxprofile);
 
 std::string systemGetWritablePath();
 uint32_t systemGetTid();
+void systemSetThreadName(const char* name);
 std::string systemGetThreadName();
 std::string systemGetAppName();
 

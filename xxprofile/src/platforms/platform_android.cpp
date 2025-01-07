@@ -22,6 +22,10 @@ uint32_t systemGetTid() {
     return ::gettid();
 }
 
+void systemSetThreadName(const char* name) {
+    pthread_setname_np(pthread_self(), name);
+}
+
 std::string systemGetThreadName() {
     char name[64];
     pthread_getname_np(pthread_self(), name, sizeof(name));

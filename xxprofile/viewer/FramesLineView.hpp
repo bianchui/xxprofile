@@ -229,7 +229,7 @@ public:
             if (endIndex >= (int)_frames.size()) {
                 endIndex = (int)_frames.size() - 1;
             }
-            buf.printf("Thread %d [%d, %d]", _data->_threadId, _minFrameId + _startIndex, _minFrameId + endIndex);
+            buf.printf("Thread %d(%s) [%d, %d]", _data->_threadId, _data->_threadName, _minFrameId + _startIndex, _minFrameId + endIndex);
             Math::FormatTime(buf, frameUseTime());
         }
 

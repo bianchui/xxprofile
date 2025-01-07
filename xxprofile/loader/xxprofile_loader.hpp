@@ -259,21 +259,20 @@ private:
 };
 
 struct ThreadData {
-    static constexpr uint32_t kInvalidThreadNameId = -1;
     std::vector<FrameData> _frames;
     uint32_t _threadIndex;
     uint32_t _threadId;
     uint64_t _maxCycleCount;
     uint32_t _maxCallDepth;
     double _secondsPerCycle;
-    uint32_t _threadNameId;
+    const char* _threadName;
     ThreadData() {
         _threadIndex = 0;
         _threadId = 0;
         _maxCycleCount = 0;
         _maxCallDepth = 0;
         _secondsPerCycle = 0;
-        _threadNameId = kInvalidThreadNameId;
+        _threadName = nullptr;
     }
 
     ~ThreadData();
@@ -285,7 +284,7 @@ struct ThreadData {
         _maxCycleCount = other._maxCycleCount;
         _maxCallDepth = other._maxCallDepth;
         _secondsPerCycle = other._secondsPerCycle;
-        _threadNameId = other._threadNameId;
+        std::swap(_threadName, other._threadName);
     }
 
     void swap(ThreadData& other) {
@@ -295,7 +294,7 @@ struct ThreadData {
         std::swap(_maxCycleCount, other._maxCycleCount);
         std::swap(_maxCallDepth, other._maxCallDepth);
         std::swap(_secondsPerCycle, other._secondsPerCycle);
-        std::swap(_threadNameId, other._threadNameId);
+        std::swap(_threadName, other._threadName);
     }
 
     uint64_t startTime() const {

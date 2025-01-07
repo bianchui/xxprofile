@@ -22,6 +22,10 @@
 //#include <sys/types.h>
 #include <assert.h>
 
+namespace xxprofile {
+void systemSetThreadName(const char* name);
+}
+
 #ifndef XX_PLATFORM_WINDOWS
 __thread int a = 0;
 #endif//XX_PLATFORM_WINDOWS
@@ -384,6 +388,9 @@ void fun() {
 void* static_thread(uint32_t id) {
     static constexpr uint32_t kTestCount = 100;
     const uint32_t start = id * kTestCount;
+    char threadName[16];
+    snprintf(threadName, 16, "test%d", id);
+    xxprofile::systemSetThreadName(threadName);
 
     if (true) {
         for (uint32_t i = 0; i < kTestCount; ++i) {
