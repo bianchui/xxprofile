@@ -284,7 +284,8 @@ struct ThreadData {
         _maxCycleCount = other._maxCycleCount;
         _maxCallDepth = other._maxCallDepth;
         _secondsPerCycle = other._secondsPerCycle;
-        std::swap(_threadName, other._threadName);
+        _threadName = other._threadName;
+        other._threadName = nullptr;
     }
 
     void swap(ThreadData& other) {
@@ -319,6 +320,7 @@ private:
 };
 
 // uint32_t threadId; // from version 3
+// SName threadName: // from version 4
 // uint32_t frameId;
 // SName::Serialize();
 // uint32_t nodeCount;

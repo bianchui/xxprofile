@@ -93,6 +93,9 @@ struct ECompressMethod {
 //         if (fileHdr.version == EVersion::V3) {
 //             /*0x00*/ uint32_t threadId;
 //         }
+//         if (fileHdr.version == EVersion::V4) {
+//             /*0x04*/ SName threadName;
+//         }
 //         /*0x00*/ uint32_t frameId;
 //         /*0x04*/ Names names;
 //         /*0x0?*/ uint32_t nodeCount;

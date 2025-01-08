@@ -15,36 +15,73 @@
 // Define structures used in BMP files
 
 typedef struct {   // fh
-    CHAR  magic[4];
-    DWORD version;
-    DWORD flags;
-    DWORD compressMethod;
+    char  magic[4];
+    uint32 version;
+    uint32 flags;
+    uint32 compressMethod;
 } XXARCHIVE_FileHeader <bgcolor=cRed>;
 
 typedef struct {    // name
-    DWORD length;
-    CHAR  name[length];
+    uint32 length;
+    char  name[length];
 } Name;
 
 typedef struct {   // names
-    DWORD nameCount;
+    uint32 nameCount;
     if (nameCount > 0) {
-        DWORD startIndex;
+        uint32 startIndex;
         Name  name[nameCount] <optimize=false>;
     }
 } Names <bgcolor=cBlue>;
 
-typedef struct {   // frameData
-    DWORD threadId;
-    DWORD frameId;
-    Names names;
-    DWORD nodeCount;
-} FrameData;
+typedef struct {
+    uint32 id;
+} SName;
 
+typedef struct {
+    uint64 startT;
+    uint64 endT;
+    SName name;
+    uint32 parent;
+} XXProfileTreeNode;
+
+typedef struct {
+    uint32 sizeOrg; // chunkNodeCount = sizeOrg / sizeof(XXProfileTreeNode)
+    uint32 sizeCom;
+    if (sizeCom == 0) {
+        XXProfileTreeNode nodes[sizeOrg / sizeof(XXProfileTreeNode)];
+    } else {
+        char compressed[sizeCom]; // expend to XXProfileTreeNode nodes[chunkNodeCount];
+    }
+} ChunkData_v2 <bgcolor=cYellow>;
+
+typedef struct {   // frameData
+    if (fh.version >= 3) {
+        uint32 threadId;
+    }
+    if (fh.version >= 4) {
+        SName threadName;
+    }
+    uint32 frameId;
+    Names names;
+    uint32 nodeCount;
+    local uint32 readCount = 0;
+    if (fh.version >= 2) {
+        while (readCount < nodeCount) {
+            ChunkData_v2 chunk;
+            readCount += chunk.sizeOrg / sizeof(XXProfileTreeNode);
+        }
+    } else {
+        XXProfileTreeNode nodes[nodeCount];
+    }
+    Printf("Frame: %d, thread: %d, names: %d, nodes: %d.\n", frame.frameId, fh.version >= 3 ? frame.threadId : 0, names.nameCount, frame.nodeCount);
+} FrameData;
 
 typedef struct {   // profileData
     double secondsPerCycle;
-    FrameData frame;
+    while (FTell() < FileSize()) {
+        FrameData frame;
+    }
 } ProfileData;
 
 
