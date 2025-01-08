@@ -1,9 +1,9 @@
 // Copyright 2018 bianchui. All rights reserved.
 #ifndef xxprofileviewer_FramesLineView_hpp
 #define xxprofileviewer_FramesLineView_hpp
-#include "../loader/xxprofile_loader.hpp"
-#include "imgui/imgui_custom.hpp"
-#include "EventHandler.hpp"
+#include "../../loader/xxprofile_loader.hpp"
+#include "../imgui/imgui_custom.hpp"
+#include "../EventHandler.hpp"
 #include <cmath>
 
 class FramesLineView {

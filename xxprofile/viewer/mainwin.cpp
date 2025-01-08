@@ -6,7 +6,7 @@
 
 #include <limits.h>         // INT_MIN, INT_MAX
 
-MainWin::MainWin() : _framesLineView(this) {
+MainWin::MainWin() : _framesLineView(this), _timeLineView(this) {
     _framesLineView.setLoader(&_loader);
     _frameView.setLoader(&_loader);
 }
@@ -112,7 +112,7 @@ void MainWin::draw(int w, int h) {
         _framesLineView.draw();
         _frameView.draw();
     } else if (_viewType == 1) {
-        //_timeLineView.draw();
+        _timeLineView.draw();
     }
 
     ImGui::End();

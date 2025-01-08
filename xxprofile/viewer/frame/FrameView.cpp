@@ -1,7 +1,7 @@
 // Copyright 2018 bianchui. All rights reserved.
 #include "FrameView.hpp"
-#include "imgui/imgui_custom.hpp"
-#include "EventHandler.hpp"
+#include "../imgui/imgui_custom.hpp"
+#include "../EventHandler.hpp"
 #include <unordered_map>
 
 FrameView::FrameView() : _loader(nullptr), _frameData(nullptr), _frameDetail(nullptr), _combined(false) {

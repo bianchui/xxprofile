@@ -847,6 +847,17 @@
 			path = xxprofile;
 			sourceTree = "<group>";
 		};
+		86603CC22D2E48A400797A4C /* frame */ = {
+			isa = PBXGroup;
+			children = (
+				ED336CF420E4C2BD0085BF34 /* FramesLineView.cpp */,
+				ED336CF520E4C2BD0085BF34 /* FramesLineView.hpp */,
+				ED6B806A20E3935A008D2BAD /* FrameView.cpp */,
+				ED6B806B20E3935A008D2BAD /* FrameView.hpp */,
+			);
+			path = frame;
+			sourceTree = "<group>";
+		};
 		868231E8238B8C3400B5A1CD /* compress */ = {
 			isa = PBXGroup;
 			children = (
@@ -964,13 +975,10 @@
 		ED2207CA20E1F6870076C22F /* viewer */ = {
 			isa = PBXGroup;
 			children = (
+				86603CC22D2E48A400797A4C /* frame */,
 				ED18B6F62D2CF18C00D81AE9 /* timelime */,
 				EDA4401320E9C1EE00C9AE65 /* imgui */,
 				ED71B0FB20EB29C200AEF85F /* EventHandler.hpp */,
-				ED336CF420E4C2BD0085BF34 /* FramesLineView.cpp */,
-				ED336CF520E4C2BD0085BF34 /* FramesLineView.hpp */,
-				ED6B806A20E3935A008D2BAD /* FrameView.cpp */,
-				ED6B806B20E3935A008D2BAD /* FrameView.hpp */,
 				ED2207C820E1F67D0076C22F /* mainloop.cpp */,
 				ED2207DE20E2500D0076C22F /* mainwin.cpp */,
 				ED2207DF20E2500D0076C22F /* mainwin.hpp */,
