@@ -31,24 +31,6 @@ bool MainWin::_load(const char* file) {
     return true;
 }
 
-shared::StrBuf& formatTimeMS(shared::StrBuf& buf, double time) {
-    if (time > 60) {
-        uint32_t minutes = (uint32_t)time / 60;
-        buf.appendf("%d:", minutes);
-        time -= minutes * 60;
-        uint32_t seconds = (uint32_t)time;
-        buf.appendf("%02d", seconds);
-        time -= seconds;
-    } else {
-        uint32_t seconds = (uint32_t)time;
-        buf.appendf("%02d", seconds);
-        time -= seconds;
-    }
-    uint32_t ms = (uint32_t)(time * 1000);
-    buf.appendf(".%03d", ms);
-    return buf;
-}
-
 /**
  * [time][frames][compressRate]
  */
@@ -62,7 +44,7 @@ std::string MainWin::getTitle() const {
             frames = std::max(frames, (uint32_t)iter->_frames.size());
         }
         buf.append("[");
-        formatTimeMS(buf, (endTime - startTime) * _loader.secondsPerCycle());
+        Format::TimeMS(buf, (endTime - startTime) * _loader.secondsPerCycle());
         buf.append("]");
         buf.appendf("[%dFrames][%02.2f%%]", frames, (100.0 * _loader.fileSize() / _loader.dataSize()));
     }

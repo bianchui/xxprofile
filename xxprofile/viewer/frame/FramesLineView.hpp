@@ -3,8 +3,10 @@
 #define xxprofileviewer_FramesLineView_hpp
 #include "../../loader/xxprofile_loader.hpp"
 #include "../imgui/imgui_custom.hpp"
-#include "../EventHandler.hpp"
+#include "../format.hpp"
 #include <cmath>
+
+class EventHandler;
 
 class FramesLineView {
 public:
@@ -183,7 +185,7 @@ public:
                 if (frame) {
                     double time = frame->frameCycles() * _data->_secondsPerCycle;
                     buf.appendf("%d: [%.3fms, %.3fms]", frame->frameId(), (frame->startTime() - _processStart) * _data->_secondsPerCycle * 1000, (frame->endTime() - _processStart) * _data->_secondsPerCycle * 1000);
-                    Math::FormatTime(buf, time);
+                    Format::Time(buf, time);
                     buf.appendf("\nNodes: %d", frame->nodeCount());
                 } else {
                     buf.appendf("no frame");
@@ -230,7 +232,7 @@ public:
                 endIndex = (int)_frames.size() - 1;
             }
             buf.printf("Thread %d(%s) [%d, %d]", _data->_threadId, _data->_threadName, _minFrameId + _startIndex, _minFrameId + endIndex);
-            Math::FormatTime(buf, frameUseTime());
+            Format::Time(buf, frameUseTime());
         }
 
         // thumbnail
@@ -249,7 +251,7 @@ public:
             const auto& v = _thumbnail[idx];
             if (v.minFrameId != -1) {
                 buf.printf("[%d, %d]\n[%.3fms, %.3fms]", v.minFrameId, v.maxFrameId, v.startTime * 1000, v.endTime * 1000);
-                Math::FormatTime(buf, v.data);
+                Format::Time(buf, v.data);
             } else {
                 buf.printf("no frames");
             }

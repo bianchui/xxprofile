@@ -1,6 +1,7 @@
 // Copyright 2018 bianchui. All rights reserved.
 #include "FramesLineView.hpp"
 #include "imgui.h"
+#include "../EventHandler.hpp"
 
 FramesLineView::FramesLineView(EventHandler* handler) : _handler(handler), _loader(NULL) {
 

@@ -3,6 +3,7 @@
 #include "../imgui/imgui_custom.hpp"
 #include "../EventHandler.hpp"
 #include <unordered_map>
+#include "../format.hpp"
 
 FrameView::FrameView() : _loader(nullptr), _frameData(nullptr), _frameDetail(nullptr), _combined(false) {
     
@@ -71,7 +72,7 @@ void FrameView::draw() {
                 style->Colors[ImGuiCol_Text] = kColorWhite;
             }
             _timeBuffer.clear();
-            Math::FormatTime(_timeBuffer, item->useCycles() * _secondsPerCycle);
+            Format::Time(_timeBuffer, item->useCycles() * _secondsPerCycle);
             if (item->_children) {
                 _name.printf("%d%s", names[item->_name]++, item->_name);
                 const bool expanded = ImGui::TreeNode(_name, "(%0.4f%% %s) %s", percentage, _timeBuffer.c_str(), item->_name);
@@ -101,13 +102,13 @@ void FrameView::draw() {
                 ImGui::BeginTooltip();
                 ImGui::PushTextWrapPos(ImGui::GetFontSize() * 50.0f);
                 _timeBuffer.appendf("\nSelf:  ");
-                Math::FormatTime(_timeBuffer, (item->useCycles() - item->childrenCycles()) * _secondsPerCycle);
+                Format::Time(_timeBuffer, (item->useCycles() - item->childrenCycles()) * _secondsPerCycle);
                 const double selfPercentage = item->useCycles() ? ((item->useCycles() - item->childrenCycles()) * 1000000 / item->useCycles()) * 0.0001 : 0;
                 _timeBuffer.appendf("(%0.4f%%)", selfPercentage);
                 _timeBuffer.appendf("\nStart: ");
-                Math::FormatTime(_timeBuffer, (item->_node->_beginTime - frameStart) * _secondsPerCycle);
+                Format::Time(_timeBuffer, (item->_node->_beginTime - frameStart) * _secondsPerCycle);
                 _timeBuffer.appendf("\nEnd:   ");
-                Math::FormatTime(_timeBuffer, (item->_node->_endTime - frameStart) * _secondsPerCycle);
+                Format::Time(_timeBuffer, (item->_node->_endTime - frameStart) * _secondsPerCycle);
                 ImGui::Text("Frame: %0.4f%%\nParent:%0.4f%%\nTime:  %s\n%s", framePercentage, percentage, _timeBuffer.c_str(), item->_name);
                 ImGui::PopTextWrapPos();
                 ImGui::EndTooltip();
@@ -125,7 +126,7 @@ void FrameView::draw() {
                 style->Colors[ImGuiCol_Text] = kColorWhite;
             }
             _timeBuffer.clear();
-            Math::FormatTime(_timeBuffer, item->useCycles() * _secondsPerCycle);
+            Format::Time(_timeBuffer, item->useCycles() * _secondsPerCycle);
             int combinedCount = (int)item->combinedCount();
             if (item->_children) {
                 _name.printf("%d%s", names[item->name()]++, item->name());
@@ -154,14 +155,14 @@ void FrameView::draw() {
                 ImGui::PushTextWrapPos(ImGui::GetFontSize() * 50.0f);
                 ImGui::Text("CallTimes: %d", (int)item->combinedCount());
                 _timeBuffer.appendf("\nSelf:  ");
-                Math::FormatTime(_timeBuffer, (item->useCycles() - item->childrenCycles()) * _secondsPerCycle);
+                Format::Time(_timeBuffer, (item->useCycles() - item->childrenCycles()) * _secondsPerCycle);
                 const double selfPercentage = item->useCycles() ? ((item->useCycles() - item->childrenCycles()) * 1000000 / item->useCycles()) * 0.0001 : 0;
                 _timeBuffer.appendf("(%0.4f%%)", selfPercentage);
                 ImGui::Text("Frame: %0.4f%%\nParent:%0.4f%%\nTime:  %s", framePercentage, percentage, _timeBuffer.c_str());
 
                 if (item->combinedCount() > 1) {
                     _timeBuffer.clear();
-                    Math::FormatTime(_timeBuffer, item->useCycles() * _secondsPerCycle / item->combinedCount());
+                    Format::Time(_timeBuffer, item->useCycles() * _secondsPerCycle / item->combinedCount());
                     ImGui::Text("Average: %0.4f%%\nParent:%0.4f%%\nTime:  %s", framePercentage / item->combinedCount(), percentage / item->combinedCount(), _timeBuffer.c_str());
                 }
 

@@ -345,6 +345,7 @@
 		864D1276237B952400112D05 /* xxprofile_version.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_version.hpp; sourceTree = "<group>"; };
 		864D127A237B967900112D05 /* xxprofile.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = xxprofile.hpp; sourceTree = "<group>"; };
 		86603CC72D2E4B4900797A4C /* StrBuf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StrBuf.h; sourceTree = "<group>"; };
+		86603CD72D2F9CB500797A4C /* format.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = format.hpp; sourceTree = "<group>"; };
 		868231E9238B8C7B00B5A1CD /* compress_zlib.cpp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = compress_zlib.cpp.h; sourceTree = "<group>"; };
 		868231EA238E317B00B5A1CD /* compress_lzo.cpp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = compress_lzo.cpp.h; sourceTree = "<group>"; };
 		868231EB238E332900B5A1CD /* compress_lz4.cpp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = compress_lz4.cpp.h; sourceTree = "<group>"; };
@@ -989,6 +990,7 @@
 				ED18B6F62D2CF18C00D81AE9 /* timelime */,
 				EDA4401320E9C1EE00C9AE65 /* imgui */,
 				ED71B0FB20EB29C200AEF85F /* EventHandler.hpp */,
+				86603CD72D2F9CB500797A4C /* format.hpp */,
 				ED2207C820E1F67D0076C22F /* mainloop.cpp */,
 				ED2207DE20E2500D0076C22F /* mainwin.cpp */,
 				ED2207DF20E2500D0076C22F /* mainwin.hpp */,
