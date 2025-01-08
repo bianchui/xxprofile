@@ -324,6 +324,7 @@ private:
 // uint32_t nodeCount;
 // XXProfileTreeNode nodes[nodeCount];
 struct Loader {
+private:
     std::vector<ThreadData> _threads;
     SNamePool _namePool;
     mutable std::vector<const char*> _names;
@@ -333,6 +334,7 @@ struct Loader {
     uint64_t _fileSize = 0;
     uint64_t _dataSize = 0;
 
+public:
     Loader();
     ~Loader();
 
@@ -340,6 +342,38 @@ struct Loader {
     void clear();
 
     const char* name(SName name) const;
+
+    const std::vector<ThreadData>& threads() const {
+        return _threads;
+    }
+
+    const ThreadData& thread(size_t i) const {
+        return _threads[i];
+    }
+
+    size_t thread_count() const {
+        return _threads.size();
+    }
+
+    double secondsPerCycle() const {
+        return _secondsPerCycle;
+    }
+
+    uint64_t processStart() const {
+        return _processStart;
+    }
+
+    uint64_t processEnd() const {
+        return _processEnd;
+    }
+
+    uint64_t fileSize() const {
+        return _fileSize;
+    }
+
+    uint64_t dataSize() const {
+        return _dataSize;
+    }
 
 protected:
     ThreadData& getThreadFromId(uint32_t threadId);

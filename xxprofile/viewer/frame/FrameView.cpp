@@ -174,10 +174,10 @@ void FrameView::draw() {
     DrawTreeNode drawtv;
     drawtv.data = _frameDetail;
     drawtv._secondsPerCycle = 0;
-    if (_loader->_threads.size()) {
-        drawtv._secondsPerCycle = _loader->_threads[0]._secondsPerCycle;
+    if (_loader->thread_count()) {
+        drawtv._secondsPerCycle = _loader->thread(0)._secondsPerCycle;
     }
-    drawtv.processStart = _loader->_processStart;
+    drawtv.processStart = _loader->processStart();
     drawtv.frameStart = _frameStart;
     drawtv.frameCycles = _frameData->frameCycles();
     if (drawtv.frameCycles == 0) {

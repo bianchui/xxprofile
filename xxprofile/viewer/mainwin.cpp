@@ -9,6 +9,7 @@
 MainWin::MainWin() : _framesLineView(this), _timeLineView(this) {
     _framesLineView.setLoader(&_loader);
     _frameView.setLoader(&_loader);
+    _timeLineView.setLoader(&_loader);
 }
 
 bool MainWin::load(const char* file) {
@@ -16,6 +17,7 @@ bool MainWin::load(const char* file) {
     bool success = _load(file);
     _framesLineView.setLoader(&_loader);
     _frameView.setLoader(&_loader);
+    _timeLineView.setLoader(&_loader);
     onFrameSelectChange(nullptr);
     return success;
 }
@@ -29,21 +31,21 @@ bool MainWin::_load(const char* file) {
     return true;
 }
 
-const char* formatTimeMS(char* buf, double time) {
+shared::StrBuf& formatTimeMS(shared::StrBuf& buf, double time) {
     if (time > 60) {
         uint32_t minutes = (uint32_t)time / 60;
-        buf += sprintf(buf, "%d:", minutes);
+        buf.appendf("%d:", minutes);
         time -= minutes * 60;
         uint32_t seconds = (uint32_t)time;
-        buf += sprintf(buf, "%02d", seconds);
+        buf.appendf("%02d", seconds);
         time -= seconds;
     } else {
         uint32_t seconds = (uint32_t)time;
-        buf += sprintf(buf, "%02d", seconds);
+        buf.appendf("%02d", seconds);
         time -= seconds;
     }
     uint32_t ms = (uint32_t)(time * 1000);
-    sprintf(buf, ".%03d", ms);
+    buf.appendf(".%03d", ms);
     return buf;
 }
 
@@ -51,24 +53,20 @@ const char* formatTimeMS(char* buf, double time) {
  * [time][frames][compressRate]
  */
 std::string MainWin::getTitle() const {
-    std::string ret;
-    char buf[256];
-    if (!_loader._threads.empty()) {
-        uint64_t startTime = _loader._processStart;
-        uint64_t endTime = _loader._threads[0].endTime();
-        uint32_t frames = (uint32_t)_loader._threads[0]._frames.size();
-        for (auto iter = _loader._threads.begin() + 1, end = _loader._threads.end(); iter != end; ++iter) {
-            endTime = std::max(endTime, iter->endTime());
+    shared::StrBuf buf;
+    if (_loader.thread_count()) {
+        uint64_t startTime = _loader.processStart();
+        uint64_t endTime = _loader.processEnd();
+        uint32_t frames = (uint32_t)_loader.thread(0)._frames.size();
+        for (auto iter = _loader.threads().begin() + 1, end = _loader.threads().end(); iter != end; ++iter) {
             frames = std::max(frames, (uint32_t)iter->_frames.size());
         }
-        formatTimeMS(buf, (endTime - startTime) * _loader._secondsPerCycle);
-        ret += "[";
-        ret += buf;
-        ret += "]";
-        sprintf(buf, "[%dFrames][%02.2f%%]", frames, (100.0 * _loader._fileSize / _loader._dataSize));
-        ret += buf;
+        buf.append("[");
+        formatTimeMS(buf, (endTime - startTime) * _loader.secondsPerCycle());
+        buf.append("]");
+        buf.appendf("[%dFrames][%02.2f%%]", frames, (100.0 * _loader.fileSize() / _loader.dataSize()));
     }
-    return ret;
+    return buf.c_str();
 }
 
 float GetItemMaxWidth() {
@@ -101,8 +99,12 @@ void MainWin::draw(int w, int h) {
     //ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.65f);    // 2/3 of the space for widget and 1/3 for labels
     ImGui::PushItemWidth(-140);                                 // Right align, keep 140 pixels for labels
     if (ImGui::BeginMenuBar()) {
-        if (ImGui::BeginMenu("Menu")) {
-            ImGui::Combo("View Type", &_viewType, "Frame\0Timeline\0\0");
+        if (ImGui::BeginMenu("View")) {
+            if (ImGui::BeginMenu("View Type")) {
+                ImGui::RadioButton("Frame", &_viewType, 0);
+                ImGui::RadioButton("Timeline", &_viewType, 1);
+                ImGui::EndMenu();
+            }
             ImGui::EndMenu();
         }
         ImGui::EndMenuBar();

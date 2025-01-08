@@ -18,12 +18,12 @@ void FramesLineView::setLoader(const xxprofile::Loader* loader) {
     clear();
     _loader = loader;
     if (loader) {
-        size_t tcount = loader->_threads.size();
+        const size_t tcount = loader->thread_count();
         _threads.resize(tcount);
         uint32_t minFrame = -1;
         uint32_t maxFrame = 0;
         for (size_t t = 0; t < tcount; ++t) {
-            const auto& loader_thread = loader->_threads[t];
+            const auto& loader_thread = loader->thread(t);
             if (loader_thread._frames.size() > 0) {
                 const auto& frame0 = loader_thread._frames[0];
                 if (minFrame == -1 || minFrame > frame0.frameId()) {
@@ -41,8 +41,8 @@ void FramesLineView::setLoader(const xxprofile::Loader* loader) {
 
         for (size_t t = 0; t < tcount; ++t) {
             auto& thread = _threads[t];
-            const auto& loader_thread = loader->_threads[t];
-            thread.init(&loader_thread, minFrame, maxFrame, loader->_processStart);
+            const auto& loader_thread = loader->thread(t);
+            thread.init(&loader_thread, minFrame, maxFrame, loader->processStart());
         }
     }
 }
@@ -90,7 +90,7 @@ void FramesLineView::draw() {
     ImGui::PushItemWidth(-1);
 
     {// Frames
-        assert(_threads.size() == _loader->_threads.size());
+        assert(_threads.size() == _loader->thread_count());
         ImGui::ImPlotWithHitTest plot;
         shared::StrBuf overlay;
         const auto& io = ImGui::GetIO();

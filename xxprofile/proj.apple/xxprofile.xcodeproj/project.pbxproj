@@ -344,6 +344,7 @@
 		86334F5E237BEFFA004F01C9 /* stats1c.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stats1c.h; sourceTree = "<group>"; };
 		864D1276237B952400112D05 /* xxprofile_version.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_version.hpp; sourceTree = "<group>"; };
 		864D127A237B967900112D05 /* xxprofile.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = xxprofile.hpp; sourceTree = "<group>"; };
+		86603CC72D2E4B4900797A4C /* StrBuf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StrBuf.h; sourceTree = "<group>"; };
 		868231E9238B8C7B00B5A1CD /* compress_zlib.cpp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = compress_zlib.cpp.h; sourceTree = "<group>"; };
 		868231EA238E317B00B5A1CD /* compress_lzo.cpp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = compress_lzo.cpp.h; sourceTree = "<group>"; };
 		868231EB238E332900B5A1CD /* compress_lz4.cpp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = compress_lz4.cpp.h; sourceTree = "<group>"; };
@@ -858,6 +859,14 @@
 			path = frame;
 			sourceTree = "<group>";
 		};
+		86603CC62D2E4B4900797A4C /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				86603CC72D2E4B4900797A4C /* StrBuf.h */,
+			);
+			path = utils;
+			sourceTree = "<group>";
+		};
 		868231E8238B8C3400B5A1CD /* compress */ = {
 			isa = PBXGroup;
 			children = (
@@ -884,6 +893,7 @@
 		86A572C0237901E7007B1437 /* shared */ = {
 			isa = PBXGroup;
 			children = (
+				86603CC62D2E4B4900797A4C /* utils */,
 				86A572E3237901E7007B1437 /* SharedMacros.h */,
 			);
 			name = shared;
