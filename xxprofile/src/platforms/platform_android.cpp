@@ -8,6 +8,8 @@
 #include <sys/stat.h>
 #include <android/log.h>
 #include <errno.h>
+#include <sys/system_properties.h>
+#include <sys/prctl.h>
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
@@ -26,9 +28,20 @@ void systemSetThreadName(const char* name) {
     pthread_setname_np(pthread_self(), name);
 }
 
+static int s_Android_SDK_INT;
+
+static int androidSdkInt() {
+    if (!s_Android_SDK_INT) {
+        char prop[PROP_VALUE_MAX];
+        __system_property_get("ro.build.version.sdk", prop);
+        s_Android_SDK_INT = atoi(prop);
+    }
+    return s_Android_SDK_INT;
+}
+
 std::string systemGetThreadName() {
     char name[64];
-    pthread_getname_np(pthread_self(), name, sizeof(name));
+    prctl(PR_GET_NAME, name);
     return name;
 }
 
