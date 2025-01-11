@@ -23,13 +23,15 @@ uint64_t getTimeStamp() {
 }
 
 void setupStyle() {
-    ImGui::StyleColorsDark();
+    //ImGui::StyleColorsDark();
+    ImGui::StyleColorsClassic();
 
     ImGuiStyle& style = ImGui::GetStyle();
     style.WindowBorderSize = 1.0f;
     style.FrameBorderSize = 1.0f;
     style.PopupBorderSize = 1.0f;
     style.FrameRounding = 3.0f;
+    style.WindowRounding = 0.0f;
 }
 
 MainWin mainwin;

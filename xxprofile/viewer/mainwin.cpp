@@ -59,6 +59,15 @@ float GetItemMaxWidth() {
     return w - s - 2 * style.WindowBorderSize - 2 * style.FrameBorderSize;
 }
 
+void ImGui_CenteredText(const char* text) {
+    float window_width = ImGui::GetWindowWidth();
+    float window_height = ImGui::GetWindowHeight();
+    auto size = ImGui::CalcTextSize(text);
+    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + window_width * 0.5f - size.x * 0.5f);
+    ImGui::SetCursorPosY(ImGui::GetCursorPosY() + window_height * 0.5f - size.y * 0.5f);
+    ImGui::TextUnformatted(text);
+}
+
 void MainWin::draw(int w, int h) {
 
     // Demonstrate the various window flags. Typically you would just use the default.
@@ -92,7 +101,9 @@ void MainWin::draw(int w, int h) {
         ImGui::EndMenuBar();
     }
 
-    if (_viewType == 0) {
+    if (_loader.thread_count() == 0) {
+        ImGui_CenteredText("double click a .xxprofile file to open.");
+    } else if (_viewType == 0) {
         _framesLineView.draw();
         _frameView.draw();
     } else if (_viewType == 1) {
