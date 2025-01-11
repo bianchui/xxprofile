@@ -1,17 +1,17 @@
 // Copyright 2018 bianchui. All rights reserved.
-#include "imgui_custom.hpp"
 #define IMGUI_DEFINE_MATH_OPERATORS
+#include "imgui_custom.hpp"
 #include "imgui_internal.h"
 #include "imgui_custom_internal.hpp"
 
 float ImGui::GetIndent() {
     ImGuiWindow* window = GetCurrentWindow();
-    return window->DC.IndentX;
+    return window->DC.Indent.x;
 }
 
 float ImGui::GetContentWidth() {
     ImGuiWindow* window = GetCurrentWindow();
-    return window->SizeContents.x;
+    return window->ContentSize.x;
 }
 
 void ImGui::PlotEx(ImGuiPlotType plot_type, ImPlotWithHitTest& value) {
@@ -38,7 +38,7 @@ void ImGui::PlotEx(ImGuiPlotType plot_type, ImPlotWithHitTest& value) {
     if (!ItemAdd(total_bb, 0, &frame_bb)) {
         return;
     }
-    const bool hovered = ItemHoverable(inner_bb, id);
+    const bool hovered = ItemHoverable(inner_bb, id, 0);
 
     // Determine scale from values if not specified
     if (value.scaleMin == FLT_MAX || value.scaleMax == FLT_MAX) {

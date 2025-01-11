@@ -33,6 +33,8 @@
 		59A5CB1E29C1B9270043004A /* compress_zstd.lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CB1D29C1B9270043004A /* compress_zstd.lib.c */; };
 		59A5CB2029C1BEF40043004A /* huf_decompress_amd64.S in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CAD829C0A1990043004A /* huf_decompress_amd64.S */; };
 		59A5CB2329C1C6660043004A /* compress_zstd.lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 59A5CB1D29C1B9270043004A /* compress_zstd.lib.c */; };
+		860C16CC2D32BA0B0041F165 /* imgui_tables.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 860C16CA2D32BA0A0041F165 /* imgui_tables.cpp */; };
+		860C16CD2D32BA0B0041F165 /* imgui_widgets.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 860C16CB2D32BA0B0041F165 /* imgui_widgets.cpp */; };
 		8615E07C2AF8985E0024389F /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 8615E07B2AF8985E0024389F /* main.c */; };
 		86DB7F272A529FB90023C6C4 /* test_lzma.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86DB7F262A529FB90023C6C4 /* test_lzma.cpp */; };
 		86DB7F292A52B5860023C6C4 /* compress_lzma_enc.lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 86DB7F282A52B5860023C6C4 /* compress_lzma_enc.lib.c */; };
@@ -83,19 +85,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		86D5F3292D13E1E1004A40F0 /* PBXContainerItemProxy */ = {
+		860C16C72D32B7230041F165 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 86D5F3222D13E1E1004A40F0 /* imguiex.xcodeproj */;
+			containerPortal = 86D5F3222D13E1E1004A40F0 /* example_apple_opengl2.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 6D2FC5541B2E632000C130BA;
-			remoteInfo = "imguiex-ios";
-		};
-		86D5F32B2D13E1E1004A40F0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 86D5F3222D13E1E1004A40F0 /* imguiex.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1A1A0F1F1CB39FB50090F036;
-			remoteInfo = "imguiex-osx";
+			remoteGlobalIDString = 4080A96B20B029B00036BA46;
+			remoteInfo = example_osx_opengl2;
 		};
 		ED0020D02D2C168300873DAD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -217,6 +212,8 @@
 		59A5CB1429C163FA0043004A /* compress_zstd.cpp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = compress_zstd.cpp.h; sourceTree = "<group>"; };
 		59A5CB1629C1B1B10043004A /* test_zstd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_zstd.cpp; sourceTree = "<group>"; };
 		59A5CB1D29C1B9270043004A /* compress_zstd.lib.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = compress_zstd.lib.c; sourceTree = "<group>"; };
+		860C16CA2D32BA0A0041F165 /* imgui_tables.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgui_tables.cpp; sourceTree = "<group>"; };
+		860C16CB2D32BA0B0041F165 /* imgui_widgets.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgui_widgets.cpp; sourceTree = "<group>"; };
 		8615E07B2AF8985E0024389F /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		86334DAF237BEFF9004F01C9 /* lz4.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lz4.c; sourceTree = "<group>"; };
 		86334DB0237BEFF9004F01C9 /* lz4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lz4.h; sourceTree = "<group>"; };
@@ -353,7 +350,7 @@
 		868231ED238F91A500B5A1CD /* lz4hc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lz4hc.c; sourceTree = "<group>"; };
 		86A572BE2378FF74007B1437 /* tls_test.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = tls_test.hpp; sourceTree = "<group>"; };
 		86A572E3237901E7007B1437 /* SharedMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedMacros.h; sourceTree = "<group>"; };
-		86D5F3222D13E1E1004A40F0 /* imguiex.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = imguiex.xcodeproj; path = ../../libs/imgui/examples/example_apple/imguiex.xcodeproj; sourceTree = "<group>"; };
+		86D5F3222D13E1E1004A40F0 /* example_apple_opengl2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = example_apple_opengl2.xcodeproj; path = ../../libs/imgui/examples/example_apple_opengl2/example_apple_opengl2.xcodeproj; sourceTree = "<group>"; };
 		86DB7F182A529E040023C6C4 /* compress_lzma.cpp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = compress_lzma.cpp.h; sourceTree = "<group>"; };
 		86DB7F1B2A529F4D0023C6C4 /* LzHash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LzHash.h; sourceTree = "<group>"; };
 		86DB7F1C2A529F4D0023C6C4 /* LzmaEnc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = LzmaEnc.c; sourceTree = "<group>"; };
@@ -382,10 +379,10 @@
 		ED2207B120E1DFAC0076C22F /* imgui_draw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgui_draw.cpp; sourceTree = "<group>"; };
 		ED2207B220E1DFAC0076C22F /* imgui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgui.cpp; sourceTree = "<group>"; };
 		ED2207B320E1DFAC0076C22F /* imgui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imgui.h; sourceTree = "<group>"; };
-		ED2207B620E1DFC40076C22F /* imgui_impl_glfw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = imgui_impl_glfw.cpp; path = examples/imgui_impl_glfw.cpp; sourceTree = "<group>"; };
-		ED2207B720E1DFC40076C22F /* imgui_impl_glfw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = imgui_impl_glfw.h; path = examples/imgui_impl_glfw.h; sourceTree = "<group>"; };
-		ED2207B820E1DFC40076C22F /* imgui_impl_opengl2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = imgui_impl_opengl2.cpp; path = examples/imgui_impl_opengl2.cpp; sourceTree = "<group>"; };
-		ED2207B920E1DFC40076C22F /* imgui_impl_opengl2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = imgui_impl_opengl2.h; path = examples/imgui_impl_opengl2.h; sourceTree = "<group>"; };
+		ED2207B620E1DFC40076C22F /* imgui_impl_glfw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = imgui_impl_glfw.cpp; path = backends/imgui_impl_glfw.cpp; sourceTree = "<group>"; };
+		ED2207B720E1DFC40076C22F /* imgui_impl_glfw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = imgui_impl_glfw.h; path = backends/imgui_impl_glfw.h; sourceTree = "<group>"; };
+		ED2207B820E1DFC40076C22F /* imgui_impl_opengl2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = imgui_impl_opengl2.cpp; path = backends/imgui_impl_opengl2.cpp; sourceTree = "<group>"; };
+		ED2207B920E1DFC40076C22F /* imgui_impl_opengl2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = imgui_impl_opengl2.h; path = backends/imgui_impl_opengl2.h; sourceTree = "<group>"; };
 		ED2207BC20E1E3E00076C22F /* GLFW.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GLFW.xcodeproj; path = "../../../libs/glfw-3.2.1/build/GLFW.xcodeproj"; sourceTree = "<group>"; };
 		ED2207C820E1F67D0076C22F /* mainloop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mainloop.cpp; sourceTree = "<group>"; };
 		ED2207D820E24D9D0076C22F /* xxprofile_namepool.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_namepool.hpp; sourceTree = "<group>"; };
@@ -648,6 +645,14 @@
 			path = common;
 			sourceTree = "<group>";
 		};
+		860C16C42D32B7230041F165 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				860C16C82D32B7230041F165 /* example_osx_opengl2 */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		86334D53237BEFE0004F01C9 /* libs */ = {
 			isa = PBXGroup;
 			children = (
@@ -901,15 +906,6 @@
 			path = ../../shared;
 			sourceTree = "<group>";
 		};
-		86D5F3232D13E1E1004A40F0 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				86D5F32A2D13E1E1004A40F0 /* imguiex-ios.app */,
-				86D5F32C2D13E1E1004A40F0 /* imguiex-osx.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		86DB7F1A2A529F4D0023C6C4 /* lzma */ = {
 			isa = PBXGroup;
 			children = (
@@ -957,11 +953,13 @@
 				ED2207B020E1DFAC0076C22F /* imconfig.h */,
 				ED2207B120E1DFAC0076C22F /* imgui_draw.cpp */,
 				EDA4401920E9CB3E00C9AE65 /* imgui_internal.h */,
+				860C16CA2D32BA0A0041F165 /* imgui_tables.cpp */,
+				860C16CB2D32BA0B0041F165 /* imgui_widgets.cpp */,
 				ED2207B220E1DFAC0076C22F /* imgui.cpp */,
 				ED2207B320E1DFAC0076C22F /* imgui.h */,
 			);
 			name = imgui;
-			path = "../../../libs/imgui";
+			path = ../../../libs/imgui;
 			sourceTree = "<group>";
 		};
 		ED2207BD20E1E3E00076C22F /* Products */ = {
@@ -1110,7 +1108,7 @@
 		ED84F6AF1FB1CF9B00C7B425 = {
 			isa = PBXGroup;
 			children = (
-				86D5F3222D13E1E1004A40F0 /* imguiex.xcodeproj */,
+				86D5F3222D13E1E1004A40F0 /* example_apple_opengl2.xcodeproj */,
 				86334D53237BEFE0004F01C9 /* libs */,
 				86A572C0237901E7007B1437 /* shared */,
 				864D1278237B966700112D05 /* include */,
@@ -1378,12 +1376,12 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = ED2207BD20E1E3E00076C22F /* Products */;
-					ProjectRef = ED2207BC20E1E3E00076C22F /* GLFW.xcodeproj */;
+					ProductGroup = 860C16C42D32B7230041F165 /* Products */;
+					ProjectRef = 86D5F3222D13E1E1004A40F0 /* example_apple_opengl2.xcodeproj */;
 				},
 				{
-					ProductGroup = 86D5F3232D13E1E1004A40F0 /* Products */;
-					ProjectRef = 86D5F3222D13E1E1004A40F0 /* imguiex.xcodeproj */;
+					ProductGroup = ED2207BD20E1E3E00076C22F /* Products */;
+					ProjectRef = ED2207BC20E1E3E00076C22F /* GLFW.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -1401,18 +1399,11 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		86D5F32A2D13E1E1004A40F0 /* imguiex-ios.app */ = {
+		860C16C82D32B7230041F165 /* example_osx_opengl2 */ = {
 			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = "imguiex-ios.app";
-			remoteRef = 86D5F3292D13E1E1004A40F0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		86D5F32C2D13E1E1004A40F0 /* imguiex-osx.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = "imguiex-osx.app";
-			remoteRef = 86D5F32B2D13E1E1004A40F0 /* PBXContainerItemProxy */;
+			fileType = "compiled.mach-o.executable";
+			path = example_osx_opengl2;
+			remoteRef = 860C16C72D32B7230041F165 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		ED2207C120E1E3E00076C22F /* libglfw3.a */ = {
@@ -1524,6 +1515,8 @@
 				ED2207BB20E1DFC40076C22F /* imgui_impl_opengl2.cpp in Sources */,
 				ED336CF620E4C2BD0085BF34 /* FramesLineView.cpp in Sources */,
 				8615E07C2AF8985E0024389F /* main.c in Sources */,
+				860C16CD2D32BA0B0041F165 /* imgui_widgets.cpp in Sources */,
+				860C16CC2D32BA0B0041F165 /* imgui_tables.cpp in Sources */,
 				ED2207C920E1F67D0076C22F /* mainloop.cpp in Sources */,
 				ED2207B420E1DFAC0076C22F /* imgui_draw.cpp in Sources */,
 				ED7744C720EF340B002B0578 /* xxprofile_CppNameDecoder.cpp in Sources */,
@@ -1904,7 +1897,7 @@
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../libs/imgui/",
-					"$(SRCROOT)/../../libs/imgui/examples/",
+					"$(SRCROOT)/../../libs/imgui/backends/",
 					"$(SRCROOT)/../../libs/glfw-3.2.1/include/",
 					"$(SRCROOT)/../../libs/lzo-2.10/include",
 					"$(SRCROOT)/../../",
@@ -1932,7 +1925,7 @@
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../libs/imgui/",
-					"$(SRCROOT)/../../libs/imgui/examples/",
+					"$(SRCROOT)/../../libs/imgui/backends/",
 					"$(SRCROOT)/../../libs/glfw-3.2.1/include/",
 					"$(SRCROOT)/../../libs/lzo-2.10/include",
 					"$(SRCROOT)/../../",
