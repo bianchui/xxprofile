@@ -353,7 +353,7 @@
 		868231ED238F91A500B5A1CD /* lz4hc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lz4hc.c; sourceTree = "<group>"; };
 		86A572BE2378FF74007B1437 /* tls_test.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = tls_test.hpp; sourceTree = "<group>"; };
 		86A572E3237901E7007B1437 /* SharedMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedMacros.h; sourceTree = "<group>"; };
-		86D5F3222D13E1E1004A40F0 /* imguiex.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = imguiex.xcodeproj; path = "../../libs/imgui-1.62/examples/example_apple/imguiex.xcodeproj"; sourceTree = "<group>"; };
+		86D5F3222D13E1E1004A40F0 /* imguiex.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = imguiex.xcodeproj; path = ../../libs/imgui/examples/example_apple/imguiex.xcodeproj; sourceTree = "<group>"; };
 		86DB7F182A529E040023C6C4 /* compress_lzma.cpp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = compress_lzma.cpp.h; sourceTree = "<group>"; };
 		86DB7F1B2A529F4D0023C6C4 /* LzHash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LzHash.h; sourceTree = "<group>"; };
 		86DB7F1C2A529F4D0023C6C4 /* LzmaEnc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = LzmaEnc.c; sourceTree = "<group>"; };
@@ -961,7 +961,7 @@
 				ED2207B320E1DFAC0076C22F /* imgui.h */,
 			);
 			name = imgui;
-			path = "../../../libs/imgui-1.62";
+			path = "../../../libs/imgui";
 			sourceTree = "<group>";
 		};
 		ED2207BD20E1E3E00076C22F /* Products */ = {
@@ -1903,8 +1903,8 @@
 					"$(inherited)",
 				);
 				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/../../libs/imgui-1.62/",
-					"$(SRCROOT)/../../libs/imgui-1.62/examples/",
+					"$(SRCROOT)/../../libs/imgui/",
+					"$(SRCROOT)/../../libs/imgui/examples/",
 					"$(SRCROOT)/../../libs/glfw-3.2.1/include/",
 					"$(SRCROOT)/../../libs/lzo-2.10/include",
 					"$(SRCROOT)/../../",
@@ -1931,8 +1931,8 @@
 					"$(inherited)",
 				);
 				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/../../libs/imgui-1.62/",
-					"$(SRCROOT)/../../libs/imgui-1.62/examples/",
+					"$(SRCROOT)/../../libs/imgui/",
+					"$(SRCROOT)/../../libs/imgui/examples/",
 					"$(SRCROOT)/../../libs/glfw-3.2.1/include/",
 					"$(SRCROOT)/../../libs/lzo-2.10/include",
 					"$(SRCROOT)/../../",
