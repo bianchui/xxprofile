@@ -85,6 +85,8 @@ void TimeLineView::draw() {
     pDraw->AddRectFilled(timelineRect.Min, ImVec2(timelineRect.Max.x, timelineRect.Min.y + _barHeight), ImColor(0.0f, 0.0f, 0.0f, 0.1f));
     pDraw->AddRect(timelineRect.Min - ImVec2(10, 0), ImVec2(timelineRect.Max.x + 10, timelineRect.Min.y + _barHeight), ImColor(1.0f, 1.0f, 1.0f, 0.4f));
 
+    ImGui::RenderArrow(pDraw, ImVec2(timelineRect.Min.x - 0 + 10, timelineRect.Min.y), 0xffff00ff, ImGuiDir_Right, 1.0f);
+    ImGui::RenderArrow(pDraw, ImVec2(timelineRect.Min.x - 0 + 50, timelineRect.Min.y), 0xffff00ff, ImGuiDir_Down, 1.0f);
     uint64_t frequency = 100000000;
     const float MsToTicks = (float)frequency / 1000.0f;
     const float TicksToMs = 1000.0f / frequency;
