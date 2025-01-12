@@ -4,6 +4,8 @@
 #include "imgui.h"
 #include "imgui_internal.h"
 
+ImVec4 BGTextColor = ImVec4(0.5f, 0.5f, 0.5f, 1.0f);
+
 TimeLineView::TimeLineView(EventHandler* handler) : _handler(handler), _loader(nullptr) {
 }
 
@@ -50,4 +52,29 @@ void TimeLineView::draw() {
         return;
     }
     ImGui::PushClipRect(timelineRect.Min, timelineRect.Max, true);
+    pDraw->AddRectFilled(timelineRect.Min, ImVec2(timelineRect.Max.x, timelineRect.Min.y + _barHeight), ImColor(0.0f, 0.0f, 0.0f, 0.1f));
+    pDraw->AddRect(timelineRect.Min - ImVec2(10, 0), ImVec2(timelineRect.Max.x + 10, timelineRect.Min.y + _barHeight), ImColor(1.0f, 1.0f, 1.0f, 0.4f));
+
+    uint64_t frequency = 100000000;
+    const float MsToTicks = (float)frequency / 1000.0f;
+    const float TicksToMs = 1000.0f / frequency;
+    float ticksInTimeline = MsToTicks * _maxTime;
+    const float TicksToPixels = timelineWidth / ticksInTimeline;
+
+    for (int i = 0; i < _maxTime; ++i)
+    {
+        float x0 = (float)i * MsToTicks * TicksToPixels;
+        float msWidth = 1.0f * MsToTicks * TicksToPixels;
+        ImVec2 tickPos = ImVec2(cursor.x + x0, timelineRect.Min.y);
+        pDraw->AddLine(tickPos + ImVec2(0, _barHeight * 0.5f), tickPos + ImVec2(0, _barHeight), ImColor(BGTextColor));
+
+        if (i % 2 == 0)
+        {
+            pDraw->AddRectFilled(tickPos + ImVec2(0, _barHeight), tickPos + ImVec2(msWidth, timelineRect.Max.y), ImColor(1.0f, 1.0f, 1.0f, 0.02f));
+            const char* pBarText;
+            ImFormatStringToTempBuffer(&pBarText, nullptr, "%d ms", i);
+            pDraw->AddText(tickPos + ImVec2(5, 0), ImColor(BGTextColor), pBarText);
+        }
+    }
+    ImGui::PopClipRect();
 }

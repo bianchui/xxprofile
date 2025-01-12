@@ -35,6 +35,8 @@ private:
     float _timelineScale;
     float _timelineOffset;
     float _scrollBarSize = 15.0f;
+    float _barHeight = 15.f;
+    float _maxTime = 80;
 };
 
 #endif /* TimeLineView_hpp */
