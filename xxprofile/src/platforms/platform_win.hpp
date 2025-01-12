@@ -32,6 +32,10 @@ FORCEINLINE std::string systemGetAppName() {
     return buf;
 }
 
+FORCEINLINE std::string systemGetThreadName() {
+    return "";
+}
+
 typedef SystemLock_win SystemLock;
 typedef Timer_win Timer;
 

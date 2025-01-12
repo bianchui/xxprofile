@@ -103,7 +103,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_GLFW_WIN32=1;XXPROFILE_HAS_DECOMPRESS=1;XX_PLATFORM_WINDOWS=1;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../../;../../../libs/zlib/src;../../../libs/lz4-1.9.4/lib;../../../libs/lz4-2.10/src;../../../libs/imgui-1.62;../../../libs/imgui-1.62/examples;../../../libs/lzo-2.10/include;../../../libs/glfw-3.2.1/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../../;../../../libs/zlib/src;../../../libs/lz4-1.9.4/lib;../../../libs/lz4-2.10/src;../../../libs/imgui;../../../libs/imgui/backends;../../../libs/lzo-2.10/include;../../../libs/glfw-3.2.1/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -121,7 +121,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_GLFW_WIN32=1;XXPROFILE_HAS_DECOMPRESS=1;XX_PLATFORM_WINDOWS=1;_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../../;../../../libs/zlib/src;../../../libs/lz4-1.9.4/lib;../../../libs/lz4-2.10/src;../../../libs/imgui-1.62;../../../libs/imgui-1.62/examples;../../../libs/lzo-2.10/include;../../../libs/glfw-3.2.1/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../../;../../../libs/zlib/src;../../../libs/lz4-1.9.4/lib;../../../libs/lz4-2.10/src;../../../libs/imgui;../../../libs/imgui/backends;../../../libs/lzo-2.10/include;../../../libs/glfw-3.2.1/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -139,7 +139,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_GLFW_WIN32=1;XXPROFILE_HAS_DECOMPRESS=1;XX_PLATFORM_WINDOWS=1;_CRT_SECURE_NO_WARNINGS;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../../;../../../libs/zlib/src;../../../libs/lz4-1.9.4/lib;../../../libs/lz4-2.10/src;../../../libs/imgui-1.62;../../../libs/imgui-1.62/examples;../../../libs/lzo-2.10/include;../../../libs/glfw-3.2.1/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../../;../../../libs/zlib/src;../../../libs/lz4-1.9.4/lib;../../../libs/lz4-2.10/src;../../../libs/imgui;../../../libs/imgui/backends;../../../libs/lzo-2.10/include;../../../libs/glfw-3.2.1/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -157,7 +157,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_GLFW_WIN32=1;XXPROFILE_HAS_DECOMPRESS=1;XX_PLATFORM_WINDOWS=1;_CRT_SECURE_NO_WARNINGS;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../../;../../../libs/zlib/src;../../../libs/lz4-1.9.4/lib;../../../libs/lz4-2.10/src;../../../libs/imgui-1.62;../../../libs/imgui-1.62/examples;../../../libs/lzo-2.10/include;../../../libs/glfw-3.2.1/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../../;../../../libs/zlib/src;../../../libs/lz4-1.9.4/lib;../../../libs/lz4-2.10/src;../../../libs/imgui;../../../libs/imgui/backends;../../../libs/lzo-2.10/include;../../../libs/glfw-3.2.1/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -170,11 +170,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\libs\imgui-1.62\examples\imgui_impl_glfw.h" />
-    <ClInclude Include="..\..\..\libs\imgui-1.62\examples\imgui_impl_opengl2.h" />
-    <ClInclude Include="..\..\..\libs\imgui-1.62\imconfig.h" />
-    <ClInclude Include="..\..\..\libs\imgui-1.62\imgui.h" />
-    <ClInclude Include="..\..\..\libs\imgui-1.62\imgui_internal.h" />
+    <ClInclude Include="..\..\..\libs\imgui\backends\imgui_impl_glfw.h" />
+    <ClInclude Include="..\..\..\libs\imgui\backends\imgui_impl_opengl2.h" />
+    <ClInclude Include="..\..\..\libs\imgui\imconfig.h" />
+    <ClInclude Include="..\..\..\libs\imgui\imgui.h" />
+    <ClInclude Include="..\..\..\libs\imgui\imgui_internal.h" />
+    <ClInclude Include="..\..\..\libs\imgui\imstb_rectpack.h" />
+    <ClInclude Include="..\..\..\libs\imgui\imstb_textedit.h" />
+    <ClInclude Include="..\..\..\libs\imgui\imstb_truetype.h" />
     <ClInclude Include="..\..\loader\xxprofile_CppNameDecoder.hpp" />
     <ClInclude Include="..\..\loader\xxprofile_loader.hpp" />
     <ClInclude Include="..\..\src\helper\CommonMacros.h" />
@@ -197,11 +200,12 @@
     <ClInclude Include="..\..\src\xxprofile_tls.hpp" />
     <ClInclude Include="..\..\src\xxprofile_version.hpp" />
     <ClInclude Include="..\..\viewer\EventHandler.hpp" />
-    <ClInclude Include="..\..\viewer\FramesLineView.hpp" />
-    <ClInclude Include="..\..\viewer\FrameView.hpp" />
+    <ClInclude Include="..\..\viewer\frame\FramesLineView.hpp" />
+    <ClInclude Include="..\..\viewer\frame\FrameView.hpp" />
     <ClInclude Include="..\..\viewer\imgui\imgui_custom.hpp" />
     <ClInclude Include="..\..\viewer\imgui\imgui_custom_internal.hpp" />
     <ClInclude Include="..\..\viewer\mainwin.hpp" />
+    <ClInclude Include="..\..\viewer\timelime\TimeLineView.hpp" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -227,10 +231,12 @@
     <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\win32_tls.c" />
     <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\win32_window.c" />
     <ClCompile Include="..\..\..\libs\glfw-3.2.1\src\window.c" />
-    <ClCompile Include="..\..\..\libs\imgui-1.62\examples\imgui_impl_glfw.cpp" />
-    <ClCompile Include="..\..\..\libs\imgui-1.62\examples\imgui_impl_opengl2.cpp" />
-    <ClCompile Include="..\..\..\libs\imgui-1.62\imgui.cpp" />
-    <ClCompile Include="..\..\..\libs\imgui-1.62\imgui_draw.cpp" />
+    <ClCompile Include="..\..\..\libs\imgui\backends\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\..\..\libs\imgui\backends\imgui_impl_opengl2.cpp" />
+    <ClCompile Include="..\..\..\libs\imgui\imgui.cpp" />
+    <ClCompile Include="..\..\..\libs\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\..\..\libs\imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\..\..\libs\imgui\imgui_widgets.cpp" />
     <ClCompile Include="..\..\..\libs\lz4-1.9.4\lib\lz4.c" />
     <ClCompile Include="..\..\..\libs\lz4-1.9.4\lib\lz4hc.c" />
     <ClCompile Include="..\..\loader\xxprofile_CppNameDecoder.cpp" />
@@ -241,12 +247,13 @@
     <ClCompile Include="..\..\src\xxprofile_archive.cpp" />
     <ClCompile Include="..\..\src\xxprofile_name.cpp" />
     <ClCompile Include="..\..\src\xxprofile_tls.cpp" />
-    <ClCompile Include="..\..\viewer\FramesLineView.cpp" />
-    <ClCompile Include="..\..\viewer\FrameView.cpp" />
+    <ClCompile Include="..\..\viewer\frame\FramesLineView.cpp" />
+    <ClCompile Include="..\..\viewer\frame\FrameView.cpp" />
     <ClCompile Include="..\..\viewer\imgui\imgui_custom.cpp" />
     <ClCompile Include="..\..\viewer\main.c" />
     <ClCompile Include="..\..\viewer\mainloop.cpp" />
     <ClCompile Include="..\..\viewer\mainwin.cpp" />
+    <ClCompile Include="..\..\viewer\timelime\TimeLineView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\libs\zlib\build\proj.windows\zlib.vcxproj">
