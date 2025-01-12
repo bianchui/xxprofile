@@ -32,6 +32,9 @@ private:
     EventHandler* _handler;
     const xxprofile::Loader* _loader;
     std::vector<ThreadData> _threads;
+    float _timelineScale;
+    float _timelineOffset;
+    float _scrollBarSize = 15.0f;
 };
 
 #endif /* TimeLineView_hpp */
