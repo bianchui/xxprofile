@@ -301,6 +301,15 @@ void ThreadData::clear() {
     _maxCycleCount = 0;
 }
 
+static bool isLower(const FrameData& frame, uint64_t time) {
+    return frame.endTime() < time;
+}
+
+uint32_t ThreadData::findFirstFrame(uint64_t startTime) const {
+    const auto iter = std::lower_bound(_frames.begin(), _frames.end(), startTime, isLower);
+    return static_cast<uint32_t>(iter - _frames.begin());
+}
+
 #pragma mark - Loader
 
 Loader::Loader() {

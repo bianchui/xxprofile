@@ -4,6 +4,10 @@
 #include "imgui.h"
 #include "imgui_internal.h"
 
+#pragma mark - TimeLineView::ThreadData
+
+#pragma mark - TimeLineView
+
 ImVec4 BGTextColor = ImVec4(0.5f, 0.5f, 0.5f, 1.0f);
 
 TimeLineView::TimeLineView(EventHandler* handler) : _handler(handler), _loader(nullptr) {
@@ -21,6 +25,32 @@ void TimeLineView::setLoader(const xxprofile::Loader* loader) {
     clear();
     _loader = loader;
     if (loader) {
+        const size_t tcount = loader->thread_count();
+        _threads.resize(tcount);
+        uint32_t minFrame = -1;
+        uint32_t maxFrame = 0;
+        for (size_t t = 0; t < tcount; ++t) {
+            const auto& loader_thread = loader->thread(t);
+            if (loader_thread._frames.size() > 0) {
+                const auto& frame0 = loader_thread._frames[0];
+                if (minFrame == -1 || minFrame > frame0.frameId()) {
+                    minFrame = frame0.frameId();
+                }
+                const auto& frameN = loader_thread._frames.back();
+                if (maxFrame < frameN.frameId()) {
+                    maxFrame = frameN.frameId();
+                }
+            }
+        }
+        if (minFrame == -1) {
+            minFrame = 0;
+        }
+
+        for (size_t t = 0; t < tcount; ++t) {
+            auto& thread = _threads[t];
+            const auto& loader_thread = loader->thread(t);
+            thread.init(&loader_thread, loader->processStart());
+        }
     }
 }
 

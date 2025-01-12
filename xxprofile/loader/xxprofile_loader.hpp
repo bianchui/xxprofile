@@ -314,6 +314,8 @@ struct ThreadData {
         return ret;
     }
 
+    uint32_t findFirstFrame(uint64_t startTime) const;
+
 private:
     XX_CLASS_DELETE_COPY(ThreadData);
     XX_CLASS_DELETE_MOVE_ASSIGN(ThreadData);

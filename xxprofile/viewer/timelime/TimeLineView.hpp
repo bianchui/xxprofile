@@ -15,8 +15,15 @@ class TimeLineView {
 public:
     struct ThreadData {
         const xxprofile::ThreadData* _data;
-
+        uint64_t _processStart;
         bool _expended;
+
+        void init(const xxprofile::ThreadData* data, uint64_t processStart) {
+            assert(data);
+            _data = data;
+            _expended = false;
+            _processStart = processStart;
+        }
     };
 
     TimeLineView(EventHandler* handler);
