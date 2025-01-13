@@ -1,4 +1,4 @@
-// Copyright 2019 bianchui. All rights reserved.
+// Copyright (C) 2019, bianchui. All rights reserved.
 #ifndef tests_tls_test_hpp
 #define tests_tls_test_hpp
 

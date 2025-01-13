@@ -1,4 +1,4 @@
-// Copyright 2019 bianchui. All rights reserved.
+// Copyright (C) 2019, bianchui. All rights reserved.
 #ifndef xxprofile_version_h
 #define xxprofile_version_h
 

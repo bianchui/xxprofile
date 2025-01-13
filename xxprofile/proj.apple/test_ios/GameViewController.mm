@@ -1,4 +1,4 @@
-// Copyright 2018 bianchui. All rights reserved.
+// Copyright (C) 2018, bianchui. All rights reserved.
 #import "GameViewController.h"
 #import "Renderer.h"
 #include "inc_xxprofile.hpp"

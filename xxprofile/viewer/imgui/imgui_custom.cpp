@@ -1,4 +1,4 @@
-// Copyright 2018 bianchui. All rights reserved.
+// Copyright (C) 2018, bianchui. All rights reserved.
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui_custom.hpp"
 #include "imgui_internal.h"

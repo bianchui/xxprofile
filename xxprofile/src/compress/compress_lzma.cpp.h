@@ -1,4 +1,4 @@
-// Copyright 2017-2019 bianchui. All rights reserved.
+// Copyright (C) 2017-2019, bianchui. All rights reserved.
 #ifndef compress_lzma_cpp_h
 #define compress_lzma_cpp_h
 #include <libs/lzma/LzmaDec.h>

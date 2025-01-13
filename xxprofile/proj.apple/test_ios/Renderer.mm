@@ -1,4 +1,4 @@
-// Copyright 2018 bianchui. All rights reserved.
+// Copyright (C) 2018, bianchui. All rights reserved.
 #import <simd/simd.h>
 #import <ModelIO/ModelIO.h>
 #import <MetalKit/MetalKit.h>

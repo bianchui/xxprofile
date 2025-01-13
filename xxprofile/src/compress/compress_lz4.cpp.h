@@ -1,4 +1,4 @@
-// Copyright 2017-2019 bianchui. All rights reserved.
+// Copyright (C) 2017-2019, bianchui. All rights reserved.
 #ifndef compress_lz4_cpp_h
 #define compress_lz4_cpp_h
 #include <libs/lz4-1.9.4/lib/lz4.h>

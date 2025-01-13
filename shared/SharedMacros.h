@@ -1,4 +1,4 @@
-// Copyright 2018 bianchui. All rights reserved.
+// Copyright (C) 2018, bianchui. All rights reserved.
 #ifndef __shared_SharedMacros_h__
 #define __shared_SharedMacros_h__
 #include <stdlib.h>

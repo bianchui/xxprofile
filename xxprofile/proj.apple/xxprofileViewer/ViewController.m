@@ -3,7 +3,7 @@
 //  xxprofileViewer
 //
 //  Created by bianchui on 2018/6/26.
-//  Copyright © 2018年 bianchui. All rights reserved.
+//  Copyright (C) 2018, bianchui. All rights reserved.
 //
 
 #import "ViewController.h"

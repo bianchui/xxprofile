@@ -1,4 +1,4 @@
-// Copyright 2017 bianchui. All rights reserved.
+// Copyright (C) 2017, bianchui. All rights reserved.
 #include "platform_android.hpp"
 #include <unistd.h>
 #include <sys/types.h>

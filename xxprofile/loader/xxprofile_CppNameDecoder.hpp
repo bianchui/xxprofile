@@ -1,4 +1,4 @@
-// Copyright 2018 bianchui. All rights reserved.
+// Copyright (C) 2018, bianchui. All rights reserved.
 #ifndef xxprofile_loader_xxprofile_CppNameDecoder_hpp
 #define xxprofile_loader_xxprofile_CppNameDecoder_hpp
 #include "../src/xxprofile_macros.hpp"

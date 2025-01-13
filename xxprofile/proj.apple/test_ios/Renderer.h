@@ -1,4 +1,4 @@
-// Copyright 2018 bianchui. All rights reserved.
+// Copyright (C) 2018, bianchui. All rights reserved.
 #import <Metal/Metal.h>
 
 // Protocol abstracting the platform specific view in order to keep the Renderer

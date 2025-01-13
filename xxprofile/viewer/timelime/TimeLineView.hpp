@@ -3,7 +3,7 @@
 //  xxprofileViewer
 //
 //  Created by bianchui on 2025/1/7.
-//  Copyright © 2025 bianchui. All rights reserved.
+//  Copyright (C) 2025, bianchui. All rights reserved.
 //
 
 #ifndef TimeLineView_hpp

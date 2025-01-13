@@ -1,4 +1,4 @@
-// Copyright 2018 bianchui. All rights reserved.
+// Copyright (C) 2018, bianchui. All rights reserved.
 #ifndef imgui_custom_internal_hpp
 #define imgui_custom_internal_hpp
 

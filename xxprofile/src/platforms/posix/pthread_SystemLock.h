@@ -3,7 +3,7 @@
 //  xxprofile
 //
 //  Created by bianchui on 2017/11/29.
-//  Copyright 2017 bianchui. All rights reserved.
+//  Copyright (C) 2017, bianchui. All rights reserved.
 //
 
 #ifndef xxprofile_platforms_posix_pthread_SystemLock_h

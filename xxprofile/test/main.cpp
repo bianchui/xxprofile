@@ -1,4 +1,4 @@
-// Copyright 2018 bianchui. All rights reserved.
+// Copyright (C) 2018, bianchui. All rights reserved.
 #define XX_ENABLE_PROFILE 1
 #ifndef XX_INTERNAL_TEST
 #include "../include/xxprofile/xxprofile.hpp"

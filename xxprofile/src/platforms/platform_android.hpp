@@ -1,4 +1,4 @@
-// Copyright 2017 bianchui. All rights reserved.
+// Copyright (C) 2017, bianchui. All rights reserved.
 #ifndef xxprofile_platform_android_hpp
 #define xxprofile_platform_android_hpp
 #include "platform_base.hpp"

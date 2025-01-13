@@ -1,4 +1,4 @@
-// Copyright 2025 bianchui. All rights reserved.
+// Copyright (C) 2025, bianchui. All rights reserved.
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "TimeLineView.hpp"
 #include "imgui.h"

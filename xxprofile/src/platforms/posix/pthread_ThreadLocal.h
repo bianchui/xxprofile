@@ -1,4 +1,4 @@
-// Copyright 2018 bianchui. All rights reserved.
+// Copyright (C) 2018, bianchui. All rights reserved.
 #ifndef xxprofile_platforms_posix_pthread_ThreadLocal_h
 #define xxprofile_platforms_posix_pthread_ThreadLocal_h
 #include <pthread.h>

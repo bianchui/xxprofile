@@ -1,4 +1,4 @@
-// Copyright 2018 bianchui. All rights reserved.
+// Copyright (C) 2018, bianchui. All rights reserved.
 
 //
 //  Header containing types and enum constants shared between Metal shaders and C/ObjC source

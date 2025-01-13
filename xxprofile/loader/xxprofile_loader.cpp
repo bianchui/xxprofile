@@ -1,4 +1,4 @@
-// Copyright 2017-2025 bianchui. All rights reserved.
+// Copyright (C) 2017-2025, bianchui. All rights reserved.
 #include "../src/xxprofile_internal.hpp"
 #include "../src/xxprofile_version.hpp"
 #include "xxprofile_loader.hpp"

@@ -1,4 +1,4 @@
-// Copyright 2017-2019 bianchui. All rights reserved.
+// Copyright (C) 2017-2019, bianchui. All rights reserved.
 #ifndef compress_zlib_cpp_h
 #define compress_zlib_cpp_h
 #include <zlib.h>

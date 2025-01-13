@@ -1,4 +1,4 @@
-// Copyright 2017-2023 bianchui. All rights reserved.
+// Copyright (C) 2017-2023, bianchui. All rights reserved.
 //#define XX_NO_DUMMY
 #include "../../../libs/lzma/LzmaDec.c"
 

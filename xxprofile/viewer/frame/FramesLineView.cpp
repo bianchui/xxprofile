@@ -1,4 +1,4 @@
-// Copyright 2018-2025 bianchui. All rights reserved.
+// Copyright (C) 2018-2025, bianchui. All rights reserved.
 #include "FramesLineView.hpp"
 #include "imgui.h"
 #include "../EventHandler.hpp"

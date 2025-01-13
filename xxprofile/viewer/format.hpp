@@ -1,4 +1,4 @@
-// Copyright 2018-2025 bianchui. All rights reserved.
+// Copyright (C) 2018-2025, bianchui. All rights reserved.
 #ifndef xxprofileviewer_format_hpp
 #define xxprofileviewer_format_hpp
 #include <shared/utils/StrBuf.h>

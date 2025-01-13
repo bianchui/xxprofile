@@ -1,4 +1,4 @@
-// Copyright 2018 bianchui. All rights reserved.
+// Copyright (C) 2018, bianchui. All rights reserved.
 #ifndef shared_utils_StrBuf_h__
 #define shared_utils_StrBuf_h__
 #include <stdio.h>

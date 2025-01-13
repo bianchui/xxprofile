@@ -1,4 +1,4 @@
-// Copyright 2017-2023 bianchui. All rights reserved.
+// Copyright (C) 2017-2023, bianchui. All rights reserved.
 #ifndef compress_zstd_cpp_h
 #define compress_zstd_cpp_h
 #include <libs/zstd-1.5.5/lib/zstd.h>

@@ -3,7 +3,7 @@
 //  xxprofile
 //
 //  Created by bianchui on 2017/11/7.
-//  Copyright 2017 bianchui. All rights reserved.
+//  Copyright (C) 2017, bianchui. All rights reserved.
 //
 
 #ifndef xxprofile_hpp

@@ -3,7 +3,7 @@
 //  xxprofile
 //
 //  Created by bianchui on 2024/3/12.
-//  Copyright © 2024 bianchui. All rights reserved.
+//  Copyright (C) 2024, bianchui. All rights reserved.
 //
 
 #include "test_compress.hpp"

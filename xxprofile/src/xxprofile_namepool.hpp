@@ -1,4 +1,4 @@
-// Copyright 2017 bianchui. All rights reserved.
+// Copyright (C) 2017, bianchui. All rights reserved.
 #ifndef xxprofile_namepool_hpp
 #define xxprofile_namepool_hpp
 #include "xxprofile_internal.hpp"

@@ -3,7 +3,7 @@
 //  xxprofile
 //
 //  Created by bianchui on 2017/11/8.
-//  Copyright 2017 bianchui. All rights reserved.
+//  Copyright (C) 2017, bianchui. All rights reserved.
 //
 
 #include "platform_apple.hpp"
