@@ -1,4 +1,4 @@
-// Copyright 2017 bianchui. All rights reserved.
+// Copyright 2017-2025 bianchui. All rights reserved.
 #include "../src/xxprofile_internal.hpp"
 #include "../src/xxprofile_version.hpp"
 #include "xxprofile_loader.hpp"
@@ -8,7 +8,6 @@
 #include "../src/compress/compress_lz4.cpp.h"
 #include "../src/compress/compress_zstd.cpp.h"
 
-#define NAME_NEEDS_FREE 0
 #define TEST_COMPRESS 0
 
 XX_NAMESPACE_BEGIN(xxprofile);
@@ -497,15 +496,14 @@ void Loader::load(Archive& ar) {
 
 void Loader::clear() {
     _threads.clear();
-    _namePool.clear();
-#if NAME_NEEDS_FREE
-    for (auto iter = _names.begin(); iter != _names.end(); ++iter) {
-        if (*iter) {
-            free((void*)*iter);
+    for (uint32_t i = 0, l = (uint32_t)_names.size(); i != l; ++i) {
+        const char* name = _names[i];
+        if (name && name != _namePool.getName(i + 1)) {
+            free(const_cast<char*>(name));
         }
     }
-#endif//NAME_NEEDS_FREE
     _names.clear();
+    _namePool.clear();
 
     _secondsPerCycle = 0;
     _processStart = 0;
@@ -534,11 +532,8 @@ const char* Loader::name(SName name) const {
 
 const char* Loader::prepareName(const char* name) {
     //CppNameDecoder decoder(name);
-#if NAME_NEEDS_FREE
-    return strdup(name)
-#else//NAME_NEEDS_FREE
+
     return name;
-#endif//NAME_NEEDS_FREE
 }
 
 XX_NAMESPACE_END(xxprofile);

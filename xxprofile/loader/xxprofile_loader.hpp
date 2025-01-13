@@ -1,4 +1,4 @@
-// Copyright 2017 bianchui. All rights reserved.
+// Copyright 2017-2025 bianchui. All rights reserved.
 #ifndef xxprofile_loader_xxprofile_loader_hpp
 #define xxprofile_loader_xxprofile_loader_hpp
 #include "../src/xxprofile_name.hpp"

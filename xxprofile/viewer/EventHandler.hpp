@@ -1,4 +1,4 @@
-// Copyright 2018 bianchui. All rights reserved.
+// Copyright 2018-2025 bianchui. All rights reserved.
 #ifndef xxprofileviewer_EventHandler_hpp
 #define xxprofileviewer_EventHandler_hpp
 #include "../loader/xxprofile_loader.hpp"
