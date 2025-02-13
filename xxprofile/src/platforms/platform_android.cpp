@@ -120,14 +120,23 @@ static const std::string& getBid() {
         const auto data_app_len = strlen(data_app);
         if (strlen(info.dli_fname) > data_app_len) {
             if (memcmp(info.dli_fname, data_app, data_app_len) == 0) {
-                const char* sname = info.dli_fname + data_app_len;
-                const char* ename0 = strchr(sname, '-');
-                const char* ename = strchr(sname, '/');
-                if (ename) {
-                    std::string bid(sname, ename0 < ename ? ename0 - sname : ename - sname);
+                const char* name_start = info.dli_fname + data_app_len;
+                const char* name_end = strstr(name_start, "/lib/");
+                if (!name_end) {
+                    name_end = name_start + strlen(name_start);
+                }
+                while (name_start < name_end) {
+                    const char* end_name = strchr(name_start, '/');
+                    if (!end_name) {
+                        break;
+                    }
+                    const char* bid_end = strchr(name_start, '-');
+                    std::string bid(name_start, (!bid_end || bid_end > end_name ? end_name : bid_end) - name_start);
                     if (testIsBid(bid)) {
                         gBid = bid;
+                        break;
                     }
+                    name_start = end_name + 1;
                 }
             }
         }
