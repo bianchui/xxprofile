@@ -38,6 +38,8 @@ struct MainWin : EventHandler {
 
 private:
     bool _load(const char* file);
+
+    void drawContent();
 };
 
 #endif//xxprofileviewer_mainwin_hpp

@@ -72,21 +72,33 @@ void MainWin::draw(int w, int h) {
 
     // Demonstrate the various window flags. Typically you would just use the default.
     ImGuiWindowFlags window_flags = 0;
+    window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus;
+    window_flags |= ImGuiWindowFlags_NoNavFocus;
     window_flags |= ImGuiWindowFlags_NoTitleBar;
     window_flags |= ImGuiWindowFlags_NoMove;
     window_flags |= ImGuiWindowFlags_NoResize;
     window_flags |= ImGuiWindowFlags_NoCollapse;
-    window_flags |= ImGuiWindowFlags_AlwaysVerticalScrollbar;
+    //window_flags |= ImGuiWindowFlags_AlwaysVerticalScrollbar;
     window_flags |= ImGuiWindowFlags_MenuBar;
 
-    if (!ImGui::Begin("MainWin", NULL, window_flags)) {
-        // Early out if the window is collapsed, as an optimization.
-        ImGui::End();
-        return;
-    }
-    ImGui::SetWindowPos(ImVec2(0, 0));
-    ImGui::SetWindowSize(ImVec2(w, h));
+    const ImGuiViewport* viewport = ImGui::GetMainViewport();
+    ImGui::SetNextWindowPos(viewport->WorkPos);
+    ImGui::SetNextWindowSize(viewport->WorkSize);
+    ImGui::SetNextWindowViewport(viewport->ID);
 
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+    const auto mainWndBegin = ImGui::Begin("MainWin", NULL, window_flags);
+    ImGui::PopStyleVar(2);
+
+    if (mainWndBegin) {
+        drawContent();
+    }
+
+    ImGui::End();
+}
+
+void MainWin::drawContent() {
     //ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.65f);    // 2/3 of the space for widget and 1/3 for labels
     ImGui::PushItemWidth(-140);                                 // Right align, keep 140 pixels for labels
     if (ImGui::BeginMenuBar()) {
@@ -109,6 +121,4 @@ void MainWin::draw(int w, int h) {
     } else if (_viewType == 1) {
         _timeLineView.draw();
     }
-
-    ImGui::End();
 }
