@@ -531,8 +531,16 @@ const char* Loader::name(SName name) const {
 }
 
 const char* Loader::prepareName(const char* name) {
+    char* localName = nullptr;
+
+    //if (strchr(name, "::__1::", )) {
+    //    localName = strdup(name);
+    //}
     //CppNameDecoder decoder(name);
 
+    if (localName) {
+        free(localName);
+    }
     return name;
 }
 

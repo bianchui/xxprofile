@@ -47,6 +47,7 @@
 		86DB7F942A550EB80023C6C4 /* compress_lzma_enc.lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 86DB7F282A52B5860023C6C4 /* compress_lzma_enc.lib.c */; };
 		86DB7F952A550EBD0023C6C4 /* compress_lzma_dec.lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 86DB7F2A2A52B68D0023C6C4 /* compress_lzma_dec.lib.c */; };
 		86DB7F962A550ED00023C6C4 /* test_lzma.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86DB7F262A529FB90023C6C4 /* test_lzma.cpp */; };
+		86DDA4152BA040D50012FA7A /* 33M.tar in Resources */ = {isa = PBXBuildFile; fileRef = 86DDA4132BA040D50012FA7A /* 33M.tar */; };
 		86DDA41A2BA050300012FA7A /* test_memcpy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86DDA4182BA050300012FA7A /* test_memcpy.cpp */; };
 		86DDA41B2BA050300012FA7A /* test_memcpy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86DDA4182BA050300012FA7A /* test_memcpy.cpp */; };
 		ED0020CF2D2C168300873DAD /* libxxprofile_mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED84F6B81FB1CF9B00C7B425 /* libxxprofile_mac.a */; };
@@ -366,6 +367,7 @@
 		86DB7F362A5401AA0023C6C4 /* xxprofile.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = xxprofile.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		86DB7FA72A5556100023C6C4 /* platform_android.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = platform_android.hpp; sourceTree = "<group>"; };
 		86DB7FA82A5556110023C6C4 /* platform_android.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = platform_android.cpp; sourceTree = "<group>"; };
+		86DDA4132BA040D50012FA7A /* 33M.tar */ = {isa = PBXFileReference; lastKnownFileType = archive.tar; name = 33M.tar; path = ../../../../../../Downloads/33M.tar; sourceTree = "<group>"; };
 		86DDA4182BA050300012FA7A /* test_memcpy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_memcpy.cpp; sourceTree = "<group>"; };
 		ED18B6F72D2CF43D00D81AE9 /* TimeLineView.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TimeLineView.cpp; sourceTree = "<group>"; };
 		ED18B6F82D2CF43D00D81AE9 /* TimeLineView.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TimeLineView.hpp; sourceTree = "<group>"; };
@@ -539,6 +541,7 @@
 		59A5CA5929C088D90043004A /* test_compress_ios */ = {
 			isa = PBXGroup;
 			children = (
+				86DDA4132BA040D50012FA7A /* 33M.tar */,
 				59A5CA7229C089BF0043004A /* Info.plist */,
 			);
 			path = test_compress_ios;
@@ -1420,6 +1423,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86DDA4152BA040D50012FA7A /* 33M.tar in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
