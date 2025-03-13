@@ -149,7 +149,7 @@
 			);
 			mainGroup = 4080A96220B029B00036BA46;
 			productRefGroup = 4080A96C20B029B00036BA46 /* Products */;
-			projectDirPath = "";
+			projectDirPath = "../imgui/examples/example_apple_opengl2";
 			projectRoot = "";
 			targets = (
 				4080A96A20B029B00036BA46 /* example_osx_opengl2 */,

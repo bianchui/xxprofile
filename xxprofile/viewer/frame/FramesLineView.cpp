@@ -78,7 +78,7 @@ void FramesLineView::draw() {
     ImGuiWindowFlags window_flags = 0;
     const ImGuiStyle& style = ImGui::GetStyle();
 
-    const float rw = ImGui::GetWindowContentRegionWidth();
+    const float rw = ImGui::GetContentRegionAvail().x;
     const float indent = ImGui::GetIndent();
     const float plotItemWidth = (rw - style.WindowPadding.x * 2 - indent + style.FramePadding.x * 2);
     const int framesGraphWidthPixels = (int)(plotItemWidth - style.FramePadding.x * 2);

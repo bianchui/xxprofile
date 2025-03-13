@@ -340,6 +340,7 @@
 		86334F5C237BEFFA004F01C9 /* stats1a.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stats1a.h; sourceTree = "<group>"; };
 		86334F5D237BEFFA004F01C9 /* stats1b.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stats1b.h; sourceTree = "<group>"; };
 		86334F5E237BEFFA004F01C9 /* stats1c.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stats1c.h; sourceTree = "<group>"; };
+		863E000E2D82A7680074DC26 /* imgui_config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = imgui_config.h; sourceTree = "<group>"; };
 		864D1276237B952400112D05 /* xxprofile_version.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = xxprofile_version.hpp; sourceTree = "<group>"; };
 		864D127A237B967900112D05 /* xxprofile.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = xxprofile.hpp; sourceTree = "<group>"; };
 		86603CC72D2E4B4900797A4C /* StrBuf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StrBuf.h; sourceTree = "<group>"; };
@@ -351,7 +352,7 @@
 		868231ED238F91A500B5A1CD /* lz4hc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lz4hc.c; sourceTree = "<group>"; };
 		86A572BE2378FF74007B1437 /* tls_test.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = tls_test.hpp; sourceTree = "<group>"; };
 		86A572E3237901E7007B1437 /* SharedMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedMacros.h; sourceTree = "<group>"; };
-		86D5F3222D13E1E1004A40F0 /* example_apple_opengl2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = example_apple_opengl2.xcodeproj; path = ../../libs/imgui/examples/example_apple_opengl2/example_apple_opengl2.xcodeproj; sourceTree = "<group>"; };
+		86D5F3222D13E1E1004A40F0 /* example_apple_opengl2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = example_apple_opengl2.xcodeproj; path = ../../libs/build/example_apple_opengl2.xcodeproj; sourceTree = "<group>"; };
 		86DB7F182A529E040023C6C4 /* compress_lzma.cpp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = compress_lzma.cpp.h; sourceTree = "<group>"; };
 		86DB7F1B2A529F4D0023C6C4 /* LzHash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LzHash.h; sourceTree = "<group>"; };
 		86DB7F1C2A529F4D0023C6C4 /* LzmaEnc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = LzmaEnc.c; sourceTree = "<group>"; };
@@ -1158,6 +1159,7 @@
 		EDA4401320E9C1EE00C9AE65 /* imgui */ = {
 			isa = PBXGroup;
 			children = (
+				863E000E2D82A7680074DC26 /* imgui_config.h */,
 				EDA4401820E9C3BF00C9AE65 /* imgui_custom_internal.hpp */,
 				EDA4401420E9C1EE00C9AE65 /* imgui_custom.cpp */,
 				EDA4401520E9C1EE00C9AE65 /* imgui_custom.hpp */,
@@ -1897,6 +1899,7 @@
 				DEVELOPMENT_TEAM = 6D5DUQ6KTS;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"XXPROFILE_HAS_DECOMPRESS=1",
+					"IMGUI_USER_CONFIG=\"\\\"$(SRCROOT)/../viewer/imgui/imgui_config.h\\\"\"",
 					"$(inherited)",
 				);
 				HEADER_SEARCH_PATHS = (
@@ -1925,6 +1928,7 @@
 				DEVELOPMENT_TEAM = 6D5DUQ6KTS;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"XXPROFILE_HAS_DECOMPRESS=1",
+					"IMGUI_USER_CONFIG=\"\\\"$(SRCROOT)/../viewer/imgui/imgui_config.h\\\"\"",
 					"$(inherited)",
 				);
 				HEADER_SEARCH_PATHS = (
