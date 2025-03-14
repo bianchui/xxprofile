@@ -1911,7 +1911,7 @@
 				);
 				INFOPLIST_FILE = xxprofileViewer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MARKETING_VERSION = 1.2024.0108;
+				MARKETING_VERSION = 1.2025.0314;
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.bianchui.xxprofileViewer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1940,7 +1940,7 @@
 				);
 				INFOPLIST_FILE = xxprofileViewer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MARKETING_VERSION = 1.2024.0108;
+				MARKETING_VERSION = 1.2025.0314;
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.bianchui.xxprofileViewer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
