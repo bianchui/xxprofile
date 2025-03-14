@@ -3,6 +3,7 @@
 #include "imgui/imgui_custom.hpp"
 #include <stdio.h>
 #include <math.h>
+#include <imgui_internal.h>
 
 #include <limits.h>         // INT_MIN, INT_MAX
 
@@ -68,6 +69,12 @@ void ImGui_CenteredText(const char* text) {
     ImGui::TextUnformatted(text);
 }
 
+void ImGui_HideTabBar() {
+    ImGuiWindowClass window_class;
+    window_class.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar;
+    ImGui::SetNextWindowClass(&window_class);
+}
+
 void MainWin::draw(int w, int h) {
 
     // Demonstrate the various window flags. Typically you would just use the default.
@@ -79,6 +86,7 @@ void MainWin::draw(int w, int h) {
     window_flags |= ImGuiWindowFlags_NoResize;
     window_flags |= ImGuiWindowFlags_NoCollapse;
     //window_flags |= ImGuiWindowFlags_AlwaysVerticalScrollbar;
+    window_flags |= ImGuiWindowFlags_NoDocking;
     window_flags |= ImGuiWindowFlags_MenuBar;
 
     const ImGuiViewport* viewport = ImGui::GetMainViewport();
@@ -88,8 +96,9 @@ void MainWin::draw(int w, int h) {
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
     const auto mainWndBegin = ImGui::Begin("MainWin", NULL, window_flags);
-    ImGui::PopStyleVar(2);
+    ImGui::PopStyleVar(3);
 
     if (mainWndBegin) {
         drawContent();
@@ -112,12 +121,45 @@ void MainWin::drawContent() {
         }
         ImGui::EndMenuBar();
     }
+    ImGuiID dockspace_id = ImGui::GetID("MainDockSpace");
+    ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
+    //dockspace_flags |= ImGuiDockNodeFlags_AutoHideTabBar;
+    dockspace_flags |= ImGuiDockNodeFlags_NoUndocking;
+    ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+
+    ImGuiWindowFlags window_flags = 0;
+    //window_flags |= ImGuiWindowFlags_NoTitleBar;
+    //window_flags |= ImGuiWindowFlags_NoMove;
+    //window_flags |= ImGuiWindowFlags_NoResize;
+    //window_flags |= ImGuiWindowFlags_NoCollapse;
+    window_flags |= ImGuiWindowFlags_AlwaysVerticalScrollbar;
+    window_flags |= ImGuiWindowFlags_HorizontalScrollbar;
 
     if (_loader.thread_count() == 0) {
         ImGui_CenteredText("double click a .xxprofile file to open.");
     } else if (_viewType == 0) {
+        static auto first_time = true;
+        if (first_time) {
+            first_time = false;
+
+            ImGuiViewport *viewport = ImGui::GetMainViewport();
+            ImGui::DockBuilderRemoveNode(dockspace_id); // clear any previous layout
+            ImGui::DockBuilderAddNode(dockspace_id, dockspace_flags | ImGuiDockNodeFlags_DockSpace);
+            ImGui::DockBuilderSetNodeSize(dockspace_id, viewport->Size);
+
+            auto dock_id_left = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.5f, nullptr, &dockspace_id);
+            ImGui::DockBuilderDockWindow("Left", dock_id_left);
+            ImGui::DockBuilderDockWindow("Right", dockspace_id);
+            ImGui::DockBuilderFinish(dockspace_id);
+        }
+        ImGui_HideTabBar();
+        ImGui::Begin("Left", NULL, window_flags);
         _framesLineView.draw();
+        ImGui::End();
+        ImGui_HideTabBar();
+        ImGui::Begin("Right", NULL, window_flags);
         _frameView.draw();
+        ImGui::End();
     } else if (_viewType == 1) {
         _timeLineView.draw();
     }
