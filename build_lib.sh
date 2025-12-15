@@ -18,7 +18,7 @@ function guard() {
     fi
 }
 
-function build_apple_lib() {
+function build_ios_lib() {
   guard pushd $THIS_DIR/xxprofile/proj.apple
     guard ./build_ios.sh
   guard popd
@@ -100,10 +100,51 @@ function build_android_lib_cmake() {
   done
 }
 
-build_apple_lib
+function build_wasm_lib() {
+  local PROJ_DIR="$THIS_DIR/xxprofile/proj.cmake"
+  local BUILD_DIR="$THIS_DIR/xxprofile/build/build-wasm"
+
+  guard mkdir -p "$BUILD_DIR"
+  guard pushd "$BUILD_DIR" > /dev/null
+
+  if command -v emcmake >/dev/null 2>&1; then
+    # Use emcmake to configure CMake for Emscripten toolchain
+    guard emcmake cmake \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_WARN_DEPRECATED=OFF \
+      -DXXPROFILE_DYNAMIC=OFF \
+      "$PROJ_DIR"
+  else
+    echo "emcmake not found in PATH, please activate emscripten environment." >&2
+    popd > /dev/null
+    return 1
+  fi
+
+  guard cmake --build . --config Release
+
+  local LIB_PATH="libxxprofile.a"
+  if [[ ! -f "$LIB_PATH" && -f "Release/libxxprofile.a" ]]; then
+    LIB_PATH="Release/libxxprofile.a"
+  fi
+
+  if [[ ! -f "$LIB_PATH" ]]; then
+    echo "libxxprofile.a (wasm) not found in $BUILD_DIR" >&2
+    popd > /dev/null
+    return 1
+  fi
+
+  local OUT_DIR="$THIS_DIR/out/prebuilt/wasm"
+  guard mkdir -p "$OUT_DIR"
+  guard cp "$LIB_PATH" "$OUT_DIR/xxprofile_wasm.a"
+
+  guard popd > /dev/null
+}
+
+build_ios_lib
 build_apple_viewer
 build_android_lib_ndk_build
 build_android_lib_cmake
+build_wasm_lib
 
 guard mkdir -p $THIS_DIR/out/include
 guard cp $THIS_DIR/xxprofile/include/xxprofile/xxprofile.hpp $THIS_DIR/out/include

@@ -30,9 +30,11 @@ set(XXPROFILE_SRC_DIR  ${XXPROFILE_ROOT_DIR}/src)
 set(XXPROFILE_LIBS_DIR ${XXPROFILE_ROOT_DIR}/../libs)
 set(XXPROFILE_REPO_ROOT ${XXPROFILE_ROOT_DIR}/..) # repo root, contains "libs/"
 
-# 平台相关宏：让实现和 Android 版本一致/兼容
+# 平台相关宏
 if(ANDROID)
     add_compile_definitions(XX_PLATFORM_ANDROID=1)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+    add_compile_definitions(XX_PLATFORM_EMSCRIPTEN=1)
 elseif(APPLE)
     add_compile_definitions(XX_PLATFORM_APPLE=1)
 elseif(WIN32)
