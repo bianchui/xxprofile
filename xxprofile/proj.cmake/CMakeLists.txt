@@ -5,8 +5,8 @@ project(xxprofile LANGUAGES C CXX)
 # 选项：是否开启解压功能（和源码里的 XXPROFILE_HAS_DECOMPRESS 对应）
 option(XXPROFILE_HAS_DECOMPRESS "Enable decompression support in xxprofile" OFF)
 
-# 选项：是否作为 DLL 导出符号（默认关闭，因为这里只构建静态库）
-option(XXPROFILE_DLL_EXPORT "Build xxprofile with XX_DLL_EXPORT=1" OFF)
+# 选项：是否构建动态库，并导出符号（XX_DLL_EXPORT=1）
+option(XXPROFILE_DYNAMIC "Build xxprofile as a shared library with XX_DLL_EXPORT=1" OFF)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -45,7 +45,7 @@ if(XXPROFILE_HAS_DECOMPRESS)
     add_compile_definitions(XXPROFILE_HAS_DECOMPRESS=1)
 endif()
 
-if(XXPROFILE_DLL_EXPORT)
+if(XXPROFILE_DYNAMIC)
     add_compile_definitions(XX_DLL_EXPORT=1)
 endif()
 
@@ -101,11 +101,20 @@ set(XXPROFILE_PRIVATE_HEADERS
 # 压缩相关实现（这些 .h/.c 文件会被 xxprofile 源码 include）
 set(XXPROFILE_COMPRESS_SOURCES
     ${XXPROFILE_SRC_DIR}/compress/compress_zstd.lib.c
-    ${XXPROFILE_SRC_DIR}/compress/compress_lzma_dec.lib.c
-    ${XXPROFILE_SRC_DIR}/compress/compress_lzma_enc.lib.c
+    #${XXPROFILE_SRC_DIR}/compress/compress_lzma_dec.lib.c
+    #${XXPROFILE_SRC_DIR}/compress/compress_lzma_enc.lib.c
 )
 
-add_library(xxprofile STATIC
+add_compile_definitions(ZSTDLIB_VISIBLE=)
+add_compile_definitions(ZSTDERRORLIB_VISIBILITY=)
+
+# 根据配置选择库类型：默认静态库；当 XXPROFILE_DYNAMIC=ON 时在所有平台构建共享库
+set(XXPROFILE_LIBRARY_TYPE STATIC)
+if(XXPROFILE_DYNAMIC)
+    set(XXPROFILE_LIBRARY_TYPE SHARED)
+endif()
+
+add_library(xxprofile ${XXPROFILE_LIBRARY_TYPE}
     ${XXPROFILE_SOURCES}
     ${XXPROFILE_PRIVATE_HEADERS}
     ${XXPROFILE_COMPRESS_SOURCES}

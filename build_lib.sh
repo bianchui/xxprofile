@@ -59,28 +59,42 @@ function build_android_lib_cmake() {
     guard pushd "$BUILD_DIR" > /dev/null
 
     guard cmake \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_WARN_DEPRECATED=OFF \
       -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN_FILE" \
       -DANDROID_ABI="$abi" \
-      -DANDROID_PLATFORM=android-19 \
+      -DANDROID_PLATFORM=android-21 \
       -DANDROID_STL=c++_static \
+      -DXXPROFILE_DYNAMIC=ON \
       "$PROJ_DIR"
 
     guard cmake --build . --config Release
 
-    local LIB_PATH="libxxprofile.a"
-    if [[ ! -f "$LIB_PATH" && -f "Release/libxxprofile.a" ]]; then
-      LIB_PATH="Release/libxxprofile.a"
+    local LIB_PATH="libxxprofile.so"
+    if [[ ! -f "$LIB_PATH" && -f "Release/libxxprofile.so" ]]; then
+      LIB_PATH="Release/libxxprofile.so"
     fi
 
     if [[ ! -f "$LIB_PATH" ]]; then
-      echo "libxxprofile.a not found for ABI $abi in $BUILD_DIR" >&2
+      echo "libxxprofile.so not found for ABI $abi in $BUILD_DIR" >&2
       popd > /dev/null
       return 1
     fi
 
     local OUT_DIR="$THIS_DIR/out/prebuilt/android_cmake/$abi"
     guard mkdir -p "$OUT_DIR"
-    guard cp "$LIB_PATH" "$OUT_DIR/xxprofile.a"
+    guard cp "$LIB_PATH" "$OUT_DIR/xxprofile.so"
+
+    # strip symbols to reduce .so size, similar to NDK build
+    local STRIP_BIN=""
+    if [[ -x "$ANDROID_NDK_ROOT/toolchains/llvm/prebuilt/darwin-x86_64/bin/llvm-strip" ]]; then
+      STRIP_BIN="$ANDROID_NDK_ROOT/toolchains/llvm/prebuilt/darwin-x86_64/bin/llvm-strip"
+    elif command -v llvm-strip >/dev/null 2>&1; then
+      STRIP_BIN="$(command -v llvm-strip)"
+    fi
+    if [[ -n "$STRIP_BIN" ]]; then
+      "$STRIP_BIN" -s -x "$OUT_DIR/xxprofile.so" || true
+    fi
 
     guard popd > /dev/null
   done
