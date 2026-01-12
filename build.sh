@@ -18,6 +18,13 @@ function guard() {
     fi
 }
 
+function ife() {
+  which -s "$1"
+  if [[ "$?" -eq 0 ]]; then
+    guard "$@"
+  fi
+}
+
 function build_apple_lib() {
   echo "==== Building apple lib ===="
   guard pushd $THIS_DIR/xxprofile/proj.apple
@@ -139,7 +146,7 @@ function build_wasm_lib() {
 
   local OUT_DIR="$THIS_DIR/out/prebuilt/wasm"
   guard mkdir -p "$OUT_DIR"
-  guard cp "$LIB_PATH" "$OUT_DIR/xxprofile_wasm.a"
+  guard cp "$LIB_PATH" "$OUT_DIR/libxxprofile.a"
 
   guard popd > /dev/null
 }

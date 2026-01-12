@@ -56,6 +56,10 @@
 
 #if XXPROFILE_HAS_FILE_IO
 
+#  ifdef EMSCRIPTEN
+#    error XXPROFILE_HAS_FILE_IO is not supported when EMSCRIPTEN is defined
+#  endif //EMSCRIPTEN
+
 inline FILE* xxopen(const char* name, bool write) {
     return fopen(name, write ? "wb" : "rb");
 }
@@ -68,12 +72,12 @@ inline size_t xxwrite(const void* ptr, size_t size, FILE* stream) {
 
 #else //XXPROFILE_HAS_FILE_IO
 
-#  if XXPROFILE_HAS_DECOMPRESS
+#  ifdef XXPROFILE_HAS_DECOMPRESS
 #    error XXPROFILE_HAS_DECOMPRESS is not supported when XXPROFILE_HAS_FILE_IO is 0
 #  endif //XXPROFILE_HAS_DECOMPRESS
 
 inline FILE* xxopen(const char* name, bool write) {
-    return write ? stdout : stdin;
+    return write ? stdout : nullptr;
 }
 inline void xxclose(FILE* fp) {
 }

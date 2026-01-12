@@ -271,7 +271,7 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
             tag->fromId = maxNameId;
         }
     } else {
-#if XXPROFILE_HAS_DECOMPRESS
+#ifdef XXPROFILE_HAS_DECOMPRESS
         ar << nameCount;
         XXLOG_DETAIL("name.read(%d)\n", nameCount);
         if (nameCount == 0) {

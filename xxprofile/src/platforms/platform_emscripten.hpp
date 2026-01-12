@@ -4,8 +4,35 @@
 #include "../xxprofile_macros.hpp"
 #include "platform_base.hpp"
 #include "posix/posix_timer.h"
+#include <stdio.h>
+#include <stdarg.h>
+#include <string>
 
 XX_NAMESPACE_BEGIN(xxprofile);
+
+FORCEINLINE void log(const char* format, ...) {
+    va_list ap;
+    va_start(ap, format);
+    vprintf(format, ap);
+    va_end(ap);
+    printf("\n");
+}
+
+FORCEINLINE uint32_t systemGetTid() {
+    return 1024;
+}
+
+FORCEINLINE std::string systemGetWritablePath() {
+    return "/";
+}
+
+FORCEINLINE std::string systemGetAppName() {
+    return "wasm";
+}
+
+FORCEINLINE std::string systemGetThreadName() {
+    return "main";
+}
 
 // emscripten is a single-threaded platform, so we don't need a lock
 class SystemLock_empty {

@@ -44,7 +44,7 @@ bool Archive::open(const char* name, bool write) {
         fh.compressMethod = _compressMethod;
         xxwrite(&fh, sizeof(fh), _fp);
     } else {
-#if XXPROFILE_HAS_DECOMPRESS
+#ifdef XXPROFILE_HAS_DECOMPRESS
 #  if Archive_ReadBufferSize
         if (!_buffer) {
             _buffer = (char*)malloc(Archive_ReadBufferSize);
@@ -152,10 +152,10 @@ void Archive::serialize(void* data, size_t size) {
             _used += size;
         }
 #else  //Archive_WriteBufferSize
-        xxwrite(data, 1, size, _fp);
+        xxwrite(data, size, _fp);
 #endif //Archive_WriteBufferSize
     } else {
-#if XXPROFILE_HAS_DECOMPRESS
+#ifdef XXPROFILE_HAS_DECOMPRESS
         if (_error) {
             return;
         }
