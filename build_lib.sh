@@ -19,18 +19,21 @@ function guard() {
 }
 
 function build_apple_lib() {
+  echo "==== Building apple lib ===="
   guard pushd $THIS_DIR/xxprofile/proj.apple
     guard ./build_ios.sh
   guard popd
 }
 
 function build_apple_viewer() {
+  echo "==== Building apple viewer ===="
   guard pushd $THIS_DIR/xxprofile/proj.apple
     guard ./build_viewer.sh
   guard popd
 }
 
 function build_android_lib_ndk_build() {
+  echo "==== Building android lib with ndk-build ===="
   guard pushd $THIS_DIR/xxprofile/proj.android
     guard ./build.sh
     guard cp ./prebuilt_Android.mk $THIS_DIR/out/prebuilt/android/Android.mk
@@ -38,6 +41,7 @@ function build_android_lib_ndk_build() {
 }
 
 function build_android_lib_cmake() {
+  echo "==== Building android lib with cmake ===="
   local ANDROID_SDK_ROOT_DEFAULT="$HOME/Library/Android/sdk"
   local ANDROID_SDK_ROOT="${ANDROID_SDK_ROOT:-$ANDROID_SDK_ROOT_DEFAULT}"
   local ANDROID_NDK_ROOT_DEFAULT="$ANDROID_SDK_ROOT/ndk/20.0.5594570"
@@ -101,6 +105,7 @@ function build_android_lib_cmake() {
 }
 
 function build_wasm_lib() {
+  echo "==== Building wasm lib ===="
   local PROJ_DIR="$THIS_DIR/xxprofile/proj.cmake"
   local BUILD_DIR="$THIS_DIR/xxprofile/build/build-wasm"
 
@@ -140,21 +145,108 @@ function build_wasm_lib() {
   guard popd > /dev/null
 }
 
-echo "==== Building apple lib ===="
-build_apple_lib
-echo "==== Building apple viewer ===="
-build_apple_viewer
-echo "==== Building android lib ===="
-build_android_lib_ndk_build
-echo "==== Building android lib with cmake ===="
-build_android_lib_cmake
-echo "==== Building wasm lib ===="
-build_wasm_lib
+function build_all() {
+  build_apple_lib
+  build_apple_viewer
+  build_android_lib_ndk_build
+  build_android_lib_cmake
+  build_wasm_lib
+}
 
-guard mkdir -p $THIS_DIR/out/include
-guard cp $THIS_DIR/xxprofile/include/xxprofile/xxprofile.hpp $THIS_DIR/out/include
+function copy_headers() {
+  echo "==== Copying headers ===="
+  guard mkdir -p $THIS_DIR/out/include
+  guard cp $THIS_DIR/xxprofile/include/xxprofile/xxprofile.hpp $THIS_DIR/out/include
+}
 
-guard pushd $THIS_DIR/out
-  rm -f $THIS_DIR/xxprofile.zip
-  guard zip -r $THIS_DIR/xxprofile.zip . -x **/.DS_Store
-guard popd
+function zip_out() {
+  echo "==== Zipping out files ===="
+  guard pushd $THIS_DIR/out
+    rm -f $THIS_DIR/xxprofile.zip
+    guard zip -r $THIS_DIR/xxprofile.zip . -x **/.DS_Store
+  guard popd
+}
+
+function cleanup_all() {
+  echo "==== Cleaning up all ===="
+  guard rm -rf $THIS_DIR/out/prebuilt
+  guard rm -rf $THIS_DIR/out/include
+
+  # android
+  guard rm -rf $THIS_DIR/xxprofile/proj.android/libs/
+  guard rm -rf $THIS_DIR/xxprofile/proj.android/obj/
+  guard rm -rf $THIS_DIR/xxprofile/proj.android/test/libs/
+  guard rm -rf $THIS_DIR/xxprofile/proj.android/test/obj/
+
+  # apple
+  guard rm -rf $THIS_DIR/xxprofile/proj.apple/build/
+
+  # cmake
+  guard rm -rf $THIS_DIR/xxprofile/build/
+}
+
+function usage() {
+  echo "$0 commands"
+  echo "commands:"
+  echo "  build_apple      : build apple lib and viewer"
+  echo "  build_android    : build android lib"
+  echo "  build_wasm       : build wasm lib"
+  echo "  build            : build all"
+  echo "  headers          : copy headers"
+  echo "  zip              : zip out files"
+  echo "  clean            : clean all"
+}
+
+function parse_arguments() {
+  while [ "$1" != "" ]; do
+    local PARAM=`echo $1 | awk -F= '{print $1}'`
+    local VALUE=`echo $1 | awk -F= '{print $2}'`
+    case $PARAM in
+      build_apple)
+        build_apple_lib
+        build_apple_viewer
+        ;;
+
+      build_android)
+        build_android_lib_ndk_build
+        build_android_lib_cmake
+        ;;
+
+      build_wasm)
+        build_wasm_lib
+        ;;
+
+      build)
+        build_all
+        copy_headers
+        zip_out
+        ;;
+
+      headers)
+        copy_headers
+        ;;
+
+      zip)
+        zip_out
+        ;;
+      
+      clean)
+        cleanup_all
+        ;;
+
+      *)
+        echo "ERROR: unknown parameter \"$PARAM\""
+        usage
+        exit 1
+        ;;
+    esac
+    shift
+  done
+}
+
+if [ $# == 0 ]; then
+  usage
+  exit
+fi
+
+parse_arguments "$@"

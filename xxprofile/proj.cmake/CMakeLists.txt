@@ -77,29 +77,6 @@ if(APPLE)
     )
 endif()
 
-set(XXPROFILE_PRIVATE_HEADERS
-    ${XXPROFILE_SRC_DIR}/xxprofile_internal.hpp
-    ${XXPROFILE_SRC_DIR}/xxprofile_data.hpp
-    ${XXPROFILE_SRC_DIR}/xxprofile_macros.hpp
-    ${XXPROFILE_SRC_DIR}/xxprofile_name.hpp
-    ${XXPROFILE_SRC_DIR}/xxprofile_namepool.hpp
-    ${XXPROFILE_SRC_DIR}/xxprofile_tls.hpp
-    ${XXPROFILE_SRC_DIR}/xxprofile_archive.hpp
-    ${XXPROFILE_SRC_DIR}/xxprofile_version.hpp
-    ${XXPROFILE_SRC_DIR}/platforms/platform.hpp
-    ${XXPROFILE_SRC_DIR}/platforms/platform_android.hpp
-    ${XXPROFILE_SRC_DIR}/platforms/platform_apple.hpp
-    ${XXPROFILE_SRC_DIR}/platforms/platform_base.hpp
-    ${XXPROFILE_SRC_DIR}/platforms/platform_win.hpp
-    ${XXPROFILE_SRC_DIR}/platforms/posix/posix_timer.h
-    ${XXPROFILE_SRC_DIR}/platforms/posix/pthread_SystemLock.h
-    ${XXPROFILE_SRC_DIR}/platforms/posix/pthread_ThreadLocal.h
-    ${XXPROFILE_SRC_DIR}/platforms/win/win_inc_windows.h
-    ${XXPROFILE_SRC_DIR}/platforms/win/win_SystemLock.h
-    ${XXPROFILE_SRC_DIR}/platforms/win/win_ThreadLocal.h
-    ${XXPROFILE_SRC_DIR}/platforms/win/win_timer.h
-)
-
 # 压缩相关实现（这些 .h/.c 文件会被 xxprofile 源码 include）
 set(XXPROFILE_COMPRESS_SOURCES
     ${XXPROFILE_SRC_DIR}/compress/compress_zstd.lib.c
@@ -118,7 +95,6 @@ endif()
 
 add_library(xxprofile ${XXPROFILE_LIBRARY_TYPE}
     ${XXPROFILE_SOURCES}
-    ${XXPROFILE_PRIVATE_HEADERS}
     ${XXPROFILE_COMPRESS_SOURCES}
 )
 
