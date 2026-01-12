@@ -116,7 +116,6 @@ function build_wasm_lib() {
     # Use emcmake to configure CMake for Emscripten toolchain
     guard emcmake cmake \
       -DCMAKE_BUILD_TYPE=Release \
-      -DCMAKE_WARN_DEPRECATED=OFF \
       -DXXPROFILE_DYNAMIC=OFF \
       "$PROJ_DIR"
   else
@@ -188,12 +187,14 @@ function cleanup_all() {
 function usage() {
   echo "$0 commands"
   echo "commands:"
-  echo "  build_apple      : build apple lib and viewer"
-  echo "  build_android    : build android lib"
-  echo "  build_wasm       : build wasm lib"
-  echo "  build            : build all"
+  echo "------------ seprate build commands ---------------"
+  echo "  apple            : build apple lib and viewer"
+  echo "  android          : build android lib"
+  echo "  wasm             : build wasm lib"
   echo "  headers          : copy headers"
   echo "  zip              : zip out files"
+  echo "-------------- all in one commands ----------------"
+  echo "  build            : build all"
   echo "  clean            : clean all"
 }
 
@@ -202,24 +203,18 @@ function parse_arguments() {
     local PARAM=`echo $1 | awk -F= '{print $1}'`
     local VALUE=`echo $1 | awk -F= '{print $2}'`
     case $PARAM in
-      build_apple)
+      apple)
         build_apple_lib
         build_apple_viewer
         ;;
 
-      build_android)
+      android)
         build_android_lib_ndk_build
         build_android_lib_cmake
         ;;
 
-      build_wasm)
+      wasm)
         build_wasm_lib
-        ;;
-
-      build)
-        build_all
-        copy_headers
-        zip_out
         ;;
 
       headers)
@@ -229,7 +224,13 @@ function parse_arguments() {
       zip)
         zip_out
         ;;
-      
+
+      build)
+        build_all
+        copy_headers
+        zip_out
+        ;;
+
       clean)
         cleanup_all
         ;;

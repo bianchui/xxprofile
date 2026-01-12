@@ -58,9 +58,9 @@ SNamePool::SNamePool() {
 }
 
 SNamePool::~SNamePool() {
-#if 0// Do not real finish and clear or delete
+#if 0  // Do not real finish and clear or delete
     clear();
-#endif//0
+#endif //0
 }
 
 void SNamePool::clear() {
@@ -80,24 +80,24 @@ void SNamePool::clear() {
 SNamePool::SNameEntry* SNamePool::newNameEntry(const char* name, const uint32_t length) {
     assert(strlen(name) == length);
     const size_t size = SNameEntry::CalcEntrySize(length);
-	if (size > _buffer_size) {
+    if (size > _buffer_size) {
         const uint32_t currentNameCount = _nameCount.load(std::memory_order_acquire);
         if (!_nameBuffers.empty()) {
             SChunkHeader* header = (SChunkHeader*)make_align((char*)_nameBuffers.back(), NAME_ENTRY_ALIGN);
             header->usedSize = (uint32_t)(_buffer - (char*)header);
             header->endId = currentNameCount;
         }
-		char* buffer = (char*)malloc(BUFFER_CHUNK_SIZE);
+        char* buffer = (char*)malloc(BUFFER_CHUNK_SIZE);
         _nameBuffers.push_back(buffer);
-		memset(buffer, 0, BUFFER_CHUNK_SIZE);
+        memset(buffer, 0, BUFFER_CHUNK_SIZE);
         _buffer = make_align(buffer, NAME_ENTRY_ALIGN) + sizeof(SChunkHeader);
         _buffer_size = BUFFER_CHUNK_SIZE - (int32_t)(_buffer - buffer);
-	}
-	SNameEntry* entry = (SNameEntry*)_buffer;
-	_buffer += size;
-	_buffer_size -= (uint32_t)size;
-	memcpy(entry->buf, name, length);
-    
+    }
+    SNameEntry* entry = (SNameEntry*)_buffer;
+    _buffer += size;
+    _buffer_size -= (uint32_t)size;
+    memcpy(entry->buf, name, length);
+
     uint32_t idx = _nameCount++;
     entry->id = idx + 1;
     entry->length = length;
@@ -120,7 +120,7 @@ SNamePool::SNameEntry* SNamePool::newNameEntry(const char* name, const uint32_t 
     if (!chunk[idxInChunk].compare_exchange_strong(expectEntry, entry, std::memory_order_release)) {
         assert(false);
     };
-	return entry;
+    return entry;
 }
 
 uint32_t SNamePool::getNameId(const char* name) {
@@ -130,24 +130,24 @@ uint32_t SNamePool::getNameId(const char* name) {
     const uint32_t length = (uint32_t)strlen(name);
     const uint32_t hash = StringHash(name);
     const uint32_t bucket = hash % HASH_BUCKET_COUNT;
-	for (SNameEntry* entry = _nameHashes[bucket].load(std::memory_order_acquire); entry; entry = entry->next) {
+    for (SNameEntry* entry = _nameHashes[bucket].load(std::memory_order_acquire); entry; entry = entry->next) {
         if (entry->length == length && entry->isEqual(name)) {
             return entry->id;
         }
     }
     SystemScopedLock lock(_lock);
     SNameEntry* head = _nameHashes[bucket].load(std::memory_order_acquire);
-	for (SNameEntry* entry = head; entry; entry = entry->next) {
+    for (SNameEntry* entry = head; entry; entry = entry->next) {
         if (entry->length == length && entry->isEqual(name)) {
             return entry->id;
         }
     }
-	SNameEntry* newEntry = newNameEntry(name, length);
+    SNameEntry* newEntry = newNameEntry(name, length);
     newEntry->next = head;
     if (!_nameHashes[bucket].compare_exchange_strong(head, newEntry, std::memory_order_release)) {
         assert(false);
     }
- 
+
     return newEntry->id;
 }
 
@@ -248,7 +248,7 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
                 XXDEBUG_ASSERT(entry->id == debug_id);
 #if XX_PROFILE_DEBUG_Name_Serialize
                 ar << entry->id;
-#endif//XX_PROFILE_DEBUG_Name_Serialize
+#endif //XX_PROFILE_DEBUG_Name_Serialize
                 ar << entry->length;
                 XXLOG_DEBUG("  name(%d)>>%s\n", entry->id, entry->buf);
                 ar.serialize(entry->buf, entry->length);
@@ -271,6 +271,7 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
             tag->fromId = maxNameId;
         }
     } else {
+#if XXPROFILE_HAS_DECOMPRESS
         ar << nameCount;
         XXLOG_DETAIL("name.read(%d)\n", nameCount);
         if (nameCount == 0) {
@@ -288,10 +289,10 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
         uint32_t currentChunkId = -1;
         XXDEBUG_ONLY(uint32_t debug_newMaxNameId = maxNameId);
         for (uint32_t i = 0; i < nameCount; ++i) {
-#if XX_PROFILE_DEBUG_Name_Serialize
+#  if XX_PROFILE_DEBUG_Name_Serialize
             uint32_t id2;
             ar << id2;
-#endif//XX_PROFILE_DEBUG_Name_Serialize
+#  endif //XX_PROFILE_DEBUG_Name_Serialize
             uint32_t length;
             ar << length;
             if (ar.hasError()) {
@@ -306,9 +307,9 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
                 abort();
             }
 
-#if XX_PROFILE_DEBUG_Name_Serialize
+#  if XX_PROFILE_DEBUG_Name_Serialize
             assert(id == id2);
-#endif//XX_PROFILE_DEBUG_Name_Serialize
+#  endif //XX_PROFILE_DEBUG_Name_Serialize
 
             if (id <= maxNameId) {
                 if (length >= strCap) {
@@ -324,7 +325,7 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
                 if (ar.hasError()) {
                     break;
                 }
-#ifndef NDEBUG
+#  ifndef NDEBUG
                 // check only
                 if (currentChunkId != chunkId) {
                     chunk = _names[chunkId].load(std::memory_order_acquire);
@@ -342,7 +343,7 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
                 assert(entry->id == id);
                 assert(entry->length == length);
                 assert(strcmp(entry->buf, str) == 0);
-#endif//NDEBUG
+#  endif //NDEBUG
             } else {
                 const size_t size = SNameEntry::CalcEntrySize(length);
                 if (size > _buffer_size) {
@@ -375,14 +376,14 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
                     const uint32_t hash = StringHash(newEntry->buf);
                     const uint32_t bucket = hash % HASH_BUCKET_COUNT;
                     SNameEntry* head = _nameHashes[bucket].load(std::memory_order_acquire);
-#ifndef NDEBUG
+#  ifndef NDEBUG
                     for (SNameEntry* entry = head; entry; entry = entry->next) {
                         assert(entry->length != length || !entry->isEqual(newEntry->buf));
                         if (entry->length == length && entry->isEqual(newEntry->buf)) {
                             printf("Name: read same name %s %d vs %d\n", entry->buf, entry->id, newEntry->id);
                         }
                     }
-#endif//NDEBUG
+#  endif //NDEBUG
                     newEntry->next = head;
                     if (!_nameHashes[bucket].compare_exchange_strong(head, newEntry, std::memory_order_release)) {
                         assert(false);
@@ -427,6 +428,7 @@ void SNamePool::serialize(SName::IncrementSerializeTag* tag, Archive& ar) {
             //XXDEBUG_ASSERT(debug_newMaxNameId == newMaxNameId);
             XXDEBUG_ASSERT(debug_newMaxNameId >= maxNameId);
         }
+#endif //XXPROFILE_HAS_DECOMPRESS
     }
 }
 
@@ -437,7 +439,8 @@ SName::SName(const char* name) {
     _id = s_namePool.getNameId(name);
 }
 
-SName::SName(uint32_t id) : _id(id) {
+SName::SName(uint32_t id)
+    : _id(id) {
     assert(c_str());
 }
 

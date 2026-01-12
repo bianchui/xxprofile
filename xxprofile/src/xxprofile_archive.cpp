@@ -8,7 +8,7 @@
 XX_NAMESPACE_BEGIN(xxprofile);
 
 #define Archive_WriteBufferSize 512 * 1024
-#define Archive_ReadBufferSize (1024 * 1024)
+#define Archive_ReadBufferSize  (1024 * 1024)
 
 Archive::Archive() {
     memset(this, 0, sizeof(Archive));
@@ -35,7 +35,7 @@ bool Archive::open(const char* name, bool write) {
         if (!_buffer) {
             _buffer = (char*)malloc(Archive_WriteBufferSize);
         }
-#endif//Archive_WriteBufferSize
+#endif //Archive_WriteBufferSize
         memcpy(&fh.magic, kMagic, 4);
         if (sizeof(void*) == 8) {
             fh.flags |= Flag_pointer8;
@@ -44,7 +44,8 @@ bool Archive::open(const char* name, bool write) {
         fh.compressMethod = _compressMethod;
         fwrite(&fh, 1, sizeof(fh), _fp);
     } else {
-#if Archive_ReadBufferSize
+#if XXPROFILE_HAS_DECOMPRESS
+#  if Archive_ReadBufferSize
         if (!_buffer) {
             _buffer = (char*)malloc(Archive_ReadBufferSize);
         }
@@ -55,7 +56,7 @@ bool Archive::open(const char* name, bool write) {
             return false;
         }
         memcpy(&fh, _buffer, sizeof(fh));
-#else//Archive_ReadBufferSize
+#  else  //Archive_ReadBufferSize
         fseek(_fp, 0, SEEK_END);
         _size = ftell(_fp);
         fseek(_fp, 0, SEEK_SET);
@@ -64,7 +65,7 @@ bool Archive::open(const char* name, bool write) {
             _fp = NULL;
             return false;
         }
-#endif//Archive_ReadBufferSize
+#  endif //Archive_ReadBufferSize
         _used = sizeof(fh);
         _filePointer = _used;
         if (memcmp(&fh.magic, kMagic, 4) != 0) {
@@ -75,6 +76,9 @@ bool Archive::open(const char* name, bool write) {
         _version = fh.version;
         _flags = fh.flags;
         _compressMethod = fh.compressMethod;
+#else  //XXPROFILE_HAS_DECOMPRESS
+        return false;
+#endif //XXPROFILE_HAS_DECOMPRESS
     }
     return _fp;
 }
@@ -88,7 +92,7 @@ void Archive::flush() {
         _used = 0;
         //fflush(_fp);
     }
-#endif//Archive_WriteBufferSize
+#endif //Archive_WriteBufferSize
 }
 
 void Archive::close() {
@@ -97,7 +101,7 @@ void Archive::close() {
         if (_write && _used) {
             fwrite(_buffer, 1, _used, _fp);
         }
-#endif//Archive_WriteBufferSize
+#endif //Archive_WriteBufferSize
         fclose(_fp);
     }
     if (_buffer) {
@@ -109,9 +113,9 @@ void Archive::close() {
 bool Archive::eof() const {
 #if Archive_ReadBufferSize
     return !_fp || ((!_write) && (_size < Archive_ReadBufferSize && _used >= _size));
-#else//Archive_ReadBufferSize
+#else  //Archive_ReadBufferSize
     return !_fp || ((!_write) && (_used >= _size));
-#endif//Archive_ReadBufferSize
+#endif //Archive_ReadBufferSize
 }
 
 void Archive::serialize(void* data, size_t size) {
@@ -147,9 +151,9 @@ void Archive::serialize(void* data, size_t size) {
             memcpy(_buffer + _used, data, size);
             _used += size;
         }
-#else//Archive_WriteBufferSize
+#else  //Archive_WriteBufferSize
         fwrite(data, 1, size, _fp);
-#endif//Archive_WriteBufferSize
+#endif //Archive_WriteBufferSize
     } else {
         if (_error) {
             return;
@@ -200,14 +204,14 @@ void Archive::serialize(void* data, size_t size) {
             }
             _used += maxSize;
         }
-#else//Archive_ReadBufferSize
+#else  //Archive_ReadBufferSize
         size_t count = fread(data, 1, size, _fp);
         _used += size;
         assert(count == size);
         if (count != size) {
             _error = true;
         }
-#endif//Archive_ReadBufferSize
+#endif //Archive_ReadBufferSize
     }
 }
 
