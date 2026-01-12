@@ -44,7 +44,16 @@ function build_Config_Sdk() {
     rm -f -R ${var_tmp_path}
     mkdir -p ${var_tmp_path}
     #xcodebuild -list -project ${var_project} 
-    guard xcodebuild -project ${var_project} -scheme ${var_scheme} -destination generic/platform=${param_sdk} -derivedDataPath ${var_tmp_path} -configuration ${param_config} BUILD_DIR=$var_PRODUCTS_DIR BUILD_ROOT=$var_PRODUCTS_DIR OBJROOT=$var_TMP_DIR -quiet
+    guard xcodebuild \
+        -project ${var_project} \
+        -scheme ${var_scheme} \
+        -destination generic/platform=${param_sdk} \
+        -derivedDataPath ${var_tmp_path} \
+        -configuration ${param_config} \
+        BUILD_DIR=$var_PRODUCTS_DIR \
+        BUILD_ROOT=$var_PRODUCTS_DIR \
+        OBJROOT=$var_TMP_DIR \
+        -quiet
 
     mkdir -p ${var_out_path}
     guard cp -Rf $var_PRODUCTS_DIR/${param_config}/${var_productname}.app ${var_out_path}/

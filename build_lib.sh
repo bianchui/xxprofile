@@ -18,7 +18,7 @@ function guard() {
     fi
 }
 
-function build_ios_lib() {
+function build_apple_lib() {
   guard pushd $THIS_DIR/xxprofile/proj.apple
     guard ./build_ios.sh
   guard popd
@@ -140,10 +140,15 @@ function build_wasm_lib() {
   guard popd > /dev/null
 }
 
-build_ios_lib
+echo "==== Building apple lib ===="
+build_apple_lib
+echo "==== Building apple viewer ===="
 build_apple_viewer
+echo "==== Building android lib ===="
 build_android_lib_ndk_build
+echo "==== Building android lib with cmake ===="
 build_android_lib_cmake
+echo "==== Building wasm lib ===="
 build_wasm_lib
 
 guard mkdir -p $THIS_DIR/out/include
