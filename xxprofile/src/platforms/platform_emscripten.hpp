@@ -63,4 +63,6 @@ struct ThreadLocal : public ThreadLocal_empty<T> {};
 
 XX_NAMESPACE_END(xxprofile);
 
+#define XXPROFILE_HAS_FILE_IO 0
+
 #endif //xxprofile_platform_emscripten_hpp
