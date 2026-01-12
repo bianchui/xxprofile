@@ -19,7 +19,11 @@ struct Timer_posix : Timer_base {
 
     static FORCEINLINE uint64_t Cycles64() {
         struct timespec tp;
+#ifdef __EMSCRIPTEN__
+        clock_gettime(CLOCK_MONOTONIC, &tp);
+#else
         clock_gettime(CLOCK_MONOTONIC_RAW, &tp);
+#endif
         uint64_t cycles = ((uint64_t)tp.tv_sec) * 1000000000 + tp.tv_nsec;
         return cycles;
     }
@@ -27,4 +31,4 @@ struct Timer_posix : Timer_base {
 
 XX_NAMESPACE_END(xxprofile);
 
-#endif//xxprofile_platforms_posix_posix_timer_h
+#endif //xxprofile_platforms_posix_posix_timer_h

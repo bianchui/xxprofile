@@ -39,7 +39,7 @@
 #  include "platform_android.hpp"
 #  define XX_TARGET XX_TARGET_ANDROID
 
-#elif defined(XX_PLATFORM_EMSCRIPTEN)
+#elif defined(__EMSCRIPTEN__)
 // emscripten
 #  include "platform_emscripten.hpp"
 #  define XX_TARGET XX_TARGET_EMSCRIPTEN
@@ -56,9 +56,9 @@
 
 #if XXPROFILE_HAS_FILE_IO
 
-#  ifdef EMSCRIPTEN
+#  ifdef __EMSCRIPTEN__
 #    error XXPROFILE_HAS_FILE_IO is not supported when EMSCRIPTEN is defined
-#  endif //EMSCRIPTEN
+#  endif //__EMSCRIPTEN__
 
 inline FILE* xxopen(const char* name, bool write) {
     return fopen(name, write ? "wb" : "rb");

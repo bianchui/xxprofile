@@ -60,7 +60,8 @@ protected:
 template <typename T>
 class ThreadLocal_empty {
 public:
-    ThreadLocal_empty() {
+    ThreadLocal_empty()
+        : _value(nullptr) {
     }
     ~ThreadLocal_empty() {
         T* p = get();
