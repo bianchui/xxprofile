@@ -23,7 +23,7 @@ bool Archive::open(const char* name, bool write) {
     if (_fp) {
         return false;
     }
-    _fp = xxopen(name, write ? "wb" : "rb");
+    _fp = xxopen(name, write);
     if (!_fp) {
         return false;
     }
@@ -42,7 +42,7 @@ bool Archive::open(const char* name, bool write) {
         }
         fh.version = _version;
         fh.compressMethod = _compressMethod;
-        xxwrite(&fh, 1, sizeof(fh), _fp);
+        xxwrite(&fh, sizeof(fh), _fp);
     } else {
 #if XXPROFILE_HAS_DECOMPRESS
 #  if Archive_ReadBufferSize
@@ -88,7 +88,7 @@ void Archive::flush() {
     assert(_write);
 #if Archive_WriteBufferSize
     if (_fp && _write && _used) {
-        xxwrite(_buffer, 1, _used, _fp);
+        xxwrite(_buffer, _used, _fp);
         _used = 0;
         //fflush(_fp);
     }
@@ -99,7 +99,7 @@ void Archive::close() {
     if (_fp) {
 #if Archive_WriteBufferSize
         if (_write && _used) {
-            xxwrite(_buffer, 1, _used, _fp);
+            xxwrite(_buffer, _used, _fp);
         }
 #endif //Archive_WriteBufferSize
         xxclose(_fp);
@@ -139,11 +139,11 @@ void Archive::serialize(void* data, size_t size) {
                 memcpy(_buffer + _used, data, writeSize);
                 size -= writeSize;
                 data = ((char*)data) + writeSize;
-                xxwrite(_buffer, 1, Archive_WriteBufferSize, _fp);
+                xxwrite(_buffer, Archive_WriteBufferSize, _fp);
                 _used = 0;
             }
             if (size > Archive_WriteBufferSize) {
-                xxwrite(data, 1, size, _fp);
+                xxwrite(data, size, _fp);
                 return;
             }
         }
@@ -187,7 +187,7 @@ void Archive::serialize(void* data, size_t size) {
                 data = ((char*)data) + fullChunkSize;
                 _filePointer += fullChunkSize;
             }
-            _size = xxread(_buffer, 1, Archive_ReadBufferSize, _fp);
+            _size = fread(_buffer, 1, Archive_ReadBufferSize, _fp);
             _used = 0;
         }
         if (size) {
@@ -206,7 +206,7 @@ void Archive::serialize(void* data, size_t size) {
             _used += maxSize;
         }
 #  else  //Archive_ReadBufferSize
-        size_t count = xxread(data, 1, size, _fp);
+        size_t count = fread(data, 1, size, _fp);
         _used += size;
         assert(count == size);
         if (count != size) {

@@ -170,6 +170,7 @@ function cleanup_all() {
   echo "==== Cleaning up all ===="
   guard rm -rf $THIS_DIR/out/prebuilt
   guard rm -rf $THIS_DIR/out/include
+  guard rm -rf $THIS_DIR/out/xxprofileViewer.app
 
   # android
   guard rm -rf $THIS_DIR/xxprofile/proj.android/libs/

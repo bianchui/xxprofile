@@ -56,17 +56,14 @@
 
 #if XXPROFILE_HAS_FILE_IO
 
-inline FILE* xxopen(const char* name, const char* mode) {
-    return fopen(name, mode);
+inline FILE* xxopen(const char* name, bool write) {
+    return fopen(name, write ? "wb" : "rb");
 }
 inline void xxclose(FILE* fp) {
     fclose(fp);
 }
-inline size_t xxread(void* ptr, size_t size, size_t nitems, FILE* stream) {
-    return fread(ptr, size, nitems, stream);
-}
-inline size_t xxwrite(const void* ptr, size_t size, size_t nitems, FILE* stream) {
-    return fwrite(ptr, size, nitems, stream);
+inline size_t xxwrite(const void* ptr, size_t size, FILE* stream) {
+    return fwrite(ptr, 1, size, stream);
 }
 
 #else //XXPROFILE_HAS_FILE_IO
@@ -75,19 +72,16 @@ inline size_t xxwrite(const void* ptr, size_t size, size_t nitems, FILE* stream)
 #    error XXPROFILE_HAS_DECOMPRESS is not supported when XXPROFILE_HAS_FILE_IO is 0
 #  endif //XXPROFILE_HAS_DECOMPRESS
 
-inline FILE* xxopen(const char* name, const char* mode) {
-    return reinterpret_cast<FILE*>(100);
+inline FILE* xxopen(const char* name, bool write) {
+    return write ? stdout : stdin;
 }
 inline void xxclose(FILE* fp) {
 }
-inline size_t xxread(void* ptr, size_t size, size_t nitems, FILE* stream) {
-    return 0;
-}
 
-extern "C" void xxwrite_callback(const void* ptr, size_t size);
-inline size_t xxwrite(const void* ptr, size_t size, size_t nitems, FILE* stream) {
-    xxwrite_callback(ptr, size * nitems);
-    return nitems;
+extern "C" void xxwrite_impl(const void* ptr, size_t size);
+inline size_t xxwrite(const void* ptr, size_t size, FILE* stream) {
+    xxwrite_impl(ptr, size);
+    return size;
 }
 
 #endif //XXPROFILE_HAS_FILE_IO
