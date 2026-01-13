@@ -17,14 +17,14 @@ struct XXProfileTreeNode;
 
 class XX_LIB_API XXProfile {
 public:
-    static bool StaticInit(const char* savePath);
+    static bool StaticInit(const char* savePath, XXWriteCallback writeCallback);
     static void StaticUninit();
     static bool IncreaseFrame();
 };
 
 class XX_LIB_API XXProfileScope {
 public:
-    XXProfileScope(const SName name);
+    XXProfileScope(SName name);
     ~XXProfileScope();
 
 private:
@@ -40,28 +40,29 @@ XX_NAMESPACE_END(xxprofile);
 #if defined(_DEBUG) || defined(DEBUG)
 #  ifndef XX_ENABLE_PROFILE
 #    define XX_ENABLE_PROFILE 0
-#  endif//XX_ENABLE_PROFILE
-#endif//defined(_DEBUG) || defined(DEBUG)
+#  endif //XX_ENABLE_PROFILE
+
+#endif //defined(_DEBUG) || defined(DEBUG)
 
 #ifndef XX_ENABLE_PROFILE
 #  define XX_ENABLE_PROFILE 0
-#endif//XX_ENABLE_PROFILE
+#endif //XX_ENABLE_PROFILE
 
 #if XX_ENABLE_PROFILE
 
-#ifdef _MSC_VER
-#  define HAVE_PRETTY_FUNCTION 0
-#else//_MSC_VER
-#  define HAVE_PRETTY_FUNCTION 1
-#endif//_MSC_VER
+#  ifdef _MSC_VER
+#    define HAVE_PRETTY_FUNCTION 0
+#  else //_MSC_VER
+#    define HAVE_PRETTY_FUNCTION 1
+#  endif //_MSC_VER
 
-#if HAVE_PRETTY_FUNCTION
-#  define XX_PROFILE_FUNCTION __PRETTY_FUNCTION__
-#endif//HAVE_PRETTY_FUNCTION
+#  if HAVE_PRETTY_FUNCTION
+#    define XX_PROFILE_FUNCTION __PRETTY_FUNCTION__
+#  endif //HAVE_PRETTY_FUNCTION
 
-#ifndef XX_PROFILE_FUNCTION
-#  define XX_PROFILE_FUNCTION __FUNCTION__
-#endif//XX_PROFILE_FUNCTION
+#  ifndef XX_PROFILE_FUNCTION
+#    define XX_PROFILE_FUNCTION __FUNCTION__
+#  endif //XX_PROFILE_FUNCTION
 
 #  define XX_PROFILE_SCOPE_FUNCTION() \
 /**/static ::xxprofile::SName __xxprofile_name_function_name(XX_PROFILE_FUNCTION); \
@@ -85,7 +86,7 @@ XX_NAMESPACE_END(xxprofile);
 
 #  define XX_PROFILE_ENABLED_ONLY(x) x
 
-#else//XX_ENABLE_PROFILE
+#else //XX_ENABLE_PROFILE
 
 #  define XX_PROFILE_SCOPE_FUNCTION()
 #  define XX_PROFILE_SCOPE_NAME(name)
@@ -95,6 +96,6 @@ XX_NAMESPACE_END(xxprofile);
 #  define XX_PROFILE_STATIC_UNINIT()
 #  define XX_PROFILE_ENABLED_ONLY(x)
 
-#endif//XX_ENABLE_PROFILE
+#endif //XX_ENABLE_PROFILE
 
-#endif//xxprofile_hpp
+#endif //xxprofile_hpp

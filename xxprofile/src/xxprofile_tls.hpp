@@ -13,28 +13,28 @@ struct ICompress;
 
 class SharedArchive {
 public:
-    SharedArchive(const char* path);
+    SharedArchive(const char* path, XXWriteCallback writeCallback);
     ~SharedArchive();
-    
+
     int addRef();
     int release();
 
     ICompress* compress() const {
         return _compress;
     }
-    
+
     void* compressBuffer() const {
         return _compressBuffer;
     }
-    
+
     size_t compressBufferSize() const {
         return _compressBufferSize;
     }
-    
+
     SystemLock& lock() {
         return _mutex;
     }
-    
+
     Archive& archive() {
         return _archive;
     }
@@ -48,7 +48,7 @@ public:
     }
 
     void writeNames();
-    
+
 private:
     Archive _archive;
     SystemLock _mutex;
@@ -120,4 +120,4 @@ private:
 
 XX_NAMESPACE_END(xxprofile);
 
-#endif//xxprofile_tls_hpp
+#endif //xxprofile_tls_hpp

@@ -24,6 +24,7 @@ private:
     size_t _filePointer;
     size_t _size;
     size_t _used;
+    XXWriteCallback _writeCallback;
     char* _buffer;
     uint32_t _version;
     uint32_t _flags;
@@ -35,13 +36,25 @@ public:
     Archive();
     ~Archive();
 
-    void setVersion(uint32_t ver) { _version = ver; }
-    uint32_t version() const { return _version; }
-    void setCompressMethod(uint32_t method) { _compressMethod = method; }
-    uint32_t getCompressMethod() const { return _compressMethod; }
-    bool isWrite() const { return _write; }
-    bool hasError() const { return _error; }
-    bool open(const char* name, bool write);
+    void setVersion(uint32_t ver) {
+        _version = ver;
+    }
+    uint32_t version() const {
+        return _version;
+    }
+    void setCompressMethod(uint32_t method) {
+        _compressMethod = method;
+    }
+    uint32_t getCompressMethod() const {
+        return _compressMethod;
+    }
+    bool isWrite() const {
+        return _write;
+    }
+    bool hasError() const {
+        return _error;
+    }
+    bool open(const char* name, bool write, XXWriteCallback writeCallback = nullptr);
     void flush();
     void close();
     bool eof() const;
@@ -104,9 +117,17 @@ public:
     }
 
 private:
+    void doWrite(const void* data, size_t size) {
+        if (_writeCallback) {
+            _writeCallback(data, static_cast<uint32_t>(size));
+        } else {
+            xxwrite(data, size, _fp);
+        }
+    }
+
     XX_CLASS_DELETE_COPY_AND_MOVE(Archive);
 };
 
 XX_NAMESPACE_END(xxprofile);
 
-#endif//xxprofile_archive_hpp
+#endif //xxprofile_archive_hpp

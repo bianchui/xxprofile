@@ -2,6 +2,7 @@
 #ifndef xxprofile_macros_hpp
 #define xxprofile_macros_hpp
 #include <stdint.h>
+#include <stddef.h>
 
 #define XX_CLASS_DELETE_COPY_CONSTRUCTOR(cls) \
 /**/cls(const cls&) = delete; \
@@ -87,5 +88,6 @@
 #  define XX_LIB_API
 #endif
 
+typedef void (*XXWriteCallback)(const void* ptr, size_t size);
 
-#endif//xxprofile_macros_hpp
+#endif //xxprofile_macros_hpp

@@ -48,52 +48,34 @@
 
 #define XX_IS_TARGET(x) (XX_TARGET == XX_TARGET_##x)
 
-#ifndef XXPROFILE_HAS_FILE_IO
-#  define XXPROFILE_HAS_FILE_IO 1
-#endif //XXPROFILE_HAS_FILE_IO
-
 #include <stdio.h>
-
-#if XXPROFILE_HAS_FILE_IO
-
-#  ifdef __EMSCRIPTEN__
-#    error XXPROFILE_HAS_FILE_IO is not supported when EMSCRIPTEN is defined
-#  endif //__EMSCRIPTEN__
-
-inline FILE* xxopen(const char* name, bool write) {
-    return fopen(name, write ? "wb" : "rb");
-}
-inline void xxclose(FILE* fp) {
-    fclose(fp);
-}
-inline size_t xxwrite(const void* ptr, size_t size, FILE* stream) {
-    return fwrite(ptr, 1, size, stream);
-}
-
-#else //XXPROFILE_HAS_FILE_IO
-
-#  ifdef XXPROFILE_HAS_DECOMPRESS
-#    error XXPROFILE_HAS_DECOMPRESS is not supported when XXPROFILE_HAS_FILE_IO is 0
-#  endif //XXPROFILE_HAS_DECOMPRESS
-
-inline FILE* xxopen(const char* name, bool write) {
-    return write ? stdout : nullptr;
-}
-inline void xxclose(FILE* fp) {
-}
-
-extern "C" void xxwrite_impl(const void* ptr, size_t size);
-inline size_t xxwrite(const void* ptr, size_t size, FILE* stream) {
-    xxwrite_impl(ptr, size);
-    return size;
-}
-
-#endif //XXPROFILE_HAS_FILE_IO
-
 #include <atomic>
 #include <string>
 
 XX_NAMESPACE_BEGIN(xxprofile);
+
+#if defined(XXPROFILE_HAS_DECOMPRESS) && defined(__EMSCRIPTEN__)
+#  error XXPROFILE_HAS_DECOMPRESS is not supported in emscripten
+#endif // defined(XXPROFILE_HAS_DECOMPRESS) && defined(__EMSCRIPTEN__)
+
+inline FILE* xxopen(const char* name, bool write) {
+#ifdef __EMSCRIPTEN__
+    return write ? stdout : nullptr;
+#else  //__EMSCRIPTEN__
+    return ::fopen(name, write ? "wb" : "rb");
+#endif // __EMSCRIPTEN__
+}
+
+inline void xxclose(FILE* fp) {
+#ifdef __EMSCRIPTEN__
+#else  //__EMSCRIPTEN__
+    ::fclose(fp);
+#endif // __EMSCRIPTEN__
+}
+
+inline size_t xxwrite(const void* ptr, size_t size, FILE* stream) {
+    return ::fwrite(ptr, 1, size, stream);
+}
 
 std::string systemGetWritablePath();
 uint32_t systemGetTid();

@@ -12,7 +12,7 @@
 #include <time.h>
 #ifndef XX_PLATFORM_WINDOWS
 #  include <sys/time.h>
-#endif//XX_PLATFORM_WINDOWS
+#endif //XX_PLATFORM_WINDOWS
 
 #include "xxprofile_tls.hpp"
 
@@ -31,7 +31,7 @@ static void StaticCloseGArchive() {
     }
 }
 
-static void StaticInitUnSafe(const char* savePath) {
+static void StaticInitUnSafe(const char* savePath, XXWriteCallback writeCallback) {
     if (!g_archive) {
         std::string filePath;
         if (savePath) {
@@ -43,7 +43,7 @@ static void StaticInitUnSafe(const char* savePath) {
         const char dir_sp = '\\';
 #else
         const char dir_sp = '/';
-#endif  // XX_PLATFORM_WINDOWS
+#endif // XX_PLATFORM_WINDOWS
         if (filePath.length() > 0 && filePath.back() != dir_sp) {
             filePath.push_back(dir_sp);
         }
@@ -57,27 +57,27 @@ static void StaticInitUnSafe(const char* savePath) {
         gettimeofday(&tv, 0);
         struct tm lt;
         localtime_r(&tv.tv_sec, &lt);
-#else//XX_PLATFORM_WINDOWS
+#else //XX_PLATFORM_WINDOWS
 #define XXProfile_TimeArgs \
 /**/ st.wYear, st.wMonth, st.wDay, \
 /**/ st.wHour, st.wMinute, st.wSecond, st.wMilliseconds
         SYSTEMTIME st;
         GetLocalTime(&st);
-#endif//XX_PLATFORM_WINDOWS
+#endif //XX_PLATFORM_WINDOWS
         snprintf(timeBuf, 64, XXProfile_TimeFormat, XXProfile_TimeArgs);
         timeBuf[63] = 0;
         filePath.append(timeBuf);
         filePath.append(systemGetAppName());
         filePath.append(".xxprofile");
-        g_archive = new SharedArchive(filePath.c_str());
+        g_archive = new SharedArchive(filePath.c_str(), writeCallback);
         atexit(StaticCloseGArchive);
     }
 }
 
 // XXProfile
-bool XXProfile::StaticInit(const char* savePath) {
+bool XXProfile::StaticInit(const char* savePath, XXWriteCallback writeCallback) {
     SystemScopedLock lock(g_mutex);
-    StaticInitUnSafe(savePath);
+    StaticInitUnSafe(savePath, writeCallback);
     return true;
 }
 
@@ -90,7 +90,7 @@ XXProfileTLS* XXProfileTLS::Get() {
     profile = g_profile_tls.get();
     if (!profile) {
         SystemScopedLock lock(g_mutex);
-        StaticInitUnSafe(nullptr);
+        StaticInitUnSafe(nullptr, nullptr);
         if (g_archive) {
             profile = new XXProfileTLS(g_archive);
             g_profile_tls.set(profile);

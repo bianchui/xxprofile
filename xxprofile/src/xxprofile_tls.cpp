@@ -4,9 +4,9 @@
 #include "xxprofile_version.hpp"
 #include <vector>
 #include <assert.h>
-#ifndef XX_PLATFORM_WINDOWS
+#if !XX_IS_TARGET(WINDOWS)
 #  include <unistd.h>
-#endif//XX_PLATFORM_WINDOWS
+#endif //!XX_IS_TARGET(WINDOWS)
 #include <stdlib.h>
 #include <stddef.h>
 
@@ -20,7 +20,7 @@
 #  include "compress/compress_zstd.cpp.h"
 #else
 #  error compress method
-#endif//
+#endif //
 
 XX_NAMESPACE_BEGIN(xxprofile);
 
@@ -42,19 +42,19 @@ typedef SCompressZstd SCompress;
 typedef SCompressChunkedZstd SCompress;
 #else
 #  error compress method
-#endif//
+#endif //
 
 static std::atomic<uint32_t> g_frameId;
 
 // SharedArchive
-SharedArchive::SharedArchive(const char* path) {
+SharedArchive::SharedArchive(const char* path, XXWriteCallback writeCallback) {
     _archive.setVersion(EVersion::NOW);
     _archive.setCompressMethod(ECompressMethod::NOW);
     _compress = new SCompress();
     _compressBufferSize = _compress->calcBound(XXProfileTLS::ChunkByteSize);
     _compressBuffer = malloc(_compressBufferSize);
 
-    _archive.open(path, true);
+    _archive.open(path, true, writeCallback);
     _tag.fromId = 0;
     Timer::InitTiming();
     double secondsPerCycle = Timer::GetSecondsPerCycle();
@@ -226,14 +226,15 @@ void XXProfileTLS::frameFlush() {
 #if (XXCOMPRESS_NOW & XXCOMPRESS_CHUNKED_FLAG)
         // chunked always cannot drop any compressed data
         sizeCom = (uint32_t)compressedSize;
-#else//if chunked
+#else  //if chunked
+
         // unchunked free to use smaller data
         if (compressedSize && compressedSize < sizeOrg) {
             sizeCom = (uint32_t)compressedSize;
         } else {
             assert(false);
         }
-#endif//if chunked
+#endif //if chunked
         ar << sizeOrg;
         ar << sizeCom;
         if (sizeCom) {

@@ -18,14 +18,19 @@ Archive::~Archive() {
     close();
 }
 
-bool Archive::open(const char* name, bool write) {
-    assert(!_fp);
-    if (_fp) {
+bool Archive::open(const char* name, bool write, XXWriteCallback writeCallback) {
+    assert(!_fp && !_writeCallback);
+    if (_fp || _writeCallback) {
         return false;
     }
-    _fp = xxopen(name, write);
-    if (!_fp) {
-        return false;
+    if (write && writeCallback) {
+        _writeCallback = writeCallback;
+        _fp = reinterpret_cast<FILE*>(1);
+    } else {
+        _fp = xxopen(name, write);
+        if (!_fp) {
+            return false;
+        }
     }
     _write = write;
     SFileHeader fh = {0};
@@ -42,7 +47,7 @@ bool Archive::open(const char* name, bool write) {
         }
         fh.version = _version;
         fh.compressMethod = _compressMethod;
-        xxwrite(&fh, sizeof(fh), _fp);
+        doWrite(&fh, sizeof(fh));
     } else {
 #ifdef XXPROFILE_HAS_DECOMPRESS
 #  if Archive_ReadBufferSize
@@ -52,7 +57,7 @@ bool Archive::open(const char* name, bool write) {
         _size = fread(_buffer, 1, Archive_ReadBufferSize, _fp);
         if (_size < sizeof(fh)) {
             fclose(_fp);
-            _fp = NULL;
+            _fp = nullptr;
             return false;
         }
         memcpy(&fh, _buffer, sizeof(fh));
@@ -62,7 +67,7 @@ bool Archive::open(const char* name, bool write) {
         fseek(_fp, 0, SEEK_SET);
         if (sizeof(fh) != fread(&fh, 1, sizeof(fh), _fp)) {
             fclose(_fp);
-            _fp = NULL;
+            _fp = nullptr;
             return false;
         }
 #  endif //Archive_ReadBufferSize
@@ -70,7 +75,7 @@ bool Archive::open(const char* name, bool write) {
         _filePointer = _used;
         if (memcmp(&fh.magic, kMagic, 4) != 0) {
             fclose(_fp);
-            _fp = NULL;
+            _fp = nullptr;
             return false;
         }
         _version = fh.version;
@@ -80,7 +85,7 @@ bool Archive::open(const char* name, bool write) {
         return false;
 #endif //XXPROFILE_HAS_DECOMPRESS
     }
-    return _fp;
+    return true;
 }
 
 void Archive::flush() {
@@ -88,7 +93,7 @@ void Archive::flush() {
     assert(_write);
 #if Archive_WriteBufferSize
     if (_fp && _write && _used) {
-        xxwrite(_buffer, _used, _fp);
+        doWrite(_buffer, _used);
         _used = 0;
         //fflush(_fp);
     }
@@ -99,10 +104,12 @@ void Archive::close() {
     if (_fp) {
 #if Archive_WriteBufferSize
         if (_write && _used) {
-            xxwrite(_buffer, _used, _fp);
+            doWrite(_buffer, _used);
         }
 #endif //Archive_WriteBufferSize
-        xxclose(_fp);
+        if (!_writeCallback) {
+            xxclose(_fp);
+        }
     }
     if (_buffer) {
         free(_buffer);
@@ -139,11 +146,11 @@ void Archive::serialize(void* data, size_t size) {
                 memcpy(_buffer + _used, data, writeSize);
                 size -= writeSize;
                 data = ((char*)data) + writeSize;
-                xxwrite(_buffer, Archive_WriteBufferSize, _fp);
+                doWrite(_buffer, Archive_WriteBufferSize);
                 _used = 0;
             }
             if (size > Archive_WriteBufferSize) {
-                xxwrite(data, size, _fp);
+                doWrite(data, size);
                 return;
             }
         }
@@ -152,7 +159,7 @@ void Archive::serialize(void* data, size_t size) {
             _used += size;
         }
 #else  //Archive_WriteBufferSize
-        xxwrite(data, size, _fp);
+        doWrite(data, size);
 #endif //Archive_WriteBufferSize
     } else {
 #ifdef XXPROFILE_HAS_DECOMPRESS
