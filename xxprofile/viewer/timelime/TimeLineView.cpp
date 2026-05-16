@@ -93,15 +93,13 @@ void TimeLineView::draw() {
     float ticksInTimeline = MsToTicks * _maxTime;
     const float TicksToPixels = timelineWidth / ticksInTimeline;
 
-    for (int i = 0; i < _maxTime; ++i)
-    {
+    for (int i = 0; i < _maxTime; ++i) {
         float x0 = (float)i * MsToTicks * TicksToPixels;
         float msWidth = 1.0f * MsToTicks * TicksToPixels;
         ImVec2 tickPos = ImVec2(cursor.x + x0, timelineRect.Min.y);
         pDraw->AddLine(tickPos + ImVec2(0, _barHeight * 0.5f), tickPos + ImVec2(0, _barHeight), ImColor(BGTextColor));
 
-        if (i % 2 == 0)
-        {
+        if (i % 2 == 0) {
             pDraw->AddRectFilled(tickPos + ImVec2(0, _barHeight), tickPos + ImVec2(msWidth, timelineRect.Max.y), ImColor(1.0f, 1.0f, 1.0f, 0.02f));
             const char* pBarText;
             ImFormatStringToTempBuffer(&pBarText, nullptr, "%d ms", i);
