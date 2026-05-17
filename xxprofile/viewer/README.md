@@ -1,170 +1,157 @@
 # xxprofile Viewer
 
-`xxprofileViewer` is the desktop viewer for `.xxprofile` capture files. It is built with the existing Dear ImGui + GLFW + OpenGL2 stack and uses the project loader to read profile archives.
+`xxprofileViewer` is a desktop tool for opening and inspecting `.xxprofile` capture files.
 
-## Launch and File Loading
+## Opening Captures
 
-- Open a capture by passing a file path on the command line:
+- Open a `.xxprofile` capture file from the command line:
 
   ```bash
   xxprofile_viewer_cmake path/to/file.xxprofile
   ```
 
-- On supported desktop platforms, double-clicking a `.xxprofile` document can also open it through the GLFW document-open callback.
-- When no capture is loaded, the main window shows `double click a .xxprofile file to open.`
-- After a file is loaded, the window title includes:
-  - capture file name
+- On supported desktop platforms, double-clicking a `.xxprofile` file can also open it in the viewer.
+- When no capture is open, the viewer prompts you to open a `.xxprofile` file.
+- After a capture is loaded, the window title shows useful capture information:
+  - file name
   - total captured time
-  - maximum frame count across threads
-  - archive compression ratio
+  - frame count
+  - compression ratio
 
-## Main Window
+## View Modes
 
-- The viewer uses a full-window ImGui dock space.
-- `View -> View Type` switches between:
-  - `Frame`
-  - `Timeline`
-- The layout is rebuilt automatically when switching view types.
+Use `View -> View Type` to switch between two ways of exploring the capture:
+
+- `Frame`: inspect frame costs and drill into one selected frame.
+- `Timeline`: inspect work by real time across all threads.
 
 ## Frame View
 
-The `Frame` view is the original two-pane analysis mode.
+The `Frame` view is useful when you want to find expensive frames and understand what happened inside a selected frame.
 
-### Left Pane: Per-Thread Frame Lines
+### Frame Overview
 
-- Shows one frame histogram per recorded thread.
-- Each thread row displays frame cost over time.
-- Frame values are scaled from each thread's maximum frame cost so spikes are visible.
-- The overlay text shows:
+- Shows recorded frames for each thread.
+- Each row represents one thread.
+- Frame bars show relative frame cost, making spikes easy to spot.
+- The thread overlay shows:
   - thread id
   - thread name
-  - visible frame id range
-  - maximum frame time for that thread
-- Hovering a frame bar shows:
+  - visible frame range
+  - maximum frame time
+- Hovering a frame shows:
   - frame id
-  - frame start and end time relative to process start
+  - frame start time
+  - frame end time
   - frame duration
-  - node count
-- Left-clicking a frame selects it and updates the right pane.
+  - number of recorded nodes
+- Clicking a frame selects it for detailed inspection.
 
-### Thumbnail Navigation
+### Frame Range Navigation
 
-- If a thread has more frames than can fit horizontally, a thumbnail histogram appears above that thread's frame histogram.
-- Each thumbnail bucket represents a range of frames.
-- Dragging/clicking on the thumbnail changes the visible frame window for all threads, keeping the timelines aligned by frame index.
-- Thumbnail tooltips show:
-  - represented frame id range
+- When there are too many frames to fit on screen, a compact overview appears above the frame row.
+- The compact overview lets you move through large captures quickly.
+- Clicking or dragging in the overview changes the visible frame range across all threads.
+- Hovering the overview shows:
+  - represented frame range
   - represented time range
-  - maximum frame cost in that bucket
+  - maximum frame cost in that range
 
-### Right Pane: Frame Detail Tree
+### Frame Detail
 
 - Shows the selected frame as a call tree.
-- Each node displays:
+- Each entry shows:
   - percentage of parent time
   - total time
-  - function/profile scope name
-- Node text is color coded by relative cost:
-  - red for nodes above 50% of parent time
-  - yellow for nodes above 30%
-  - white for lower-cost nodes
-- Hovering a node shows:
+  - scope/function name
+- Expensive entries are highlighted:
+  - red for very expensive entries
+  - yellow for moderately expensive entries
+  - white for lower-cost entries
+- Hovering an entry shows:
   - percentage of the whole frame
-  - percentage of the parent
+  - percentage of the parent entry
   - total time
-  - self time and self percentage
-  - start and end time relative to the selected frame
-  - node name
+  - self time
+  - start and end time inside the selected frame
+  - scope/function name
 
 ### Combined Mode
 
-- If the selected frame contains repeated call paths that can be combined, a `Combined` checkbox is shown.
-- Combined mode groups matching nodes by name/path.
-- Combined nodes show:
+- When repeated work exists in the selected frame, a `Combined` option is available.
+- Combined mode groups repeated entries together.
+- Grouped entries show:
   - call count
-  - total combined time
+  - total time
   - percentage of parent time
-  - node name
-- Combined tooltips show:
+  - scope/function name
+- Hovering a grouped entry shows:
   - call count
-  - frame and parent percentages
+  - frame percentage
+  - parent percentage
   - total time
   - self time
-  - average time and average percentages when the call count is greater than one
+  - average time when there is more than one call
 
 ## Timeline View
 
-The `Timeline` view is a Chrome Performance-style time-based view over the loaded capture.
+The `Timeline` view is useful when you want to understand how work is distributed over time across threads.
 
-### Global Time Ruler
+### Time Ruler
 
-- Displays a time ruler across the top of the timeline.
-- Tick spacing adapts to the current zoom level.
-- Time labels use seconds, milliseconds, microseconds, or nanoseconds depending on scale.
-- Vertical grid lines align all threads to the same process-relative time axis.
+- Shows a shared time ruler across the top of the capture.
+- Tick spacing adjusts as you zoom.
+- Time labels automatically use appropriate units.
+- Vertical guide lines make it easier to compare work across threads.
 
 ### Thread Tracks
 
-- Each recorded thread is shown as a separate track.
-- Thread headers display:
+- Shows each recorded thread as a separate track.
+- Thread headers show:
   - thread id
   - thread name when available
-- Each thread always includes a `Frames` row.
-- Frame bars are positioned by real start/end timestamps, not by frame index.
-- Frame bars show `F<frameId>` when there is enough horizontal space.
+- Each thread includes a `Frames` row.
+- Frame bars are placed by their real start and end time.
+- Frame labels appear when there is enough space.
 - Hovering a frame bar shows:
   - thread id and name
   - frame id
   - start time
   - end time
   - frame duration
-  - node count
-- Left-clicking a frame selects it and updates the shared frame selection state.
+  - number of recorded nodes
+- Clicking a frame selects it.
 
-### Expanded Node Tracks
+### Expanded Thread Details
 
-- The arrow button on each thread expands or collapses that thread.
-- When expanded, the thread shows one row per call depth:
-  - `Depth 0`
-  - `Depth 1`
-  - ...
-- Profile nodes are drawn on their depth rows using real begin/end timestamps.
-- Node colors are stable per profile scope name.
-- Node labels are shown when the bar is wide enough.
-- Hovering a node shows:
-  - profile scope name
+- Use the arrow button on a thread to expand or collapse it.
+- Expanded threads show nested work by call depth.
+- Each depth row shows the work that ran at that nesting level.
+- Wider bars show their scope/function names directly.
+- Hovering a bar shows:
+  - scope/function name
   - frame id
-  - start and end time relative to the frame
-  - node duration
+  - start and end time inside that frame
+  - duration
 
 ### Timeline Navigation
 
-- `Ctrl + mouse wheel` zooms in or out around the mouse position.
-- Middle-button drag pans horizontally.
-- Right-button drag also pans horizontally.
-- Horizontal mouse wheel pans the visible time range.
-- The visible range is clamped to the capture's process start/end time.
-- The timeline keeps a minimum zoom span so the view remains usable on very large captures.
+- `Ctrl + mouse wheel`: zoom in or out around the mouse position.
+- Middle-button drag: pan horizontally.
+- Right-button drag: pan horizontally.
+- Horizontal mouse wheel: pan the visible time range.
+- The visible range stays within the loaded capture.
 
-## Rendering and UI Stack
+## Build and Run
 
-- Uses Dear ImGui for all UI.
-- Uses ImGui docking for the main layout.
-- Uses GLFW for the window, input, and document-open callback.
-- Uses OpenGL2 through `imgui_impl_opengl2`.
-- Uses the viewer's local ImGui helpers in `viewer/imgui` for histogram plotting with hover and selection hit testing.
-
-## Build
-
-From the repository root, the CMake viewer build command is:
+From the repository root:
 
 ```bash
 bash build.sh cmake_viewer
 ```
 
-The resulting executable is copied to:
+The viewer executable is copied to:
 
 ```text
 out/xxprofile_viewer_cmake
 ```
-
