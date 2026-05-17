@@ -333,14 +333,33 @@ void TimeLineView::draw() {
         ThreadData& thread = _threads[t];
         const auto* data = thread._data;
         const ImRect headerRect(ImVec2(canvas.Min.x, y), ImVec2(canvas.Max.x, y + _threadHeaderHeight));
-        drawList->AddRectFilled(headerRect.Min, headerRect.Max, ImColor(1.0f, 1.0f, 1.0f, 0.035f));
-
-        ImGui::SetCursorScreenPos(ImVec2(leftRect.Min.x + 4.0f, y + 2.0f));
-        ImGui::PushID((int)t);
-        if (ImGui::ArrowButton("expand", thread._expended ? ImGuiDir_Down : ImGuiDir_Right)) {
+        const ImRect headerLeftRect(ImVec2(leftRect.Min.x, y), ImVec2(leftRect.Max.x, y + _threadHeaderHeight));
+        const ImRect arrowRect(ImVec2(leftRect.Min.x + 4.0f, y + 3.0f), ImVec2(leftRect.Min.x + 20.0f, y + 19.0f));
+        const bool headerHovered = ImGui::IsMouseHoveringRect(headerLeftRect.Min, headerLeftRect.Max);
+        if (headerHovered && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
             thread._expended = !thread._expended;
         }
-        ImGui::PopID();
+
+        drawList->AddRectFilled(headerRect.Min, headerRect.Max, ImColor(1.0f, 1.0f, 1.0f, 0.035f));
+        if (headerHovered) {
+            drawList->AddRectFilled(headerLeftRect.Min, headerLeftRect.Max, ImColor(1.0f, 1.0f, 1.0f, 0.045f));
+        }
+
+        const ImU32 arrowColor = ImColor(kTimelineTextColor);
+        if (thread._expended) {
+            drawList->AddTriangleFilled(
+                ImVec2(arrowRect.Min.x + 3.0f, arrowRect.Min.y + 5.0f),
+                ImVec2(arrowRect.Max.x - 3.0f, arrowRect.Min.y + 5.0f),
+                ImVec2((arrowRect.Min.x + arrowRect.Max.x) * 0.5f, arrowRect.Max.y - 4.0f),
+                arrowColor);
+        } else {
+            drawList->AddTriangleFilled(
+                ImVec2(arrowRect.Min.x + 5.0f, arrowRect.Min.y + 3.0f),
+                ImVec2(arrowRect.Min.x + 5.0f, arrowRect.Max.y - 3.0f),
+                ImVec2(arrowRect.Max.x - 4.0f, (arrowRect.Min.y + arrowRect.Max.y) * 0.5f),
+                arrowColor);
+        }
+
         label.clear();
         label.appendf("Thread %d", data->_threadId);
         if (data->_threadName && data->_threadName[0]) {
