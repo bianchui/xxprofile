@@ -39,6 +39,142 @@ function build_apple_viewer() {
   guard popd
 }
 
+function cmake_build_target() {
+  local BUILD_DIR="$1"
+  local TARGET="$2"
+  local CONFIG="${3:-Release}"
+
+  guard cmake --build "$BUILD_DIR" --config "$CONFIG" --target "$TARGET" --parallel
+}
+
+function build_cmake_lib_mac() {
+  echo "==== Building mac lib with cmake ===="
+  local PROJ_DIR="$THIS_DIR/xxprofile/proj.cmake"
+  local BUILD_DIR="$THIS_DIR/xxprofile/build/cmake-lib-mac"
+  local OUT_DIR="$THIS_DIR/out/prebuilt/cmake/mac"
+
+  guard mkdir -p "$BUILD_DIR"
+  guard cmake \
+    -S "$PROJ_DIR" \
+    -B "$BUILD_DIR" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_OSX_SYSROOT=macosx \
+    -DXXPROFILE_DYNAMIC=OFF \
+    -DXXPROFILE_BUILD_LOADER=OFF \
+    -DXXPROFILE_BUILD_TESTS=OFF \
+    -DXXPROFILE_BUILD_TEST_COMPRESS=OFF \
+    -DXXPROFILE_BUILD_VIEWER=OFF
+
+  cmake_build_target "$BUILD_DIR" xxprofile Release
+
+  local LIB_PATH="$BUILD_DIR/libxxprofile.a"
+  if [[ ! -f "$LIB_PATH" && -f "$BUILD_DIR/Release/libxxprofile.a" ]]; then
+    LIB_PATH="$BUILD_DIR/Release/libxxprofile.a"
+  fi
+  if [[ ! -f "$LIB_PATH" ]]; then
+    echo "libxxprofile.a not found in $BUILD_DIR" >&2
+    return 1
+  fi
+
+  guard mkdir -p "$OUT_DIR"
+  guard cp "$LIB_PATH" "$OUT_DIR/libxxprofile.a"
+}
+
+function build_cmake_lib_ios_sdk() {
+  local SDK="$1"
+  local ARCHS="$2"
+  local PROJ_DIR="$THIS_DIR/xxprofile/proj.cmake"
+  local BUILD_DIR="$THIS_DIR/xxprofile/build/cmake-lib-ios-$SDK"
+  local OUT_DIR="$THIS_DIR/out/prebuilt/cmake/ios/$SDK"
+  local CACHE_DIR="$BUILD_DIR/darwin-cache"
+  local MODULE_CACHE_DIR="$BUILD_DIR/ModuleCache.noindex"
+
+  guard rm -rf "$BUILD_DIR"
+  guard mkdir -p "$BUILD_DIR"
+  guard mkdir -p "$CACHE_DIR"
+  guard mkdir -p "$MODULE_CACHE_DIR"
+  guard env \
+    DARWIN_USER_CACHE_DIR="$CACHE_DIR/" \
+    CLANG_MODULE_CACHE_PATH="$MODULE_CACHE_DIR" \
+    cmake \
+    -S "$PROJ_DIR" \
+    -B "$BUILD_DIR" \
+    -G Xcode \
+    -DCMAKE_SYSTEM_NAME=iOS \
+    -DCMAKE_OSX_SYSROOT="$SDK" \
+    -DCMAKE_OSX_ARCHITECTURES="$ARCHS" \
+    -DCMAKE_XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH=NO \
+    -DCMAKE_XCODE_ATTRIBUTE_CLANG_MODULE_CACHE_PATH="$BUILD_DIR/ModuleCache.noindex" \
+    -DXXPROFILE_DYNAMIC=OFF \
+    -DXXPROFILE_BUILD_LOADER=OFF \
+    -DXXPROFILE_BUILD_TESTS=OFF \
+    -DXXPROFILE_BUILD_TEST_COMPRESS=OFF \
+    -DXXPROFILE_BUILD_VIEWER=OFF
+
+  guard env \
+    DARWIN_USER_CACHE_DIR="$CACHE_DIR/" \
+    CLANG_MODULE_CACHE_PATH="$MODULE_CACHE_DIR" \
+    cmake --build "$BUILD_DIR" --config Release --target xxprofile --parallel
+
+  local LIB_PATH="$BUILD_DIR/Release-$SDK/libxxprofile.a"
+  if [[ ! -f "$LIB_PATH" && -f "$BUILD_DIR/Release/libxxprofile.a" ]]; then
+    LIB_PATH="$BUILD_DIR/Release/libxxprofile.a"
+  fi
+  if [[ ! -f "$LIB_PATH" ]]; then
+    echo "libxxprofile.a not found for $SDK in $BUILD_DIR" >&2
+    return 1
+  fi
+
+  guard mkdir -p "$OUT_DIR"
+  guard cp "$LIB_PATH" "$OUT_DIR/libxxprofile.a"
+}
+
+function build_cmake_lib_ios() {
+  echo "==== Building ios lib with cmake ===="
+  build_cmake_lib_ios_sdk iphoneos arm64
+  build_cmake_lib_ios_sdk iphonesimulator "arm64;x86_64"
+
+  local OUT_DIR="$THIS_DIR/out/prebuilt/cmake/ios"
+  local XCFRAMEWORK="$OUT_DIR/libxxprofile.xcframework"
+  guard rm -rf "$XCFRAMEWORK"
+  guard xcodebuild -create-xcframework \
+    -library "$OUT_DIR/iphoneos/libxxprofile.a" \
+    -library "$OUT_DIR/iphonesimulator/libxxprofile.a" \
+    -output "$XCFRAMEWORK"
+}
+
+function build_cmake_viewer() {
+  echo "==== Building mac viewer with cmake ===="
+  local PROJ_DIR="$THIS_DIR/xxprofile/proj.cmake"
+  local BUILD_DIR="$THIS_DIR/xxprofile/build/cmake-viewer-mac"
+  local OUT_DIR="$THIS_DIR/out"
+
+  guard mkdir -p "$BUILD_DIR"
+  guard cmake \
+    -S "$PROJ_DIR" \
+    -B "$BUILD_DIR" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_OSX_SYSROOT=macosx \
+    -DXXPROFILE_BUILD_VIEWER=ON \
+    -DXXPROFILE_BUILD_LOADER=ON \
+    -DXXPROFILE_BUILD_TESTS=OFF \
+    -DXXPROFILE_BUILD_TEST_COMPRESS=OFF
+
+  cmake_build_target "$BUILD_DIR" xxprofile_viewer Release
+
+  local BIN_PATH="$BUILD_DIR/xxprofile_viewer"
+  if [[ ! -f "$BIN_PATH" && -f "$BUILD_DIR/Release/xxprofile_viewer" ]]; then
+    BIN_PATH="$BUILD_DIR/Release/xxprofile_viewer"
+  fi
+  if [[ ! -f "$BIN_PATH" ]]; then
+    echo "xxprofile_viewer not found in $BUILD_DIR" >&2
+    return 1
+  fi
+
+  guard mkdir -p "$OUT_DIR"
+  guard cp "$BIN_PATH" "$OUT_DIR/xxprofile_viewer_cmake"
+}
+
 function build_android_lib_ndk_build() {
   echo "==== Building android lib with ndk-build ===="
   guard pushd $THIS_DIR/xxprofile/proj.android
@@ -154,6 +290,9 @@ function build_wasm_lib() {
 function build_all() {
   build_apple_lib
   build_apple_viewer
+  build_cmake_lib_mac
+  build_cmake_lib_ios
+  build_cmake_viewer
   build_android_lib_ndk_build
   build_android_lib_cmake
   build_wasm_lib
@@ -197,6 +336,10 @@ function usage() {
   echo "commands:"
   echo "------------ seprate build commands ---------------"
   echo "  apple            : build apple lib and viewer"
+  echo "  cmake_lib_mac    : build mac static lib with cmake"
+  echo "  cmake_lib_ios    : build ios static xcframework with cmake"
+  echo "  cmake_viewer     : build mac viewer executable with cmake"
+  echo "  cmake_apple      : build cmake mac lib, ios lib, and mac viewer"
   echo "  android          : build android lib"
   echo "  wasm             : build wasm lib"
   echo "  headers          : copy headers"
@@ -214,6 +357,24 @@ function parse_arguments() {
       apple)
         build_apple_lib
         build_apple_viewer
+        ;;
+
+      cmake_lib_mac)
+        build_cmake_lib_mac
+        ;;
+
+      cmake_lib_ios)
+        build_cmake_lib_ios
+        ;;
+
+      cmake_viewer)
+        build_cmake_viewer
+        ;;
+
+      cmake_apple)
+        build_cmake_lib_mac
+        build_cmake_lib_ios
+        build_cmake_viewer
         ;;
 
       android)
