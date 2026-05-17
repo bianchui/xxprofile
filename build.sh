@@ -175,6 +175,152 @@ function build_cmake_viewer() {
   guard cp "$BIN_PATH" "$OUT_DIR/xxprofile_viewer_cmake"
 }
 
+function build_cmake_test_mac() {
+  echo "==== Building and running mac test with cmake ===="
+  local PROJ_DIR="$THIS_DIR/xxprofile/proj.cmake"
+  local BUILD_DIR="$THIS_DIR/xxprofile/build/cmake-test-mac"
+  local OUT_DIR="$THIS_DIR/out/prebuilt/cmake/test_mac"
+
+  guard mkdir -p "$BUILD_DIR"
+  guard cmake \
+    -S "$PROJ_DIR" \
+    -B "$BUILD_DIR" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_OSX_SYSROOT=macosx \
+    -DXXPROFILE_DYNAMIC=OFF \
+    -DXXPROFILE_BUILD_LOADER=OFF \
+    -DXXPROFILE_BUILD_TESTS=ON \
+    -DXXPROFILE_BUILD_TEST_COMPRESS=OFF \
+    -DXXPROFILE_BUILD_VIEWER=OFF
+
+  cmake_build_target "$BUILD_DIR" xxprofile_test Release
+
+  local TEST_PATH="$BUILD_DIR/xxprofile_test"
+  if [[ ! -f "$TEST_PATH" && -f "$BUILD_DIR/Release/xxprofile_test" ]]; then
+    TEST_PATH="$BUILD_DIR/Release/xxprofile_test"
+  fi
+  if [[ ! -f "$TEST_PATH" ]]; then
+    echo "xxprofile_test not found in $BUILD_DIR" >&2
+    return 1
+  fi
+
+  guard mkdir -p "$OUT_DIR"
+  guard cp "$TEST_PATH" "$OUT_DIR/xxprofile_test"
+  guard pushd "$BUILD_DIR" > /dev/null
+    guard "$TEST_PATH"
+  guard popd > /dev/null
+}
+
+function build_cmake_test_ios_sdk() {
+  local SDK="$1"
+  local ARCHS="$2"
+  local PROJ_DIR="$THIS_DIR/xxprofile/proj.cmake"
+  local BUILD_DIR="$THIS_DIR/xxprofile/build/cmake-test-ios-$SDK"
+  local OUT_DIR="$THIS_DIR/out/prebuilt/cmake/test_ios/$SDK"
+  local CACHE_DIR="$BUILD_DIR/darwin-cache"
+  local MODULE_CACHE_DIR="$BUILD_DIR/ModuleCache.noindex"
+
+  guard rm -rf "$BUILD_DIR"
+  guard mkdir -p "$BUILD_DIR"
+  guard mkdir -p "$CACHE_DIR"
+  guard mkdir -p "$MODULE_CACHE_DIR"
+  guard env \
+    DARWIN_USER_CACHE_DIR="$CACHE_DIR/" \
+    CLANG_MODULE_CACHE_PATH="$MODULE_CACHE_DIR" \
+    cmake \
+    -S "$PROJ_DIR" \
+    -B "$BUILD_DIR" \
+    -G Xcode \
+    -DCMAKE_SYSTEM_NAME=iOS \
+    -DCMAKE_OSX_SYSROOT="$SDK" \
+    -DCMAKE_OSX_ARCHITECTURES="$ARCHS" \
+    -DCMAKE_XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH=NO \
+    -DCMAKE_XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER=com.xxprofile.xxprofile-test \
+    -DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED=NO \
+    -DCMAKE_XCODE_ATTRIBUTE_CLANG_MODULE_CACHE_PATH="$MODULE_CACHE_DIR" \
+    -DXXPROFILE_DYNAMIC=OFF \
+    -DXXPROFILE_BUILD_LOADER=OFF \
+    -DXXPROFILE_BUILD_TESTS=ON \
+    -DXXPROFILE_BUILD_TEST_COMPRESS=OFF \
+    -DXXPROFILE_BUILD_VIEWER=OFF
+
+  guard env \
+    DARWIN_USER_CACHE_DIR="$CACHE_DIR/" \
+    CLANG_MODULE_CACHE_PATH="$MODULE_CACHE_DIR" \
+    cmake --build "$BUILD_DIR" --config Release --target xxprofile_test --parallel
+
+  local TEST_PATH="$(find "$BUILD_DIR" -path '*Release-*' -type f -name 'xxprofile_test' | head -n 1)"
+  if [[ -z "$TEST_PATH" || ! -f "$TEST_PATH" ]]; then
+    echo "xxprofile_test not found for $SDK in $BUILD_DIR" >&2
+    return 1
+  fi
+
+  guard mkdir -p "$OUT_DIR"
+  guard cp "$TEST_PATH" "$OUT_DIR/xxprofile_test"
+}
+
+function build_cmake_test_ios() {
+  echo "==== Building ios test with cmake ===="
+  build_cmake_test_ios_sdk iphoneos arm64
+  build_cmake_test_ios_sdk iphonesimulator "arm64;x86_64"
+}
+
+function build_cmake_test_android() {
+  echo "==== Building android test with cmake ===="
+  local ANDROID_SDK_ROOT_DEFAULT="$HOME/Library/Android/sdk"
+  local ANDROID_SDK_ROOT="${ANDROID_SDK_ROOT:-$ANDROID_SDK_ROOT_DEFAULT}"
+  local ANDROID_NDK_ROOT_DEFAULT="$ANDROID_SDK_ROOT/ndk/20.0.5594570"
+  local ANDROID_NDK_ROOT="${ANDROID_NDK_ROOT:-$ANDROID_NDK_ROOT_DEFAULT}"
+
+  local TOOLCHAIN_FILE="$ANDROID_NDK_ROOT/build/cmake/android.toolchain.cmake"
+  local PROJ_DIR="$THIS_DIR/xxprofile/proj.cmake"
+
+  if [[ ! -f "$TOOLCHAIN_FILE" ]]; then
+    echo "Android CMake toolchain file not found: $TOOLCHAIN_FILE" >&2
+    return 1
+  fi
+
+  local ABIS=("arm64-v8a" "armeabi-v7a" "x86" "x86_64")
+
+  for abi in "${ABIS[@]}"; do
+    local BUILD_DIR="$THIS_DIR/xxprofile/build/cmake-test-android-$abi"
+    local OUT_DIR="$THIS_DIR/out/prebuilt/cmake/test_android/$abi"
+    guard mkdir -p "$BUILD_DIR"
+
+    guard cmake \
+      -S "$PROJ_DIR" \
+      -B "$BUILD_DIR" \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_WARN_DEPRECATED=OFF \
+      -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN_FILE" \
+      -DANDROID_ABI="$abi" \
+      -DANDROID_PLATFORM=android-21 \
+      -DANDROID_STL=c++_static \
+      -DXXPROFILE_DYNAMIC=OFF \
+      -DXXPROFILE_BUILD_LOADER=OFF \
+      -DXXPROFILE_BUILD_TESTS=ON \
+      -DXXPROFILE_BUILD_TEST_COMPRESS=OFF \
+      -DXXPROFILE_BUILD_VIEWER=OFF
+
+    cmake_build_target "$BUILD_DIR" xxprofile_test Release
+
+    local TEST_PATH="$BUILD_DIR/xxprofile_test"
+    if [[ ! -f "$TEST_PATH" && -f "$BUILD_DIR/Release/xxprofile_test" ]]; then
+      TEST_PATH="$BUILD_DIR/Release/xxprofile_test"
+    fi
+    if [[ ! -f "$TEST_PATH" ]]; then
+      TEST_PATH="$(find "$BUILD_DIR" -type f -name 'xxprofile_test' | head -n 1)"
+    fi
+    if [[ -z "$TEST_PATH" || ! -f "$TEST_PATH" ]]; then
+      echo "xxprofile_test not found for ABI $abi in $BUILD_DIR" >&2
+      return 1
+    fi
+
+    guard mkdir -p "$OUT_DIR"
+    guard cp "$TEST_PATH" "$OUT_DIR/xxprofile_test"
+  done
+}
+
 function build_android_lib_ndk_build() {
   echo "==== Building android lib with ndk-build ===="
   guard pushd $THIS_DIR/xxprofile/proj.android
@@ -340,6 +486,9 @@ function usage() {
   echo "  cmake_lib_ios    : build ios static xcframework with cmake"
   echo "  cmake_viewer     : build mac viewer executable with cmake"
   echo "  cmake_apple      : build cmake mac lib, ios lib, and mac viewer"
+  echo "  cmake_test_mac   : build and run mac test with cmake"
+  echo "  cmake_test_ios   : build ios test executable with cmake"
+  echo "  cmake_test_android: build android test executable with cmake"
   echo "  android          : build android lib"
   echo "  wasm             : build wasm lib"
   echo "  headers          : copy headers"
@@ -375,6 +524,18 @@ function parse_arguments() {
         build_cmake_lib_mac
         build_cmake_lib_ios
         build_cmake_viewer
+        ;;
+
+      cmake_test_mac)
+        build_cmake_test_mac
+        ;;
+
+      cmake_test_ios)
+        build_cmake_test_ios
+        ;;
+
+      cmake_test_android)
+        build_cmake_test_android
         ;;
 
       android)
