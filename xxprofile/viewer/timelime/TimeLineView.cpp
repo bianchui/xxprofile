@@ -48,6 +48,7 @@ uint32_t TimeLineView::ThreadData::nodeDepth(const xxprofile::FrameData& frame, 
 
 static const ImVec4 kTimelineTextColor(0.72f, 0.74f, 0.78f, 1.0f);
 static const ImVec4 kTimelineMutedTextColor(0.48f, 0.50f, 0.55f, 1.0f);
+static const uint32_t kTimelineDepthPageSize = 20;
 
 TimeLineView::TimeLineView(EventHandler* handler)
 : _handler(handler)
@@ -121,7 +122,11 @@ float TimeLineView::calcContentHeight() const {
         height += _threadHeaderHeight + _rowGap;
         height += _rowHeight + _rowGap;
         if (thread._expended && thread._data->_maxCallDepth) {
-            height += thread._data->_maxCallDepth * (_rowHeight + _rowGap);
+            const uint32_t visibleDepth = std::min(thread._visibleDepth, thread._data->_maxCallDepth);
+            height += visibleDepth * (_rowHeight + _rowGap);
+            if (visibleDepth < thread._data->_maxCallDepth) {
+                height += _rowHeight + _rowGap;
+            }
         }
     }
     return height + ImGui::GetStyle().WindowPadding.y * 2.0f;
@@ -337,7 +342,12 @@ void TimeLineView::draw() {
         const ImRect arrowRect(ImVec2(leftRect.Min.x + 4.0f, y + 3.0f), ImVec2(leftRect.Min.x + 20.0f, y + 19.0f));
         const bool headerHovered = ImGui::IsMouseHoveringRect(headerLeftRect.Min, headerLeftRect.Max);
         if (headerHovered && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
-            thread._expended = !thread._expended;
+            if (thread._expended) {
+                thread._expended = false;
+            } else {
+                thread._expended = true;
+                thread._visibleDepth = kTimelineDepthPageSize;
+            }
         }
 
         drawList->AddRectFilled(headerRect.Min, headerRect.Max, ImColor(1.0f, 1.0f, 1.0f, 0.035f));
@@ -377,7 +387,8 @@ void TimeLineView::draw() {
         y += _rowHeight + _rowGap;
         if (thread._expended && data->_maxCallDepth) {
             const float depthStartY = y;
-            for (uint32_t depth = 0; depth < data->_maxCallDepth; ++depth) {
+            const uint32_t visibleDepth = std::min(thread._visibleDepth, data->_maxCallDepth);
+            for (uint32_t depth = 0; depth < visibleDepth; ++depth) {
                 label.clear();
                 label.appendf("Depth %d", depth);
                 drawList->AddText(ImVec2(leftRect.Min.x + 26.0f, y + 2.0f), ImColor(kTimelineMutedTextColor), label.c_str());
@@ -387,9 +398,26 @@ void TimeLineView::draw() {
             for (const auto& frame : data->_frames) {
                 for (uint32_t n = 0; n < frame.nodeCount(); ++n) {
                     const uint32_t depth = thread.nodeDepth(frame, n);
+                    if (depth >= visibleDepth) {
+                        continue;
+                    }
                     const float nodeY = depthStartY + depth * (_rowHeight + _rowGap);
                     drawNode(drawList, thread, frame, n, bodyRect, nodeY, ticksToPixels);
                 }
+            }
+            if (visibleDepth < data->_maxCallDepth) {
+                const uint32_t moreDepth = data->_maxCallDepth - visibleDepth;
+                const ImRect moreRect(ImVec2(canvas.Min.x, y), ImVec2(canvas.Max.x, y + _rowHeight));
+                const bool moreHovered = ImGui::IsMouseHoveringRect(moreRect.Min, moreRect.Max);
+                if (moreHovered && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+                    thread._visibleDepth = std::min(data->_maxCallDepth, thread._visibleDepth + kTimelineDepthPageSize);
+                }
+                drawList->AddRectFilled(moreRect.Min, moreRect.Max, moreHovered ? ImColor(1.0f, 1.0f, 1.0f, 0.075f) : ImColor(1.0f, 1.0f, 1.0f, 0.035f));
+                label.clear();
+                label.appendf("%u more", moreDepth);
+                const ImVec2 textSize = ImGui::CalcTextSize(label.c_str());
+                drawList->AddText(ImVec2(moreRect.Min.x + (moreRect.GetWidth() - textSize.x) * 0.5f, moreRect.Min.y + 2.0f), ImColor(kTimelineTextColor), label.c_str());
+                y += _rowHeight + _rowGap;
             }
         }
     }

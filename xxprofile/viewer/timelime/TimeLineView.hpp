@@ -20,6 +20,7 @@ public:
         const xxprofile::ThreadData* _data;
         uint64_t _processStart;
         bool _expended;
+        uint32_t _visibleDepth;
         std::vector<uint32_t> _frameNodeOffsets;
         std::vector<uint32_t> _nodeDepths;
 
@@ -27,6 +28,7 @@ public:
             assert(data);
             _data = data;
             _expended = true;
+            _visibleDepth = 20;
             _processStart = processStart;
             rebuildDepths();
         }
