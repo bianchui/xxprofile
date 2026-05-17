@@ -7,7 +7,7 @@
 
 #include <limits.h>         // INT_MIN, INT_MAX
 
-MainWin::MainWin() : _framesLineView(this), _timeLineView(this) {
+MainWin::MainWin() : _viewType(0), _framesLineView(this), _timeLineView(this) {
     _framesLineView.setLoader(&_loader);
     _frameView.setLoader(&_loader);
     _timeLineView.setLoader(&_loader);
@@ -135,13 +135,12 @@ void MainWin::drawContent() {
     window_flags |= ImGuiWindowFlags_AlwaysVerticalScrollbar;
     window_flags |= ImGuiWindowFlags_HorizontalScrollbar;
 
+    static int layoutViewType = -1;
     if (_loader.thread_count() == 0) {
         ImGui_CenteredText("double click a .xxprofile file to open.");
     } else if (_viewType == 0) {
-        static auto first_time = true;
-        if (first_time) {
-            first_time = false;
-
+        if (layoutViewType != _viewType) {
+            layoutViewType = _viewType;
             ImGuiViewport *viewport = ImGui::GetMainViewport();
             ImGui::DockBuilderRemoveNode(dockspace_id); // clear any previous layout
             ImGui::DockBuilderAddNode(dockspace_id, dockspace_flags | ImGuiDockNodeFlags_DockSpace);
@@ -161,6 +160,19 @@ void MainWin::drawContent() {
         _frameView.draw();
         ImGui::End();
     } else if (_viewType == 1) {
+        if (layoutViewType != _viewType) {
+            layoutViewType = _viewType;
+            ImGuiViewport *viewport = ImGui::GetMainViewport();
+            ImGui::DockBuilderRemoveNode(dockspace_id); // clear any previous layout
+            ImGui::DockBuilderAddNode(dockspace_id, dockspace_flags | ImGuiDockNodeFlags_DockSpace);
+            ImGui::DockBuilderSetNodeSize(dockspace_id, viewport->Size);
+
+            ImGui::DockBuilderDockWindow("Timeline", dockspace_id);
+            ImGui::DockBuilderFinish(dockspace_id);
+        }
+        ImGui_HideTabBar();
+        ImGui::Begin("Timeline", NULL, window_flags);
         _timeLineView.draw();
+        ImGui::End();
     }
 }
