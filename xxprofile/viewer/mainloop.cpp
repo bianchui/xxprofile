@@ -3,6 +3,7 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl2.h"
 #include <stdio.h>
+#include <string.h>
 #include <GLFW/glfw3.h>
 #include <time.h>
 #include <chrono>
@@ -47,6 +48,31 @@ void glfw_setTitle(const char* title) {
     }
 }
 
+static bool isProfileFile(const char* path) {
+    if (!path) {
+        return false;
+    }
+    const char* ext = strrchr(path, '.');
+    if (!ext) {
+        return false;
+    }
+    const char* expected = ".xxprofile";
+    for (size_t i = 0; expected[i] || ext[i]; ++i) {
+        char a = ext[i];
+        char b = expected[i];
+        if (a >= 'A' && a <= 'Z') {
+            a = (char)(a - 'A' + 'a');
+        }
+        if (b >= 'A' && b <= 'Z') {
+            b = (char)(b - 'A' + 'a');
+        }
+        if (a != b) {
+            return false;
+        }
+    }
+    return true;
+}
+
 int glfw_onDocumentOpen(const char* name) {
     XX_PROFILE_SCOPE_FUNCTION();
     printf("%s\n", name);
@@ -66,6 +92,19 @@ int glfw_onDocumentOpen(const char* name) {
     return GLFW_TRUE;
 }
 
+static void glfw_drop_callback(GLFWwindow* window, int count, const char** paths) {
+    (void)window;
+    for (int i = 0; i < count; ++i) {
+        if (isProfileFile(paths[i])) {
+            glfw_onDocumentOpen(paths[i]);
+            return;
+        }
+    }
+    if (count > 0 && paths && paths[0]) {
+        printf("Drop ignored: expected a .xxprofile file, got %s\n", paths[0]);
+    }
+}
+
 void _mainLoop(const char* openFile) {
     XX_PROFILE_SCOPE_FUNCTION();
     // Setup window
@@ -75,8 +114,13 @@ void _mainLoop(const char* openFile) {
     }
     glfwSetOnDocumentOpen(glfw_onDocumentOpen);
     GLFWwindow* window = glfwCreateWindow(1280, 720, kTitle, NULL, NULL);
+    if (!window) {
+        glfwTerminate();
+        return;
+    }
     g_win = window;
     glfwSetWindowTitle(g_win, g_title.c_str());
+    glfwSetDropCallback(window, glfw_drop_callback);
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // Enable vsync
 

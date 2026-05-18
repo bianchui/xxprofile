@@ -137,7 +137,7 @@ void MainWin::drawContent() {
 
     static int layoutViewType = -1;
     if (_loader.thread_count() == 0) {
-        ImGui_CenteredText("double click a .xxprofile file to open.");
+        ImGui_CenteredText("drop or double click a .xxprofile file to open.");
     } else if (_viewType == 0) {
         if (layoutViewType != _viewType) {
             layoutViewType = _viewType;

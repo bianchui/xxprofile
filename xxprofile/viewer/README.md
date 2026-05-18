@@ -11,6 +11,7 @@
   ```
 
 - On supported desktop platforms, double-clicking a `.xxprofile` file can also open it in the viewer.
+- Dragging a `.xxprofile` file onto the viewer window opens it.
 - When no capture is open, the viewer prompts you to open a `.xxprofile` file.
 - After a capture is loaded, the window title shows useful capture information:
   - file name
