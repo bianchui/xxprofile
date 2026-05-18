@@ -33,7 +33,17 @@ struct MainWin : EventHandler {
         //        frameData = &thread._frames[item];
         //    }
         //}
+        if (frameData) {
+            _viewType = 0;
+        }
         _frameView.setFrameData(frameData);
+    }
+
+    void onFrameNodeSelectChange(const xxprofile::FrameData* frameData, const xxprofile::XXProfileTreeNode* node) override {
+        if (frameData) {
+            _viewType = 0;
+        }
+        _frameView.setFrameNodeData(frameData, node);
     }
 
 private:

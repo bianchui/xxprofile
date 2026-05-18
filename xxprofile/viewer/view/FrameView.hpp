@@ -10,6 +10,7 @@ public:
 
     void setLoader(const xxprofile::Loader* loader);
     void setFrameData(const xxprofile::FrameData* data);
+    void setFrameNodeData(const xxprofile::FrameData* data, const xxprofile::XXProfileTreeNode* node);
     void draw();
 
     void clear();
@@ -21,6 +22,8 @@ private:
     const xxprofile::Loader* _loader;
     const xxprofile::FrameData* _frameData;
     const xxprofile::FrameDetail* _frameDetail;
+    const xxprofile::XXProfileTreeNode* _focusNode;
+    bool _focusNodePending;
     bool _combined;
     uint64_t _frameStart;
 };

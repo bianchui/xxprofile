@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include "../format.hpp"
 
-FrameView::FrameView() : _loader(nullptr), _frameData(nullptr), _frameDetail(nullptr), _combined(false) {
+FrameView::FrameView() : _loader(nullptr), _frameData(nullptr), _frameDetail(nullptr), _focusNode(nullptr), _focusNodePending(false), _combined(false) {
     
 }
 
@@ -15,6 +15,8 @@ FrameView::~FrameView() {
 
 void FrameView::clear() {
     _frameData = nullptr;
+    _focusNode = nullptr;
+    _focusNodePending = false;
     if (_frameDetail) {
         delete _frameDetail;
         _frameDetail = nullptr;
@@ -27,6 +29,8 @@ void FrameView::setLoader(const xxprofile::Loader* loader) {
 
 void FrameView::setFrameData(const xxprofile::FrameData* data) {
     if (data == _frameData) {
+        _focusNode = nullptr;
+        _focusNodePending = false;
         return;
     }
     clear();
@@ -34,6 +38,17 @@ void FrameView::setFrameData(const xxprofile::FrameData* data) {
     _frameStart = data ? data->startTime() : 0;
     if (data && _loader) {
         _frameDetail = new xxprofile::FrameDetail(*_loader, *data);
+    }
+}
+
+void FrameView::setFrameNodeData(const xxprofile::FrameData* data, const xxprofile::XXProfileTreeNode* node) {
+    if (data != _frameData) {
+        setFrameData(data);
+    }
+    _focusNode = node;
+    _focusNodePending = node != nullptr;
+    if (node) {
+        _combined = false;
     }
 }
 
@@ -60,10 +75,30 @@ void FrameView::draw() {
         double frameTimes;
         ImGuiStyle* style;
         const xxprofile::FrameDetail* data;
+        const xxprofile::XXProfileTreeNode* focusNode;
+        bool* focusNodePending;
         shared::StrBuf _name;
         shared::StrBuf _timeBuffer;
+        bool containsFocusNode(const xxprofile::TreeItem* item) const {
+            if (!focusNode) {
+                return false;
+            }
+            if (item->_node == focusNode) {
+                return true;
+            }
+            if (!item->_children) {
+                return false;
+            }
+            for (auto iter = item->_children->begin(); iter != item->_children->end(); ++iter) {
+                if (containsFocusNode(*iter)) {
+                    return true;
+                }
+            }
+            return false;
+        }
         void draw(const xxprofile::TreeItem* item, uint64_t parentCycles, children_names_map& names) {
             const double percentage = (item->useCycles() * 1000000 / parentCycles) * 0.0001;
+            const bool focused = item->_node == focusNode;
             if (percentage > 50) {
                 style->Colors[ImGuiCol_Text] = kColorRed;
             } else if (percentage > 30) {
@@ -75,7 +110,14 @@ void FrameView::draw() {
             Format::Time(_timeBuffer, item->useCycles() * _secondsPerCycle);
             if (item->_children) {
                 _name.printf("%d%s", names[item->_name]++, item->_name);
+                if (containsFocusNode(item)) {
+                    ImGui::SetNextItemOpen(true, ImGuiCond_Always);
+                }
                 const bool expanded = ImGui::TreeNode(_name, "(%0.4f%% %s) %s", percentage, _timeBuffer.c_str(), item->_name);
+                if (focused && focusNodePending && *focusNodePending) {
+                    ImGui::SetScrollHereY(0.5f);
+                    *focusNodePending = false;
+                }
                 tooltip(item, percentage);
                 if (expanded) {
                     draw(*item->_children, item->useCycles());
@@ -87,6 +129,10 @@ void FrameView::draw() {
                 }
             } else {
                 ImGui::BulletText("(%0.4f%% %s) %s", percentage, _timeBuffer.c_str(), item->_name);
+                if (focused && focusNodePending && *focusNodePending) {
+                    ImGui::SetScrollHereY(0.5f);
+                    *focusNodePending = false;
+                }
                 tooltip(item, percentage);
             }
         }
@@ -186,6 +232,8 @@ void FrameView::draw() {
     }
     drawtv.frameTimes = drawtv._secondsPerCycle * drawtv.frameCycles;
     drawtv.style = &style;
+    drawtv.focusNode = _focusNode;
+    drawtv.focusNodePending = &_focusNodePending;
     const ImVec4 colorOld = style.Colors[ImGuiCol_Text];
     if (!_combined) {
         drawtv.draw(_frameDetail->roots(), drawtv.frameCycles);

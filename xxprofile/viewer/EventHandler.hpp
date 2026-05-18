@@ -6,6 +6,7 @@
 
 struct EventHandler {
     virtual void onFrameSelectChange(const xxprofile::FrameData* frameData) = 0;
+    virtual void onFrameNodeSelectChange(const xxprofile::FrameData* frameData, const xxprofile::XXProfileTreeNode* node) = 0;
 };
 
 #endif//xxprofileviewer_EventHandler_hpp

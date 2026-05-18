@@ -44,6 +44,7 @@ private:
     void drawRuler(ImDrawList* drawList, const ImRect& rulerRect, const ImRect& bodyRect, double visibleTicks, double ticksToPixels) const;
     void drawFrame(ImDrawList* drawList, const ThreadData& thread, const xxprofile::FrameData& frame, const ImRect& bodyRect, float y, double ticksToPixels);
     void drawNode(ImDrawList* drawList, const ThreadData& thread, const xxprofile::FrameData& frame, uint32_t nodeIndex, const ImRect& bodyRect, float y, double ticksToPixels);
+    void selectThreadFrame(const ThreadData& thread);
     float timeToX(uint64_t time, const ImRect& bodyRect, double ticksToPixels) const;
     ImU32 nameColor(const char* name, float saturation = 0.55f, float value = 0.72f) const;
 

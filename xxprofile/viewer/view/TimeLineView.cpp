@@ -260,6 +260,10 @@ void TimeLineView::drawNode(ImDrawList* drawList, const ThreadData& thread, cons
 
     if (ImGui::IsMouseHoveringRect(rect.Min, rect.Max)) {
         shared::StrBuf buf;
+        if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+            _selectedFrame = &frame;
+            _handler->onFrameNodeSelectChange(&frame, &node);
+        }
         buf.appendf("%s\nFrame %d\nStart: ", name, frame.frameId());
         Format::Time(buf, (node._beginTime - frame.startTime()) * thread._data->_secondsPerCycle);
         buf.append("\nEnd:   ");
@@ -268,6 +272,20 @@ void TimeLineView::drawNode(ImDrawList* drawList, const ThreadData& thread, cons
         Format::Time(buf, (node._endTime - node._beginTime) * thread._data->_secondsPerCycle);
         ImGui::SetTooltip("%s", buf.c_str());
     }
+}
+
+void TimeLineView::selectThreadFrame(const ThreadData& thread) {
+    if (!thread._data || thread._data->_frames.empty()) {
+        return;
+    }
+
+    uint32_t frameIndex = thread._data->findFirstFrame(_processStart + (uint64_t)_viewStart);
+    if (frameIndex >= thread._data->_frames.size()) {
+        frameIndex = (uint32_t)thread._data->_frames.size() - 1;
+    }
+    const xxprofile::FrameData* frame = &thread._data->_frames[frameIndex];
+    _selectedFrame = frame;
+    _handler->onFrameSelectChange(frame);
 }
 
 void TimeLineView::draw() {
@@ -350,14 +368,17 @@ void TimeLineView::draw() {
         const ImRect headerRect(ImVec2(canvas.Min.x, y), ImVec2(canvas.Max.x, y + _threadHeaderHeight));
         const ImRect headerLeftRect(ImVec2(leftRect.Min.x, y), ImVec2(leftRect.Max.x, y + _threadHeaderHeight));
         const ImRect arrowRect(ImVec2(leftRect.Min.x + 4.0f, y + 3.0f), ImVec2(leftRect.Min.x + 20.0f, y + 19.0f));
+        const bool arrowHovered = ImGui::IsMouseHoveringRect(arrowRect.Min, arrowRect.Max);
         const bool headerHovered = ImGui::IsMouseHoveringRect(headerLeftRect.Min, headerLeftRect.Max);
-        if (headerHovered && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+        if (arrowHovered && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
             if (thread._expended) {
                 thread._expended = false;
             } else {
                 thread._expended = true;
                 thread._visibleDepth = kTimelineDepthPageSize;
             }
+        } else if (headerHovered && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+            selectThreadFrame(thread);
         }
 
         drawList->AddRectFilled(headerRect.Min, headerRect.Max, ImColor(1.0f, 1.0f, 1.0f, 0.035f));
