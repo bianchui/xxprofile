@@ -121,6 +121,11 @@ void MainWin::drawContent() {
         }
         ImGui::EndMenuBar();
     }
+    if (_loader.thread_count() == 0) {
+        ImGui_CenteredText("drop or double click a .xxprofile file to open.");
+        return;
+    }
+
     ImGuiID dockspace_id = ImGui::GetID("MainDockSpace");
     ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
     //dockspace_flags |= ImGuiDockNodeFlags_AutoHideTabBar;
@@ -136,9 +141,7 @@ void MainWin::drawContent() {
     window_flags |= ImGuiWindowFlags_HorizontalScrollbar;
 
     static int layoutViewType = -1;
-    if (_loader.thread_count() == 0) {
-        ImGui_CenteredText("drop or double click a .xxprofile file to open.");
-    } else if (_viewType == 0) {
+    if (_viewType == 0) {
         if (layoutViewType != _viewType) {
             layoutViewType = _viewType;
             ImGuiViewport *viewport = ImGui::GetMainViewport();
