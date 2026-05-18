@@ -121,7 +121,7 @@ void FrameView::draw() {
             Format::Time(_timeBuffer, item->useCycles() * _secondsPerCycle);
             if (item->_children) {
                 _name.printf("%d%s", names[item->_name]++, item->_name);
-                if (containsFocusNode(item)) {
+                if (focusNodePending && *focusNodePending && containsFocusNode(item)) {
                     ImGui::SetNextItemOpen(true, ImGuiCond_Always);
                 }
                 const bool expanded = ImGui::TreeNode(_name, "(%0.4f%% %s) %s", percentage, _timeBuffer.c_str(), item->_name);
