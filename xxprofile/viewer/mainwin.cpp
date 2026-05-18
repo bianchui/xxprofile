@@ -170,12 +170,18 @@ void MainWin::drawContent() {
             ImGui::DockBuilderAddNode(dockspace_id, dockspace_flags | ImGuiDockNodeFlags_DockSpace);
             ImGui::DockBuilderSetNodeSize(dockspace_id, viewport->Size);
 
+            auto dock_id_bottom = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Down, 0.35f, nullptr, &dockspace_id);
             ImGui::DockBuilderDockWindow("Timeline", dockspace_id);
+            ImGui::DockBuilderDockWindow("Frame Detail", dock_id_bottom);
             ImGui::DockBuilderFinish(dockspace_id);
         }
         ImGui_HideTabBar();
         ImGui::Begin("Timeline", NULL, window_flags);
         _timeLineView.draw();
+        ImGui::End();
+        ImGui_HideTabBar();
+        ImGui::Begin("Frame Detail", NULL, window_flags);
+        _frameView.draw();
         ImGui::End();
     }
 }
