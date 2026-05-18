@@ -24,14 +24,7 @@ public:
         std::vector<uint32_t> _frameNodeOffsets;
         std::vector<uint32_t> _nodeDepths;
 
-        void init(const xxprofile::ThreadData* data, uint64_t processStart) {
-            assert(data);
-            _data = data;
-            _expended = true;
-            _visibleDepth = 20;
-            _processStart = processStart;
-            rebuildDepths();
-        }
+        void init(const xxprofile::ThreadData* data, uint64_t processStart);
 
         void rebuildDepths();
         uint32_t nodeDepth(const xxprofile::FrameData& frame, uint32_t nodeIndex) const;

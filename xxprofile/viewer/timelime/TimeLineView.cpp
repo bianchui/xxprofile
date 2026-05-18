@@ -6,7 +6,18 @@
 #include <algorithm>
 #include <cmath>
 
+static const uint32_t kTimelineDepthPageSize = 10;
+
 #pragma mark - TimeLineView::ThreadData
+
+void TimeLineView::ThreadData::init(const xxprofile::ThreadData* data, uint64_t processStart) {
+    assert(data);
+    _data = data;
+    _expended = true;
+    _visibleDepth = kTimelineDepthPageSize;
+    _processStart = processStart;
+    rebuildDepths();
+}
 
 void TimeLineView::ThreadData::rebuildDepths() {
     _frameNodeOffsets.clear();
@@ -48,7 +59,6 @@ uint32_t TimeLineView::ThreadData::nodeDepth(const xxprofile::FrameData& frame, 
 
 static const ImVec4 kTimelineTextColor(0.72f, 0.74f, 0.78f, 1.0f);
 static const ImVec4 kTimelineMutedTextColor(0.48f, 0.50f, 0.55f, 1.0f);
-static const uint32_t kTimelineDepthPageSize = 20;
 
 TimeLineView::TimeLineView(EventHandler* handler)
 : _handler(handler)
