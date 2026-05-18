@@ -360,6 +360,10 @@ function build_android_lib_cmake() {
       -DANDROID_PLATFORM=android-21 \
       -DANDROID_STL=c++_static \
       -DXXPROFILE_DYNAMIC=ON \
+      -DXXPROFILE_BUILD_LOADER=OFF \
+      -DXXPROFILE_BUILD_TESTS=OFF \
+      -DXXPROFILE_BUILD_TEST_COMPRESS=OFF \
+      -DXXPROFILE_BUILD_VIEWER=OFF \
       "$PROJ_DIR"
 
     guard cmake --build . --config Release
@@ -536,6 +540,12 @@ function parse_arguments() {
         ;;
 
       cmake_test_android)
+        build_cmake_test_android
+        ;;
+
+      test)
+        build_cmake_test_mac
+        build_cmake_test_ios
         build_cmake_test_android
         ;;
 
