@@ -79,6 +79,17 @@ void FrameView::draw() {
         bool* focusNodePending;
         shared::StrBuf _name;
         shared::StrBuf _timeBuffer;
+        void drawFocusRect() const {
+            ImDrawList* drawList = ImGui::GetWindowDrawList();
+            ImVec2 min = ImGui::GetItemRectMin();
+            ImVec2 max = ImGui::GetItemRectMax();
+            min.x -= 3.0f;
+            min.y -= 2.0f;
+            max.x += 3.0f;
+            max.y += 2.0f;
+            drawList->AddRectFilled(min, max, ImColor(1.0f, 0.82f, 0.12f, 0.12f), 2.0f);
+            drawList->AddRect(min, max, ImColor(1.0f, 0.82f, 0.12f, 1.0f), 2.0f, 0, 2.0f);
+        }
         bool containsFocusNode(const xxprofile::TreeItem* item) const {
             if (!focusNode) {
                 return false;
@@ -118,6 +129,9 @@ void FrameView::draw() {
                     ImGui::SetScrollHereY(0.5f);
                     *focusNodePending = false;
                 }
+                if (focused) {
+                    drawFocusRect();
+                }
                 tooltip(item, percentage);
                 if (expanded) {
                     draw(*item->_children, item->useCycles());
@@ -132,6 +146,9 @@ void FrameView::draw() {
                 if (focused && focusNodePending && *focusNodePending) {
                     ImGui::SetScrollHereY(0.5f);
                     *focusNodePending = false;
+                }
+                if (focused) {
+                    drawFocusRect();
                 }
                 tooltip(item, percentage);
             }
