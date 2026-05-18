@@ -1,9 +1,9 @@
 // Copyright (C) 2018-2025, bianchui. All rights reserved.
 #ifndef xxprofileviewer_mainwin_hpp
 #define xxprofileviewer_mainwin_hpp
-#include "frame/FramesLineView.hpp"
-#include "frame/FrameView.hpp"
-#include "timelime/TimeLineView.hpp"
+#include "view/FramesLineView.hpp"
+#include "view/FrameView.hpp"
+#include "view/TimeLineView.hpp"
 #include "../loader/xxprofile_loader.hpp"
 #include "EventHandler.hpp"
 

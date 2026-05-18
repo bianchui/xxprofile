@@ -245,9 +245,9 @@ if(XXPROFILE_BUILD_VIEWER)
         ${XXPROFILE_VIEWER_DIR}/main.c
         ${XXPROFILE_VIEWER_DIR}/mainloop.cpp
         ${XXPROFILE_VIEWER_DIR}/mainwin.cpp
-        ${XXPROFILE_VIEWER_DIR}/frame/FramesLineView.cpp
-        ${XXPROFILE_VIEWER_DIR}/frame/FrameView.cpp
-        ${XXPROFILE_VIEWER_DIR}/timelime/TimeLineView.cpp
+        ${XXPROFILE_VIEWER_DIR}/view/FramesLineView.cpp
+        ${XXPROFILE_VIEWER_DIR}/view/FrameView.cpp
+        ${XXPROFILE_VIEWER_DIR}/view/TimeLineView.cpp
     )
     xxprofile_apply_common_options(xxprofile_viewer)
     xxprofile_apply_platform(xxprofile_viewer)
