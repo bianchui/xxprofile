@@ -108,8 +108,12 @@ bool FrameData::init() {
                         _endTime = node->_endTime;
                     }
                 }
-            } else if (node->_parentNodeId < nodeCount) {
-                const uint32_t depth = g_depth[i] = g_depth[node->_parentNodeId] + 1;
+            } else if (node->_parentNodeId <= nodeCount) {
+                const uint32_t parentIndex = node->_parentNodeId - 1;
+                if (parentIndex >= i) {
+                    return false;
+                }
+                const uint32_t depth = g_depth[i] = g_depth[parentIndex] + 1;
                 if (maxDepth < depth) {
                     maxDepth = depth;
                 }
