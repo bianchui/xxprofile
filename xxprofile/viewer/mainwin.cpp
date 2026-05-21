@@ -7,7 +7,7 @@
 
 #include <limits.h>         // INT_MIN, INT_MAX
 
-MainWin::MainWin() : _viewType(0), _framesLineView(this), _timeLineView(this) {
+MainWin::MainWin() : _viewType(1), _framesLineView(this), _timeLineView(this) {
     _framesLineView.setLoader(&_loader);
     _frameView.setLoader(&_loader);
     _timeLineView.setLoader(&_loader);
