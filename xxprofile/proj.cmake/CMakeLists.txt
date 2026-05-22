@@ -235,9 +235,9 @@ if(XXPROFILE_BUILD_VIEWER)
         )
     endif()
 
-    set(XXPROFILE_VIEWER_MAINLOOP_SOURCE ${XXPROFILE_VIEWER_DIR}/mainloop.cpp)
+    set(XXPROFILE_VIEWER_BACKEND_SOURCE ${XXPROFILE_VIEWER_DIR}/mainloop_opengl2.cpp)
     if(APPLE)
-        set(XXPROFILE_VIEWER_MAINLOOP_SOURCE ${XXPROFILE_VIEWER_DIR}/mainloop_metal.mm)
+        set(XXPROFILE_VIEWER_BACKEND_SOURCE ${XXPROFILE_VIEWER_DIR}/mainloop_metal.mm)
         set_source_files_properties(
             ${XXPROFILE_LIBS_DIR}/imgui/backends/imgui_impl_metal.mm
             ${XXPROFILE_VIEWER_DIR}/mainloop_metal.mm
@@ -271,7 +271,8 @@ if(XXPROFILE_BUILD_VIEWER)
 
     add_executable(xxprofile_viewer
         ${XXPROFILE_VIEWER_DIR}/main.c
-        ${XXPROFILE_VIEWER_MAINLOOP_SOURCE}
+        ${XXPROFILE_VIEWER_DIR}/mainloop.cpp
+        ${XXPROFILE_VIEWER_BACKEND_SOURCE}
         ${XXPROFILE_VIEWER_DIR}/mainwin.cpp
         ${XXPROFILE_VIEWER_DIR}/view/FramesLineView.cpp
         ${XXPROFILE_VIEWER_DIR}/view/FrameView.cpp

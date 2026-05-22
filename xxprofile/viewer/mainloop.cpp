@@ -1,12 +1,20 @@
-// Copyright (C) 2018-2025, bianchui. All rights reserved.
+// Copyright (C) 2018-2026, bianchui. All rights reserved.
+#include "mainloop_backend.hpp"
+
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl2.h"
+
+#include <GLFW/glfw3.h>
+#include <chrono>
 #include <stdio.h>
 #include <string.h>
-#include <GLFW/glfw3.h>
+#include <string>
 #include <time.h>
-#include <chrono>
+
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 #include <shared/utils/StrBuf.h>
 
 #define XX_ENABLE_PROFILE 0
@@ -19,11 +27,35 @@ static void glfw_error_callback(int error, const char* description) {
     fprintf(stderr, "Glfw Error %d: %s\n", error, description);
 }
 
-uint64_t getTimeStamp() {
+static uint64_t getTimeStamp() {
     return (std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
 }
 
-void setupStyle() {
+static void sleepToMinFrameTime(uint64_t start) {
+    const uint64_t end = getTimeStamp();
+    const uint64_t used = end - start;
+    const uint64_t minTime = 33000;
+    if (used >= minTime) {
+        return;
+    }
+
+#ifdef _WIN32
+    Sleep((DWORD)((minTime - used) / 1000));
+#else
+    struct timespec rqtp, rmtp;
+    rqtp.tv_sec = 0;
+    rqtp.tv_nsec = (minTime - used) * 1000;
+    while (true) {
+        int ret = nanosleep(&rqtp, &rmtp);
+        if (!ret || rmtp.tv_nsec == 0) {
+            break;
+        }
+        rqtp = rmtp;
+    }
+#endif
+}
+
+static void setupStyle() {
     //ImGui::StyleColorsDark();
     ImGui::StyleColorsClassic();
 
@@ -35,12 +67,12 @@ void setupStyle() {
     style.WindowRounding = 0.0f;
 }
 
-MainWin mainwin;
-GLFWwindow* g_win = NULL;
-const char* kTitle = "xxprofileViewer";
-std::string g_title = kTitle;
+static MainWin mainwin;
+static GLFWwindow* g_win = NULL;
+static const char* kTitle = "xxprofileViewer";
+static std::string g_title = kTitle;
 
-void glfw_setTitle(const char* title) {
+static void glfw_setTitle(const char* title) {
     XX_PROFILE_SCOPE_FUNCTION();
     g_title = title;
     if (g_win) {
@@ -73,7 +105,7 @@ static bool isProfileFile(const char* path) {
     return true;
 }
 
-int glfw_onDocumentOpen(const char* name) {
+static int glfw_onDocumentOpen(const char* name) {
     XX_PROFILE_SCOPE_FUNCTION();
     printf("%s\n", name);
     if (!mainwin.load(name)) {
@@ -105,35 +137,40 @@ static void glfw_drop_callback(GLFWwindow* window, int count, const char** paths
     }
 }
 
-void _mainLoop(const char* openFile) {
+static void _mainLoop(const char* openFile) {
     XX_PROFILE_SCOPE_FUNCTION();
-    // Setup window
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit()) {
         return;
     }
+
     glfwSetOnDocumentOpen(glfw_onDocumentOpen);
+    glfwDefaultWindowHints();
+    mainloopBackendApplyWindowHints();
+
     GLFWwindow* window = glfwCreateWindow(1280, 720, kTitle, NULL, NULL);
     if (!window) {
         glfwTerminate();
         return;
     }
+
     g_win = window;
     glfwSetWindowTitle(g_win, g_title.c_str());
     glfwSetDropCallback(window, glfw_drop_callback);
-    glfwMakeContextCurrent(window);
-    glfwSwapInterval(1); // Enable vsync
 
-    // Setup Dear ImGui binding
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
-    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;   // Enable Gamepad Controls
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
+    ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL2_Init();
+    if (!mainloopBackendInit(window)) {
+        ImGui::DestroyContext();
+        g_win = NULL;
+        glfwDestroyWindow(window);
+        glfwTerminate();
+        return;
+    }
 
     setupStyle();
 
@@ -143,69 +180,42 @@ void _mainLoop(const char* openFile) {
 
     const ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-
-    // Main loop
     while (!glfwWindowShouldClose(window)) {
         const uint64_t start = getTimeStamp();
-        // Poll and handle events (inputs, window resize, etc.)
-        // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
-        // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application.
-        // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application.
-        // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
         glfwPollEvents();
-
-        // Start the ImGui frame
-        ImGui_ImplOpenGL2_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
 
         int display_w, display_h, w, h;
         glfwGetFramebufferSize(window, &display_w, &display_h);
         glfwGetWindowSize(window, &w, &h);
+        if (display_w <= 0 || display_h <= 0) {
+            sleepToMinFrameTime(start);
+            continue;
+        }
+
+        if (!mainloopBackendNewFrame(window, clear_color, display_w, display_h, w, h)) {
+            sleepToMinFrameTime(start);
+            continue;
+        }
+
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
         io.DisplaySize = ImVec2((float)w, (float)h);
         io.DisplayFramebufferScale = ImVec2(w > 0 ? ((float)display_w / w) : 0, h > 0 ? ((float)display_h / h) : 0);
 
         mainwin.draw(w, h);
 
-        // Rendering
         ImGui::Render();
-        glViewport(0, 0, display_w, display_h);
-        glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-        glClear(GL_COLOR_BUFFER_BIT);
-        //glUseProgram(0); // You may want this if using this code in an OpenGL 3+ context where shaders may be bound, but prefer using the GL3+ code.
-        ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+        mainloopBackendRender(window, ImGui::GetDrawData(), clear_color, display_w, display_h);
 
-        glfwMakeContextCurrent(window);
-        glfwSwapBuffers(window);
-
-        if (true) {
-            const uint64_t end = getTimeStamp();
-            const uint64_t used = end - start;
-            const uint64_t minTime = 33000;
-            if (used < minTime) {
-#ifdef _WIN32
-                Sleep(minTime / 1000);
-#else//_WIN32
-                struct timespec rqtp, rmtp;
-                rqtp.tv_sec = 0;
-                rqtp.tv_nsec = (minTime - used) * 1000;
-                while (true) {
-                    int ret = nanosleep(&rqtp, &rmtp);
-                    if (!ret || rmtp.tv_nsec == 0) {
-                        break;
-                    }
-                    rqtp = rmtp;
-                }
-#endif  //_WIN32
-            }
-        }
+        sleepToMinFrameTime(start);
     }
 
-    // Cleanup
-    ImGui_ImplOpenGL2_Shutdown();
+    mainloopBackendShutdown(window);
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 
+    g_win = NULL;
     glfwDestroyWindow(window);
     glfwTerminate();
 }
