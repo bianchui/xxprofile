@@ -475,17 +475,6 @@ function build_wasm_lib() {
   guard popd > /dev/null
 }
 
-function build_all() {
-  build_apple_lib
-  build_apple_viewer
-  build_cmake_lib_mac
-  build_cmake_lib_ios
-  build_cmake_viewer
-  build_android_lib_ndk_build
-  build_android_lib_cmake
-  build_wasm_lib
-}
-
 function copy_headers() {
   echo "==== Copying headers ===="
   guard mkdir -p $THIS_DIR/out/include
@@ -502,13 +491,20 @@ function zip_out() {
 
 function cleanup_all() {
   echo "==== Cleaning up all ===="
+  guard rm -rf $THIS_DIR/build
+
+  guard rm -rf $THIS_DIR/libs/imgui/examples/example_glfw_metal/example_glfw_metal
+
   guard rm -rf $THIS_DIR/out/prebuilt
   guard rm -rf $THIS_DIR/out/include
   guard rm -rf $THIS_DIR/out/xxprofileViewer.app
+  guard rm -rf $THIS_DIR/out/xxprofile_viewer_cmake
 
   # android
   guard rm -rf $THIS_DIR/xxprofile/proj.android/libs/
   guard rm -rf $THIS_DIR/xxprofile/proj.android/obj/
+  guard rm -rf $THIS_DIR/xxprofile/proj.android/san-angeles/app/.cxx/
+  guard rm -rf $THIS_DIR/xxprofile/proj.android/san-angeles/app/build/
   guard rm -rf $THIS_DIR/xxprofile/proj.android/test/libs/
   guard rm -rf $THIS_DIR/xxprofile/proj.android/test/obj/
 
@@ -522,27 +518,29 @@ function cleanup_all() {
 function usage() {
   echo "$0 commands"
   echo "commands:"
-  echo "------------ seprate build commands ---------------"
+  echo "-------------- normal build commands --------------"
   echo "  apple                 : build apple lib and viewer"
   echo "  android               : build android lib"
   echo "  wasm                  : build wasm lib"
   echo "  headers               : copy headers"
   echo "  zip                   : zip out files"
-  echo "------------- cmake build commands ----------------"
+  echo "  build                 : = apple + android + wasm + headers + zip"
+  echo "-------------- cmake build commands ---------------"
   echo "  cmake_lib_mac         : build mac static lib with cmake"
   echo "  cmake_lib_ios         : build ios static xcframework with cmake"
-  echo "  cmake_apple           : build cmake mac lib, ios lib, and mac viewer"
   echo "  cmake_viewer          : build mac viewer executable with cmake"
-  echo "-------------- all in one commands ----------------"
-  echo "  build                 : build all"
-  echo "  clean                 : clean all"
-  echo "----------- cmake build test commands -------------"
+  echo "  cmake_apple           : = cmake_lib_mac + cmake_lib_ios + cmake_viewer"
+  echo "  cmake_lib_android     : build ios static xcframework with cmake"
+  echo "  cmake                 : = cmake_apple + cmake_lib_android"
+  echo "------------ cmake build test commands ------------"
   echo "  cmake_test_mac        : build and run mac test with cmake"
   echo "  cmake_test_ios        : build ios test executable with cmake"
   echo "  cmake_test_android    : build android test executable with cmake"
-  echo "---------- imgui sample build commands ------------"
+  echo "  cmake_test            : = cmake_test_mac + cmake_test_ios + cmake_test_android"
+  echo "----------- imgui sample build commands -----------"
   echo "  imgui_sample_mac_metal: build ImGui GLFW Metal sample with bundled GLFW 3.3.10"
-
+  echo "---------------- cleanup commands -----------------"
+  echo "  clean                 : clean all"
 }
 
 function parse_arguments() {
@@ -555,49 +553,8 @@ function parse_arguments() {
         build_apple_viewer
         ;;
 
-      cmake_lib_mac)
-        build_cmake_lib_mac
-        ;;
-
-      cmake_lib_ios)
-        build_cmake_lib_ios
-        ;;
-
-      cmake_viewer)
-        build_cmake_viewer
-        ;;
-
-      imgui_sample_mac_metal)
-        build_imgui_sample_mac_metal
-        ;;
-
-      cmake_apple)
-        build_cmake_lib_mac
-        build_cmake_lib_ios
-        build_cmake_viewer
-        ;;
-
-      cmake_test_mac)
-        build_cmake_test_mac
-        ;;
-
-      cmake_test_ios)
-        build_cmake_test_ios
-        ;;
-
-      cmake_test_android)
-        build_cmake_test_android
-        ;;
-
-      test)
-        build_cmake_test_mac
-        build_cmake_test_ios
-        build_cmake_test_android
-        ;;
-
       android)
         build_android_lib_ndk_build
-        build_android_lib_cmake
         ;;
 
       wasm)
@@ -613,9 +570,63 @@ function parse_arguments() {
         ;;
 
       build)
-        build_all
+        build_apple_lib
+        build_apple_viewer
+        build_android_lib_ndk_build
+        build_wasm_lib
         copy_headers
         zip_out
+        ;;
+
+      cmake_lib_mac)
+        build_cmake_lib_mac
+        ;;
+
+      cmake_lib_ios)
+        build_cmake_lib_ios
+        ;;
+
+      cmake_lib_android)
+        build_android_lib_cmake
+        ;;
+
+      cmake_viewer)
+        build_cmake_viewer
+        ;;
+
+      cmake_apple)
+        build_cmake_lib_mac
+        build_cmake_lib_ios
+        build_cmake_viewer
+        ;;
+
+      cmake)
+        build_cmake_lib_mac
+        build_cmake_lib_ios
+        build_cmake_viewer
+        build_android_lib_cmake
+        ;;
+
+      cmake_test_mac)
+        build_cmake_test_mac
+        ;;
+
+      cmake_test_ios)
+        build_cmake_test_ios
+        ;;
+
+      cmake_test_android)
+        build_cmake_test_android
+        ;;
+
+      cmake_test)
+        build_cmake_test_mac
+        build_cmake_test_ios
+        build_cmake_test_android
+        ;;
+
+      imgui_sample_mac_metal)
+        build_imgui_sample_mac_metal
         ;;
 
       clean)
