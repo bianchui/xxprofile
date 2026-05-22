@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.10)
 
 project(xxprofile LANGUAGES C CXX)
 
+if(APPLE)
+    enable_language(OBJCXX)
+endif()
+
 option(XXPROFILE_HAS_DECOMPRESS "Enable decompression support in xxprofile" OFF)
 option(XXPROFILE_DYNAMIC "Build xxprofile as a shared library with XX_DLL_EXPORT=1" OFF)
 option(XXPROFILE_BUILD_LOADER "Build xxprofile trace loader library" ON)
@@ -217,13 +221,35 @@ if(XXPROFILE_BUILD_VIEWER)
     set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
     add_subdirectory(${XXPROFILE_LIBS_DIR}/glfw-3.2.1 ${CMAKE_BINARY_DIR}/glfw)
 
+    set(XXPROFILE_IMGUI_BACKEND_SOURCES
+        ${XXPROFILE_LIBS_DIR}/imgui/backends/imgui_impl_glfw.cpp
+    )
+    if(APPLE)
+        list(APPEND XXPROFILE_IMGUI_BACKEND_SOURCES
+            ${XXPROFILE_LIBS_DIR}/imgui/backends/imgui_impl_metal.mm
+        )
+    else()
+        list(APPEND XXPROFILE_IMGUI_BACKEND_SOURCES
+            ${XXPROFILE_LIBS_DIR}/imgui/backends/imgui_impl_opengl2.cpp
+        )
+    endif()
+
+    set(XXPROFILE_VIEWER_MAINLOOP_SOURCE ${XXPROFILE_VIEWER_DIR}/mainloop.cpp)
+    if(APPLE)
+        set(XXPROFILE_VIEWER_MAINLOOP_SOURCE ${XXPROFILE_VIEWER_DIR}/mainloop_metal.mm)
+        set_source_files_properties(
+            ${XXPROFILE_LIBS_DIR}/imgui/backends/imgui_impl_metal.mm
+            ${XXPROFILE_VIEWER_DIR}/mainloop_metal.mm
+            PROPERTIES COMPILE_FLAGS "-fobjc-arc"
+        )
+    endif()
+
     add_library(xxprofile_imgui STATIC
         ${XXPROFILE_LIBS_DIR}/imgui/imgui.cpp
         ${XXPROFILE_LIBS_DIR}/imgui/imgui_draw.cpp
         ${XXPROFILE_LIBS_DIR}/imgui/imgui_tables.cpp
         ${XXPROFILE_LIBS_DIR}/imgui/imgui_widgets.cpp
-        ${XXPROFILE_LIBS_DIR}/imgui/backends/imgui_impl_glfw.cpp
-        ${XXPROFILE_LIBS_DIR}/imgui/backends/imgui_impl_opengl2.cpp
+        ${XXPROFILE_IMGUI_BACKEND_SOURCES}
         ${XXPROFILE_VIEWER_DIR}/imgui/imgui_custom.cpp
     )
     target_include_directories(xxprofile_imgui
@@ -244,7 +270,7 @@ if(XXPROFILE_BUILD_VIEWER)
 
     add_executable(xxprofile_viewer
         ${XXPROFILE_VIEWER_DIR}/main.c
-        ${XXPROFILE_VIEWER_DIR}/mainloop.cpp
+        ${XXPROFILE_VIEWER_MAINLOOP_SOURCE}
         ${XXPROFILE_VIEWER_DIR}/mainwin.cpp
         ${XXPROFILE_VIEWER_DIR}/view/FramesLineView.cpp
         ${XXPROFILE_VIEWER_DIR}/view/FrameView.cpp
@@ -268,8 +294,17 @@ if(XXPROFILE_BUILD_VIEWER)
         xxprofile_compression_deps
     )
 
-    find_package(OpenGL REQUIRED)
-    target_link_libraries(xxprofile_viewer PRIVATE OpenGL::GL)
+    if(APPLE)
+        find_library(METAL_FRAMEWORK Metal REQUIRED)
+        find_library(QUARTZCORE_FRAMEWORK QuartzCore REQUIRED)
+        target_link_libraries(xxprofile_viewer PRIVATE
+            ${METAL_FRAMEWORK}
+            ${QUARTZCORE_FRAMEWORK}
+        )
+    else()
+        find_package(OpenGL REQUIRED)
+        target_link_libraries(xxprofile_viewer PRIVATE OpenGL::GL)
+    endif()
 
     if(WIN32)
         target_sources(xxprofile_viewer PRIVATE ${XXPROFILE_ROOT_DIR}/proj.win/xxprofileViewer/xxprofileViewer.rc)
