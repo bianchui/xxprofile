@@ -219,7 +219,7 @@ if(XXPROFILE_BUILD_VIEWER)
     set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
     set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
     set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
-    add_subdirectory(${XXPROFILE_LIBS_DIR}/glfw-3.2.1 ${CMAKE_BINARY_DIR}/glfw)
+    add_subdirectory(${XXPROFILE_LIBS_DIR}/glfw-3.3.10 ${CMAKE_BINARY_DIR}/glfw)
 
     set(XXPROFILE_IMGUI_BACKEND_SOURCES
         ${XXPROFILE_LIBS_DIR}/imgui/backends/imgui_impl_glfw.cpp
@@ -256,7 +256,7 @@ if(XXPROFILE_BUILD_VIEWER)
         PUBLIC
             ${XXPROFILE_LIBS_DIR}/imgui
             ${XXPROFILE_LIBS_DIR}/imgui/backends
-            ${XXPROFILE_LIBS_DIR}/glfw-3.2.1/include
+            ${XXPROFILE_LIBS_DIR}/glfw-3.3.10/include
             ${XXPROFILE_VIEWER_DIR}/imgui
             ${XXPROFILE_REPO_ROOT}
     )
@@ -286,7 +286,7 @@ if(XXPROFILE_BUILD_VIEWER)
         ${XXPROFILE_VIEWER_DIR}
         ${XXPROFILE_LIBS_DIR}/imgui
         ${XXPROFILE_LIBS_DIR}/imgui/backends
-        ${XXPROFILE_LIBS_DIR}/glfw-3.2.1/include
+        ${XXPROFILE_LIBS_DIR}/glfw-3.3.10/include
     )
     target_link_libraries(xxprofile_viewer PRIVATE
         xxprofile_loader

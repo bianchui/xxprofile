@@ -209,7 +209,7 @@ function build_imgui_sample_mac_metal() {
     EXE="$EXAMPLE_DIR/example_glfw_metal" \
     IMGUI_DIR="$THIS_DIR/libs/imgui" \
     VPATH="$EXAMPLE_DIR:$THIS_DIR/libs/imgui:$THIS_DIR/libs/imgui/backends" \
-    CXXFLAGS="-std=c++11 -I$THIS_DIR/libs/imgui -I$THIS_DIR/libs/imgui/backends -I$THIS_DIR/libs/glfw-3.2.1/include -Wall -Wformat" \
+    CXXFLAGS="-std=c++11 -I$THIS_DIR/libs/imgui -I$THIS_DIR/libs/imgui/backends -I$THIS_DIR/libs/glfw-3.3.10/include -Wall -Wformat" \
     LIBS="-framework Metal -framework MetalKit -framework Cocoa -framework IOKit -framework CoreVideo -framework QuartzCore $GLFW_LIB"
 }
 
