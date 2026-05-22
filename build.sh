@@ -32,7 +32,7 @@ function build_apple_lib() {
   guard popd
 }
 
-function build_apple_viewer() {
+function build_mac_viewer() {
   echo "==== Building apple viewer ===="
   guard pushd $THIS_DIR/xxprofile/proj.apple
     guard ./build_viewer.sh
@@ -47,7 +47,7 @@ function cmake_build_target() {
   guard cmake --build "$BUILD_DIR" --config "$CONFIG" --target "$TARGET" --parallel
 }
 
-function build_cmake_lib_mac() {
+function cmake_lib_mac() {
   echo "==== Building mac lib with cmake ===="
   local PROJ_DIR="$THIS_DIR/xxprofile/proj.cmake"
   local BUILD_DIR="$THIS_DIR/xxprofile/build/cmake-lib-mac"
@@ -80,7 +80,7 @@ function build_cmake_lib_mac() {
   guard cp "$LIB_PATH" "$OUT_DIR/libxxprofile.a"
 }
 
-function build_cmake_lib_ios_sdk() {
+function cmake_lib_ios_sdk() {
   local SDK="$1"
   local ARCHS="$2"
   local PROJ_DIR="$THIS_DIR/xxprofile/proj.cmake"
@@ -129,10 +129,10 @@ function build_cmake_lib_ios_sdk() {
   guard cp "$LIB_PATH" "$OUT_DIR/libxxprofile.a"
 }
 
-function build_cmake_lib_ios() {
+function cmake_lib_ios() {
   echo "==== Building ios lib with cmake ===="
-  build_cmake_lib_ios_sdk iphoneos arm64
-  build_cmake_lib_ios_sdk iphonesimulator "arm64;x86_64"
+  cmake_lib_ios_sdk iphoneos arm64
+  cmake_lib_ios_sdk iphonesimulator "arm64;x86_64"
 
   local OUT_DIR="$THIS_DIR/out/prebuilt/cmake/ios"
   local XCFRAMEWORK="$OUT_DIR/libxxprofile.xcframework"
@@ -143,7 +143,7 @@ function build_cmake_lib_ios() {
     -output "$XCFRAMEWORK"
 }
 
-function build_cmake_viewer() {
+function cmake_viewer() {
   echo "==== Building mac viewer with cmake ===="
   local PROJ_DIR="$THIS_DIR/xxprofile/proj.cmake"
   local BUILD_DIR="$THIS_DIR/xxprofile/build/cmake-viewer-mac"
@@ -213,7 +213,7 @@ function build_imgui_sample_mac_metal() {
     LIBS="-framework Metal -framework MetalKit -framework Cocoa -framework IOKit -framework CoreVideo -framework QuartzCore $GLFW_LIB"
 }
 
-function build_cmake_test_mac() {
+function cmake_test_mac() {
   echo "==== Building and running mac test with cmake ===="
   local PROJ_DIR="$THIS_DIR/xxprofile/proj.cmake"
   local BUILD_DIR="$THIS_DIR/xxprofile/build/cmake-test-mac"
@@ -249,7 +249,7 @@ function build_cmake_test_mac() {
   guard popd > /dev/null
 }
 
-function build_cmake_test_ios_sdk() {
+function cmake_test_ios_sdk() {
   local SDK="$1"
   local ARCHS="$2"
   local PROJ_DIR="$THIS_DIR/xxprofile/proj.cmake"
@@ -297,13 +297,13 @@ function build_cmake_test_ios_sdk() {
   guard cp "$TEST_PATH" "$OUT_DIR/xxprofile_test"
 }
 
-function build_cmake_test_ios() {
+function cmake_test_ios() {
   echo "==== Building ios test with cmake ===="
-  build_cmake_test_ios_sdk iphoneos arm64
-  build_cmake_test_ios_sdk iphonesimulator "arm64;x86_64"
+  cmake_test_ios_sdk iphoneos arm64
+  cmake_test_ios_sdk iphonesimulator "arm64;x86_64"
 }
 
-function build_cmake_test_android() {
+function cmake_test_android() {
   echo "==== Building android test with cmake ===="
   local ANDROID_SDK_ROOT_DEFAULT="$HOME/Library/Android/sdk"
   local ANDROID_SDK_ROOT="${ANDROID_SDK_ROOT:-$ANDROID_SDK_ROOT_DEFAULT}"
@@ -367,7 +367,7 @@ function build_android_lib_ndk_build() {
   guard popd
 }
 
-function build_android_lib_cmake() {
+function cmake_lib_android() {
   echo "==== Building android lib with cmake ===="
   local ANDROID_SDK_ROOT_DEFAULT="$HOME/Library/Android/sdk"
   local ANDROID_SDK_ROOT="${ANDROID_SDK_ROOT:-$ANDROID_SDK_ROOT_DEFAULT}"
@@ -519,6 +519,7 @@ function usage() {
   echo "$0 commands"
   echo "commands:"
   echo "-------------- normal build commands --------------"
+  echo "  viewer                : build mac viewer app"
   echo "  apple                 : build apple lib and viewer"
   echo "  android               : build android lib"
   echo "  wasm                  : build wasm lib"
@@ -548,9 +549,13 @@ function parse_arguments() {
     local PARAM=`echo $1 | awk -F= '{print $1}'`
     local VALUE=`echo $1 | awk -F= '{print $2}'`
     case $PARAM in
+      viewer)
+        build_mac_viewer
+        ;;
+
       apple)
         build_apple_lib
-        build_apple_viewer
+        build_mac_viewer
         ;;
 
       android)
@@ -571,7 +576,7 @@ function parse_arguments() {
 
       build)
         build_apple_lib
-        build_apple_viewer
+        build_mac_viewer
         build_android_lib_ndk_build
         build_wasm_lib
         copy_headers
@@ -579,50 +584,50 @@ function parse_arguments() {
         ;;
 
       cmake_lib_mac)
-        build_cmake_lib_mac
+        cmake_lib_mac
         ;;
 
       cmake_lib_ios)
-        build_cmake_lib_ios
+        cmake_lib_ios
         ;;
 
       cmake_lib_android)
-        build_android_lib_cmake
+        cmake_lib_android
         ;;
 
       cmake_viewer)
-        build_cmake_viewer
+        cmake_viewer
         ;;
 
       cmake_apple)
-        build_cmake_lib_mac
-        build_cmake_lib_ios
-        build_cmake_viewer
+        cmake_lib_mac
+        cmake_lib_ios
+        cmake_viewer
         ;;
 
       cmake)
-        build_cmake_lib_mac
-        build_cmake_lib_ios
-        build_cmake_viewer
-        build_android_lib_cmake
+        cmake_lib_mac
+        cmake_lib_ios
+        cmake_viewer
+        cmake_lib_android
         ;;
 
       cmake_test_mac)
-        build_cmake_test_mac
+        cmake_test_mac
         ;;
 
       cmake_test_ios)
-        build_cmake_test_ios
+        cmake_test_ios
         ;;
 
       cmake_test_android)
-        build_cmake_test_android
+        cmake_test_android
         ;;
 
       cmake_test)
-        build_cmake_test_mac
-        build_cmake_test_ios
-        build_cmake_test_android
+        cmake_test_mac
+        cmake_test_ios
+        cmake_test_android
         ;;
 
       imgui_sample_mac_metal)
