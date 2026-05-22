@@ -10,9 +10,11 @@
 		24F804D7250D41FFB812CB78 /* window.c in Sources */ = {isa = PBXBuildFile; fileRef = DB26F55E882C4849B2F2E0A3 /* window.c */; };
 		303C22BA8B4E4CF89AF18659 /* cocoa_window.m in Sources */ = {isa = PBXBuildFile; fileRef = 266785F317BA46B5B8EFF6A0 /* cocoa_window.m */; };
 		510FAD0DD4FE4215A8DC9307 /* context.c in Sources */ = {isa = PBXBuildFile; fileRef = 206304A344D34F0991285A1B /* context.c */; };
-		536EEE6C91E6491498A90FFC /* posix_tls.c in Sources */ = {isa = PBXBuildFile; fileRef = F3CDB05481524A0980CE44E6 /* posix_tls.c */; };
+		536EEE6C91E6491498A90FFC /* posix_thread.c in Sources */ = {isa = PBXBuildFile; fileRef = F3CDB05481524A0980CE44E6 /* posix_thread.c */; };
 		6F20412BC1554C09ABAC5D3B /* init.c in Sources */ = {isa = PBXBuildFile; fileRef = 7E90B7811984401DA217A033 /* init.c */; };
 		706A89357D524C18B7D6AC52 /* vulkan.c in Sources */ = {isa = PBXBuildFile; fileRef = 75ED14F315764128B274CAC5 /* vulkan.c */; };
+		86F9F6E92FC00FCD00430D49 /* osmesa_context.c in Sources */ = {isa = PBXBuildFile; fileRef = 86F9F6E82FC00FCD00430D49 /* osmesa_context.c */; };
+		86F9F6EC2FC0102100430D49 /* egl_context.c in Sources */ = {isa = PBXBuildFile; fileRef = 86F9F6EB2FC0102100430D49 /* egl_context.c */; };
 		89BAED83EF244BFB8D5C2711 /* cocoa_monitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDF0A107D8F4AD68293BBF2 /* cocoa_monitor.m */; };
 		8A252899A0074D0391321E4F /* cocoa_init.m in Sources */ = {isa = PBXBuildFile; fileRef = BD28AED67F6647199E1EB9DC /* cocoa_init.m */; };
 		9E8214D468ED47B5A18E941B /* cocoa_joystick.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E8DA3070F4543A1BD4BCA51 /* cocoa_joystick.m */; };
@@ -35,6 +37,10 @@
 		76161B43528B45BCB39EA2F3 /* glfw_config.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = glfw_config.h; path = build/src/glfw_config.h; sourceTree = SOURCE_ROOT; };
 		7DDF0A107D8F4AD68293BBF2 /* cocoa_monitor.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; name = cocoa_monitor.m; path = src/cocoa_monitor.m; sourceTree = SOURCE_ROOT; };
 		7E90B7811984401DA217A033 /* init.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = init.c; path = src/init.c; sourceTree = SOURCE_ROOT; };
+		86F9F6E72FC00FCD00430D49 /* osmesa_context.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = osmesa_context.h; path = src/osmesa_context.h; sourceTree = "<group>"; };
+		86F9F6E82FC00FCD00430D49 /* osmesa_context.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = osmesa_context.c; path = src/osmesa_context.c; sourceTree = "<group>"; };
+		86F9F6EA2FC0102100430D49 /* egl_context.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = egl_context.h; path = src/egl_context.h; sourceTree = "<group>"; };
+		86F9F6EB2FC0102100430D49 /* egl_context.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = egl_context.c; path = src/egl_context.c; sourceTree = "<group>"; };
 		967C3D2A14384B3CB0ACBBAF /* cocoa_platform.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = cocoa_platform.h; path = src/cocoa_platform.h; sourceTree = SOURCE_ROOT; };
 		9A57A9348F864E27A3EEF1A8 /* posix_tls.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = posix_tls.h; path = src/posix_tls.h; sourceTree = SOURCE_ROOT; };
 		A357235A10C94837A89D6329 /* glfw3native.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = glfw3native.h; path = include/GLFW/glfw3native.h; sourceTree = SOURCE_ROOT; };
@@ -44,7 +50,7 @@
 		DB26F55E882C4849B2F2E0A3 /* window.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = window.c; path = src/window.c; sourceTree = SOURCE_ROOT; };
 		DFA799AF15B84A2692C49195 /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; name = CMakeLists.txt; path = src/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
 		F19004A16DDE44379CD7530C /* nsgl_context.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; name = nsgl_context.m; path = src/nsgl_context.m; sourceTree = SOURCE_ROOT; };
-		F3CDB05481524A0980CE44E6 /* posix_tls.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = posix_tls.c; path = src/posix_tls.c; sourceTree = SOURCE_ROOT; };
+		F3CDB05481524A0980CE44E6 /* posix_thread.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = posix_thread.c; path = src/posix_thread.c; sourceTree = SOURCE_ROOT; };
 		F76AB893F12448AE89E04425 /* nsgl_context.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = nsgl_context.h; path = src/nsgl_context.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -84,11 +90,15 @@
 				0891A918A97D437AB5E6B3A8 /* cocoa_time.c */,
 				266785F317BA46B5B8EFF6A0 /* cocoa_window.m */,
 				206304A344D34F0991285A1B /* context.c */,
+				86F9F6EA2FC0102100430D49 /* egl_context.h */,
+				86F9F6EB2FC0102100430D49 /* egl_context.c */,
 				7E90B7811984401DA217A033 /* init.c */,
 				698FC93DD4FB4930BC3FEF70 /* input.c */,
 				72E2F324997D4E97876BAB6E /* monitor.c */,
 				F19004A16DDE44379CD7530C /* nsgl_context.m */,
-				F3CDB05481524A0980CE44E6 /* posix_tls.c */,
+				86F9F6E72FC00FCD00430D49 /* osmesa_context.h */,
+				86F9F6E82FC00FCD00430D49 /* osmesa_context.c */,
+				F3CDB05481524A0980CE44E6 /* posix_thread.c */,
 				75ED14F315764128B274CAC5 /* vulkan.c */,
 				DB26F55E882C4849B2F2E0A3 /* window.c */,
 			);
@@ -142,7 +152,6 @@
 		EE299FEE132F4A69BC3F4E13 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 0830;
 			};
 			buildConfigurationList = A7B2E16A7C4A405B8B71E1D7 /* Build configuration list for PBXProject "GLFW" */;
@@ -150,6 +159,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 62B7CFFEE39F464DB2769507;
@@ -169,6 +179,7 @@
 				8A252899A0074D0391321E4F /* cocoa_init.m in Sources */,
 				9E8214D468ED47B5A18E941B /* cocoa_joystick.m in Sources */,
 				89BAED83EF244BFB8D5C2711 /* cocoa_monitor.m in Sources */,
+				86F9F6EC2FC0102100430D49 /* egl_context.c in Sources */,
 				BE04956D73704EECBFC1305C /* cocoa_time.c in Sources */,
 				303C22BA8B4E4CF89AF18659 /* cocoa_window.m in Sources */,
 				510FAD0DD4FE4215A8DC9307 /* context.c in Sources */,
@@ -176,9 +187,10 @@
 				A24F12CD0F414AE1BA3F75A4 /* input.c in Sources */,
 				EFBFF83BBEBC4E648F9AD6C3 /* monitor.c in Sources */,
 				9FC527CC5BF346ABB5B23EDA /* nsgl_context.m in Sources */,
-				536EEE6C91E6491498A90FFC /* posix_tls.c in Sources */,
+				536EEE6C91E6491498A90FFC /* posix_thread.c in Sources */,
 				706A89357D524C18B7D6AC52 /* vulkan.c in Sources */,
 				24F804D7250D41FFB812CB78 /* window.c in Sources */,
+				86F9F6E92FC00FCD00430D49 /* osmesa_context.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
