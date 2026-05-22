@@ -176,6 +176,43 @@ function build_cmake_viewer() {
   guard cp "$BIN_PATH" "$OUT_DIR/xxprofile_viewer_cmake"
 }
 
+function build_imgui_sample_mac_metal() {
+  echo "==== Building ImGui GLFW Metal sample with bundled GLFW 3.2.1 ===="
+  local PROJ_DIR="$THIS_DIR/xxprofile/proj.cmake"
+  local EXAMPLE_DIR="$THIS_DIR/libs/imgui/examples/example_glfw_metal"
+  local TMP_DIR="$THIS_DIR/build/tmps/imgui_sample_mac_metal"
+  local GLFW_BUILD_DIR="$TMP_DIR/glfw"
+  local GLFW_LIB="$GLFW_BUILD_DIR/glfw/src/libglfw3.a"
+
+  guard mkdir -p "$GLFW_BUILD_DIR"
+  guard cmake \
+    -S "$PROJ_DIR" \
+    -B "$GLFW_BUILD_DIR" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_OSX_SYSROOT=macosx \
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+    -DXXPROFILE_BUILD_VIEWER=ON \
+    -DXXPROFILE_BUILD_LOADER=ON \
+    -DXXPROFILE_BUILD_TESTS=OFF \
+    -DXXPROFILE_BUILD_TEST_COMPRESS=OFF
+
+  cmake_build_target "$GLFW_BUILD_DIR" glfw Release
+
+  if [[ ! -f "$GLFW_LIB" ]]; then
+    echo "libglfw3.a not found in $GLFW_BUILD_DIR" >&2
+    return 1
+  fi
+
+  guard mkdir -p "$TMP_DIR"
+  guard make -C "$EXAMPLE_DIR" clean
+  guard make -C "$TMP_DIR" -f "$EXAMPLE_DIR/Makefile" -B \
+    EXE="$EXAMPLE_DIR/example_glfw_metal" \
+    IMGUI_DIR="$THIS_DIR/libs/imgui" \
+    VPATH="$EXAMPLE_DIR:$THIS_DIR/libs/imgui:$THIS_DIR/libs/imgui/backends" \
+    CXXFLAGS="-std=c++11 -I$THIS_DIR/libs/imgui -I$THIS_DIR/libs/imgui/backends -I$THIS_DIR/libs/glfw-3.2.1/include -Wall -Wformat" \
+    LIBS="-framework Metal -framework MetalKit -framework Cocoa -framework IOKit -framework CoreVideo -framework QuartzCore $GLFW_LIB"
+}
+
 function build_cmake_test_mac() {
   echo "==== Building and running mac test with cmake ===="
   local PROJ_DIR="$THIS_DIR/xxprofile/proj.cmake"
@@ -486,21 +523,26 @@ function usage() {
   echo "$0 commands"
   echo "commands:"
   echo "------------ seprate build commands ---------------"
-  echo "  apple            : build apple lib and viewer"
-  echo "  cmake_lib_mac    : build mac static lib with cmake"
-  echo "  cmake_lib_ios    : build ios static xcframework with cmake"
-  echo "  cmake_viewer     : build mac viewer executable with cmake"
-  echo "  cmake_apple      : build cmake mac lib, ios lib, and mac viewer"
-  echo "  cmake_test_mac   : build and run mac test with cmake"
-  echo "  cmake_test_ios   : build ios test executable with cmake"
-  echo "  cmake_test_android: build android test executable with cmake"
-  echo "  android          : build android lib"
-  echo "  wasm             : build wasm lib"
-  echo "  headers          : copy headers"
-  echo "  zip              : zip out files"
+  echo "  apple                 : build apple lib and viewer"
+  echo "  android               : build android lib"
+  echo "  wasm                  : build wasm lib"
+  echo "  headers               : copy headers"
+  echo "  zip                   : zip out files"
+  echo "------------- cmake build commands ----------------"
+  echo "  cmake_lib_mac         : build mac static lib with cmake"
+  echo "  cmake_lib_ios         : build ios static xcframework with cmake"
+  echo "  cmake_apple           : build cmake mac lib, ios lib, and mac viewer"
+  echo "  cmake_viewer          : build mac viewer executable with cmake"
   echo "-------------- all in one commands ----------------"
-  echo "  build            : build all"
-  echo "  clean            : clean all"
+  echo "  build                 : build all"
+  echo "  clean                 : clean all"
+  echo "----------- cmake build test commands -------------"
+  echo "  cmake_test_mac        : build and run mac test with cmake"
+  echo "  cmake_test_ios        : build ios test executable with cmake"
+  echo "  cmake_test_android    : build android test executable with cmake"
+  echo "---------- imgui sample build commands ------------"
+  echo "  imgui_sample_mac_metal: build ImGui GLFW Metal sample with bundled GLFW 3.2.1"
+
 }
 
 function parse_arguments() {
@@ -523,6 +565,10 @@ function parse_arguments() {
 
       cmake_viewer)
         build_cmake_viewer
+        ;;
+
+      imgui_sample_mac_metal)
+        build_imgui_sample_mac_metal
         ;;
 
       cmake_apple)
