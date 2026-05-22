@@ -1,8 +1,7 @@
 # GLFW
 
-[![Build status](https://travis-ci.org/glfw/glfw.svg?branch=master)](https://travis-ci.org/glfw/glfw)
+[![Build status](https://github.com/glfw/glfw/actions/workflows/build.yml/badge.svg)](https://github.com/glfw/glfw/actions)
 [![Build status](https://ci.appveyor.com/api/projects/status/0kf0ct9831i5l6sp/branch/master?svg=true)](https://ci.appveyor.com/project/elmindreda/glfw)
-[![Coverity Scan](https://scan.coverity.com/projects/4884/badge.svg)](https://scan.coverity.com/projects/glfw-glfw)
 
 ## Introduction
 
@@ -10,64 +9,90 @@ GLFW is an Open Source, multi-platform library for OpenGL, OpenGL ES and Vulkan
 application development.  It provides a simple, platform-independent API for
 creating windows, contexts and surfaces, reading input, handling events, etc.
 
+GLFW natively supports Windows, macOS and Linux and other Unix-like systems.  On
+Linux both X11 and Wayland are supported.
+
 GLFW is licensed under the [zlib/libpng
-license](https://opensource.org/licenses/Zlib).
+license](https://www.glfw.org/license.html).
 
-This is version 3.2.1, which adds support for statically linking the Vulkan
-loader and fixes for a number of bugs that together affect all supported
-platforms.
-
-See the [downloads](http://www.glfw.org/download.html) page for details and
-files, or fetch the `latest` branch, which always points to the latest stable
-release.  Each release starting with 3.0 also has a corresponding [annotated
+You can [download](https://www.glfw.org/download.html) the latest stable release
+as source or Windows binaries, or fetch the `latest` branch from GitHub.  Each
+release starting with 3.0 also has a corresponding [annotated
 tag](https://github.com/glfw/glfw/releases) with source and binary archives.
 
+The [documentation](https://www.glfw.org/docs/latest/) is available online and is
+included in all source and binary archives.  See the [release
+notes](https://www.glfw.org/docs/latest/news.html) for new features, caveats and
+deprecations in the latest release.  For more details see the [version
+history](https://www.glfw.org/changelog.html).
+
+The `master` branch is the stable integration branch and _should_ always compile
+and run on all supported platforms, although details of newly added features may
+change until they have been included in a release.  New features and many bug
+fixes live in [other branches](https://github.com/glfw/glfw/branches/all) until
+they are stable enough to merge.
+
 If you are new to GLFW, you may find the
-[tutorial](http://www.glfw.org/docs/latest/quick.html) for GLFW
-3 useful.  If you have used GLFW 2 in the past, there is a
-[transition guide](http://www.glfw.org/docs/latest/moving.html) for moving to
-the GLFW 3 API.
+[tutorial](https://www.glfw.org/docs/latest/quick.html) for GLFW 3 useful.  If
+you have used GLFW 2 in the past, there is a [transition
+guide](https://www.glfw.org/docs/latest/moving.html) for moving to the GLFW
+3 API.
+
+GLFW exists because of the contributions of [many people](CONTRIBUTORS.md)
+around the world, whether by reporting bugs, providing community support, adding
+features, reviewing or testing code, debugging, proofreading docs, suggesting
+features or fixing bugs.
 
 
 ## Compiling GLFW
 
-GLFW itself requires only the headers and libraries for your window system.  It
-does not need the headers for any context creation API (WGL, GLX, EGL, NSGL) or
-rendering API (OpenGL, OpenGL ES, Vulkan) to enable support for them.
+GLFW itself requires only the headers and libraries for your OS and window
+system.  It does not need the headers for any context creation API (WGL, GLX,
+EGL, NSGL, OSMesa) or rendering API (OpenGL, OpenGL ES, Vulkan) to enable
+support for them.
 
 GLFW supports compilation on Windows with Visual C++ 2010 and later, MinGW and
-MinGW-w64, on OS X with Clang and on Linux and other Unix-like systems with GCC
+MinGW-w64, on macOS with Clang and on Linux and other Unix-like systems with GCC
 and Clang.  It will likely compile in other environments as well, but this is
 not regularly tested.
 
-There are also [pre-compiled Windows
-binaries](http://www.glfw.org/download.html) available for all compilers
-supported on that platform.
+There are [pre-compiled Windows binaries](https://www.glfw.org/download.html)
+available for all supported compilers.
 
-See the [compilation guide](http://www.glfw.org/docs/latest/compile.html) in the
-documentation for more information.
+See the [compilation guide](https://www.glfw.org/docs/latest/compile.html) for
+more information about how to compile GLFW yourself.
 
 
 ## Using GLFW
 
-See the [building application guide](http://www.glfw.org/docs/latest/build.html)
-guide in the documentation for more information.
+See the [documentation](https://www.glfw.org/docs/latest/) for tutorials, guides
+and the API reference.
+
+
+## Contributing to GLFW
+
+See the [contribution
+guide](https://github.com/glfw/glfw/blob/master/docs/CONTRIBUTING.md) for
+more information.
 
 
 ## System requirements
 
-GLFW supports Windows XP and later, OS X 10.7 Lion and later, and Linux and
-other Unix-like systems with the X Window System.  Experimental implementations
-for the Wayland protocol and the Mir display server are available but not yet
-officially supported.
+GLFW supports Windows XP and later and macOS 10.8 and later.  Linux and other
+Unix-like systems running the X Window System are supported even without
+a desktop environment or modern extensions, although some features require
+a running window or clipboard manager.  The OSMesa backend requires Mesa 6.3.
 
-See the [compatibility guide](http://www.glfw.org/docs/latest/compat.html)
+See the [compatibility guide](https://www.glfw.org/docs/latest/compat.html)
 in the documentation for more information.
 
 
 ## Dependencies
 
 GLFW itself depends only on the headers and libraries for your window system.
+
+The (experimental) Wayland backend also depends on the `extra-cmake-modules`
+package, which is used to generate Wayland protocol headers.
 
 The examples and test programs depend on a number of tiny libraries.  These are
 located in the `deps/` directory.
@@ -76,199 +101,47 @@ located in the `deps/` directory.
    with command-line options
  - [TinyCThread](https://github.com/tinycthread/tinycthread) for threaded
    examples
- - An OpenGL 3.2 core loader generated by
-   [glad](https://github.com/Dav1dde/glad) for examples using modern OpenGL
+ - [glad2](https://github.com/Dav1dde/glad) for loading OpenGL and Vulkan
+   functions
  - [linmath.h](https://github.com/datenwolf/linmath.h) for linear algebra in
    examples
- - [Vulkan headers](https://www.khronos.org/registry/vulkan/) for Vulkan tests
+ - [Nuklear](https://github.com/Immediate-Mode-UI/Nuklear) for test and example UI
+ - [stb\_image\_write](https://github.com/nothings/stb) for writing images to disk
 
-The Vulkan example additionally requires the Vulkan SDK to be installed, or it
-will not be included in the build.
-
-The documentation is generated with [Doxygen](http://doxygen.org/).  If CMake
-does not find Doxygen, the documentation will not be generated when you build.
+The documentation is generated with [Doxygen](https://doxygen.org/) if CMake can
+find that tool.
 
 
 ## Reporting bugs
 
 Bugs are reported to our [issue tracker](https://github.com/glfw/glfw/issues).
 Please check the [contribution
-guide](https://github.com/glfw/glfw/blob/master/.github/CONTRIBUTING.md) for
+guide](https://github.com/glfw/glfw/blob/master/docs/CONTRIBUTING.md) for
 information on what to include when reporting a bug.
 
 
 ## Changelog
 
- - Added on-demand loading of Vulkan and context creation API libraries
- - Added `_GLFW_VULKAN_STATIC` build macro to make the library use the Vulkan
-   loader linked statically into the application (#820)
- - Bugfix: Single compilation unit builds failed due to naming conflicts (#783)
- - Bugfix: The range checks for `glfwSetCursorPos` used the wrong minimum (#773)
- - Bugfix: Defining `GLFW_INCLUDE_VULKAN` when compiling the library did not
-           fail with the expected error message (#823)
- - Bugfix: Inherited value of `CMAKE_MODULE_PATH` was clobbered (#822)
- - [Win32] Bugfix: `glfwSetClipboardString` created an unnecessary intermediate
-                   copy of the string
- - [Win32] Bugfix: Examples failed to build on Visual C++ 2010 due to C99 in
-                   `linmath.h` (#785)
- - [Win32] Bugfix: The first shown window ignored the `GLFW_MAXIMIZED` hint
-                   when the process was provided a `STARTUPINFO` (#780)
- - [Cocoa] Bugfix: Event processing would segfault on some machines due to
-                   a previous distributed notification listener not being fully
-                   removed (#817,#826)
- - [Cocoa] Bugfix: Some include statements were duplicated (#838)
- - [X11] Bugfix: Window size limits were ignored if the minimum or maximum size
-                 was set to `GLFW_DONT_CARE` (#805)
- - [X11] Bugfix: Input focus was set before window was visible, causing
-                 `BadMatch` on some non-reparenting WMs (#789,#798)
- - [X11] Bugfix: `glfwGetWindowPos` and `glfwSetWindowPos` operated on the
-                 window frame instead of the client area (#800)
- - [WGL] Added reporting of errors from `WGL_ARB_create_context` extension
- - [GLX] Bugfix: Dynamically loaded entry points were not verified
- - [EGL] Added `lib` prefix matching between EGL and OpenGL ES library binaries
- - [EGL] Bugfix: Dynamically loaded entry points were not verified
+ - Bugfix: `glfwGetKeyName` emitted `GLFW_INVALID_VALUE` for scancodes with no
+   key token (#1785,#2214)
+ - [Wayland] Bugfix: Terminating the library before showing a window could segfault
+ - [Wayland] Bugfix: Compilation failed on FreeBSD (#2445)
+ - [Linux] Bugfix: `regfree´ was called on invalid data (#2464)
+ - [WGL] Bugfix: Context creation failed in Parallels VM (#2191,#2406,#2467)
 
 
 ## Contact
 
-On [glfw.org](http://www.glfw.org/) you can find the latest version of GLFW, as
+On [glfw.org](https://www.glfw.org/) you can find the latest version of GLFW, as
 well as news, documentation and other information about the project.
 
 If you have questions related to the use of GLFW, we have a
-[forum](http://discourse.glfw.org/), and the `#glfw` IRC channel on
-[Freenode](http://freenode.net/).
+[forum](https://discourse.glfw.org/).
 
 If you have a bug to report, a patch to submit or a feature you'd like to
 request, please file it in the
 [issue tracker](https://github.com/glfw/glfw/issues) on GitHub.
 
 Finally, if you're interested in helping out with the development of GLFW or
-porting it to your favorite platform, join us on the forum, GitHub or IRC.
-
-
-## Acknowledgements
-
-GLFW exists because people around the world donated their time and lent their
-skills.
-
- - Bobyshev Alexander
- - artblanc
- - arturo
- - Matt Arsenault
- - Keith Bauer
- - John Bartholomew
- - Niklas Behrens
- - Niklas Bergström
- - Doug Binks
- - blanco
- - Martin Capitanio
- - Chi-kwan Chan
- - Lambert Clara
- - Andrew Corrigan
- - Noel Cower
- - Jarrod Davis
- - Olivier Delannoy
- - Paul R. Deppe
- - Michael Dickens
- - Роман Донченко
- - Mario Dorn
- - Jonathan Dummer
- - Ralph Eastwood
- - Siavash Eliasi
- - Michael Fogleman
- - Gerald Franz
- - GeO4d
- - Marcus Geelnard
- - Eloi Marín Gratacós
- - Stefan Gustavson
- - Sylvain Hellegouarch
- - Matthew Henry
- - heromyth
- - Lucas Hinderberger
- - Paul Holden
- - Warren Hu
- - IntellectualKitty
- - Aaron Jacobs
- - Erik S. V. Jansson
- - Toni Jovanoski
- - Arseny Kapoulkine
- - Osman Keskin
- - Cameron King
- - Peter Knut
- - Christoph Kubisch
- - Eric Larson
- - Robin Leffmann
- - Glenn Lewis
- - Shane Liesegang
- - Eyal Lotem
- - Дмитри Малышев
- - Martins Mozeiko
- - Tristam MacDonald
- - Hans Mackowiak
- - Zbigniew Mandziejewicz
- - Kyle McDonald
- - David Medlock
- - Bryce Mehring
- - Jonathan Mercier
- - Marcel Metz
- - Jonathan Miller
- - Kenneth Miller
- - Bruce Mitchener
- - Jack Moffitt
- - Jeff Molofee
- - Jon Morton
- - Pierre Moulon
- - Julian Møller
- - Kamil Nowakowski
- - Ozzy
- - Andri Pálsson
- - Peoro
- - Braden Pellett
- - Arturo J. Pérez
- - Orson Peters
- - Emmanuel Gil Peyrot
- - Cyril Pichard
- - Pieroman
- - Philip Rideout
- - Jorge Rodriguez
- - Ed Ropple
- - Aleksey Rybalkin
- - Riku Salminen
- - Brandon Schaefer
- - Sebastian Schuberth
- - Matt Sealey
- - SephiRok
- - Steve Sexton
- - Systemcluster
- - Yoshiki Shibukawa
- - Dmitri Shuralyov
- - Daniel Skorupski
- - Bradley Smith
- - Patrick Snape
- - Julian Squires
- - Johannes Stein
- - Justin Stoecker
- - Elviss Strazdins
- - Nathan Sweet
- - TTK-Bandit
- - Sergey Tikhomirov
- - Arthur Tombs
- - Ioannis Tsakpinis
- - Samuli Tuomola
- - urraka
- - Jari Vetoniemi
- - Ricardo Vieira
- - Nicholas Vitovitch
- - Simon Voordouw
- - Torsten Walluhn
- - Patrick Walton
- - Xo Wang
- - Jay Weisskopf
- - Frank Wille
- - yuriks
- - Santi Zupancic
- - Jonas Ådahl
- - Lasse Öörni
- - All the unmentioned and anonymous contributors in the GLFW community, for bug
-   reports, patches, feedback, testing and encouragement
+porting it to your favorite platform, join us on the forum or GitHub.
 
