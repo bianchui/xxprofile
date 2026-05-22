@@ -177,7 +177,7 @@ function build_cmake_viewer() {
 }
 
 function build_imgui_sample_mac_metal() {
-  echo "==== Building ImGui GLFW Metal sample with bundled GLFW 3.2.1 ===="
+  echo "==== Building ImGui GLFW Metal sample with bundled GLFW 3.3.10 ===="
   local PROJ_DIR="$THIS_DIR/xxprofile/proj.cmake"
   local EXAMPLE_DIR="$THIS_DIR/libs/imgui/examples/example_glfw_metal"
   local TMP_DIR="$THIS_DIR/build/tmps/imgui_sample_mac_metal"
@@ -541,7 +541,7 @@ function usage() {
   echo "  cmake_test_ios        : build ios test executable with cmake"
   echo "  cmake_test_android    : build android test executable with cmake"
   echo "---------- imgui sample build commands ------------"
-  echo "  imgui_sample_mac_metal: build ImGui GLFW Metal sample with bundled GLFW 3.2.1"
+  echo "  imgui_sample_mac_metal: build ImGui GLFW Metal sample with bundled GLFW 3.3.10"
 
 }
 

@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 project(xxprofile LANGUAGES C CXX)
 
 if(APPLE)
+    enable_language(OBJC)
     enable_language(OBJCXX)
 endif()
 
