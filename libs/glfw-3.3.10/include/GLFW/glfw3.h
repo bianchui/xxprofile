@@ -1930,6 +1930,9 @@ GLFWAPI void glfwGetVersion(int* major, int* minor, int* rev);
  */
 GLFWAPI const char* glfwGetVersionString(void);
 
+typedef int (* GLFWOnDocumentOpen)(const char*);
+GLFWAPI void glfwSetOnDocumentOpen(GLFWOnDocumentOpen cbfun);
+
 /*! @brief Returns and clears the last error for the calling thread.
  *
  *  This function returns and clears the [error code](@ref errors) of the last

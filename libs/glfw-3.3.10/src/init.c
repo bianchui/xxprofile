@@ -418,6 +418,10 @@ GLFWAPI int glfwGetError(const char** description)
     return code;
 }
 
+GLFWAPI void glfwSetOnDocumentOpen(GLFWOnDocumentOpen cbfun) {
+    _glfw.onDocumentOpen = cbfun;
+}
+
 GLFWAPI GLFWerrorfun glfwSetErrorCallback(GLFWerrorfun cbfun)
 {
     _GLFW_SWAP_POINTERS(_glfwErrorCallback, cbfun);

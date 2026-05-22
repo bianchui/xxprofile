@@ -543,6 +543,8 @@ struct _GLFWlibrary
     _GLFWtls            contextSlot;
     _GLFWmutex          errorLock;
 
+    GLFWOnDocumentOpen  onDocumentOpen;
+
     struct {
         uint64_t        offset;
         // This is defined in the platform's time.h
