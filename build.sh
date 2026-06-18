@@ -32,8 +32,27 @@ function build_apple_lib() {
   guard popd
 }
 
+function update_viewer_version_metadata() {
+  local year="$(date +%Y)"
+  local month_day="$(date +%m%d)"
+  local version="1.${year}.${month_day}"
+  local pbxproj="$THIS_DIR/xxprofile/proj.apple/xxprofile.xcodeproj/project.pbxproj"
+  local plist="$THIS_DIR/xxprofile/proj.apple/xxprofileViewer/Info.plist"
+  local current_project_version="$(perl -0ne 'while (/(buildSettings = \{(?:(?!\n\t\t\t};).)*?INFOPLIST_FILE = xxprofileViewer\/Info\.plist;(?:(?!\n\t\t\t};).)*?\n\t\t\t};)/sg) { my $block = $1; print "$1\n" if $block =~ /CURRENT_PROJECT_VERSION = ([0-9]+);/; }' "$pbxproj" | sort -n | tail -n 1)"
+  if [[ -z "$current_project_version" ]]; then
+    echo "CURRENT_PROJECT_VERSION not found for xxprofileViewer" >&2
+    return 1
+  fi
+  local next_project_version=$((current_project_version + 1))
+
+  echo "==== Updating viewer version metadata: ${version}, build ${next_project_version}, 2017-${year} ===="
+  guard env VIEWER_MARKETING_VERSION="$version" VIEWER_PROJECT_VERSION="$next_project_version" perl -0pi -e 's/(buildSettings = \{(?:(?!\n\t\t\t};).)*?INFOPLIST_FILE = xxprofileViewer\/Info\.plist;(?:(?!\n\t\t\t};).)*?\n\t\t\t};)/my $block = $1; $block =~ s!(MARKETING_VERSION = )[^;]+(;)!$1$ENV{VIEWER_MARKETING_VERSION}$2!; $block =~ s!(CURRENT_PROJECT_VERSION = )[^;]+(;)!$1$ENV{VIEWER_PROJECT_VERSION}$2!; $block/sge' "$pbxproj"
+  guard perl -0pi -e 's#(<key>NSHumanReadableCopyright</key>\s*<string>Copyright .*? 2017-)\d{4}(, bianchui\. All rights reserved\.</string>)#${1}'"$year"'${2}#s' "$plist"
+}
+
 function build_mac_viewer() {
   echo "==== Building apple viewer ===="
+  update_viewer_version_metadata
   guard pushd $THIS_DIR/xxprofile/proj.apple
     guard ./build_viewer.sh
   guard popd

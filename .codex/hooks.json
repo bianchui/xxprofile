@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/python3 \"$(git rev-parse --show-toplevel)/.codex/hooks/log_user_prompt.py\"",
+            "timeout": 10,
+            "statusMessage": "Recording user prompt"
+          }
+        ]
+      }
+    ]
+  }
+}
