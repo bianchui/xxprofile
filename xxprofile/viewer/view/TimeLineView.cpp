@@ -7,6 +7,9 @@
 #include <cmath>
 
 static const uint32_t kTimelineDepthPageSize = 10;
+static const float kTimelineMinSubdivisionWidth = 2.0f;
+static const float kTimelineMinNodeRenderWidth = 1.0f;
+static const float kTimelineMinNodeNameWidth = 5.0f;
 
 #pragma mark - TimeLineView::ThreadData
 
@@ -242,9 +245,14 @@ void TimeLineView::drawNode(ImDrawList* drawList, const ThreadData& thread, cons
         return;
     }
 
-    const char* name = _loader->name(node._name);
     const float x0 = timeToX(node._beginTime, bodyRect, ticksToPixels);
     const float x1 = timeToX(node._endTime, bodyRect, ticksToPixels);
+    const float visibleWidth = std::min(x1, bodyRect.Max.x) - std::max(x0, bodyRect.Min.x);
+    if (visibleWidth < kTimelineMinNodeRenderWidth) {
+        return;
+    }
+
+    const char* name = _loader->name(node._name);
     ImRect rect(ImVec2(std::max(x0, bodyRect.Min.x), y), ImVec2(std::min(std::max(x1, x0 + _minBarWidth), bodyRect.Max.x), y + _rowHeight));
     if (rect.Max.x <= bodyRect.Min.x || rect.Min.x >= bodyRect.Max.x) {
         return;
@@ -252,13 +260,13 @@ void TimeLineView::drawNode(ImDrawList* drawList, const ThreadData& thread, cons
 
     drawList->AddRectFilled(rect.Min, rect.Max, nameColor(name), 2.0f);
     drawList->AddRect(rect.Min, rect.Max, ImColor(0.0f, 0.0f, 0.0f, 0.18f), 2.0f);
-    if (rect.GetWidth() > 56.0f) {
+    if (visibleWidth >= kTimelineMinNodeNameWidth && rect.GetWidth() > 56.0f) {
         drawList->PushClipRect(rect.Min, rect.Max, true);
         drawList->AddText(rect.Min + ImVec2(4.0f, 2.0f), ImColor(0.05f, 0.05f, 0.06f, 1.0f), name);
         drawList->PopClipRect();
     }
 
-    if (ImGui::IsMouseHoveringRect(rect.Min, rect.Max)) {
+    if (visibleWidth >= kTimelineMinSubdivisionWidth && ImGui::IsMouseHoveringRect(rect.Min, rect.Max)) {
         shared::StrBuf buf;
         if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
             _selectedFrame = &frame;
@@ -427,6 +435,11 @@ void TimeLineView::draw() {
                 y += _rowHeight + _rowGap;
             }
             for (const auto& frame : data->_frames) {
+                const float x0 = timeToX(frame.startTime(), bodyRect, ticksToPixels);
+                const float x1 = timeToX(frame.endTime(), bodyRect, ticksToPixels);
+                if (std::min(x1, bodyRect.Max.x) - std::max(x0, bodyRect.Min.x) < kTimelineMinSubdivisionWidth) {
+                    continue;
+                }
                 for (uint32_t n = 0; n < frame.nodeCount(); ++n) {
                     const uint32_t depth = thread.nodeDepth(frame, n);
                     if (depth >= visibleDepth) {
