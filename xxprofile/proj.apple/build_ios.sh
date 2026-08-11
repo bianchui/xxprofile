@@ -31,6 +31,18 @@ function move2trash() {
     fi
 }
 
+function verify_no_zstd_exports() {
+    local binary=$1
+    local exported_symbols
+
+    exported_symbols="$(nm -arch all -gU "${binary}" | awk '$NF ~ /^_?(ZSTD|HUF|FSE|XXH|HIST)_/ { print $NF }')"
+    if [[ -n "${exported_symbols}" ]]; then
+        echo "Unexpected Zstd symbols exported by ${binary}:" >&2
+        echo "${exported_symbols}" >&2
+        return 1
+    fi
+}
+
 function build_Config_Sdk() {
     local param_type=$1
     local param_scheme=$2
@@ -62,6 +74,7 @@ function build_Config_Sdk() {
         if [[ -d ${var_out_path}/${param_sdk}/${param_scheme}.framework/_CodeSignature ]]; then
             guard codesign -f -s - ${var_out_path}/${param_sdk}/${param_scheme}.framework
         fi
+        guard verify_no_zstd_exports ${var_out_path}/${param_sdk}/${param_scheme}.framework/xxprofile
     fi
 
     #guard cp -R -n ${var_tmp_path}/Build/Products/${param_config}-${param_sdk}/usr/local/ ${var_out_path}
