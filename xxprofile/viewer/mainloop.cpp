@@ -161,6 +161,10 @@ static void _mainLoop(const char* openFile) {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
+    // GLFW changes the working directory to the app bundle's Resources folder
+    // on macOS.  Letting ImGui write its default relative imgui.ini there would
+    // mutate the signed bundle and invalidate its code signature.
+    io.IniFilename = nullptr;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 

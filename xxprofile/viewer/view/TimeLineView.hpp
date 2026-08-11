@@ -17,17 +17,23 @@
 class TimeLineView {
 public:
     struct ThreadData {
+        struct DepthIndex {
+            std::vector<uint32_t> _nodes;
+            std::vector<uint64_t> _blockMaxDurations;
+        };
+
+        struct FrameIndex {
+            std::vector<DepthIndex> _depths;
+        };
+
         const xxprofile::ThreadData* _data;
-        uint64_t _processStart;
         bool _expended;
         uint32_t _visibleDepth;
-        std::vector<uint32_t> _frameNodeOffsets;
-        std::vector<uint32_t> _nodeDepths;
+        std::vector<FrameIndex> _frameIndexes;
 
-        void init(const xxprofile::ThreadData* data, uint64_t processStart);
+        void init(const xxprofile::ThreadData* data);
 
-        void rebuildDepths();
-        uint32_t nodeDepth(const xxprofile::FrameData& frame, uint32_t nodeIndex) const;
+        void rebuildIndex();
     };
 
     TimeLineView(EventHandler* handler);
@@ -46,7 +52,7 @@ private:
     void drawNode(ImDrawList* drawList, const ThreadData& thread, const xxprofile::FrameData& frame, uint32_t nodeIndex, const ImRect& bodyRect, float y, double ticksToPixels);
     void selectThreadFrame(const ThreadData& thread);
     float timeToX(uint64_t time, const ImRect& bodyRect, double ticksToPixels) const;
-    ImU32 nameColor(const char* name, float saturation = 0.55f, float value = 0.72f) const;
+    ImU32 nameColor(xxprofile::SName name, float saturation = 0.55f, float value = 0.72f);
 
     EventHandler* _handler;
     const xxprofile::Loader* _loader;
@@ -56,6 +62,7 @@ private:
     double _viewStart;
     double _viewEnd;
     const xxprofile::FrameData* _selectedFrame;
+    std::vector<ImU32> _nameColors;
 
     float _leftWidth = 190.0f;
     float _rulerHeight = 26.0f;

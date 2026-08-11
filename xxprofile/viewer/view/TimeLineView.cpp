@@ -10,52 +10,76 @@ static const uint32_t kTimelineDepthPageSize = 10;
 static const float kTimelineMinSubdivisionWidth = 2.0f;
 static const float kTimelineMinNodeRenderWidth = 1.0f;
 static const float kTimelineMinNodeNameWidth = 5.0f;
+static const size_t kTimelineIndexBlockSize = 64;
 
 #pragma mark - TimeLineView::ThreadData
 
-void TimeLineView::ThreadData::init(const xxprofile::ThreadData* data, uint64_t processStart) {
+void TimeLineView::ThreadData::init(const xxprofile::ThreadData* data) {
     assert(data);
     _data = data;
     _expended = true;
     _visibleDepth = kTimelineDepthPageSize;
-    _processStart = processStart;
-    rebuildDepths();
+    rebuildIndex();
 }
 
-void TimeLineView::ThreadData::rebuildDepths() {
-    _frameNodeOffsets.clear();
-    _nodeDepths.clear();
-    for (const auto& frame : _data->_frames) {
+void TimeLineView::ThreadData::rebuildIndex() {
+    _frameIndexes.clear();
+    _frameIndexes.resize(_data->_frames.size());
+    std::vector<uint32_t> nodeDepths;
+    for (size_t frameIndex = 0; frameIndex < _data->_frames.size(); ++frameIndex) {
+        const auto& frame = _data->_frames[frameIndex];
+        auto& index = _frameIndexes[frameIndex];
         const uint32_t nodeCount = frame.nodeCount();
-        const uint32_t base = (uint32_t)_nodeDepths.size();
-        _frameNodeOffsets.push_back(base);
-        _nodeDepths.resize(base + nodeCount);
+        if (!nodeCount) {
+            continue;
+        }
+
+        nodeDepths.resize(nodeCount);
+        uint32_t maxDepth = 0;
         for (uint32_t i = 0; i < nodeCount; ++i) {
             const auto& node = frame._nodes[i];
             uint32_t depth = 0;
             if (node._parentNodeId) {
                 const uint32_t parentIndex = node._parentNodeId - 1;
                 if (parentIndex < i) {
-                    depth = _nodeDepths[base + parentIndex] + 1;
+                    depth = nodeDepths[parentIndex] + 1;
                 }
             }
-            _nodeDepths[base + i] = depth;
+            nodeDepths[i] = depth;
+            maxDepth = std::max(maxDepth, depth);
+        }
+
+        index._depths.resize(maxDepth + 1);
+        std::vector<uint32_t> depthCounts(maxDepth + 1, 0);
+        for (uint32_t i = 0; i < nodeCount; ++i) {
+            ++depthCounts[nodeDepths[i]];
+        }
+        for (uint32_t depth = 0; depth <= maxDepth; ++depth) {
+            index._depths[depth]._nodes.reserve(depthCounts[depth]);
+        }
+        for (uint32_t i = 0; i < nodeCount; ++i) {
+            index._depths[nodeDepths[i]]._nodes.push_back(i);
+        }
+
+        for (auto& depth : index._depths) {
+            auto& nodes = depth._nodes;
+            const auto byBeginTime = [&frame](uint32_t a, uint32_t b) {
+                return frame._nodes[a]._beginTime < frame._nodes[b]._beginTime;
+            };
+            if (!std::is_sorted(nodes.begin(), nodes.end(), byBeginTime)) {
+                std::stable_sort(nodes.begin(), nodes.end(), byBeginTime);
+            }
+
+            const size_t blockCount = (nodes.size() + kTimelineIndexBlockSize - 1) / kTimelineIndexBlockSize;
+            depth._blockMaxDurations.assign(blockCount, 0);
+            for (size_t i = 0; i < nodes.size(); ++i) {
+                const auto& node = frame._nodes[nodes[i]];
+                const uint64_t duration = node._endTime >= node._beginTime ? node._endTime - node._beginTime : 0;
+                uint64_t& blockMax = depth._blockMaxDurations[i / kTimelineIndexBlockSize];
+                blockMax = std::max(blockMax, duration);
+            }
         }
     }
-}
-
-uint32_t TimeLineView::ThreadData::nodeDepth(const xxprofile::FrameData& frame, uint32_t nodeIndex) const {
-    const xxprofile::FrameData* first = _data->_frames.data();
-    const ptrdiff_t frameIndex = &frame - first;
-    if (frameIndex < 0 || (size_t)frameIndex >= _frameNodeOffsets.size()) {
-        return 0;
-    }
-    const uint32_t offset = _frameNodeOffsets[(size_t)frameIndex];
-    const uint32_t index = offset + nodeIndex;
-    if (index < _nodeDepths.size()) {
-        return _nodeDepths[index];
-    }
-    return 0;
 }
 
 #pragma mark - TimeLineView
@@ -112,7 +136,7 @@ void TimeLineView::setLoader(const xxprofile::Loader* loader) {
     for (size_t t = 0; t < tcount; ++t) {
         auto& thread = _threads[t];
         const auto& loader_thread = loader->thread(t);
-        thread.init(&loader_thread, _processStart);
+        thread.init(&loader_thread);
     }
 
     _viewStart = 0;
@@ -121,6 +145,7 @@ void TimeLineView::setLoader(const xxprofile::Loader* loader) {
 
 void TimeLineView::clear() {
     _threads.clear();
+    _nameColors.clear();
     _loader = nullptr;
     _processStart = 0;
     _processEnd = 1;
@@ -150,15 +175,24 @@ float TimeLineView::timeToX(uint64_t time, const ImRect& bodyRect, double ticksT
     return bodyRect.Min.x + (float)((rel - _viewStart) * ticksToPixels);
 }
 
-ImU32 TimeLineView::nameColor(const char* name, float saturation, float value) const {
+ImU32 TimeLineView::nameColor(xxprofile::SName name, float saturation, float value) {
+    const uint32_t nameId = name.id();
+    if (_nameColors.size() <= nameId) {
+        _nameColors.resize((size_t)nameId + 1, 0);
+    }
+    if (_nameColors[nameId]) {
+        return _nameColors[nameId];
+    }
+
     uint32_t hash = 2166136261u;
-    if (name) {
-        for (const char* p = name; *p; ++p) {
+    const char* nameText = _loader ? _loader->name(name) : nullptr;
+    if (nameText) {
+        for (const char* p = nameText; *p; ++p) {
             hash = (hash ^ (uint8_t)*p) * 16777619u;
         }
     }
     const float hue = (float)(hash % 360) / 360.0f;
-    return ImColor::HSV(hue, saturation, value);
+    return _nameColors[nameId] = ImColor::HSV(hue, saturation, value);
 }
 
 void TimeLineView::drawRuler(ImDrawList* drawList, const ImRect& rulerRect, const ImRect& bodyRect, double visibleTicks, double ticksToPixels) const {
@@ -252,21 +286,28 @@ void TimeLineView::drawNode(ImDrawList* drawList, const ThreadData& thread, cons
         return;
     }
 
-    const char* name = _loader->name(node._name);
     ImRect rect(ImVec2(std::max(x0, bodyRect.Min.x), y), ImVec2(std::min(std::max(x1, x0 + _minBarWidth), bodyRect.Max.x), y + _rowHeight));
     if (rect.Max.x <= bodyRect.Min.x || rect.Min.x >= bodyRect.Max.x) {
         return;
     }
 
-    drawList->AddRectFilled(rect.Min, rect.Max, nameColor(name), 2.0f);
-    drawList->AddRect(rect.Min, rect.Max, ImColor(0.0f, 0.0f, 0.0f, 0.18f), 2.0f);
+    drawList->AddRectFilled(rect.Min, rect.Max, nameColor(node._name), visibleWidth >= 3.0f ? 2.0f : 0.0f);
+    if (visibleWidth >= 3.0f) {
+        drawList->AddRect(rect.Min, rect.Max, ImColor(0.0f, 0.0f, 0.0f, 0.18f), 2.0f);
+    }
+    const bool hovered = visibleWidth >= kTimelineMinSubdivisionWidth && ImGui::IsMouseHoveringRect(rect.Min, rect.Max);
+    const char* name = nullptr;
     if (visibleWidth >= kTimelineMinNodeNameWidth && rect.GetWidth() > 56.0f) {
+        name = _loader->name(node._name);
         drawList->PushClipRect(rect.Min, rect.Max, true);
         drawList->AddText(rect.Min + ImVec2(4.0f, 2.0f), ImColor(0.05f, 0.05f, 0.06f, 1.0f), name);
         drawList->PopClipRect();
     }
 
-    if (visibleWidth >= kTimelineMinSubdivisionWidth && ImGui::IsMouseHoveringRect(rect.Min, rect.Max)) {
+    if (hovered) {
+        if (!name) {
+            name = _loader->name(node._name);
+        }
         shared::StrBuf buf;
         if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
             _selectedFrame = &frame;
@@ -361,6 +402,8 @@ void TimeLineView::draw() {
     }
     visibleTicks = std::max(minTicks, _viewEnd - _viewStart);
     const double ticksToPixels = bodyRect.GetWidth() / visibleTicks;
+    const uint64_t viewStartTime = _processStart + (uint64_t)_viewStart;
+    const uint64_t viewEndTime = _processStart + (uint64_t)_viewEnd;
 
     drawList->AddRectFilled(canvas.Min, canvas.Max, ImColor(0.075f, 0.080f, 0.090f, 1.0f));
     drawList->AddRectFilled(leftRect.Min, leftRect.Max, ImColor(0.095f, 0.100f, 0.115f, 1.0f));
@@ -419,8 +462,13 @@ void TimeLineView::draw() {
         y += _threadHeaderHeight + _rowGap;
         drawList->AddText(ImVec2(leftRect.Min.x + 26.0f, y + 2.0f), ImColor(kTimelineMutedTextColor), "Frames");
         drawList->AddLine(ImVec2(bodyRect.Min.x, y + _rowHeight + _rowGap), ImVec2(bodyRect.Max.x, y + _rowHeight + _rowGap), ImColor(1.0f, 1.0f, 1.0f, 0.05f));
-        for (const auto& frame : data->_frames) {
-            drawFrame(drawList, thread, frame, bodyRect, y, ticksToPixels);
+        const uint32_t firstFrame = data->findFirstFrame(viewStartTime);
+        size_t endFrame = firstFrame;
+        while (endFrame < data->_frames.size() && data->_frames[endFrame].startTime() <= viewEndTime) {
+            ++endFrame;
+        }
+        for (size_t frameIndex = firstFrame; frameIndex < endFrame; ++frameIndex) {
+            drawFrame(drawList, thread, data->_frames[frameIndex], bodyRect, y, ticksToPixels);
         }
 
         y += _rowHeight + _rowGap;
@@ -434,19 +482,52 @@ void TimeLineView::draw() {
                 drawList->AddLine(ImVec2(bodyRect.Min.x, y + _rowHeight + _rowGap), ImVec2(bodyRect.Max.x, y + _rowHeight + _rowGap), ImColor(1.0f, 1.0f, 1.0f, 0.035f));
                 y += _rowHeight + _rowGap;
             }
-            for (const auto& frame : data->_frames) {
+            for (size_t frameIndex = firstFrame; frameIndex < endFrame; ++frameIndex) {
+                const auto& frame = data->_frames[frameIndex];
                 const float x0 = timeToX(frame.startTime(), bodyRect, ticksToPixels);
                 const float x1 = timeToX(frame.endTime(), bodyRect, ticksToPixels);
                 if (std::min(x1, bodyRect.Max.x) - std::max(x0, bodyRect.Min.x) < kTimelineMinSubdivisionWidth) {
                     continue;
                 }
-                for (uint32_t n = 0; n < frame.nodeCount(); ++n) {
-                    const uint32_t depth = thread.nodeDepth(frame, n);
-                    if (depth >= visibleDepth) {
-                        continue;
+
+                const auto& frameTimelineIndex = thread._frameIndexes[frameIndex];
+                const uint32_t indexedDepths = std::min<uint32_t>(visibleDepth, (uint32_t)frameTimelineIndex._depths.size());
+                for (uint32_t depth = 0; depth < indexedDepths; ++depth) {
+                    const auto& depthIndex = frameTimelineIndex._depths[depth];
+                    const auto& nodes = depthIndex._nodes;
+                    auto begin = std::lower_bound(nodes.begin(), nodes.end(), viewStartTime,
+                        [&frame](uint32_t nodeIndex, uint64_t time) {
+                            return frame._nodes[nodeIndex]._beginTime < time;
+                        });
+                    if (begin != nodes.begin()) {
+                        --begin;
                     }
-                    const float nodeY = depthStartY + depth * (_rowHeight + _rowGap);
-                    drawNode(drawList, thread, frame, n, bodyRect, nodeY, ticksToPixels);
+                    const auto end = std::upper_bound(begin, nodes.end(), viewEndTime,
+                        [&frame](uint64_t time, uint32_t nodeIndex) {
+                            return time < frame._nodes[nodeIndex]._beginTime;
+                        });
+
+                    size_t position = (size_t)(begin - nodes.begin());
+                    const size_t endPosition = (size_t)(end - nodes.begin());
+                    while (position < endPosition) {
+                        const size_t block = position / kTimelineIndexBlockSize;
+                        const size_t blockStart = block * kTimelineIndexBlockSize;
+                        const size_t blockEnd = std::min(nodes.size(), blockStart + kTimelineIndexBlockSize);
+                        if (position == blockStart && blockEnd <= endPosition &&
+                            (double)depthIndex._blockMaxDurations[block] * ticksToPixels < kTimelineMinNodeRenderWidth) {
+                            position = blockEnd;
+                            continue;
+                        }
+
+                        const uint32_t nodeIndex = nodes[position++];
+                        const auto& node = frame._nodes[nodeIndex];
+                        if (node._endTime <= node._beginTime || node._endTime < viewStartTime || node._beginTime > viewEndTime ||
+                            (double)(node._endTime - node._beginTime) * ticksToPixels < kTimelineMinNodeRenderWidth) {
+                            continue;
+                        }
+                        const float nodeY = depthStartY + depth * (_rowHeight + _rowGap);
+                        drawNode(drawList, thread, frame, nodeIndex, bodyRect, nodeY, ticksToPixels);
+                    }
                 }
             }
             if (visibleDepth < data->_maxCallDepth) {
