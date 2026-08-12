@@ -95,7 +95,11 @@ public:
 protected:
     XXProfileTreeNode* newChunk();
     void tryFrameFlush();
-    void frameFlush();
+    void frameFlush(uint32_t frameId);
+
+    bool hasPendingNodes() const {
+        return !_buffers.empty();
+    }
 
 private:
     struct StackFrame {

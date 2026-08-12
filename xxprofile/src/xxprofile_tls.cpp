@@ -99,6 +99,7 @@ void XXProfileTLS::operator delete(void* p) {
 XXProfileTLS::XXProfileTLS(SharedArchive* ar) {
     _threadId = systemGetTid();
     _threadNameId = kInvalidThreadNameId;
+    _frameId = g_frameId.load(std::memory_order_acquire);
     log("Thread %d begin profile", _threadId);
     assert(ar);
     ar->addRef();
@@ -111,8 +112,8 @@ XXProfileTLS::XXProfileTLS(SharedArchive* ar) {
 
 XXProfileTLS::~XXProfileTLS() {
     assert(_stack.empty());
-    if (_buffers.size()) {
-        frameFlush();
+    if (hasPendingNodes()) {
+        frameFlush(_frameId);
     }
     for (auto iter = _freeBuffers.begin(); iter != _freeBuffers.end(); ++iter) {
         free(*iter);
@@ -124,6 +125,15 @@ XXProfileTLS::~XXProfileTLS() {
 }
 
 XXProfileTreeNode* XXProfileTLS::beginScope(SName name) {
+    if (_stack.empty()) {
+        tryFrameFlush();
+        if (!hasPendingNodes()) {
+            // An empty buffer is not bound to a frame. Re-read after a possible
+            // flush because another thread may have advanced the global frame.
+            _frameId = g_frameId.load(std::memory_order_acquire);
+        }
+    }
+
     if (!_currentBuffer || _usedCount == ChunkNodeCount) {
         _currentBuffer = newChunk();
         _usedCount = 0;
@@ -174,12 +184,13 @@ XXProfileTreeNode* XXProfileTLS::newChunk() {
 }
 
 void XXProfileTLS::tryFrameFlush() {
-    if (_stack.empty()) {
-        uint32_t frameId = g_frameId.load(std::memory_order_acquire);
-        if (frameId > _frameId) {
-            _frameId = frameId;
-            frameFlush();
-        }
+    if (!_stack.empty() || !hasPendingNodes()) {
+        return;
+    }
+
+    const uint32_t currentFrameId = g_frameId.load(std::memory_order_acquire);
+    if (currentFrameId != _frameId) {
+        frameFlush(_frameId);
     }
 }
 
@@ -188,7 +199,9 @@ void XXProfileTLS::tryFrameFlush() {
 // SName::Serialize();
 // uint32_t nodeCount;
 // XXProfileTreeNode nodes[nodeCount];
-void XXProfileTLS::frameFlush() {
+void XXProfileTLS::frameFlush(uint32_t frameId) {
+    assert(_stack.empty());
+    assert(hasPendingNodes());
     static SName xxflush("xxflush");
     uint64_t flush_node[3];
     static_assert(sizeof(flush_node) == sizeof(XXProfileTreeNode), "sizeof XXProfileTreeNode");
@@ -204,8 +217,8 @@ void XXProfileTLS::frameFlush() {
         _threadNameId = threadName.id();
         ar << _threadNameId;
     }
-    ar << _frameId;
-    XXLOG_DEBUG("frameFlush:frame %d\n", _frameId);
+    ar << frameId;
+    XXLOG_DEBUG("frameFlush:frame %d\n", frameId);
     _sharedAr->writeNames();
     uint32_t nodeCount = (uint32_t)_buffers.size();
     if (nodeCount) {
