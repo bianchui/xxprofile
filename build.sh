@@ -50,12 +50,103 @@ function update_viewer_version_metadata() {
   guard perl -0pi -e 's#(<key>NSHumanReadableCopyright</key>\s*<string>Copyright .*? 2017-)\d{4}(, bianchui\. All rights reserved\.</string>)#${1}'"$year"'${2}#s' "$plist"
 }
 
+function register_mac_viewer() {
+  local viewer_app="$THIS_DIR/out/xxprofileViewer.app"
+  local viewer_bundle_id="com.github.bianchui.xxprofileViewer"
+  local lsregister="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister"
+  local registered_apps_file
+  local swift_module_cache="${TMPDIR:-/tmp}/xxprofile-swift-module-cache"
+
+  function query_registered_mac_viewers() {
+    local output_file="$1"
+    env CLANG_MODULE_CACHE_PATH="$swift_module_cache" xcrun swift -e '
+import CoreServices
+import Foundation
+
+let bundleIdentifier = CommandLine.arguments[1] as CFString
+var error: Unmanaged<CFError>?
+if let result = LSCopyApplicationURLsForBundleIdentifier(bundleIdentifier, &error) {
+    if let urls = result.takeRetainedValue() as? [URL] {
+        for url in urls {
+            FileHandle.standardOutput.write(Data(url.path.utf8))
+            FileHandle.standardOutput.write(Data([0]))
+        }
+    }
+} else {
+    if let queryError = error?.takeRetainedValue() {
+        FileHandle.standardError.write(Data("\(queryError)\n".utf8))
+    }
+    exit(1)
+}
+' "$viewer_bundle_id" > "$output_file"
+  }
+
+  if [[ ! -x "$lsregister" ]]; then
+    echo "lsregister not found: $lsregister" >&2
+    return 1
+  fi
+  if [[ ! -d "$viewer_app" ]]; then
+    echo "xxprofileViewer.app not found: $viewer_app" >&2
+    return 1
+  fi
+
+  registered_apps_file="$(mktemp "${TMPDIR:-/tmp}/xxprofile-viewer-apps.XXXXXX")" || return 1
+  guard mkdir -p "$swift_module_cache"
+  if ! query_registered_mac_viewers "$registered_apps_file"; then
+    rm -f "$registered_apps_file"
+    return 1
+  fi
+
+  echo "==== Re-registering latest xxprofileViewer.app ===="
+  while IFS= read -r -d '' registered_app; do
+    echo "unregister: $registered_app"
+    # LaunchServices may drop a stale entry between query and unregister. In
+    # that case lsregister returns -10814; registration below remains valid.
+    "$lsregister" -u "$registered_app" >/dev/null 2>&1 || true
+  done < "$registered_apps_file"
+  rm -f "$registered_apps_file"
+
+  echo "register: $viewer_app"
+  guard "$lsregister" -f "$viewer_app"
+
+  # Xcode may asynchronously register an archive copy several seconds after
+  # the build. Keep checking LaunchServices through a short stability window.
+  local pass
+  for pass in 1 2 3 4 5; do
+    sleep 1
+    guard query_registered_mac_viewers "$registered_apps_file"
+    local removed_stale_app=0
+    while IFS= read -r -d '' registered_app; do
+      if [[ "$registered_app" == "$viewer_app" ]]; then
+        continue
+      fi
+      echo "unregister stale: $registered_app"
+      "$lsregister" -u "$registered_app" >/dev/null 2>&1 || true
+      removed_stale_app=1
+    done < "$registered_apps_file"
+    if [[ "$removed_stale_app" -ne 0 ]]; then
+      guard "$lsregister" -f "$viewer_app"
+    fi
+  done
+
+  guard query_registered_mac_viewers "$registered_apps_file"
+  while IFS= read -r -d '' registered_app; do
+    if [[ "$registered_app" != "$viewer_app" ]]; then
+      echo "Unexpected registered xxprofileViewer.app: $registered_app" >&2
+      rm -f "$registered_apps_file"
+      return 1
+    fi
+  done < "$registered_apps_file"
+  rm -f "$registered_apps_file"
+}
+
 function build_mac_viewer() {
   echo "==== Building apple viewer ===="
   update_viewer_version_metadata
   guard pushd $THIS_DIR/xxprofile/proj.apple
     guard ./build_viewer.sh
   guard popd
+  register_mac_viewer
 }
 
 function cmake_build_target() {
