@@ -98,6 +98,13 @@ target_compile_definitions(xxprofile PRIVATE
 
 if(XXPROFILE_DYNAMIC)
     target_compile_definitions(xxprofile PUBLIC XX_DLL_EXPORT=1)
+    if(ANDROID)
+        set(XXPROFILE_EXPORTS_MAP ${XXPROFILE_ROOT_DIR}/proj.android/xxprofile.exports.map)
+        target_link_libraries(xxprofile PRIVATE
+            "-Wl,--version-script=${XXPROFILE_EXPORTS_MAP}"
+        )
+        set_property(TARGET xxprofile APPEND PROPERTY LINK_DEPENDS ${XXPROFILE_EXPORTS_MAP})
+    endif()
 endif()
 
 if(XXPROFILE_HAS_DECOMPRESS OR XXPROFILE_BUILD_LOADER OR XXPROFILE_BUILD_VIEWER OR XXPROFILE_BUILD_TEST_COMPRESS)

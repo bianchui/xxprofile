@@ -1,0 +1,10 @@
+{
+    global:
+        _ZN9xxprofile5SNameC*;
+        _ZNK9xxprofile5SName5c_strEv;
+        _ZN9xxprofile9XXProfile*;
+        _ZN9xxprofile14XXProfileScopeC*;
+        _ZN9xxprofile14XXProfileScopeD*;
+    local:
+        *;
+};

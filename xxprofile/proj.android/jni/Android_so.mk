@@ -21,5 +21,8 @@ LOCAL_CPPFLAGS += -std=c++11 -fno-rtti -fno-exceptions -fno-stack-protector
 LOCAL_CPPFLAGS += -fvisibility=hidden -fvisibility-inlines-hidden -Os
 
 LOCAL_LDLIBS := -L$(SYSROOT)/usr/lib -llog
+XXPROFILE_EXPORTS_MAP := $(LOCAL_PATH)/../xxprofile.exports.map
+LOCAL_LDFLAGS += -Wl,--version-script=$(XXPROFILE_EXPORTS_MAP)
+LOCAL_ADDITIONAL_DEPENDENCIES += $(XXPROFILE_EXPORTS_MAP)
 
 include $(BUILD_SHARED_LIBRARY)
