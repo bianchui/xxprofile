@@ -267,6 +267,9 @@ void TimeLineView::drawFrame(ImDrawList* drawList, const ThreadData& thread, con
         buf.append("\nEnd:   ");
         Format::Time(buf, (frame.endTime() - _processStart) * thread._data->_secondsPerCycle);
         buf.append("\nTime:  ");
+        const uint64_t frameDuration = frame.endTime() >= frame.startTime() ? frame.endTime() - frame.startTime() : 0;
+        Format::Time(buf, frameDuration * thread._data->_secondsPerCycle);
+        buf.append("\nCpuTime: ");
         Format::Time(buf, frame.frameCycles() * thread._data->_secondsPerCycle);
         buf.appendf("\nNodes: %d", frame.nodeCount());
         ImGui::SetTooltip("%s", buf.c_str());
