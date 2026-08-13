@@ -54,6 +54,7 @@ public:
 
     void clear();
 
+    uint32_t findNameId(const char* name) const;
     uint32_t getNameId(const char* name);
     uint32_t getNameCount() const {
         return _nameCount.load(std::memory_order_acquire);

@@ -17,8 +17,10 @@ struct FrameData {
     uint64_t _frameCycles;
     uint64_t _startTime;
     uint64_t _endTime;
+    uint64_t _endTimeWithoutFlush;
     uint32_t _frameId;
     uint32_t _nodeCount;
+    uint32_t _nodeCountWithoutFlush;
     uint32_t _maxCallDepth;
     XXProfileTreeNode* _nodes;
 
@@ -35,7 +37,7 @@ struct FrameData {
         }
     }
 
-    bool init();
+    bool init(const Loader& loader);
 
     uint64_t frameCycles() const {
         return _frameCycles;
@@ -46,11 +48,20 @@ struct FrameData {
     uint64_t endTime() const {
         return _endTime;
     }
+    uint64_t endTimeWithoutFlush() const {
+        return _endTimeWithoutFlush;
+    }
+    uint64_t frameTimeWithoutFlush() const {
+        return _endTimeWithoutFlush >= _startTime ? _endTimeWithoutFlush - _startTime : 0;
+    }
     uint32_t frameId() const {
         return _frameId;
     }
     uint32_t nodeCount() const {
         return _nodeCount;
+    }
+    uint32_t nodeCountWithoutFlush() const {
+        return _nodeCountWithoutFlush;
     }
     uint32_t maxCallDepth() const {
         return _maxCallDepth;
@@ -346,6 +357,10 @@ public:
     void clear();
 
     const char* name(SName name) const;
+
+    uint32_t findNameId(const char* name) const {
+        return _namePool.findNameId(name);
+    }
 
     const std::vector<ThreadData>& threads() const {
         return _threads;

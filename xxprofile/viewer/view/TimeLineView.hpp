@@ -34,6 +34,8 @@ public:
         void init(const xxprofile::ThreadData* data);
 
         void rebuildIndex();
+
+        uint32_t findFirstFrame(uint64_t startTime) const;
     };
 
     TimeLineView(EventHandler* handler);

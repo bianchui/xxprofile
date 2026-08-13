@@ -81,8 +81,11 @@ FORCEINLINE uint32_t Uint32Hash(uint32_t value, uint32_t hash = 0) {
 #pragma mark - FrameData
 
 static std::vector<uint32_t> g_depth;
+static const double kFlushHideThresholdSeconds = 0.0001;
 
-bool FrameData::init() {
+bool FrameData::init(const Loader& loader) {
+    const uint32_t name_xxflush = loader.findNameId("xxflush");
+    _nodeCountWithoutFlush = _nodeCount;
     if (_nodeCount) {
         const uint32_t nodeCount = _nodeCount;
         assert(_nodes != nullptr);
@@ -122,6 +125,28 @@ bool FrameData::init() {
             }
         }
         _maxCallDepth = maxDepth + 1;
+        _endTimeWithoutFlush = _endTime;
+
+        if (name_xxflush != (uint32_t)-1 && nodeCount > 1 && loader.secondsPerCycle() > 0) {
+            const XXProfileTreeNode& trailingNode = nodes[nodeCount - 1];
+            const uint64_t duration = trailingNode._endTime >= trailingNode._beginTime ? trailingNode._endTime - trailingNode._beginTime : 0;
+            if (trailingNode._endTime >= trailingNode._beginTime &&
+                !trailingNode._parentNodeId &&
+                duration * loader.secondsPerCycle() < kFlushHideThresholdSeconds &&
+                trailingNode._name.id() == name_xxflush) {
+                uint64_t endTimeWithoutFlush = 0;
+                for (uint32_t i = 0; i + 1 < nodeCount; ++i) {
+                    const XXProfileTreeNode& node = nodes[i];
+                    if (!node._parentNodeId) {
+                        endTimeWithoutFlush = std::max(endTimeWithoutFlush, node._endTime);
+                    }
+                }
+                if (endTimeWithoutFlush >= _startTime) {
+                    _endTimeWithoutFlush = endTimeWithoutFlush;
+                    _nodeCountWithoutFlush = nodeCount - 1;
+                }
+            }
+        }
     }
     return true;
 }
@@ -471,7 +496,7 @@ void Loader::load(Archive& ar) {
         if (ar.hasError()) {
             break;
         }
-        if (!data.init()) {
+        if (!data.init(*this)) {
             break;
         }
         if (thread._maxCycleCount < data.frameCycles()) {

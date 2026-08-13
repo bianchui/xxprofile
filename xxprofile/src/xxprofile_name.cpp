@@ -123,7 +123,7 @@ SNamePool::SNameEntry* SNamePool::newNameEntry(const char* name, const uint32_t 
     return entry;
 }
 
-uint32_t SNamePool::getNameId(const char* name) {
+uint32_t SNamePool::findNameId(const char* name) const {
     if (!name || !*name) {
         return 0;
     }
@@ -135,6 +135,20 @@ uint32_t SNamePool::getNameId(const char* name) {
             return entry->id;
         }
     }
+    return (uint32_t)-1;
+}
+
+uint32_t SNamePool::getNameId(const char* name) {
+    if (!name || !*name) {
+        return 0;
+    }
+    const uint32_t existingId = findNameId(name);
+    if (existingId != (uint32_t)-1) {
+        return existingId;
+    }
+    const uint32_t length = (uint32_t)strlen(name);
+    const uint32_t hash = StringHash(name);
+    const uint32_t bucket = hash % HASH_BUCKET_COUNT;
     SystemScopedLock lock(_lock);
     SNameEntry* head = _nameHashes[bucket].load(std::memory_order_acquire);
     for (SNameEntry* entry = head; entry; entry = entry->next) {

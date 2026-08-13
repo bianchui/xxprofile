@@ -29,7 +29,7 @@ void TimeLineView::ThreadData::rebuildIndex() {
     for (size_t frameIndex = 0; frameIndex < _data->_frames.size(); ++frameIndex) {
         const auto& frame = _data->_frames[frameIndex];
         auto& index = _frameIndexes[frameIndex];
-        const uint32_t nodeCount = frame.nodeCount();
+        const uint32_t nodeCount = frame.nodeCountWithoutFlush();
         if (!nodeCount) {
             continue;
         }
@@ -82,6 +82,14 @@ void TimeLineView::ThreadData::rebuildIndex() {
     }
 }
 
+uint32_t TimeLineView::ThreadData::findFirstFrame(uint64_t startTime) const {
+    const auto iter = std::lower_bound(_data->_frames.begin(), _data->_frames.end(), startTime,
+        [](const xxprofile::FrameData& frame, uint64_t time) {
+            return frame.endTimeWithoutFlush() < time;
+        });
+    return (uint32_t)(iter - _data->_frames.begin());
+}
+
 #pragma mark - TimeLineView
 
 static const ImVec4 kTimelineTextColor(0.72f, 0.74f, 0.78f, 1.0f);
@@ -122,8 +130,8 @@ void TimeLineView::setLoader(const xxprofile::Loader* loader) {
             if (!hasFrame || _processStart > frame.startTime()) {
                 _processStart = frame.startTime();
             }
-            if (_processEnd < frame.endTime()) {
-                _processEnd = frame.endTime();
+            if (_processEnd < frame.endTimeWithoutFlush()) {
+                _processEnd = frame.endTimeWithoutFlush();
             }
             hasFrame = true;
         }
@@ -234,12 +242,12 @@ void TimeLineView::drawRuler(ImDrawList* drawList, const ImRect& rulerRect, cons
 }
 
 void TimeLineView::drawFrame(ImDrawList* drawList, const ThreadData& thread, const xxprofile::FrameData& frame, const ImRect& bodyRect, float y, double ticksToPixels) {
-    if (frame.endTime() < _processStart + (uint64_t)_viewStart || frame.startTime() > _processStart + (uint64_t)_viewEnd) {
+    if (frame.endTimeWithoutFlush() < _processStart + (uint64_t)_viewStart || frame.startTime() > _processStart + (uint64_t)_viewEnd) {
         return;
     }
 
     const float x0 = timeToX(frame.startTime(), bodyRect, ticksToPixels);
-    const float x1 = timeToX(frame.endTime(), bodyRect, ticksToPixels);
+    const float x1 = timeToX(frame.endTimeWithoutFlush(), bodyRect, ticksToPixels);
     ImRect rect(ImVec2(std::max(x0, bodyRect.Min.x), y), ImVec2(std::min(std::max(x1, x0 + _minBarWidth), bodyRect.Max.x), y + _rowHeight));
     if (rect.Max.x <= bodyRect.Min.x || rect.Min.x >= bodyRect.Max.x) {
         return;
@@ -265,13 +273,12 @@ void TimeLineView::drawFrame(ImDrawList* drawList, const ThreadData& thread, con
         buf.appendf("Thread %d (%s)\nFrame %d\nStart: ", thread._data->_threadId, thread._data->_threadName ? thread._data->_threadName : "", frame.frameId());
         Format::Time(buf, (frame.startTime() - _processStart) * thread._data->_secondsPerCycle);
         buf.append("\nEnd:   ");
-        Format::Time(buf, (frame.endTime() - _processStart) * thread._data->_secondsPerCycle);
+        Format::Time(buf, (frame.endTimeWithoutFlush() - _processStart) * thread._data->_secondsPerCycle);
         buf.append("\nTime:  ");
-        const uint64_t frameDuration = frame.endTime() >= frame.startTime() ? frame.endTime() - frame.startTime() : 0;
-        Format::Time(buf, frameDuration * thread._data->_secondsPerCycle);
+        Format::Time(buf, frame.frameTimeWithoutFlush() * thread._data->_secondsPerCycle);
         buf.append("\nCpuTime: ");
         Format::Time(buf, frame.frameCycles() * thread._data->_secondsPerCycle);
-        buf.appendf("\nNodes: %d", frame.nodeCount());
+        buf.appendf("\nNodes: %d", frame.nodeCountWithoutFlush());
         ImGui::SetTooltip("%s", buf.c_str());
     }
 }
@@ -331,7 +338,7 @@ void TimeLineView::selectThreadFrame(const ThreadData& thread) {
         return;
     }
 
-    uint32_t frameIndex = thread._data->findFirstFrame(_processStart + (uint64_t)_viewStart);
+    uint32_t frameIndex = thread.findFirstFrame(_processStart + (uint64_t)_viewStart);
     if (frameIndex >= thread._data->_frames.size()) {
         frameIndex = (uint32_t)thread._data->_frames.size() - 1;
     }
@@ -465,7 +472,7 @@ void TimeLineView::draw() {
         y += _threadHeaderHeight + _rowGap;
         drawList->AddText(ImVec2(leftRect.Min.x + 26.0f, y + 2.0f), ImColor(kTimelineMutedTextColor), "Frames");
         drawList->AddLine(ImVec2(bodyRect.Min.x, y + _rowHeight + _rowGap), ImVec2(bodyRect.Max.x, y + _rowHeight + _rowGap), ImColor(1.0f, 1.0f, 1.0f, 0.05f));
-        const uint32_t firstFrame = data->findFirstFrame(viewStartTime);
+        const uint32_t firstFrame = thread.findFirstFrame(viewStartTime);
         size_t endFrame = firstFrame;
         while (endFrame < data->_frames.size() && data->_frames[endFrame].startTime() <= viewEndTime) {
             ++endFrame;
@@ -488,7 +495,7 @@ void TimeLineView::draw() {
             for (size_t frameIndex = firstFrame; frameIndex < endFrame; ++frameIndex) {
                 const auto& frame = data->_frames[frameIndex];
                 const float x0 = timeToX(frame.startTime(), bodyRect, ticksToPixels);
-                const float x1 = timeToX(frame.endTime(), bodyRect, ticksToPixels);
+                const float x1 = timeToX(frame.endTimeWithoutFlush(), bodyRect, ticksToPixels);
                 if (std::min(x1, bodyRect.Max.x) - std::max(x0, bodyRect.Min.x) < kTimelineMinSubdivisionWidth) {
                     continue;
                 }
