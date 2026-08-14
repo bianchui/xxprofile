@@ -83,8 +83,7 @@ FORCEINLINE uint32_t Uint32Hash(uint32_t value, uint32_t hash = 0) {
 static std::vector<uint32_t> g_depth;
 static const double kFlushHideGapSeconds = 0.1;
 
-bool FrameData::init(const Loader& loader) {
-    const uint32_t name_xxflush = loader.findNameId("xxflush");
+bool FrameData::init(const uint32_t name_xxflush, const double secondsPerCycle) {
     _nodeCountWithoutFlush = _nodeCount;
     if (_nodeCount) {
         const uint32_t nodeCount = _nodeCount;
@@ -127,7 +126,7 @@ bool FrameData::init(const Loader& loader) {
         _maxCallDepth = maxDepth + 1;
         _endTimeWithoutFlush = _endTime;
 
-        if (name_xxflush != (uint32_t)-1 && nodeCount > 1 && loader.secondsPerCycle() > 0) {
+        if (name_xxflush != (uint32_t)-1 && nodeCount > 1 && secondsPerCycle > 0) {
             const XXProfileTreeNode& trailingNode = nodes[nodeCount - 1];
             if (!trailingNode._parentNodeId && trailingNode._name.id() == name_xxflush) {
                 uint64_t endTimeWithoutFlush = 0;
@@ -139,7 +138,7 @@ bool FrameData::init(const Loader& loader) {
                 }
                 if (endTimeWithoutFlush >= _startTime &&
                     trailingNode._beginTime > endTimeWithoutFlush &&
-                    (trailingNode._beginTime - endTimeWithoutFlush) * loader.secondsPerCycle() > kFlushHideGapSeconds) {
+                    (trailingNode._beginTime - endTimeWithoutFlush) * secondsPerCycle > kFlushHideGapSeconds) {
                     _endTimeWithoutFlush = endTimeWithoutFlush;
                     _nodeCountWithoutFlush = nodeCount - 1;
                 }
@@ -403,6 +402,7 @@ void Loader::load(Archive& ar) {
 #endif//TEST_COMPRESS
     ar << this->_secondsPerCycle;
     uint32_t threadId = 0;
+    uint32_t name_xxflush = -1;
     Buffer buf;
     while (!ar.eof() && !ar.hasError()) {
         if (ar.version() >= EVersion::V3) {
@@ -420,6 +420,9 @@ void Loader::load(Archive& ar) {
         ar << data._frameId;
         XXLOG_DETAIL("Load.frame(%d) for thread(%d)\n", data._frameId, threadId);
         _namePool.serialize(nullptr, ar);
+        if (name_xxflush == (uint32_t)-1) {
+            name_xxflush = _namePool.findNameId("xxflush");
+        }
         if (threadNameId != -1) {
             thread._threadName = name(*reinterpret_cast<const SName*>(&threadNameId));
         }
@@ -494,7 +497,7 @@ void Loader::load(Archive& ar) {
         if (ar.hasError()) {
             break;
         }
-        if (!data.init(*this)) {
+        if (!data.init(name_xxflush, _secondsPerCycle)) {
             break;
         }
         if (thread._maxCycleCount < data.frameCycles()) {

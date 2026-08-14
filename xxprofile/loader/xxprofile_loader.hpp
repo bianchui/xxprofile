@@ -37,7 +37,7 @@ struct FrameData {
         }
     }
 
-    bool init(const Loader& loader);
+    bool init(uint32_t name_xxflush, double secondsPerCycle);
 
     uint64_t frameCycles() const {
         return _frameCycles;
@@ -357,10 +357,6 @@ public:
     void clear();
 
     const char* name(SName name) const;
-
-    uint32_t findNameId(const char* name) const {
-        return _namePool.findNameId(name);
-    }
 
     const std::vector<ThreadData>& threads() const {
         return _threads;
